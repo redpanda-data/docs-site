@@ -21,7 +21,6 @@ ui:
     snapshot: true
 asciidoc:
   attributes:
-    latest-console-version:
   extensions:
   - '@asciidoctor/tabs'
   - 'node_modules/antora-extensions-and-macros/macros/glossary.js'
