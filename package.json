@@ -4,7 +4,7 @@
   "description": "The Antora playbook project for Redpanda documentation.",
   "license": "ISC",
   "scripts": {
-    "build": "cross-env-shell \"if [ \\\"$OSTYPE\\\" = \\\"msys\\\" ] || [ \\\"$OSTYPE\\\" = \\\"cygwin\\\" ] || [ \\\"$OSTYPE\\\" = \\\"win32\\\" ]; then ./start-scripts/build.bat; else ./start-scripts/build.sh; fi\"",
+    "build": "antora --to-dir docs --fetch antora-playbook.yml",
     "start": "cross-env-shell LIVERELOAD=true npx gulp",
     "build-and-serve": "npm run build && wds --node-resolve --open home/index.html --watch --root-dir docs"
   },
@@ -15,7 +15,7 @@
     "@octokit/plugin-retry": "^4.1.3",
     "@octokit/rest": "^19.0.7",
     "algoliasearch": "^4.17.0",
-    "antora-extensions-and-macros": "^1.7.0"
+    "antora-extensions-and-macros": "^2.0.0"
   },
   "devDependencies": {
     "@web/dev-server": "^0.2.1",
