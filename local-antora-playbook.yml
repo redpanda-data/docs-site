@@ -4,11 +4,9 @@ site:
   url: http://localhost:5000
 content:
   sources:
-  - url: https://github.com/JakeSCahill/docs-site
-    branches: playbook
-    start_paths: site-search, home, api
-  - url: ../local-docs-directory
+  - url: .
     branches: HEAD
+    start_paths: [site-search, home, api]
 ui:
   bundle:
     url: https://github.com/JakeSCahill/redpanda-docs-ui/releases/download/beta-ui/ui-bundle.zip
@@ -22,9 +20,6 @@ asciidoc:
   - 'node_modules/antora-extensions-and-macros/macros/helm-ref.js'
 antora:
   extensions:
-  - 'node_modules/antora-extensions-and-macros/extensions/version-fetcher/set-latest-version.js'
-  - 'node_modules/antora-extensions-and-macros/extensions/algolia-indexer/index.js'
   - 'node_modules/antora-extensions-and-macros/extensions/unlisted-pages.js'
-  - 'node_modules/antora-extensions-and-macros/extensions/replace-attributes-in-attachments.js'
   - 'node_modules/antora-extensions-and-macros/extensions/add-global-attributes.js'
 
