@@ -1,7 +1,7 @@
 site:
   title: Redpanda Docs
   start_page: home:ROOT:index.adoc
-  url: https://grand-lokum-795b84.netlify.app
+  url: https://incomparable-treacle-75bd5a.netlify.app
 urls:
   html_extension_style: indexify
   redirect_facility: netlify
