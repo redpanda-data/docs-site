@@ -32,5 +32,8 @@ antora:
   - 'node_modules/antora-extensions-and-macros/extensions/algolia-indexer/index.js'
   - 'node_modules/antora-extensions-and-macros/extensions/unlisted-pages.js'
   - 'node_modules/antora-extensions-and-macros/extensions/replace-attributes-in-attachments.js'
-  - 'node_modules/antora-extensions-and-macros/extensions/add-global-attributes.js'
+  - require: 'node_modules/antora-extensions-and-macros/extensions/add-global-attributes.js'
+    org: JakeSCahill
+    repo: docs-site
+    branch: main
 
