@@ -1,0 +1,64 @@
+[build.environment]
+NODE_VERSION = "16"
+
+[[headers]]
+  for = "/api/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+
+# NOTE the following redirects get appended to the redirects defined in the _redirects file
+
+[[redirects]]
+from = "/docs/23.1/home"
+to = "/home"
+status = 301
+
+[[redirects]]
+from = "/docs/22.3/home"
+to = "/home"
+status = 301
+
+[[redirects]]
+from = "/docs/22.2/home"
+to = "/home"
+status = 301
+
+[[redirects]]
+from = "/docs/22.1/home"
+to = "/home"
+status = 301
+
+[[redirects]]
+from = "/docs/21.11/home"
+to = "/home"
+status = 301
+
+[[redirects]]
+from = "/docs/22.3/*"
+to = "/22.3/:splat"
+status = 301
+
+[[redirects]]
+from = "/docs/22.2/*"
+to = "/22.2/:splat"
+status = 301
+
+[[redirects]]
+from = "/docs/22.1/*"
+to = "/22.1/:splat"
+status = 301
+
+[[redirects]]
+from = "/docs/21.11/*"
+to = "/21.11/:splat"
+status = 301
+
+[[redirects]]
+from = "/docs/api/*"
+to = "/api/:splat"
+status = 301
+
+[[redirects]]
+from = "/docs/*"
+to = "/current/:splat"
+status = 301
