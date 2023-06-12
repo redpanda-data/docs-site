@@ -7,6 +7,8 @@ content:
   - url: .
     branches: HEAD
     start_paths: [site-search, home, api]
+  - url: https://github.com/redpanda-data/documentation
+    branches: [v/*]
 ui:
   bundle:
     url: https://github.com/JakeSCahill/redpanda-docs-ui/releases/download/beta-ui/ui-bundle.zip
@@ -25,4 +27,3 @@ antora:
     org: JakeSCahill
     repo: docs-site
     branch: main
-

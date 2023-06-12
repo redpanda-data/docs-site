@@ -1,0 +1,6 @@
+= Redpanda Documentation Site
+:url-docs: https://docs.redpanda.com
+:url-org: https://github.com/redpanda-data
+:url-ui: {url-org}/docs-ui
+
+This is the Antora playbook project (site build) for the Redpanda documentation site published at {url-docs}.
