@@ -345,12 +345,9 @@ If you need to link to different pages in partials depending on the context of t
 To learn more, see xref:{data-archiving-link}[Data Archiving]
 ----
 
-[TIP]
-====
 We recommend using https://code.visualstudio.com/download[Visual Studio Code] with the https://marketplace.visualstudio.com/items?itemName=asciidoctor.asciidoctor-vscode[Asciidoc extension] to edit documentation. The Asciidoc extension provides useful features such as folding conditionals and titles to make it easier to work with large documents.
 
 image::../images/asciidoc-extension.gif[]
-====
 
 == Update the nav tree
 
