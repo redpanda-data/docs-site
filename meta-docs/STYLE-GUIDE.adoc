@@ -617,7 +617,7 @@ If you do not specify a Helm reference value, the macro generates a link without
 
 The source code is in the {url-extensions} GitHub repository.
 
-== Link to Tiered Storage configuration properties
+=== Link to Tiered Storage configuration properties
 
 To make it easier to link to Tiered Storage properties, the Redpanda documentation uses a custom macro called `config_ref`.
 
