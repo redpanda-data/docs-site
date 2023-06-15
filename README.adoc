@@ -67,6 +67,12 @@ The `global-attributes` directory contains attributes that are made available si
 
 These attributes are merged into the playbook during a build using the {url-extensions}[global attributes extension].
 
+== Extensions and macros
+
+The Redpanda documentation site includes custom extensions and macros to enhance the site and provide custom features.
+
+For details about all the extensions and macros, see {url-extensions}.
+
 == Netlify configuration and redirects
 
 The docs site is hosted on link:{url-netlify}[Netlify].

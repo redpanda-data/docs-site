@@ -514,7 +514,7 @@ NOTE: Each new line in a nested tab must contain a `+`.
 
 Each tab item has a unique ID. When a user clicks on a tab, a query string is appended to the URL that points to the tab's ID so that users can share links to the tab.
 
-The tabs functionality is provided by the `asciidoctor-tabs` module. For more details about using tabs, see the https://github.com/asciidoctor/asciidoctor-tabs[module's GitHub repository].
+The tabs syntax and rendering is provided by the `asciidoctor-tabs` module. For more details about using tabs, see the https://github.com/asciidoctor/asciidoctor-tabs[module's GitHub repository].
 
 == Glossary terms
 
@@ -573,13 +573,13 @@ To produce a glossary page with all terms that have been defined in the document
 glossary::[]
 ----
 
-During the build, the macro collects all the terms used in `glossterm` macros, sorts the alphabetically, and adds them to the page that includes the `glossary` macro. Any terms without a `link` property link to the glossary page.
+During the build, the macro collects all the terms used in `glossterm` macros, sorts them alphabetically, and adds them to the page that includes the `glossary` macro. Any terms without a `link` property link to the glossary page.
 
 == Link macros
 
 The Redpanda documentation includes custom macros to make it easier for writers to link to common pages.
 
-Using a macro to generate URLs provides the following benefits:
+Using a macro to generate links provides the following benefits:
 
 - You can use the macro instead of manually typing the URL each time, reducing the chance of errors.
 
@@ -615,6 +615,8 @@ For default values and documentation for configuration options, see the https://
 
 If you do not specify a Helm reference value, the macro generates a link without specifying a path.
 
+The source code is in the {url-extensions} GitHub repository.
+
 == Link to Tiered Storage configuration properties
 
 To make it easier to link to Tiered Storage properties, the Redpanda documentation uses a custom macro called `config_ref`.
@@ -647,6 +649,8 @@ This is the path to the document where the configuration value is defined. This 
 IMPORTANT: The path must be the name of a document at the root of the `reference` module.
 
 NOTE: The `config_ref` macro is environment-aware. It checks if the document it is being used in is part of a Kubernetes environment by checking if the `env-kubernetes` attribute is set in the document's attributes. Depending on this check, it either prepends `storage.tieredConfig.` to the `configRef` or just uses the `configRef` as is.
+
+The source code is in the {url-extensions} GitHub repository.
 
 == Images
 
@@ -837,7 +841,7 @@ Incorrect: dma, Direct Memory Access
 |
 |fintech
 |Lowercase unless at the beginning of a sentence.
-|Correct: fintech 
+|Correct: fintech
 Incorrect: Fintech, FinTech
 |for example
 |Do not use "e.g." Use “for example”, “such as”, or “like” as appropriate.
