@@ -6,7 +6,7 @@
   "scripts": {
     "build": "antora --to-dir docs --fetch antora-playbook.yml",
     "start": "cross-env-shell LIVERELOAD=true npx gulp",
-    "build-and-serve": "npm run build && wds --node-resolve --open home/index.html --watch --root-dir docs"
+    "serve": "wds --node-resolve --open home/index.html --watch --root-dir docs"
   },
   "dependencies": {
     "@antora/cli": "3.1.2",

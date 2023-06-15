@@ -1,6 +1,7 @@
 [build.environment]
 NODE_VERSION = "16"
 
+# For future use. Allows us to host docs under the `/api/` path that other services such as Redpanda Cloud can consume.
 [[headers]]
   for = "/api/*"
   [headers.values]
