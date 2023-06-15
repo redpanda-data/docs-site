@@ -322,25 +322,25 @@ For example:
 
 [,asciidoc,subs=none]
 ----
-ifndef::env-kubernetes[]
+\ifndef::env-kubernetes[]
 This will be rendered only if the pages you include the partial in do not have the `env-kubernetes` attribute.
-endif::[]
+\endif::[]
 
-ifdef::env-kubernetes[]
+\ifdef::env-kubernetes[]
 This will be rendered only if the pages you include the partial in has the `env-kubernetes` attribute.
-endif::[]
+\endif::[]
 ----
 
 If you need to link to different pages in partials depending on the context of the page that you include them in, you can define attributes at the top of the page to hold the links. For example:
 
-[,asciidoc,subs=none]
+[,asciidoc]
 ----
-ifdef::env-kubernetes[]
+\ifdef::env-kubernetes[]
 :data-archiving-link: manage:kubernetes/data-archiving.adoc
-endif::[]
-ifndef::env-kubernetes[]
+\endif::[]
+\ifndef::env-kubernetes[]
 :data-archiving-link: manage:data-archiving.adoc
-endif::[]
+\endif::[]
 
 To learn more, see xref:{data-archiving-link}[Data Archiving]
 ----
