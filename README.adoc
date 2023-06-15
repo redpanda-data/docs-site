@@ -43,7 +43,7 @@ The API component hosts all OpenAPI docs at the root of the site under the `/api
 
 The OpenAPI spec files are stored in the `api/modules/ROOT/attachments/` directory. The Asciidoc pages reference these attachments in the `page-api-spec-url` attribute. The {url-ui}/blob/main/src/layouts/swagger.hbs[`swagger` UI layout] uses this attribute to render the OpenAPI docs using {url-redoc}[Redoc].
 
-image::images/api.png[Preview of API docs, 400, 200]
+image::images/api.png[Preview of API docs]
 
 == Home component
 
@@ -51,7 +51,7 @@ The home page is configured as a dedicated component called `home` so that we ca
 
 The link:./home/antora.yml[`home/antora.yml`] file contains the content for the home page. This content is read by a template in the UI to produce the home page. The template for the home page is in the {url-ui}/blob/main/src/partials/home.hbs[`home.hbs`] file of the link:{url-ui}[`docs-ui` repository].
 
-image::images/home.png[Preview of the home page, 400, 200]
+image::images/home.png[Preview of the home page]
 
 == Search component
 
@@ -59,7 +59,7 @@ The site search page is configured as a dedicated component called `search` so t
 
 Search is powered by an link:{url-algolia}[Algolia] search index. The index is generated on each build of the production site using the {url-extensions}[Algolia indexer extension].
 
-image::images/search.png[Preview of site search, 400, 200]
+image::images/search.png[Preview of site search]
 
 == Global Asciidoc attributes
 
