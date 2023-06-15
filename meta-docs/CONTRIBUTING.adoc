@@ -32,8 +32,6 @@ Antora uses Asciidoctor.js to convert Asciidoc to HTML, then it uses Handlebars 
 
 The Handlebars templates and other frontend elements, such as CSS and JavaScript, are stored in a {url-ui}[separate repository]. The UI is served in a `ui-bundle.zip` file that is made available in GitHub release and referenced in the playbook.
 
-[TIP]
-====
 Learn more about Antora in this introduction on YouTube.
 
 ifdef::env-github[]
@@ -43,8 +41,6 @@ endif::[]
 ifndef::env-github[]
 video::BAJ8F7yQz64[YouTube]
 endif::[]
-
-====
 
 == Get started
 
@@ -61,12 +57,9 @@ node --version
 
 If this command fails, you don't have Node.js installed.
 
-[TIP]
-====
 We recommend using https://code.visualstudio.com/download[Visual Studio Code] with the https://marketplace.visualstudio.com/items?itemName=asciidoctor.asciidoctor-vscode[Asciidoc extension] to edit documentation. The Asciidoc extension provides useful features such as folding conditionals and titles to make it easier to work with large documents.
 
 image::../images/asciidoc-extension.gif[]
-====
 
 === Clone the Redpanda documentation repository
 
@@ -275,8 +268,7 @@ Index pages are documentation topics that provide links to their top-level child
 
 For example:
 
-[,asciidoc]
-----
+....
 * xref:get-started:index.adoc[Get Started] <1>
 ** xref:get-started:intro-to-events.adoc[Introduction to Redpanda]
 ** xref:get-started:architecture.adoc[How Redpanda Works]
@@ -284,17 +276,16 @@ For example:
 ** xref:get-started:quick-start.adoc[Redpanda Quickstart]
 ** xref:get-started:rpk-install.adoc[Introduction to rpk]
 ** xref:get-started:code-examples.adoc[Build a Sample Application]
-----
+....
 
 <1> This page is an index. After the build, it will contains the titles and descriptions of all the topics underneath it.
 
 To create an index page, give it a title and the `page-layout: index` attribute.
 
-[,asciidoc]
-----
+....
 = Example Index Page
 page-layout: index
-----
+....
 
 The UI takes care of generating the links from the titles and description attributes on each child page.
 
@@ -304,12 +295,10 @@ If you move, delete, or rename pages, you must redirect those page URLs to an ex
 
 The `page-aliases` attribute is set in the page header of a target page using an attribute entry. The target page refers to the page you're redirecting a source page to. The source page refers to the deleted, renamed, or moved page that you're redirecting from. A source page's resource ID (its resource ID before it was deleted, renamed, or moved) is assigned to the `page-aliases` attribute in a target page. Multiple resource IDs can be assigned to the attribute in a comma-separated list.
 
-.Example
-[,asciidoc]
-----
+....
 = Title of Target Page
 :page-aliases: deleted-page-filename.adoc, renamed-page-filename.adoc
-----
+....
 
 Antora calculates the URL for a source page's resource ID and generates redirect information so that the source page URL redirects to the target page URL. Any coordinates, such as version or component, that aren't specified in a resource ID assigned to page-aliases are interpolated from the target page’s coordinates. The generated output format of the redirect information is determined by your chosen redirect facility.
 
@@ -331,8 +320,7 @@ Inside partials, you can conditionally render content depending on attributes th
 
 For example:
 
-[,asciidoc]
-----
+....
 ifndef::env-kubernetes[]
 This will be rendered only if the pages you include the partial in do not have the `env-kubernetes` attribute.
 endif::[]
@@ -340,12 +328,11 @@ endif::[]
 ifdef::env-kubernetes[]
 This will be rendered only if the pages you include the partial in has the `env-kubernetes` attribute.
 endif::[]
-----
+....
 
 If you need to link to different pages in partials depending on the context of the page that you include them in, you can define attributes at the top of the page to hold the links. For example:
 
-[,asciidoc]
-----
+....
 ifdef::env-kubernetes[]
 :data-archiving-link: manage:kubernetes/data-archiving.adoc
 endif::[]
@@ -354,7 +341,7 @@ ifndef::env-kubernetes[]
 endif::[]
 
 To learn more, see xref:{data-archiving-link}[Data Archiving]
-----
+....
 
 [TIP]
 ====
