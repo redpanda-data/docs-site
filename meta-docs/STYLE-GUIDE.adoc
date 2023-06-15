@@ -758,7 +758,7 @@ Disable registering metrics exposed on the public metrics endpoint.
 
 == Tables
 
-Tables can be helpful for visualizing information or as a reference after reading the documentation. The Tiered Storage topic contains tables that are a different way of presenting the same information that’s included in the text. However, there are limitations when Asciidoc tables are mixed with code fences. To break lines, use `+`.
+Tables can be helpful for visualizing information or as a reference after reading the documentation. The Tiered Storage topic contains tables that are a different way of presenting the same information that’s included in the text. To break lines in table cells, use `+`.
 
 This is an excellent tool that you can use to help you create Asciidoc Tables: https://tableconvert.com/markdown-to-asciidoc
 
