@@ -4,7 +4,7 @@
 :url-ui: https://github.com/JakeSCahill/redpanda-docs-ui
 :url-extensions: https://github.com/JakeSCahill/antora-extensions-and-macros
 :hide-uri-scheme:
-:url-contributing: meta-docs/CONTRIBUTING.adoc
+:url-contributing: ./meta-docs/CONTRIBUTING.adoc
 :url-netlify: https://netlify.com
 :url-netlify-docs: https://docs.netlify.com
 :url-antora-docs: https://docs.antora.org
@@ -35,7 +35,7 @@ A deploy preview of the site is also published for each pull request.
 
 The link:local-antora-playbook.yml[`local-antora-playbook`] file is for local builds when developing the components in this site locally. This playbook is set up to read from your local Git repository rather than the remote one.
 
-TIP: For an introduction to Antora and helpful tips for getting started with local development, see the {url-contributing}[Contributing guide].
+TIP: For an introduction to Antora and helpful tips for getting started with local development, see the link:{url-contributing}[Contributing guide].
 
 == API component
 
