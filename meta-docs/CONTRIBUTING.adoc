@@ -6,6 +6,7 @@
 :url-site: https://github.com/JakeSCahill/docs-site
 :hide-uri-scheme:
 :url-netlify: https://netlify.com
+:url-nodejs: https://nodejs.org/en/download
 :url-netlify-docs: https://docs.netlify.com
 :url-antora-docs: https://docs.antora.org
 :url-redoc: https://github.com/Redocly/redoc
