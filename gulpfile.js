@@ -19,7 +19,7 @@ const watchPatterns = playbook.content.sources.filter((source) => !source.url.in
       accum.push(`${source.url}/${start_path ? start_path + '/' : ''}antora.yml`)
       accum.push(`${source.url}/${start_path ? start_path + '/' : ''}**/*.adoc`)
     });
-  } else if (source.start_path) {
+  } else {
     accum.push(`${source.url}/${source.start_path ? source.start_path + '/' : ''}antora.yml`)
     accum.push(`${source.url}/${source.start_path ? source.start_path + '/' : ''}**/*.adoc`)
   }
