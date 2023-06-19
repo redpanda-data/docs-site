@@ -516,7 +516,7 @@ Each tab item has a unique ID. When a user clicks on a tab, a query string is ap
 
 The tabs syntax and rendering is provided by the `asciidoctor-tabs` module. For more details about using tabs, see the https://github.com/asciidoctor/asciidoctor-tabs[module's GitHub repository].
 
-== Context swticher
+== Context switcher
 
 We often have separate topics (pages) for doing the same task in different deployment environments, for example Kubernetes and Linux. We use separate topics so that we can write for the correct persona rather than filling topics with conditional phrases.
 
