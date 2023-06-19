@@ -516,6 +516,34 @@ Each tab item has a unique ID. When a user clicks on a tab, a query string is ap
 
 The tabs syntax and rendering is provided by the `asciidoctor-tabs` module. For more details about using tabs, see the https://github.com/asciidoctor/asciidoctor-tabs[module's GitHub repository].
 
+== Context swticher
+
+We often have separate topics (pages) for doing the same task in different deployment environments, for example Kubernetes and Linux. We use separate topics so that we can write for the correct persona rather than filling topics with conditional phrases.
+
+However, with this approach, users may come across a topic that doesn't apply to their deployment such as from an internal or external search result. We need to make it easy for users to find the right context from whichever page they land on.
+
+The context switcher consists of buttons at the top of a topic that links to equivalent topics for other deployment environments. This comes with a couple of improvements to the user experience:
+
+- It's easy to see if the topic is covered for other deployment scenarios.
+- It's easy for users to switch contexts when they realize that they are in the wrong one.
+
+To create a context switcher, add the `page-context-links` attribute to each page that requires it. The attribute should contain an array of objects that includes:
+
+- `name`: The label to give the button in the UI.
+- `to`: The {url-antora-docs}/antora/latest/page/resource-id-coordinates/[resource ID] of the page to link to.
+
+For each object in the array, a button is added to the top of the page.
+
+For example:
+
+[,asciidoc]
+----
+= Redpanda Quickstart
+:page-context-links: [{"name": "Docker", "to": "quick-start.adoc" },{"name": "Cloud", "to": "quick-start-cloud.adoc" }]
+----
+
+image::../images/context-switcher.png[]
+
 == Glossary terms
 
 Defining glossary terms in documentation ensures clear and consistent communication by facilitating a common understanding among team members and users.
