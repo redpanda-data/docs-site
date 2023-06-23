@@ -28,7 +28,9 @@ toc::[]
 
 Antora is a static site generator that facilitates a docs-as-code workflow. In Antora, documentation is stored in Git repositories and processed to output a static website.
 
-Antora uses Asciidoctor.js to convert Asciidoc to HTML, then it uses Handlebars to set that HTML into a page layout.
+Antora can collect files from a combination of local, remote public, and remote private repositories over any protocol supported by git.
+
+Antora uses https://docs.asciidoctor.org/asciidoctor.js/latest/[Asciidoctor.js] to convert Asciidoc to HTML, then it uses https://handlebarsjs.com/guide/#introduction[Handlebars] to set that HTML into a page layout.
 
 The Handlebars templates and other frontend elements, such as CSS and JavaScript, are stored in a {url-ui}[separate repository]. The UI is served in a `ui-bundle.zip` file that is made available in GitHub release and referenced in the playbook.
 

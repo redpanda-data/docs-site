@@ -25,10 +25,14 @@ image::https://api.netlify.com/api/v1/badges/478ad2ac-0538-412c-9df2-4e12216e47a
 
 This is the Antora playbook project (site build) for the Redpanda documentation site published at {url-docs}.
 
+This playbook tells Antora what documentation to assemble, where to find it, and what UI to apply to it.
+
 == Playbook
 
 The playbook, link:antora-playbook.yml[`antora-playbook.yml`], configures the production build for this site.
-This playbook specifies the content sources, UI bundle URL, and global AsciiDoc attributes.
+This playbook specifies the content sources, UI bundle URL, and custom extensions for the site.
+
+image::images/antora.svg[]
 
 The production site is built for each change to the `main` branch.
 A deploy preview of the site is also published for each pull request.
