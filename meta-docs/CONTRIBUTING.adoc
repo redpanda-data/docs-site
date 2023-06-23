@@ -1,4 +1,4 @@
-= Contribute to Redpanda Documentation
+= Contribute to Redpanda Docs
 :url-docs: https://docs.redpanda.com
 :url-org: https://github.com/redpanda-data
 :url-ui: https://github.com/JakeSCahill/redpanda-docs-ui
@@ -63,7 +63,7 @@ We recommend using https://code.visualstudio.com/download[Visual Studio Code] wi
 
 image::../images/asciidoc-extension.gif[]
 
-=== Clone the Redpanda documentation repository
+=== Clone the Redpanda docs repository
 
 Documentation is hosted in GitHub repositories. To work on a particular documentation repository, you must clone it.
 
@@ -79,7 +79,7 @@ cd documentation
 +
 IMPORTANT: If you're not part of the Redpanda team, you'll need to fork the repository and work on your local fork instead.
 +
-The default `main` branch contains the latest version of the Redpanda documentation. To work on an older version check out the versioned branch. For example:
+The default `main` branch contains the latest version of the Redpanda docs. To work on an older version check out the versioned branch. For example:
 +
 [source,bash]
 ----
@@ -93,19 +93,19 @@ git checkout v/22.3
 git checkout -b <branch-name>
 ----
 
-=== Make your Changes
+=== Make your changes
 
-After cloning a documentation repository and checking out a new local branch, you're ready to make your changes.
+After cloning a docs repository and checking out a new local branch, you're ready to make your changes.
 
 [TIP]
 ====
-- For help navigating a documentation repository, see the <<structure, Docs Structure section>>.
+- For help navigating a docs repository, see the <<structure, Docs Structure section>>.
 - For rules and recommendations as well as help with Asciidoc syntax, see the link:./STYLE-GUIDE.adoc[Redpanda documentation style guide].
 ====
 
 === Build and Test your Changes Locally
 
-When working on a documentation project, you should build and preview the docs on your local machine to see your changes before going live.
+When working on a docs project, you should build and preview the docs on your local machine to see your changes before going live.
 
 The repository contains a script that watches Asciidoc files in the `pages/` directories and `antora.yml` files in your local repository and triggers a new Antora build when it detects changes to those files.
 The script also starts a web server and can use LiveReload to reload the browser tab after the Antora build completes.
@@ -155,7 +155,7 @@ npm run serve
 ----
 ====
 
-=== Submit your Changes
+=== Submit your changes
 
 After making your changes, and testing how they look, you're ready to submit them to GitHub for review.
 
@@ -197,7 +197,7 @@ content:
 ----
 
 <1> Clone this repository to work on the main playbook, the home, page, the OpenAPI docs, or the site search.
-<2> Clone this repository to work on Redpanda documentation.
+<2> Clone this repository to work on Redpanda docs.
 
 === Docs structure
 
@@ -266,7 +266,7 @@ For example, we use this attribute for the `home` component because the UI has b
 
 == Create index pages
 
-Index pages are documentation topics that provide links to their top-level child topics in the nav tree.
+Index pages are docs topics that provide links to their top-level child topics in the nav tree.
 
 For example:
 
@@ -293,7 +293,7 @@ The UI takes care of generating the links from the titles and description attrib
 
 == Move, delete, or rename pages
 
-If you move, delete, or rename pages, you must redirect those page URLs to an existing page in the documentation using the `page-aliases` attribute.
+If you move, delete, or rename pages, you must redirect those page URLs to an existing page in the docs using the `page-aliases` attribute.
 
 The `page-aliases` attribute is set in the page header of a target page using an attribute entry. The target page refers to the page you're redirecting a source page to. The source page refers to the deleted, renamed, or moved page that you're redirecting from. A source page's resource ID (its resource ID before it was deleted, renamed, or moved) is assigned to the `page-aliases` attribute in a target page. Multiple resource IDs can be assigned to the attribute in a comma-separated list.
 
@@ -302,7 +302,7 @@ The `page-aliases` attribute is set in the page header of a target page using an
 :page-aliases: deleted-page-filename.adoc, renamed-page-filename.adoc
 ....
 
-Antora calculates the URL for a source page's resource ID and generates redirect information so that the source page URL redirects to the target page URL. Any coordinates, such as version or component, that aren't specified in a resource ID assigned to page-aliases are interpolated from the target page’s coordinates. The generated output format of the redirect information is determined by your chosen redirect facility.
+Antora calculates the URL for a source page's resource ID and generates redirect information so that the source page URL redirects to the target page URL. Any coordinates, such as version or component, that aren't specified in a resource ID assigned to page-aliases are interpolated from the target page's coordinates. The generated output format of the redirect information is determined by your chosen redirect facility.
 
 NOTE: A resource ID assigned to a page-aliases attribute can be used in an xref. Therefore, if you delete, rename, or move a page, you don't need to update any references to it in your source files.
 
@@ -347,13 +347,9 @@ If you need to link to different pages in partials depending on the context of t
 To learn more, see xref:{data-archiving-link}[Data Archiving]
 ----
 
-We recommend using https://code.visualstudio.com/download[Visual Studio Code] with the https://marketplace.visualstudio.com/items?itemName=asciidoctor.asciidoctor-vscode[Asciidoc extension] to edit documentation. The Asciidoc extension provides useful features such as folding conditionals and titles to make it easier to work with large documents.
-
-image::../images/asciidoc-extension.gif[]
-
 == Update the nav tree
 
-All documentation repositories use a single navigation file for the nav tree, which is defined in the `nav.adoc` file of the `ROOT` module.
+All doc repositories use a single navigation file for the nav tree, which is defined in the `nav.adoc` file of the `ROOT` module.
 
 To update the nav tree, edit the `nav.adoc` file.
 
@@ -361,7 +357,7 @@ For more information about navigation files, see the {url-antora-docs}/antora/la
 
 == Style guide
 
-For rules and recommendations as well as help with Asciidoc syntax, see the link:./STYLE-GUIDE.adoc[Redpanda documentation style guide].
+For rules and recommendations as well as help with Asciidoc syntax, see the link:./STYLE-GUIDE.adoc[Redpanda docs style guide].
 
 == Troubleshooting
 
@@ -383,4 +379,4 @@ Each message shows the repository source, the refname, and the path from the roo
 
 == Contact us
 
-Get in touch with the Redpanda documentation team on https://redpanda.com/slack[Slack] in the #docs channel.
+Get in touch with the Redpanda docs team on https://redpanda.com/slack[Slack] in the #docs channel.

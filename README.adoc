@@ -1,4 +1,4 @@
-= Redpanda Documentation Site
+= Redpanda Docs Site
 :url-docs: https://docs.redpanda.com
 :url-org: https://github.com/redpanda-data
 :url-ui: https://github.com/JakeSCahill/redpanda-docs-ui
@@ -23,14 +23,14 @@ toc::[]
 [link=https://app.netlify.com/sites/incomparable-treacle-75bd5a/deploys]
 image::https://api.netlify.com/api/v1/badges/478ad2ac-0538-412c-9df2-4e12216e47af/deploy-status[Netlify deploy status]
 
-This is the Antora playbook project (site build) for the Redpanda documentation site published at {url-docs}.
-
-This playbook tells Antora what documentation to assemble, where to find it, and what UI to apply to it.
+This is the Antora playbook project (site build) for the Redpanda docs site published at {url-docs}.
 
 == Playbook
 
-The playbook, link:antora-playbook.yml[`antora-playbook.yml`], configures the production build for this site.
-This playbook specifies the content sources, UI bundle URL, and custom extensions for the site.
+The playbook, link:antora-playbook.yml[`antora-playbook.yml`]configures the production build for the docs site.
+This playbook tells Antora what documentation to assemble, where to find it, and what UI to apply to it.
+
+The documentation is hosted in multiple Git repositories, as is the {url-ui}[UI project], and the {url-extensions}[custom extensions].
 
 image::images/antora.svg[]
 
@@ -41,7 +41,11 @@ The link:local-antora-playbook.yml[`local-antora-playbook`] file is for local bu
 
 TIP: For an introduction to Antora and helpful tips for getting started with local development, see the link:{url-contributing}[Contributing guide].
 
-== API component
+== Content sources
+
+This repository hosts content for the API docs, the home page, and the site search page. Each of these pages is configured as a separate component in Antora to give each one a unique URL path at the site root.
+
+=== API component
 
 The API component hosts all OpenAPI docs at the root of the site under the `/api` path.
 
@@ -49,7 +53,7 @@ The OpenAPI spec files are stored in the `api/modules/ROOT/attachments/` directo
 
 image::images/api.png[Preview of API docs]
 
-== Home component
+=== Home component
 
 The home page is configured as a dedicated component called `home` so that we can host it at the root of the site under the `/home` path.
 
@@ -57,7 +61,7 @@ The link:./home/antora.yml[`home/antora.yml`] file contains the content for the 
 
 image::images/home.png[Preview of the home page]
 
-== Search component
+=== Search component
 
 The site search page is configured as a dedicated component called `search` so that we can host it at the root of the site under the `/search` path.
 
@@ -73,7 +77,7 @@ These attributes are merged into the playbook during a build using the {url-exte
 
 == Extensions and macros
 
-The Redpanda documentation site includes custom extensions and macros to enhance the site and provide custom features.
+The Redpanda docs site includes custom extensions and macros to enhance the site and provide custom features.
 
 For details about all the extensions and macros, see {url-extensions}.
 
