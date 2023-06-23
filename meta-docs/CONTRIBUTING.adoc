@@ -103,7 +103,7 @@ After cloning a docs repository and checking out a new local branch, you're read
 - For rules and recommendations as well as help with Asciidoc syntax, see the link:./STYLE-GUIDE.adoc[Redpanda documentation style guide].
 ====
 
-=== Build and Test your Changes Locally
+=== Build and test your changes locally
 
 When working on a docs project, you should build and preview the docs on your local machine to see your changes before going live.
 
@@ -361,7 +361,7 @@ For rules and recommendations as well as help with Asciidoc syntax, see the link
 
 == Troubleshooting
 
-=== Reference Validation
+=== Reference validation
 
 Reference validation, which covers xrefs, includes, and images, is performed automatically when Antora runs.
 The validation errors will be shown in the log output.
