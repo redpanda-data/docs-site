@@ -44,9 +44,46 @@ ifndef::env-github[]
 video::BAJ8F7yQz64[YouTube]
 endif::[]
 
-== Get started
+== Choose a way to contribute
 
-This section helps you get started with your first contribution.
+To contribute to the Redpanda docs, you have the following options:
+
+|===
+|Option|Description
+
+|<<Open an issue>>
+|Suggest a change by opening an issue on GitHub.
+
+|<<Contribute content>>
+|Make changes directly to the documentation and submit them through a pull request.
+
+|===
+
+=== Open an issue
+
+The Redpanda docs team uses GitHub issues to track, plan, and prioritize tasks. To suggest changes, you can create an issue, which the team will then evaluate:
+
+. <<find-content, Find the repository>> where the docs are hosted.
+. Verify whether a similar issue already exists in that repository to avoid duplication.
+. Go to **Issues** > **New Issue** to create a new issue.
+
+You have the option to assign the issue to yourself or leave the assignee field blank. The Redpanda docs team triages all new issues and will allocate a writer if one isn't already assigned.
+
+=== Contribute content
+
+You have two options to contribute to the documentation:
+
+. Directly edit a page on GitHub by selecting **Make a contribution** > **Edit on GitHub** located at the bottom of a documentation page.
+. Clone the docs repository to make changes locally on your machine. For a guide, see <<Submit your first contribution>>.
+
+If you're looking for an open issue to fix, check the open docs issues. If you find an issue you'd like to work on:
+
+- If the issue is already assigned to someone else, please consider another one.
+- If the issue is unassigned, add a comment expressing your interest in working on it.
+
+== Submit your first contribution
+
+This section helps you get started with your first contribution by running through the steps for making a change.
 
 === Prerequisites
 
@@ -65,7 +102,7 @@ image::../images/asciidoc-extension.gif[]
 
 === Clone the Redpanda docs repository
 
-Documentation is hosted in GitHub repositories. To work on a particular documentation repository, you must clone it.
+Documentation is hosted in GitHub repositories. To work on a particular documentation repository, clone it on your local machine.
 
 TIP: You can find all documentation repositories in the `antora-playbook.yml` file under `content.sources`. See <<find-content, Find content>>
 
@@ -77,7 +114,7 @@ git clone {url-org}/documentation
 cd documentation
 ----
 +
-IMPORTANT: If you're not part of the Redpanda team, you'll need to fork the repository and work on your local fork instead.
+IMPORTANT: If you're not a Redpanda employee, you'll need to fork the repository and work on your local fork instead.
 +
 The default `main` branch contains the latest version of the Redpanda docs. To work on an older version check out the versioned branch. For example:
 +
@@ -196,7 +233,7 @@ content:
     branches: [v/*]
 ----
 
-<1> Clone this repository to work on the main playbook, the home, page, the OpenAPI docs, or the site search.
+<1> Clone this repository to work on the main playbook, the home page, the OpenAPI docs, or the site search.
 <2> Clone this repository to work on Redpanda docs.
 
 === Docs structure
@@ -314,7 +351,7 @@ IMPORTANT: Make sure that links are relative to the current component version. D
 
 Practice the DRY (Don't Repeat Yourself) principle by single-sourcing repeated content. Common examples of single-sourced content include prerequisites, contact info, and foundational steps of how-to guides.
 
-Antora supports single-sourcing Asciidoc files by including references to pages in the `partials/` directory in Asciidoc files in the `pages/` directory. For details about partials, see {url-antora-docs}/antora/latest/page/partials/[Partials] in the Antora docs.
+Antora supports single-sourcing Asciidoc files that are located in the `partials/` directory. For details about partials, see {url-antora-docs}/antora/latest/page/partials/[Partials] in the Antora docs.
 
 NOTE: You can include partials inside other partials.
 
