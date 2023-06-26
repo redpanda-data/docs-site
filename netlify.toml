@@ -1,6 +1,15 @@
 [build.environment]
 NODE_VERSION = "16"
 
+[[plugins]]
+  package = "@netlify/plugin-lighthouse"
+
+  [[plugins.inputs.audits]]
+    path = "home/index.html"
+
+  [plugins.inputs.settings]
+    preset = "desktop"
+
 # For future use. Allows us to host docs under the `/api/` path that other services such as Redpanda Cloud can consume.
 [[headers]]
   for = "/api/*"
