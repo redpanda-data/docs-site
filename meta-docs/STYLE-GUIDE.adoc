@@ -1,9 +1,9 @@
 = Redpanda Documentation Style Guide
 :url-docs: https://docs.redpanda.com
 :url-org: https://github.com/redpanda-data
-:url-ui: https://github.com/JakeSCahill/redpanda-docs-ui
-:url-extensions: https://github.com/JakeSCahill/antora-extensions-and-macros
-:url-site: https://github.com/JakeSCahill/docs-site
+:url-ui: {url-org}/docs-ui
+:url-extensions: {url-org}/docs-extensions-and-macros
+:url-site: {url-org}/docs-site
 :hide-uri-scheme:
 :url-contributing: CONTRIBUTING.adoc
 :url-netlify: https://netlify.com

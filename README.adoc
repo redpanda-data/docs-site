@@ -1,8 +1,8 @@
 = Redpanda Docs Site
 :url-docs: https://docs.redpanda.com
 :url-org: https://github.com/redpanda-data
-:url-ui: https://github.com/JakeSCahill/redpanda-docs-ui
-:url-extensions: https://github.com/JakeSCahill/antora-extensions-and-macros
+:url-ui: {url-org}/docs-ui
+:url-extensions: {url-org}/docs-extensions-and-macros
 :hide-uri-scheme:
 :url-contributing: ./meta-docs/CONTRIBUTING.adoc
 :url-netlify: https://netlify.com
