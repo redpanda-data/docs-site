@@ -20,8 +20,8 @@ endif::[]
 
 toc::[]
 
-[link=https://app.netlify.com/sites/incomparable-treacle-75bd5a/deploys]
-image::https://api.netlify.com/api/v1/badges/478ad2ac-0538-412c-9df2-4e12216e47af/deploy-status[Netlify deploy status]
+[link=https://app.netlify.com/sites/profound-twilight-0b1971/deploys]
+image::https://api.netlify.com/api/v1/badges/b7efcd64-847e-413e-a6a1-78a0845fde35/deploy-status[Netlify deploy status]
 
 This is the Antora playbook project (site build) for the Redpanda docs site published at {url-docs}.
 
