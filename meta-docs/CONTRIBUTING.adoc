@@ -256,7 +256,6 @@ All content repositories are organized according to the same content hierarchy.
   📁 packages <12>
 ----
 
-
 <1> (Required) The repository root and the content source root. Antora assumes the content source root is at the root of a repository unless the `start_path` or `start_paths` key is assigned a value on a content source in the site’s playbook.
 <2> (Required) A component version descriptor file, named `antora.yml`, is required at each content source root. An `antora.yml` file indicates to Antora that the contents of a directory named `modules/` should be collected and processed.
 <3> (Required) A `modules/` directory must be located at the same hierarchical level as an `antora.yml` file in a content source root.

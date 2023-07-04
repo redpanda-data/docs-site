@@ -12,7 +12,7 @@ content:
   sources:
   - url: https://github.com/redpanda-data/docs-site
     branches: main
-    start_paths: [site-search, home, api]
+    start_paths: [site-search, home, api, shared]
   - url: https://github.com/redpanda-data/documentation
     branches: [v/*]
 ui:
@@ -34,7 +34,5 @@ antora:
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/unlisted-pages'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/replace-attributes-in-attachments'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/add-global-attributes'
-    org: redpanda-data
-    repo: docs-site
-    branch: main
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/aggregate-terms'
 

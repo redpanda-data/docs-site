@@ -43,7 +43,7 @@ TIP: For an introduction to Antora and helpful tips for getting started with loc
 
 == Content sources
 
-This repository hosts content for the API docs, the home page, and the site search page. Each of these pages is configured as a separate component in Antora to give each one a unique URL path at the site root.
+This repository hosts content for the API docs, the home page, the site search page, and shared content. Each of these content sources is configured as a separate component in Antora to give each one a unique URL path at the site root.
 
 === API component
 
@@ -69,11 +69,13 @@ Search is powered by an link:{url-algolia}[Algolia] search index. The index is g
 
 image::images/search.png[Preview of site search]
 
-== Global Asciidoc attributes
+== Shared component
 
-The `global-attributes` directory contains attributes that are made available site-wide across all components.
+The `shared/` directory contains content that is intended to be shared across all component versions.
 
-These attributes are merged into the playbook during a build using the {url-extensions}[global attributes extension].
+The attributes in the `ROOT/partials/attributes.yaml` file are merged into the `antora.yml` file of each component version. These are global attributes that are required for all local builds as well as the production build.
+
+The pages in the `terms/partials/` directory are terms that can be referenced in any component version using the {url-extensions}[`glossterm` macro].
 
 == Extensions and macros
 
