@@ -20,8 +20,8 @@ endif::[]
 
 toc::[]
 
-[link=https://app.netlify.com/sites/incomparable-treacle-75bd5a/deploys]
-image::https://api.netlify.com/api/v1/badges/478ad2ac-0538-412c-9df2-4e12216e47af/deploy-status[Netlify deploy status]
+[link=https://app.netlify.com/sites/profound-twilight-0b1971/deploys]
+image::https://api.netlify.com/api/v1/badges/b7efcd64-847e-413e-a6a1-78a0845fde35/deploy-status[Netlify deploy status]
 
 This is the Antora playbook project (site build) for the Redpanda docs site published at {url-docs}.
 
@@ -69,13 +69,13 @@ Search is powered by an link:{url-algolia}[Algolia] search index. The index is g
 
 image::images/search.png[Preview of site search]
 
-== Shared component
+=== Shared component
 
 The `shared/` directory contains content that is intended to be shared across all component versions.
 
-The attributes in the `ROOT/partials/attributes.yaml` file are merged into the `antora.yml` file of each component version. These are global attributes that are required for all local builds as well as the production build.
+The attributes in the `ROOT/partials/attributes.yaml` file are merged into the `antora.yml` file of each component version by the {url-extensions}[global attributes extension]. These global attributes are required for all local builds as well as the production build.
 
-The pages in the `terms/partials/` directory are terms that can be referenced in any component version using the {url-extensions}[`glossterm` macro].
+The pages in the `terms/partials/` directory are terms that can be referenced in any component version using the {url-extensions}[`glossterm` macro]. The content of these term page are also added automatically to `reference:glossary.adoc` pages by the {url-extensions}[aggregate terms extension].
 
 == Extensions and macros
 
