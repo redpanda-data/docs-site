@@ -54,4 +54,4 @@ async function serve (done) {
   })
 }
 
-module.exports = { serve, generate, default: series(generate, serve) }
+module.exports = { serve, generate, default: series(generate, serve) } 
