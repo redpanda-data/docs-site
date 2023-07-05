@@ -13,6 +13,8 @@ content:
   - url: .
     branches: HEAD
     start_paths: [site-search, home, api, shared]
+  - url: https://github.com/redpanda-data/documentation
+    branches: [v/*]
 ui:
   bundle:
     url: https://github.com/redpanda-data/docs-ui/releases/latest/download/ui-bundle.zip
