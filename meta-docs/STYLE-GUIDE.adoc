@@ -548,60 +548,65 @@ image::../images/context-switcher.png[]
 
 Defining glossary terms in documentation ensures clear and consistent communication by facilitating a common understanding among team members and users.
 
-Glossary terms in Redpanda documentation are rendered as links with a tooltip that displays the definition on hover.
+Glossary terms in Redpanda documentation are rendered with a tooltip that displays the definition on hover. Terms also include links to their full definition in the glossary page if one exists.
 
 image::../images/term.png[,100]
 
-To include glossary terms in Redpanda documentation, use the `glossterm` macro:
+To include glossary terms in Redpanda documentation:
+
+. Make sure that the term is defined in a file in the {url-site}/shared/modules/terms[`terms` module] of the `shared` component.
+. If the term is not yet defined, submit a pull request to add a file for your term.
+. Use the `glossterm` macro:
+
+[,asciidoc]
+----
+This is an important glossterm:<term-name>:[]
+----
+
+Replace `<term-name>` with the term.
+
+To facilitate reusing definitions across different pages of the docs, terms are defined in a centralized location in the {url-site}/shared/modules/terms/partials[`modules/terms/partials/`] directory of the `shared` component. At build time, the {url-extensions}[`aggregate-terms` extension] makes the `term-name` and `hover-text` attributes available to the `glossterm` macro. It also looks for a `reference:glossary.adoc` file in each component version and if it exists adds all the term file contents to it.
+
+For local development, you can define terms and their definitions inline:
 
 [,asciidoc]
 ----
 This is an important glossterm:<term-name>:[<definition>]
 ----
 
-Replace `<term-name>` with the term. Replace `<definition>` with the definition of the term.
+Or, in the `local-terms` attribute of the `antora.yml` file:
 
-To facilitate reusing definitions across different pages of the docs, you can define terms and definitions in the `terms.yaml` file of the `global-attributes/` directory in the {url-site} repository or in the `antora.yml` file of a component. If terms are defined in either of these places, you can omit the description, and the macro will take care of inserting it during the build.
-
-.`global-attributes/terms.yaml`
 [,yaml]
 ----
-terms:
-- term: tatting
-  definition: test
-  link: https://www.google.com
-----
-
-.`antora.yml`
-[,yaml]
-----
+name: <some-component>
+version: <version>
 asciidoc:
   attributes:
     local-terms:
-    - term: tatting2
-      definition: test2
-      link: https://www.google.com
-    - term: tatting
-      definition: test3
-      link: https://www.google.com
+    - term: <term-name>
+      definition: <definition>
+      link: <URL> # Optional - adds an external link to the term. Useful for defining links to more detailed definitions on external sites.
 ----
 
-NOTE: If you want terms to link to external URLs, you must define them in one of these files and include the `link` property.
+[,asciidoc]
+----
+This is an important glossterm:<term-name>:[]
+----
 
-IMPORTANT: Any terms defined in the `terms` attribute override those in the `local-terms` attribute.
+IMPORTANT: Links to the glossary page are provided only when terms are defined in the `modules/terms/partials/` directory of the `shared` component.
 
 === Glossary pages
 
-To produce a glossary page with all terms that have been defined in the documentation, create an empty page called `z-glossary.adoc` and include the `glossary` macro:
+To produce a glossary page with all terms that have been defined in the `shared` component, create an empty page called `glossary.adoc` in the `reference` module and include a title:
 
 [,asciidoc]
 ----
 = Glossary
-
-glossary::[]
 ----
 
-During the build, the macro collects all the terms used in `glossterm` macros, sorts them alphabetically, and adds them to the page that includes the `glossary` macro. Any terms without a `link` property link to the glossary page.
+During the build, an extension collects all the terms in the `modules/terms/partials/` directory of the `shared` component, sorts them alphabetically by the file name, and adds them to the page.
+
+IMPORTANT: Make sure to add the glossary page to the nav tree.
 
 == Link macros
 
