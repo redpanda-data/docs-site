@@ -574,25 +574,6 @@ For local development, you can define terms and their definitions inline:
 This is an important glossterm:<term-name>:[<definition>]
 ----
 
-Or, in the `local-terms` attribute of the `antora.yml` file:
-
-[,yaml]
-----
-name: <some-component>
-version: <version>
-asciidoc:
-  attributes:
-    local-terms:
-    - term: <term-name>
-      definition: <definition>
-      link: <URL> # Optional - adds an external link to the term. Useful for defining links to more detailed definitions on external sites.
-----
-
-[,asciidoc]
-----
-This is an important glossterm:<term-name>:[]
-----
-
 IMPORTANT: Links to the glossary page are provided only when terms are defined in the `modules/terms/partials/` directory of the `shared` component.
 
 === Glossary pages
