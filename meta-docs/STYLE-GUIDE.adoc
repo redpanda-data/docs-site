@@ -10,6 +10,7 @@
 :url-netlify-docs: https://docs.netlify.com
 :url-antora-docs: https://docs.antora.org
 :url-redoc: https://github.com/Redocly/redoc
+:url-asciidoc: https://docs.asciidoctor.org/asciidoc/latest/syntax-quick-reference/
 :idprefix:
 :idseparator: -
 :experimental:
@@ -22,6 +23,8 @@ endif::[]
 
 The Redpanda Documentation Style Guide provides guidance on writing product documentation.
 
+TIP: For help with Asciidoc, see the {url-asciidoc}[Asciidoc syntax quick reference].
+
 == Style guide update and approval process
 
 This guide is intended to be helpful to documentation team writers and reviewers.
@@ -30,6 +33,7 @@ This guide is intended to be helpful to documentation team writers and reviewers
 * If you are not a member of the Redpanda doc team, you should start a conversation on https://rpnda.co/slack[the community channel].
 
 == Organization of product documentation
+
 Before you start writing, create an outline with the information you intend to add to each section. It might look something like this:
 
 * *Overview* - This is an introduction to the feature and contains use cases, architecture, and any important notes, such as whether the feature is in technical preview.
@@ -572,25 +576,6 @@ For local development, you can define terms and their definitions inline:
 [,asciidoc]
 ----
 This is an important glossterm:<term-name>:[<definition>]
-----
-
-Or, in the `local-terms` attribute of the `antora.yml` file:
-
-[,yaml]
-----
-name: <some-component>
-version: <version>
-asciidoc:
-  attributes:
-    local-terms:
-    - term: <term-name>
-      definition: <definition>
-      link: <URL> # Optional - adds an external link to the term. Useful for defining links to more detailed definitions on external sites.
-----
-
-[,asciidoc]
-----
-This is an important glossterm:<term-name>:[]
 ----
 
 IMPORTANT: Links to the glossary page are provided only when terms are defined in the `modules/terms/partials/` directory of the `shared` component.
