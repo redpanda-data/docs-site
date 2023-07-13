@@ -1,6 +1,6 @@
 == Test
 :term-name: test term
-:hover-text: This is hover text for {term-name}.
+:hover-text: This is hover text for a test term.
 
 {hover-text}
 
