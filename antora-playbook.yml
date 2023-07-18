@@ -1,7 +1,7 @@
 site:
   title: Redpanda Docs
   start_page: home:ROOT:index.adoc
-  url: https://profound-twilight-0b1971.netlify.app
+  url: https://redpanda-antora-site.netlify.app
 urls:
   html_extension_style: indexify
   redirect_facility: netlify
@@ -10,11 +10,8 @@ urls:
   latest_version_segment_strategy: redirect:to
 content:
   sources:
-  - url: https://github.com/redpanda-data/docs-site
-    branches: main
-    start_paths: [site-search, home, api, shared]
   - url: https://github.com/redpanda-data/documentation
-    branches: [v/*]
+    branches: [v/*, home, api, shared, 'site-search']
 ui:
   bundle:
     url: https://github.com/redpanda-data/docs-ui/releases/latest/download/ui-bundle.zip

@@ -102,7 +102,7 @@ image::../images/asciidoc-extension.gif[]
 
 === Clone the Redpanda docs repository
 
-Documentation is hosted in GitHub repositories. To work on a particular documentation repository, clone it on your local machine.
+Documentation is hosted in GitHub repositories. To work on the documentation repository, clone it on your local machine.
 
 TIP: You can find all documentation repositories in the `antora-playbook.yml` file under `content.sources`. See <<find-content, Find content>>
 
@@ -132,7 +132,7 @@ git checkout -b <branch-name>
 
 === Make your changes
 
-After cloning a docs repository and checking out a new local branch, you're ready to make your changes.
+After cloning the docs repository and checking out a new local branch, you're ready to make your changes.
 
 [TIP]
 ====
@@ -226,19 +226,15 @@ For example:
 ----
 content:
   sources:
-  - url: {url-site} <1>
-    branches: main
-    start_paths: [site-search, home, api]
-  - url: https://github.com/redpanda-data/documentation <2>
-    branches: [v/*]
+  - url: https://github.com/redpanda-data/documentation <1>
+    branches: [v/*, home, api, shared, site-search]
 ----
 
-<1> Clone this repository to work on the main playbook, the home page, the OpenAPI docs, or the site search.
-<2> Clone this repository to work on Redpanda docs.
+<1> Clone this repository to work on Redpanda docs, the home page, shared content, the OpenAPI docs, or the site search.
 
 === Docs structure
 
-All content repositories are organized according to the same content hierarchy.
+All content sources are organized according to the same content hierarchy.
 
 ----
 📒 repository <1>

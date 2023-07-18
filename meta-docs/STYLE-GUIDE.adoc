@@ -1,6 +1,7 @@
 = Redpanda Documentation Style Guide
 :url-docs: https://docs.redpanda.com
 :url-org: https://github.com/redpanda-data
+:url-docs: {url-org}/documentation
 :url-ui: {url-org}/docs-ui
 :url-extensions: {url-org}/docs-extensions-and-macros
 :url-site: {url-org}/docs-site
@@ -558,7 +559,7 @@ image::../images/term.png[,100]
 
 To include glossary terms in Redpanda documentation:
 
-. Make sure that the term is defined in a file in the {url-site}/shared/modules/terms[`terms` module] of the `shared` component.
+. Make sure that the term is defined in a file in the {url-docs}/tree/shared/modules/terms[`terms` module] of the `shared` branch.
 . If the term is not yet defined, submit a pull request to add a file for your term.
 . Use the `glossterm` macro:
 
@@ -569,7 +570,7 @@ This is an important glossterm:<term-name>:[]
 
 Replace `<term-name>` with the term.
 
-To facilitate reusing definitions across different pages of the docs, terms are defined in a centralized location in the {url-site}/shared/modules/terms/partials[`modules/terms/partials/`] directory of the `shared` component. At build time, the {url-extensions}[`aggregate-terms` extension] makes the `term-name` and `hover-text` attributes available to the `glossterm` macro. It also looks for a `reference:glossary.adoc` file in each component version and if it exists adds all the term file contents to it.
+At build time, the {url-extensions}[`aggregate-terms` extension] makes the `term-name` and `hover-text` attributes available to the `glossterm` macro. It also looks for a `reference:glossary.adoc` file in each component version and if it exists adds all the term file contents to it.
 
 For local development, you can define terms and their definitions inline:
 
@@ -578,7 +579,7 @@ For local development, you can define terms and their definitions inline:
 This is an important glossterm:<term-name>:[<definition>]
 ----
 
-IMPORTANT: Links to the glossary page are provided only when terms are defined in the `modules/terms/partials/` directory of the `shared` component.
+IMPORTANT: Links to the glossary page are provided only when terms are defined in the {url-docs}/tree/shared/modules/terms[`terms` module] of the `shared` branch.
 
 === Glossary pages
 
@@ -589,7 +590,7 @@ To produce a glossary page with all terms that have been defined in the `shared`
 = Glossary
 ----
 
-During the build, an extension collects all the terms in the `modules/terms/partials/` directory of the `shared` component, sorts them alphabetically by the file name, and adds them to the page.
+During the build, an extension collects all the terms in the {url-docs}/tree/shared/modules/terms[`terms` module] of the `shared` branch, sorts them alphabetically by the file name, and adds them to the page.
 
 IMPORTANT: Make sure to add the glossary page to the nav tree.
 
