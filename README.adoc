@@ -1,6 +1,7 @@
 = Redpanda Docs Site
 :url-docs: https://docs.redpanda.com
 :url-org: https://github.com/redpanda-data
+:url-docs: {url-org}/documentation
 :url-ui: {url-org}/docs-ui
 :url-extensions: {url-org}/docs-extensions-and-macros
 :hide-uri-scheme:
@@ -20,7 +21,7 @@ endif::[]
 
 toc::[]
 
-[link=https://app.netlify.com/sites/profound-twilight-0b1971/deploys]
+[link=https://app.netlify.com/sites/redpanda-antora-site/deploys]
 image::https://api.netlify.com/api/v1/badges/b7efcd64-847e-413e-a6a1-78a0845fde35/deploy-status[Netlify deploy status]
 
 This is the Antora playbook project (site build) for the Redpanda docs site published at {url-docs}.
@@ -30,48 +31,53 @@ This is the Antora playbook project (site build) for the Redpanda docs site publ
 The playbook, link:antora-playbook.yml[`antora-playbook.yml`]configures the production build for the docs site.
 This playbook tells Antora what documentation to assemble, where to find it, and what UI to apply to it.
 
-The documentation is hosted in multiple Git repositories, as is the {url-ui}[UI project], and the {url-extensions}[custom extensions].
+The documentation is hosted in a separate Git repository, as is the {url-ui}[UI project], and the {url-extensions}[custom extensions].
 
 image::images/antora.svg[]
 
 The production site is built for each change to the `main` branch.
 A deploy preview of the site is also published for each pull request.
 
-The link:local-antora-playbook.yml[`local-antora-playbook`] file is for local builds when developing the components in this site locally. This playbook is set up to read from your local Git repository rather than the remote one.
-
 TIP: For an introduction to Antora and helpful tips for getting started with local development, see the link:{url-contributing}[Contributing guide].
 
 == Content sources
 
-This repository hosts content for the API docs, the home page, the site search page, and shared content. Each of these content sources is configured as a separate component in Antora to give each one a unique URL path at the site root.
+The playbook pulls content from branches in the https://github.com/redpanda-data/documentation repository.
 
-=== API component
+=== Redpanda docs
+
+Redpanda documentation is stored in versioned branches prefixed with `v/`.
+For more details, see the https://github.com/redpanda-data/documentation/blob/main/README.adoc[README].
+
+=== API docs
+
+The OpenAPI spec files are stored in the `api/modules/ROOT/attachments/` directory of the {url-docs}/tree/api[`api` branch].
 
 The API component hosts all OpenAPI docs at the root of the site under the `/api` path.
 
-The OpenAPI spec files are stored in the `api/modules/ROOT/attachments/` directory. The Asciidoc pages reference these attachments in the `page-api-spec-url` attribute. The {url-ui}/blob/main/src/layouts/swagger.hbs[`swagger` UI layout] uses this attribute to render the OpenAPI docs using {url-redoc}[Redoc].
+The Asciidoc pages reference these attachments in the `page-api-spec-url` attribute. The {url-ui}/blob/main/src/layouts/swagger.hbs[`swagger` UI layout] uses this attribute to render the OpenAPI docs using {url-redoc}[Redoc].
 
 image::images/api.png[Preview of API docs]
 
-=== Home component
+=== Home page
 
-The home page is configured as a dedicated component called `home` so that we can host it at the root of the site under the `/home` path.
+The home page is hosted in the {url-docs}/tree/home[`home` branch] and is configured as a dedicated component called `home` so that we can host it at the root of the site under the `/home` path.
 
-The link:./home/antora.yml[`home/antora.yml`] file contains the content for the home page. This content is read by a template in the UI to produce the home page. The template for the home page is in the {url-ui}/blob/main/src/partials/home.hbs[`home.hbs`] file of the link:{url-ui}[`docs-ui` repository].
+The link:./antora.yml[`antora.yml`] file contains the content for the home page. This content is read by a template in the UI to produce the home page. The template for the home page is in the {url-ui}/blob/main/src/partials/home.hbs[`home.hbs`] file of the link:{url-ui}[`docs-ui` repository].
 
 image::images/home.png[Preview of the home page]
 
-=== Search component
+=== Search page
 
-The site search page is configured as a dedicated component called `search` so that we can host it at the root of the site under the `/search` path.
+The site-wide search page is hosted in the {url-docs}/tree/site-search[`site-search` branch] and is configured as a dedicated component called `search` so that we can host it at the root of the site under the `/search` path.
 
 Search is powered by an link:{url-algolia}[Algolia] search index. The index is generated on each build of the production site using the {url-extensions}[Algolia indexer extension].
 
 image::images/search.png[Preview of site search]
 
-=== Shared component
+=== Shared content
 
-The `shared/` directory contains content that is intended to be shared across all component versions.
+The {url-docs}/tree/shared[`shared` branch] contains content that is intended to be shared across all component versions.
 
 The attributes in the `ROOT/partials/attributes.yaml` file are merged into the `antora.yml` file of each component version by the {url-extensions}[global attributes extension]. These global attributes are required for all local builds as well as the production build.
 
