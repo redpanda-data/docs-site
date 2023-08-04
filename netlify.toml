@@ -19,6 +19,11 @@ NODE_VERSION = "16"
 # NOTE the following redirects get appended to the redirects defined in the _redirects file
 
 [[redirects]]
+from = "/docs/home/*"
+to = "/home"
+status = 301
+
+[[redirects]]
 from = "/docs/23.1/home"
 to = "/home"
 status = 301
@@ -44,6 +49,11 @@ to = "/home"
 status = 301
 
 [[redirects]]
+from = "/docs/23.1/*"
+to = "/23.1/:splat"
+status = 301
+
+[[redirects]]
 from = "/docs/22.3/*"
 to = "/22.3/:splat"
 status = 301
@@ -66,6 +76,16 @@ status = 301
 [[redirects]]
 from = "/docs/api/*"
 to = "/api/:splat"
+status = 301
+
+[[redirects]]
+from = "/docs/cloud/*"
+to = "/current/deploy/deployment-option/cloud/:splat"
+status = 301
+
+[[redirects]]
+from = "/docs/platform/reference/*"
+to = "/current/reference/:splat"
 status = 301
 
 [[redirects]]
