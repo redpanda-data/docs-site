@@ -84,8 +84,8 @@ to = "/current/deploy/deployment-option/cloud/:splat"
 status = 301
 
 [[redirects]]
-from = "/docs/platform/reference/*"
-to = "/current/reference/:splat"
+from = "/docs/platform/*"
+to = "/current/:splat"
 status = 301
 
 [[redirects]]
