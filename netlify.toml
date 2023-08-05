@@ -79,11 +79,6 @@ to = "/api/:splat"
 status = 301
 
 [[redirects]]
-from = "/docs/cloud/*"
-to = "/current/deploy/deployment-option/cloud/:splat"
-status = 301
-
-[[redirects]]
 from = "/docs/platform/*"
 to = "/current/:splat"
 status = 301
