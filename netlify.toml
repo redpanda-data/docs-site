@@ -24,6 +24,11 @@ to = "/home"
 status = 301
 
 [[redirects]]
+from = "/docs/reference/faq"
+to = "/home"
+status = 301
+
+[[redirects]]
 from = "/docs/23.1/home"
 to = "/home"
 status = 301
