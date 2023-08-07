@@ -6,12 +6,12 @@ urls:
   html_extension_style: indexify
   redirect_facility: netlify
   latest_version_segment: 'current'
-  latest_prerelease_version_segment: 'prerelease'
+  latest_prerelease_version_segment: 'beta'
   latest_version_segment_strategy: redirect:to
 content:
   sources:
   - url: https://github.com/redpanda-data/documentation
-    branches: [v/*, home, api, shared, 'site-search']
+    branches: [main, v/*, home, api, shared, 'site-search']
 ui:
   bundle:
     url: https://github.com/redpanda-data/docs-ui/releases/latest/download/ui-bundle.zip
