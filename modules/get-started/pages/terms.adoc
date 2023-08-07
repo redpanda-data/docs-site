@@ -28,7 +28,7 @@ For example: glossterm:test term[]
 +
 For example: glossterm:external term[]
 
-=== Local development
+== Local development
 
 For local development, you can test what your hover text will look like by adding the description to the macro like so:
 

@@ -7,7 +7,7 @@ content:
   - url: .
     branches: HEAD
   - url: https://github.com/redpanda-data/documentation
-    branches: [main, v/*, '!v/21.11', home, api, shared, site-search]
+    branches: [main, v/*, '!v/21.11', home, api, shared, 'site-search']
 #  - url: https://github.com/JakeSCahill/redpanda-cloud-docs
 #    branches: main
 ui:
