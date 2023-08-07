@@ -1,4 +1,4 @@
-= Antora Playground
+= Antora and Asciidoc Playground
 
 A playground for doing local testing as well as Asciidoc samples that you can copy/paste from link:++https://demo--redpanda-antora-site.netlify.app++[demo--redpanda-antora-site.netlify.app]
 
