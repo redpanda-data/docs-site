@@ -4,8 +4,8 @@
   "description": "The Antora playbook project for Redpanda documentation.",
   "license": "ISC",
   "scripts": {
-    "build": "antora --to-dir build --fetch local-antora-playbook.yml",
-    "serve": "wds --node-resolve --open index.html --watch --root-dir build --port 5002",
+    "build": "antora --to-dir docs --fetch local-antora-playbook.yml",
+    "serve": "wds --node-resolve --open index.html --watch --root-dir docs --port 5002",
     "start": "cross-env-shell LIVERELOAD=true npx gulp"
   },
   "dependencies": {
