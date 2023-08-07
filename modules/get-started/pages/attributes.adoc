@@ -1,0 +1,72 @@
+= Attributes
+:description: Examples of creating and using attributes.
+:env-kubernetes: false
+
+{description}
+
+Attributes are used to toggle or configure processing settings, control behavior and styles of the output, pass metadata from the source to the UI templates, and pass down information about the page to the content, among a variety of other uses. More info available at https://docs.antora.org/antora/latest/page/attributes/.
+
+[.two-column]
+====
+Edit URL: {page-edit-url}
+
+```asciidoc
+Edit URL: {page-edit-url}
+```
+====
+
+[.two-column]
+====
+Version: {page-version}
+
+```asciidoc
+Version: {page-version}
+```
+====
+
+[.two-column]
+====
+Branch: {page-origin-branch}
+
+```asciidoc
+Branch: {page-origin-branch}
+```
+====
+
+[.two-column]
+====
+Is Kubernetes: {env-kubernetes}
+
+```asciidoc
+Is Kubernetes: {env-kubernetes}
+```
+====
+
+:env-kubernetes: true
+
+[.two-column]
+====
+Is Kubernetes: {env-kubernetes}
+
+```asciidoc
+:env-kubernetes: true
+```
+====
+
+[.two-column]
+====
+Latest Redpanda version: {full-version}
+
+```asciidoc
+Latest Redpanda version: {full-version}
+```
+====
+
+[.two-column]
+====
+Latest Redpanda Console version: {latest-console-version}
+
+```asciidoc
+Latest Redpanda Console version: {latest-console-version}
+```
+====

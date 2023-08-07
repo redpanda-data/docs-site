@@ -1,0 +1,6 @@
+= Get Started
+:page-layout: index
+
+```asciidoc
+:page-layout: index
+```

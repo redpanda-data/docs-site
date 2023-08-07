@@ -1,0 +1,103 @@
+= Code Blocks
+:description: Examples of creating code blocks.
+
+{description} More info available at https://docs.asciidoctor.org/asciidoc/latest/verbatim/source-blocks/.
+
+We use Prism.js for source code highlighting. See all the available languages: https://prismjs.com/#supported-languages.
+
+[.two-column]
+====
+[source,ruby]
+----
+require 'sinatra'
+
+get '/hi' do
+  "Hello World!"
+end
+----
+
+```asciidoc
+[source,ruby]
+----
+require 'sinatra'
+
+get '/hi' do
+  "Hello World!"
+end
+----
+```
+====
+
+[.two-column]
+====
+
+[source,ruby,role="no-copy"]
+----
+require 'sinatra'
+
+get '/hi' do
+  "Hello World!"
+end
+----
+
+```asciidoc
+[source,ruby,role=no-copy]
+----
+require 'sinatra'
+
+get '/hi' do
+  "Hello World!"
+end
+----
+```
+====
+
+[.two-column]
+======
+[%collapsible]
+====
+[source,yaml]
+----
+include::example$docker-compose.yml[tag=**]
+----
+====
+
+```asciidoc
+[,yaml]
+----
+\include::example$docker-compose.yml[tag=**]
+----
+====
+```
+======
+
+[.two-column]
+====
+[source,yaml]
+----
+include::example$docker-compose.yml[tag=config]
+----
+
+```asciidoc
+[source,yaml]
+----
+\include::example$docker-compose.yml[tag=config]
+----
+```
+====
+
+[.two-column]
+====
+[source,yaml,subs="attributes+"]
+----
+include::example$docker-compose-attributes.yml[tag=config,indent=0]
+----
+
+```asciidoc
+[source,yaml,subs="attributes+"]
+----
+include::example$docker-compose-attributes.yml
+[tag=config,indent=0]
+----
+```
+====

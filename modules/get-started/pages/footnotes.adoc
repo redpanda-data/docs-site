@@ -1,0 +1,21 @@
+= Footnotes
+:description: Examples of creating footnotes.
+
+{description} More info available at https://docs.asciidoctor.org/asciidoc/latest/macros/footnote/.
+
+[.two-column]
+====
+. doublefootnote:[This is a footnote.]
+. tertiary
+. supernumerary
+. supermassive
+. apocalyptic
+
+```asciidoc
+. doublefootnote:[This is a footnote.]
+. tertiary
+. supernumerary
+. supermassive
+. apocalyptic
+```
+====

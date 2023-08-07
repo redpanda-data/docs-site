@@ -1,0 +1,63 @@
+= Admonitions
+:description: Examples of creating admonitions.
+
+{description} More info available at https://docs.asciidoctor.org/asciidoc/latest/blocks/admonitions/.
+
+[.two-column]
+====
+TIP: This is a tip.
+
+```asciidoc
+TIP: This is a tip.
+```
+====
+
+[.two-column]
+====
+NOTE: This is a note.
+
+```asciidoc
+NOTE: This is a note.
+```
+====
+
+[.two-column]
+====
+CAUTION: This is a caution.
+
+```asciidoc
+CAUTION: This is a caution.
+```
+====
+
+[.two-column]
+====
+WARNING: This is a warning.
+
+```asciidoc
+WARNING: This is a warning.
+```
+====
+
+[.two-column]
+======
+[IMPORTANT]
+====
+You can use this syntax to add more than one line to an admonition.
+
+. Step 1
+. Step 2
+. Step 3
+====
+
+```asciidoc
+[IMPORTANT]
+====
+You can use this syntax to add more than one line to an admonition.
+
+. Step 1
+. Step 2
+. Step 3
+====
+```
+======

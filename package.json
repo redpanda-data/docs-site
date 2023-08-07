@@ -4,21 +4,21 @@
   "description": "The Antora playbook project for Redpanda documentation.",
   "license": "ISC",
   "scripts": {
-    "build": "if [ \"$PREVIEW\" = \"true\" ]; then antora --to-dir docs --fetch preview-antora-playbook.yml; else antora --to-dir docs --fetch antora-playbook.yml; fi",
-    "start": "cross-env-shell LIVERELOAD=true npx gulp",
-    "serve": "wds --node-resolve --open home/index.html --watch --root-dir docs"
+    "build": "antora --to-dir build --fetch local-antora-playbook.yml",
+    "serve": "wds --node-resolve --open index.html --watch --root-dir build --port 5002",
+    "start": "cross-env-shell LIVERELOAD=true npx gulp"
   },
   "dependencies": {
     "@antora/cli": "3.1.2",
     "@antora/site-generator": "3.1.2",
     "@asciidoctor/tabs": "^1.0.0-beta.5",
-    "@redpanda-data/docs-extensions-and-macros": "^3.0.0"
+    "@redpanda-data/docs-extensions-and-macros": "latest"
   },
   "devDependencies": {
     "@web/dev-server": "^0.2.1",
     "cross-env": "^7.0.3",
+    "open": "^9.1.0",
     "gulp": "^4.0.2",
-    "gulp-connect": "^5.7.0",
-    "open": "^9.1.0"
+    "gulp-connect": "^5.7.0"
   }
 }

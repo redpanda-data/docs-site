@@ -1,0 +1,60 @@
+= Links
+:description: Examples of creating links.
+
+{description} More info at https://docs.antora.org/antora/latest/page/resource-id-coordinates/ and https://docs.asciidoctor.org/asciidoc/latest/macros/links/.
+
+image::full-resource-id.svg[]
+
+[.two-column]
+====
+xref:admonitions.adoc[Link to page is the same module]
+
+```asciidoc
+xref:admonitions.adoc[Link to page is the same module]
+```
+====
+
+[.two-column]
+====
+xref:reference:glossary.adoc[Link to another module]
+
+```asciidoc
+xref:reference:glossary.adoc[Link to another module]
+```
+====
+
+[.two-column]
+====
+xref:22.3@ROOT:get-started:index.adoc[Link to another version]
+
+```asciidoc
+xref:22.3@ROOT:get-started:index.adoc[Link to another version]
+```
+====
+
+[.two-column]
+====
+<<suggested-reading, Cross-reference>>
+
+```asciidoc
+<<suggested-reading, Cross-reference>>
+```
+====
+
+[.two-column]
+====
+xref:tabs.adoc#tabs-1-python[Link to a tab]
+
+```asciidoc
+xref:tabs.adoc#tabs-1-python[Link to a tab]
+```
+====
+
+[.two-column]
+====
+link:https://docs.antora.org/antora/latest/page/resource-id-coordinates/[External link]
+
+```asciidoc
+link:https://docs.antora.org/antora/latest/page/resource-id-coordinates/[External link]
+```
+====

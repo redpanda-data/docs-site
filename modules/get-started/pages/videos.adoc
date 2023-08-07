@@ -1,0 +1,14 @@
+= Videos
+:description: Creating embedded videos.
+
+{description} More info available at https://docs.asciidoctor.org/asciidoc/latest/macros/audio-and-video/.
+
+[.two-column]
+====
+video::FEVL8cLUFOc[youtube,width=400]
+
+
+```asciidoc
+video::FEVL8cLUFOc[youtube,width=400]
+```
+====

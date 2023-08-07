@@ -1,11 +1,15 @@
 site:
   title: Redpanda Docs
-  start_page: home:ROOT:index.adoc
+  start_page: ROOT:get-started:index.adoc
   url: http://localhost:5002
 content:
   sources:
+  - url: .
+    branches: HEAD
   - url: https://github.com/redpanda-data/documentation
-    branches: [main, v/*, home, api, shared, site-search]
+    branches: [main, v/*, '!v/21.11', home, api, shared, site-search]
+#  - url: https://github.com/JakeSCahill/redpanda-cloud-docs
+#    branches: main
 ui:
   bundle:
     url: https://github.com/redpanda-data/docs-ui/releases/latest/download/ui-bundle.zip
@@ -22,3 +26,4 @@ antora:
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/unlisted-pages'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/add-global-attributes'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/aggregate-terms'
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/version-fetcher/set-latest-version'

@@ -1,0 +1,23 @@
+= Images
+:description: Examples of creating inline and block images.
+
+{description} More info available at https://docs.asciidoctor.org/asciidoc/latest/macros/images/.
+
+
+[.two-column]
+====
+image::cluster.png[Producers and consumers in a cluster]
+
+```asciidoc
+image::cluster.png[Producers and consumers in a cluster]
+```
+====
+
+[.two-column]
+====
+This image:redpanda-kubernetes.png[K8s,width=30px] is an inline image.
+
+```asciidoc
+This image:redpanda-kubernetes.png[K8s,width=30px] is an inline image.
+```
+====

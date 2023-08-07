@@ -1,0 +1,50 @@
+= Lists
+:description: Examples of using ordered and unordered lists.
+
+{description}
+
+[.two-column]
+====
+. Step 1.
+. Step 2.
+. Step 3.
++
+With extra content.
++
+```bash
+# a comment
+./an-executable.sh
+```
+
+[,asciidoc]
+----
+. Step 1.
+. Step 2.
+. Step 3.
++
+With extra content.
++
+```bash
+./some-code.sh
+```
+----
+====
+
+[.two-column]
+====
+- Item 1
+- Item 2
+** Subitem
+*** Subsubitem
+- Item 3
+
+[,asciidoc]
+----
+- Item 1
+- Item 2
+** Subitem
+*** Subsubitem
+- Item 3
+----
+====
+

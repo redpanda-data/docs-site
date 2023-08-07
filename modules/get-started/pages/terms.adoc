@@ -1,0 +1,42 @@
+= Terms
+:description: Creating terms with tooltips.
+
+{description} This functionality is custom to our build. For the source code, see https://github.com/redpanda-data/docs-extensions-and-macros/tree/main.
+
+Glossary terms are defined globally in the https://github.com/redpanda-data/docs-site/tree/main/shared/modules/terms/partials[`docs-site` repo].
+
+To reference a term in a doc topic, use the following syntax:
+
+[,asciidoc]
+----
+glossterm:<term-name>[]
+----
+
+Replace `<term-name>` with the value of the `term-name` attribute in a term file.
+
+The `hover-text` attribute is read from the term file and used to add hover text to the term.
+
+The rules for whether a link to the glossary entry is added to the term, depend on what content is available on the term page:
+
+- If you include only a title and the required `term-name` and `hover-text` attributes, a link to the glossary entry is added to the term but the glossary will contain the same information as available on this page.
++
+For example: glossterm:hover-only term[]
+- If you include other Asciidoc content in the term page, such as headings, images, or paragraphs, a link to the glossary entry is added to the term so that users can read the full definition.
++
+For example: glossterm:test term[]
+- If you include an external URL in the `link` attribute, a link to that URL is added to the term. The term is still available in the glossary.
++
+For example: glossterm:external term[]
+
+=== Local development
+
+For local development, you can test what your hover text will look like by adding the description to the macro like so:
+
+[,asciidoc]
+----
+glossterm:term[This description is located in the Asciidoc source of this page]
+----
+
+This glossterm:term[This description is located in the Asciidoc source of this page] is defined inline on this page. Inline terms do not include an internal link to the glossary page.
+
+This glossterm:inline term[This is another test term that is defined inline] was added inline for development purposes.

@@ -1,0 +1,137 @@
+= Tabs
+:description: Creating tabbed content.
+
+{description} This functionality is provided by a custom Asciidoctor extension. See https://github.com/asciidoctor/asciidoctor-tabs#syntax.
+
+[.two-column]
+======
+[tabs]
+====
+Go::
++
+--
+
+Download and install Go
+from https://go.dev/doc/install[go.dev].
+
+This Kafka client code example
+uses the https://github.com/twmb/franz-go[franz-go] library.
+
+```bash
+# Create and enter the project folder
+mkdir redpanda-go; cd redpanda-go
+# Initialize the project
+go mod init com/redpanda/example
+# Install required dependencies
+go get github.com/twmb/franz-go
+<test>
+go get github.com/twmb/franz-go/pkg/kadm
+go get github.com/twmb/tlscfg
+go get github.com/twmb/franz-go/pkg/sasl/scram@v1.9.0
+```
+--
+Node.js::
++
+--
+Download and install Node.js https://nodejs.org/en/download[here].
+
+This example uses the https://kafka.js.org/[KafkaJS] library.
+
+```bash
+# Create and enter the project folder
+mkdir redpanda-node; cd redpanda-node
+# Generate package.json (the default values are fine)
+npm init
+# Install required dependencies
+npm i -D typescript npm i -D @types/node npm i kafkajs
+# Generate
+tsconfig.json tsc --init
+```
+--
+Python::
++
+--
+Download and install Python 3
+from https://www.python.org/downloads[python.org].
+
+This example uses
+the https://kafka-python.readthedocs.io/en/master/[kafka-python] library.
+
+```bash
+# Create and enter the project folder
+mkdir redpanda-python; cd redpanda-python
+# Create virtual environment
+python3 -m venv .env source .env/bin/activate
+# Install dependencies (.env)
+pip install kafka-python
+```
+--
+====
+
+[,asciidoc]
+----
+[tabs]
+====
+Go::
++
+--
+
+Download and install Go
+from https://go.dev/doc/install[go.dev].
+
+This Kafka client code example
+uses the https://github.com/twmb/franz-go[franz-go] library.
+
+```bash
+# Create and enter the project folder
+mkdir redpanda-go; cd redpanda-go
+# Initialize the project
+go mod init com/redpanda/example
+# Install required dependencies
+go get github.com/twmb/franz-go
+<test>
+go get github.com/twmb/franz-go/pkg/kadm
+go get github.com/twmb/tlscfg
+go get github.com/twmb/franz-go/pkg/sasl/scram@v1.9.0
+```
+--
+Node.js::
++
+--
+Download and install Node.js https://nodejs.org/en/download[here].
+
+This example uses the https://kafka.js.org/[KafkaJS] library.
+
+```bash
+# Create and enter the project folder
+mkdir redpanda-node; cd redpanda-node
+# Generate package.json (the default values are fine)
+npm init
+# Install required dependencies
+npm i -D typescript npm i -D @types/node npm i kafkajs
+# Generate
+tsconfig.json tsc --init
+```
+--
+Python::
++
+--
+Download and install Python 3
+from https://www.python.org/downloads[python.org].
+
+This example uses
+the https://kafka-python.readthedocs.io/en/master/[kafka-python]
+library.
+
+```bash
+# Create and enter the project folder
+mkdir redpanda-python; cd redpanda-python
+# Create virtual environment
+python3 -m venv .env source .env/bin/activate
+# Install dependencies (.env)
+pip install kafka-python
+```
+--
+====
+----
+======
