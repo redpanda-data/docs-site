@@ -229,7 +229,7 @@ For example:
 content:
   sources:
   - url: https://github.com/redpanda-data/documentation <1>
-    branches: [v/*, home, api, shared, site-search]
+    branches: [v/*, api, shared, site-search]
 ----
 
 <1> Clone this repository to work on Redpanda docs, the home page, shared content, the OpenAPI docs, or the site search.
@@ -296,7 +296,7 @@ asciidoc:
     page-exclude-from-dropdown-selector: true
 ----
 
-For example, we use this attribute for the `home` component because the UI has been customized to provide a link to the home page at the top of each nav tree.
+For example, we use this attribute for the `api` component so that API is not displayed as a separate product in the component selector.
 
 == Create index pages
 

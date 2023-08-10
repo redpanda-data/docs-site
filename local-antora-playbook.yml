@@ -1,11 +1,14 @@
 site:
   title: Redpanda Docs
-  start_page: home:ROOT:index.adoc
+  start_page: ROOT:home:index.adoc
   url: http://localhost:5002
+urls:
+  html_extension_style: indexify
+  latest_version_segment: 'current'
 content:
   sources:
   - url: https://github.com/redpanda-data/documentation
-    branches: [main, v/*, home, api, shared, site-search]
+    branches: [main, v/*, api, shared, site-search]
 ui:
   bundle:
     url: https://github.com/redpanda-data/docs-ui/releases/latest/download/ui-bundle.zip

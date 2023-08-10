@@ -59,14 +59,6 @@ The Asciidoc pages reference these attachments in the `page-api-spec-url` attrib
 
 image::images/api.png[Preview of API docs]
 
-=== Home page
-
-The home page is hosted in the {url-gh-docs}/tree/home[`home` branch] and is configured as a dedicated component called `home` so that we can host it at the root of the site under the `/home` path.
-
-The link:./antora.yml[`antora.yml`] file contains the content for the home page. This content is read by a template in the UI to produce the home page. The template for the home page is in the {url-ui}/blob/main/src/partials/home.hbs[`home.hbs`] file of the link:{url-ui}[`docs-ui` repository].
-
-image::images/home.png[Preview of the home page]
-
 === Search page
 
 The site-wide search page is hosted in the {url-gh-docs}/tree/site-search[`site-search` branch] and is configured as a dedicated component called `search` so that we can host it at the root of the site under the `/search` path.
