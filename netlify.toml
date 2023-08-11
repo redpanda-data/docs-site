@@ -24,33 +24,8 @@ to = "/current/:splat"
 status = 301
 
 [[redirects]]
-from = "/docs/23.2/home"
-to = "/home"
-status = 301
-
-[[redirects]]
-from = "/docs/23.1/home"
-to = "/home"
-status = 301
-
-[[redirects]]
-from = "/docs/22.3/home"
-to = "/home"
-status = 301
-
-[[redirects]]
-from = "/docs/22.2/home"
-to = "/home"
-status = 301
-
-[[redirects]]
-from = "/docs/22.1/home"
-to = "/home"
-status = 301
-
-[[redirects]]
-from = "/docs/21.11/home"
-to = "/home"
+from = "/home"
+to = "/current/home"
 status = 301
 
 [[redirects]]
