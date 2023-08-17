@@ -2,6 +2,8 @@ site:
   title: Redpanda Docs
   start_page: ROOT:home:index.adoc
   url: https://redpanda-antora-site.netlify.app
+  keys:
+    google_analytics: GTM-WB2CSV5
 urls:
   html_extension_style: indexify
   redirect_facility: netlify
