@@ -2,12 +2,16 @@ site:
   title: Redpanda Docs
   start_page: ROOT:home:index.adoc
   url: https://redpanda-antora-site.netlify.app
+  keys:
+    google_analytics: GTM-WB2CSV5
 urls:
   html_extension_style: indexify
   redirect_facility: netlify
   latest_version_segment: 'current'
   latest_prerelease_version_segment: 'beta'
   latest_version_segment_strategy: redirect:to
+output:
+  clean: true
 content:
   sources:
   - url: https://github.com/redpanda-data/documentation

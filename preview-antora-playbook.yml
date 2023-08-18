@@ -8,6 +8,8 @@ urls:
   latest_version_segment: 'current'
   latest_prerelease_version_segment: 'beta'
   latest_version_segment_strategy: redirect:to
+output:
+  clean: true
 content:
   sources:
   - url: https://github.com/redpanda-data/documentation
