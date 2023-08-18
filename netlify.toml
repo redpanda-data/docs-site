@@ -1,5 +1,5 @@
 [build.environment]
-NODE_VERSION = "16"
+NODE_VERSION = "18"
 
 [[plugins]]
   package = "@netlify/plugin-lighthouse"
@@ -62,13 +62,18 @@ to = "/21.11/:splat"
 status = 301
 
 [[redirects]]
+from = "/docs/21.1/*"
+to = "/21.11/:splat"
+status = 301
+
+[[redirects]]
 from = "/docs/home/*"
-to = "/home"
+to = "/current/home"
 status = 301
 
 [[redirects]]
 from = "/docs/reference/faq"
-to = "/home"
+to = "/current/home"
 status = 301
 
 [[redirects]]
