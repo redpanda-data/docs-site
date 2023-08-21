@@ -10,6 +10,7 @@
 :url-netlify-docs: https://docs.netlify.com
 :url-antora-docs: https://docs.antora.org
 :url-redoc: https://github.com/Redocly/redoc
+:url-asciidoc: https://docs.asciidoctor.org/asciidoc/latest/syntax-quick-reference/
 :idprefix:
 :idseparator: -
 :experimental:
