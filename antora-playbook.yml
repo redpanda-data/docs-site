@@ -4,6 +4,10 @@ site:
   url: https://redpanda-antora-site.netlify.app
   keys:
     google_analytics: GTM-WB2CSV5
+    announcement: true
+    announcement-text: 'Save your seat for our August 23 Masterclass:'
+    announcement-link-text: 'Day 2 Operations with Redpanda'
+    announcement-link: 'https://go.redpanda.com/masterclass-aug23-2023'
 urls:
   html_extension_style: indexify
   redirect_facility: netlify
