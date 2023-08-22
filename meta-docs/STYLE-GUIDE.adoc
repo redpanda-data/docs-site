@@ -24,7 +24,7 @@ endif::[]
 
 The Redpanda Documentation Style Guide provides guidance on writing product documentation.
 
-TIP: For help with Asciidoc, see the link:++https://demo--redpanda-antora-site.netlify.app/demo/get-started/index.html++[Antora and Asciidoc playground]. Or, see the {url-asciidoc}[Asciidoc syntax quick reference].
+TIP: For help with Asciidoc, see the link:++https://demo--redpanda-documentation.netlify.app/demo/get-started/index.html++[Antora and Asciidoc playground]. Or, see the {url-asciidoc}[Asciidoc syntax quick reference].
 
 == Style guide update and approval process
 
