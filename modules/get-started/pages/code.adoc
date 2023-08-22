@@ -67,7 +67,6 @@ include::example$docker-compose.yml[tag=**]
 ----
 \include::example$docker-compose.yml[tag=**]
 ----
-====
 ```
 ======
 
