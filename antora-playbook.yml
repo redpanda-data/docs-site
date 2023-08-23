@@ -37,7 +37,7 @@ antora:
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/algolia-indexer/index'
     excludes: ['.thumbs','script', '.page-versions','.feedback-section','.banner-container']
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/unlisted-pages'
-  - require: '@redpanda-data/docs-extensions-and-macros/extensions/replace-attributes-in-attachments'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/add-global-attributes'
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/replace-attributes-in-attachments'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/aggregate-terms'
 

@@ -2,6 +2,12 @@ site:
   title: Redpanda Docs
   start_page: ROOT:home:index.adoc
   url: http://localhost:5002
+  keys:
+    google_analytics: GTM-WB2CSV5
+    announcement: true
+    announcement-text: 'Save your seat for our August 23 Masterclass:'
+    announcement-link-text: 'Day 2 Operations with Redpanda'
+    announcement-link: 'https://go.redpanda.com/masterclass-aug23-2023'
 urls:
   html_extension_style: indexify
   latest_version_segment: 'current'
@@ -13,7 +19,7 @@ content:
     branches: [main, v/*, api, shared, site-search]
 ui:
   bundle:
-    url: https://github.com/redpanda-data/docs-ui/releases/latest/download/ui-bundle.zip
+    url: ../docs-ui/build/ui-bundle.zip
     snapshot: true
 asciidoc:
   attributes:
@@ -26,4 +32,5 @@ antora:
   extensions:
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/unlisted-pages'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/add-global-attributes'
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/replace-attributes-in-attachments'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/aggregate-terms'
