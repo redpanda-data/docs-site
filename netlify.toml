@@ -37,8 +37,18 @@ to = "/23.2/:splat"
 status = 301
 
 [[redirects]]
+from = "/docs/23.1/platform/*"
+to = "/23.1/:splat"
+status = 301
+
+[[redirects]]
 from = "/docs/23.1/*"
 to = "/23.1/:splat"
+status = 301
+
+[[redirects]]
+from = "/docs/22.3/platform/*"
+to = "/22.3/:splat"
 status = 301
 
 [[redirects]]
@@ -47,13 +57,28 @@ to = "/22.3/:splat"
 status = 301
 
 [[redirects]]
+from = "/docs/22.2/platform/*"
+to = "/22.2/:splat"
+status = 301
+
+[[redirects]]
 from = "/docs/22.2/*"
 to = "/22.2/:splat"
 status = 301
 
 [[redirects]]
+from = "/docs/22.1/platform/*"
+to = "/22.1/:splat"
+status = 301
+
+[[redirects]]
 from = "/docs/22.1/*"
 to = "/22.1/:splat"
+status = 301
+
+[[redirects]]
+from = "/docs/21.11/platform/*"
+to = "/21.11/:splat"
 status = 301
 
 [[redirects]]
