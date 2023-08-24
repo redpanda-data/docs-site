@@ -2,6 +2,7 @@ site:
   title: Redpanda Docs
   start_page: ROOT:home:index.adoc
   url: https://redpanda-antora-site.netlify.app
+  robots: allow
   keys:
     google_analytics: GTM-WB2CSV5
     announcement: false
