@@ -1,6 +1,6 @@
 {
   "name": "redpanda-docs-site",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "The Antora playbook project for Redpanda documentation.",
   "license": "ISC",
   "scripts": {
