@@ -1,7 +1,7 @@
 site:
   title: Redpanda Docs
   start_page: ROOT:home:index.adoc
-  url: https://redpanda-antora-site.netlify.app
+  url: https://docs.redpanda.com
   robots: allow
   keys:
     google_analytics: GTM-WB2CSV5
