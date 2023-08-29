@@ -19,7 +19,7 @@ output:
   clean: true
 content:
   sources:
-  - url: https://github.com/redpanda-data/documentation
+  - url: https://github.com/redpanda-data/documentation-private
     branches: [main, v/*, api, shared, 'site-search']
 ui:
   bundle:
