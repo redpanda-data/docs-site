@@ -18,9 +18,8 @@ urls:
 output:
   clean: true
 content:
-  edit_url: 'https://github.com/redpanda-data/documentation/blob/{refname}/{path}'
   sources:
-  - url: https://github.com/redpanda-data/documentation-private
+  - url: https://github.com/redpanda-data/docs
     branches: [main, v/*, api, shared, 'site-search']
 ui:
   bundle:
