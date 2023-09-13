@@ -107,6 +107,10 @@ image::../images/asciidoc-extension.gif[]
 
 Documentation is hosted in GitHub repositories. To work on the documentation repository, clone it on your local machine.
 
+If you are not a Redpanda employee, clone/use the public `redpanda-data/docs` repository.
+
+If you are an internal Redpanda submittors, clone/use the private `redpanda-data/documentation-private` repository.
+
 TIP: You can find all documentation repositories in the `antora-playbook.yml` file under `content.sources`. See <<find-content, Find content>>
 
 . Clone the repository, and check out the branch that you want to work on.
@@ -215,7 +219,7 @@ git commit -m "Concise message that describes your changes"
 
 . Push your local branch to the remote repository.
 
-. In the GitHub UI, open a pull request.
+. In the GitHub UI, open a pull request. 
 
 Thanks! We'll review your changes and provide feedback and guidance as necessary.
 
