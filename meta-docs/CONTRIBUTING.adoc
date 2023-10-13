@@ -115,8 +115,8 @@ TIP: You can find all documentation repositories in the `antora-playbook.yml` fi
 +
 [source,bash,subs=attributes+]
 ----
-git clone {url-org}/documentation
-cd documentation
+git clone {url-org}/docs
+cd docs
 ----
 +
 IMPORTANT: If you're not a Redpanda employee, you'll need to fork the repository and work on your local fork instead.
