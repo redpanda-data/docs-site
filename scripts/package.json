@@ -1,0 +1,25 @@
+{
+  "name": "index-apis",
+  "version": "1.0.0",
+  "description": "Index Redpanda API reference docs",
+  "main": "index-api.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/redpanda-data/docs-site.git"
+  },
+  "author": "JakeSCahill",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/redpanda-data/docs-site/issues"
+  },
+  "homepage": "https://github.com/redpanda-data/docs-site#readme",
+  "dependencies": {
+    "algoliasearch": "^4.20.0",
+    "axios": "^1.6.0",
+    "puppeteer": "^21.5.0",
+    "xml2js": "^0.6.2"
+  }
+}
