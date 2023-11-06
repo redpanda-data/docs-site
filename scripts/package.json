@@ -10,7 +10,7 @@
     "type": "git",
     "url": "git+https://github.com/redpanda-data/docs-site.git"
   },
-  "author": "JakeSCahill",
+  "author": "redpanda-data",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/redpanda-data/docs-site/issues"
