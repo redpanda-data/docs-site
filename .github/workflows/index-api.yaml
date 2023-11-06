@@ -14,12 +14,12 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Set up Node.js
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v3
       with:
         node-version: '18'
 
     - name: Install dependencies
-      run: npm install
+      run: cd script && npm install
 
     - name: Run indexing script
       run: node scripts/index-api.js
