@@ -1,7 +1,7 @@
 site:
   title: Redpanda Docs
   start_page: ROOT:home:index.adoc
-  url: http://localhost:5002
+  url: http://localhost:8000
 urls:
   html_extension_style: indexify
   latest_version_segment: 'current'
