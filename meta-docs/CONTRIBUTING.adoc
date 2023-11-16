@@ -394,7 +394,7 @@ For more information about navigation files, see the {url-antora-docs}/antora/la
 
 == Cloud pages
 
-Cloud pages should be tagged accordingly. If you create a cloud page make sure to add the attribute `page-cloud:true` after `title:` and `description:`.
+Redpanda Cloud pages should be tagged accordingly. If you create a Redpanda Cloud page make sure to add the attribute `page-cloud:true` to the top of the file under the title.
 
 === Cloud beta feature
 
