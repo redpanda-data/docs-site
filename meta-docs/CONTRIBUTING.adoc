@@ -402,7 +402,7 @@ Cloud has a different flavor of beta, where some specific features can be marked
 
 == Feature Flag
 
-If a feature is marked as feature flag, please include the partial admonition that identifies it. Use `include::shared:partial$feature-flag.adoc[]`  as the first information on your page.
+If a feature is marked as a feature flag, please include the partial admonition that identifies it. To include the admonition, add `include::shared:partial$feature-flag.adoc[]` to the top of the page after the title and any attributes.
 
 == Style guide
 
