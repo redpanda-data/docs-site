@@ -392,6 +392,18 @@ To update the nav tree, edit the `nav.adoc` file.
 
 For more information about navigation files, see the {url-antora-docs}/antora/latest/navigation/include-lists/[Antora docs].
 
+== Cloud pages
+
+Cloud pages should be tagged accordingly. If you create a cloud page make sure to add the attribute `page-cloud:true` after `title:` and `description:`.
+
+=== Cloud beta feature
+
+Cloud has a different flavor of beta, where some specific features can be marked as beta. If that's the case, add the attribute `page-beta:true` to your page, after `page-cloud:true`.
+
+== Feature Flag
+
+If a feature is marked as feature flag, please include the partial admonition that identifies it. Use `include::shared:partial$feature-flag.adoc[]`  as the first information on your page.
+
 == Style guide
 
 For rules and recommendations as well as help with Asciidoc syntax, see the link:./STYLE-GUIDE.adoc[Redpanda docs style guide].
