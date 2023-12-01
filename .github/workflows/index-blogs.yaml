@@ -1,4 +1,4 @@
-name: Index API docs and upload to Algolia
+name: Index Redpanda blogs and upload to Algolia
 
 on:
   schedule:
@@ -19,10 +19,10 @@ jobs:
         node-version: '18'
 
     - name: Install dependencies
-      run: cd scripts/index-api && npm install
+      run: cd scripts/index-blogs && npm install
 
     - name: Run indexing script
-      run: node scripts/index-api/index-api.js
+      run: node scripts/index-blogs/index-blogs.js
       env:
         ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_APP_ID }}
         ALGOLIA_ADMIN_API_KEY: ${{ secrets.ALGOLIA_ADMIN_API_KEY }}
