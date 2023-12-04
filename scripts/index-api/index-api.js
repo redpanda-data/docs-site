@@ -62,7 +62,7 @@ async function indexUrlsInAlgolia(urls) {
         title: data.h1,
         titles: data.titles,
         intro: data.intro,
-        type: 'doc',
+        type: 'Doc',
         _tags: ['docs','apis']
       };
     } catch (error) {

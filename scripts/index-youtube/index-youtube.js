@@ -28,7 +28,7 @@ async function fetchYouTubeVideos() {
           intro: video.snippet.description,
           publishedAt: video.snippet.publishedAt,
           image: video.snippet.thumbnails.high.url,
-          type: 'video',
+          type: 'Video',
           _tags: ['videos']
       }));
     } catch (error) {
@@ -39,26 +39,6 @@ async function fetchYouTubeVideos() {
 
 fetchYouTubeVideos().then(async (videos) => {
   try {
-    const existingRecords = {};
-    await index.browseObjects({
-      query: '',
-      filters: '_tags:videos',
-      batch: batch => {
-        batch.forEach(record => {
-          existingRecords[record.objectID] = record;
-        });
-      }
-    });
-    console.log(existingRecords)
-    // Determine which videos to delete
-    const existingObjectIDs = Object.keys(existingRecords);
-    const newObjectIDs = videos.map(video => video.objectID);
-    const videosToDelete = existingObjectIDs.filter(id => !newObjectIDs.includes(id));
-
-    // Delete old videos
-    if (videosToDelete.length > 0) {
-      await index.deleteObjects(videosToDelete);
-    }
     const { objectIDs } = await index.saveObjects(videos);
     console.log(`Successfully indexed YouTube videos in Algolia with object IDs: ${objectIDs.join(', ')}`);
   } catch (error) {

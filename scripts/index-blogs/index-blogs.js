@@ -38,7 +38,7 @@ async function indexUrlsInAlgolia(urls) {
     const page = await browser.newPage();
     try {
       await retry(async () => {
-        await page.goto(url, { waitUntil: 'networkidle2', timeout: 80000 }); // Increased timeout
+        await page.goto(url, { waitUntil: 'networkidle2', timeout: 80000 });
       }, {
         retries: 3,
         factor: 2,
@@ -51,8 +51,8 @@ async function indexUrlsInAlgolia(urls) {
             const anchor = element.id;
             return { t: element.textContent.trim(), h: anchor }
           })
-        const categorySelector = '[class^="styles_BlogPostTemplate__headerCategory"]'; // Example for 'starts with'
-        const titleSelector = '[class*="styles_BlogPostTemplate__headerTitle"]'; // Example for 'contains'
+        const categorySelector = '[class^="styles_BlogPostTemplate__headerCategory"]';
+        const titleSelector = '[class*="styles_BlogPostTemplate__headerTitle"]';
         const descriptionSelector = '[class*="styles_BlogPostTemplate__headerDescription"]';
         const authorSelector = '[class*="styles_BlogPostTemplate__headerAuthor"]';
         const dateSelector = '[class*="styles_BlogPostTemplate__headerAuthorsAndDate"] span:last-child';
@@ -82,7 +82,6 @@ async function indexUrlsInAlgolia(urls) {
       const { pathname } = new URL(url);
       return {
         objectID: `${BASE_URL}${pathname}`,
-        product: "Redpanda",
         title: data.h1,
         titles: data.titles,
         intro: data.intro,
@@ -90,7 +89,7 @@ async function indexUrlsInAlgolia(urls) {
         image: data.imageUrl,
         date: data.date,
         author: data.author,
-        type: 'blog',
+        type: 'Blog',
         _tags: ['blogs']
       };
     } catch (error) {
@@ -105,25 +104,6 @@ async function indexUrlsInAlgolia(urls) {
   const validRecords = records.filter(record => record !== null);
 
   try {
-    const existingRecords = {};
-    await index.browseObjects({
-      query: '',
-      filters: '_tags:blogs',
-      batch: batch => {
-        batch.forEach(record => {
-          existingRecords[record.objectID] = record;
-        });
-      }
-    });
-    // Determine which blogs to delete
-    const existingObjectIDs = Object.keys(existingRecords);
-    const newObjectIDs = validRecords.map(blog => blog.objectID);
-    const blogsToDelete = existingObjectIDs.filter(id => !newObjectIDs.includes(id));
-
-    // Delete old blogs
-    if (blogsToDelete.length > 0) {
-      await index.deleteObjects(blogsToDelete);
-    }
     const { objectIDs } = await index.saveObjects(validRecords);
     console.log(`Successfully indexed blogs in Algolia with object IDs: ${objectIDs.join(', ')}`);
   } catch (error) {
