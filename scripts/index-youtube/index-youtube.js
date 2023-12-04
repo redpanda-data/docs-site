@@ -1,5 +1,6 @@
 const axios = require('axios');
 const algoliasearch = require('algoliasearch');
+const _ = require('lodash');
 
 const ALGOLIA_APP_ID = process.env.ALGOLIA_APP_ID;
 const ALGOLIA_ADMIN_API_KEY = process.env.ALGOLIA_ADMIN_API_KEY;
@@ -38,12 +39,60 @@ async function fetchYouTubeVideos() {
 }
 
 fetchYouTubeVideos().then(async (videos) => {
+  let existingObjectsMap = new Map()
+
+  // Save objects in a local cache to query later.
+  // Avoids sending multiple requests.
+  // browseObjects does not affect analytics or usage limits.
+  // See https://www.algolia.com/doc/api-reference/api-methods/browse/#about-this-method
   try {
-    const { objectIDs } = await index.saveObjects(videos);
-    console.log(`Successfully indexed YouTube videos in Algolia with object IDs: ${objectIDs.join(', ')}`);
-  } catch (error) {
-    console.error('Error indexing URLs in Algolia:', error);
+    await index.browseObjects({
+      query: '',
+      tagFilters: 'videos',
+      batch: batch => {
+        for (const obj of batch) {
+          existingObjectsMap.set(obj.objectID, obj)
+        }
+      }
+    })
+  } catch (err) {
+    console.error(JSON.stringify(err))
   }
+
+  const objectsToUpdate = []
+  const objectsToAdd = []
+  for (const obj of videos) {
+    const existingObject = existingObjectsMap.get(obj.objectID)
+    if (existingObject) {
+      if (!_.isEqual(existingObject, obj)) {
+        objectsToUpdate.push(obj)
+      }
+    } else {
+      objectsToAdd.push(obj)
+    }
+  }
+
+  const addObjectActions = objectsToAdd.map(object => ({
+    action: 'addObject',
+    indexName: process.env.ALGOLIA_INDEX_NAME,
+    body: object
+  }));
+
+  const updateObjectActions = objectsToUpdate.map(object => ({
+    action: 'updateObject',
+    indexName: process.env.ALGOLIA_INDEX_NAME,
+    body: object
+  }));
+
+  const batchActions = [...addObjectActions, ...updateObjectActions];
+
+  // Upload new records only if the objects have been updated or they are new.
+  // See https://www.algolia.com/doc/api-reference/api-methods/batch/?client=javascript
+  await client.multipleBatch(batchActions).then(() => {
+    console.log('Batch indexing operations completed successfully');
+  }).catch(error => {
+    console.error(`Error uploading records to Algolia: ${error.message}`);
+  });
 }).catch(error => {
   console.error('Unhandled error:', error);
 });

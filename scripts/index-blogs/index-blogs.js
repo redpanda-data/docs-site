@@ -2,6 +2,7 @@ const puppeteer = require('puppeteer');
 const axios = require('axios');
 const xml2js = require('xml2js');
 const retry = require('async-retry');
+const _ = require('lodash');
 const algoliasearch = require('algoliasearch');
 const BASE_URL = 'https://redpanda.com';
 const SITEMAP_URL = 'https://redpanda.com/sitemap.xml';
@@ -103,13 +104,60 @@ async function indexUrlsInAlgolia(urls) {
 
   const validRecords = records.filter(record => record !== null);
 
+  let existingObjectsMap = new Map()
+
+  // Save objects in a local cache to query later.
+  // Avoids sending multiple requests.
+  // browseObjects does not affect analytics or usage limits.
+  // See https://www.algolia.com/doc/api-reference/api-methods/browse/#about-this-method
   try {
-    const { objectIDs } = await index.saveObjects(validRecords);
-    console.log(`Successfully indexed blogs in Algolia with object IDs: ${objectIDs.join(', ')}`);
-  } catch (error) {
-    console.error('Error indexing blog URLs in Algolia:', error);
-    throw error;
+    await index.browseObjects({
+      query: '',
+      tagFilters: 'blogs',
+      batch: batch => {
+        for (const obj of batch) {
+          existingObjectsMap.set(obj.objectID, obj)
+        }
+      }
+    })
+  } catch (err) {
+    console.error(JSON.stringify(err))
   }
+
+  const objectsToUpdate = []
+  const objectsToAdd = []
+  for (const obj of validRecords) {
+    const existingObject = existingObjectsMap.get(obj.objectID)
+    if (existingObject) {
+      if (!_.isEqual(existingObject, obj)) {
+        objectsToUpdate.push(obj)
+      }
+    } else {
+      objectsToAdd.push(obj)
+    }
+  }
+
+  const addObjectActions = objectsToAdd.map(object => ({
+    action: 'addObject',
+    indexName: process.env.ALGOLIA_INDEX_NAME,
+    body: object
+  }));
+
+  const updateObjectActions = objectsToUpdate.map(object => ({
+    action: 'updateObject',
+    indexName: process.env.ALGOLIA_INDEX_NAME,
+    body: object
+  }));
+
+  const batchActions = [...addObjectActions, ...updateObjectActions];
+
+  // Upload new records only if the objects have been updated or they are new.
+  // See https://www.algolia.com/doc/api-reference/api-methods/batch/?client=javascript
+  await client.multipleBatch(batchActions).then(() => {
+    console.log('Batch indexing operations completed successfully');
+  }).catch(error => {
+    console.error(`Error uploading records to Algolia: ${error.message}`);
+  });
 }
 
 async function generateAlgoliaIndex(sitemapUrl) {
