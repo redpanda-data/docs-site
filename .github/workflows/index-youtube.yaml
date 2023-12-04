@@ -1,8 +1,8 @@
-name: Index API docs and upload to Algolia
+name: Index Redpanda YouTube videos and upload to Algolia
 
 on:
   schedule:
-    - cron: '0 0 * * 0'  # Runs every Sunday at midnight
+    - cron: '0 23 * * 0'  # Runs every Sunday at midnight
   workflow_dispatch:
 
 jobs:
@@ -19,11 +19,12 @@ jobs:
         node-version: '18'
 
     - name: Install dependencies
-      run: cd scripts/index-api && npm install
+      run: cd scripts/index-youtube && npm install
 
     - name: Run indexing script
-      run: node scripts/index-api/index-api.js
+      run: node scripts/index-youtube/index-youtube.js
       env:
         ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_APP_ID }}
         ALGOLIA_ADMIN_API_KEY: ${{ secrets.ALGOLIA_ADMIN_API_KEY }}
         ALGOLIA_INDEX_NAME: ${{ secrets.ALGOLIA_INDEX_NAME }}
+        YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY}}

@@ -2,6 +2,7 @@ const puppeteer = require('puppeteer');
 const axios = require('axios');
 const xml2js = require('xml2js');
 const algoliasearch = require('algoliasearch');
+const SITEMAP_URL = 'https://docs.redpanda.com/sitemap-api.xml';
 
 const ALGOLIA_APP_ID = process.env.ALGOLIA_APP_ID;
 const ALGOLIA_ADMIN_API_KEY = process.env.ALGOLIA_ADMIN_API_KEY;
@@ -60,7 +61,9 @@ async function indexUrlsInAlgolia(urls) {
         version: data.latestVersion,
         title: data.h1,
         titles: data.titles,
-        intro: data.intro
+        intro: data.intro,
+        type: 'Doc',
+        _tags: ['docs','apis']
       };
     } catch (error) {
       console.error(`Error processing URL ${url}:`, error);
@@ -88,8 +91,6 @@ async function generateAlgoliaIndex(sitemapUrl) {
   await indexUrlsInAlgolia(pageUrls);
   console.log('Algolia indexing completed!');
 }
-
-const SITEMAP_URL = 'https://docs.redpanda.com/sitemap-api.xml';
 
 generateAlgoliaIndex(SITEMAP_URL)
   .then(() => console.log('Indexing completed!'))
