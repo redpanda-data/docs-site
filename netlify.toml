@@ -120,4 +120,4 @@ status = 301
 [[redirects]]
 from = "/current/manage/schema-reg/*"
 to = "/beta/manage/schema-reg/:splat:"
-status = 301
+status = 307
