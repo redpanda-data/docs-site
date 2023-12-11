@@ -119,5 +119,5 @@ status = 301
 
 [[redirects]]
 from = "/current/manage/schema-reg/*"
-to = "/beta/manage/schema-reg/:splat:"
+to = "/beta/manage/schema-reg/:splat"
 status = 307
