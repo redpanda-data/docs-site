@@ -115,3 +115,9 @@ status = 301
 from = "/docs/*"
 to = "/current/:splat"
 status = 301
+
+
+[[redirects]]
+from = "/current/manage/schema-reg/*"
+to = "/beta/manage/schema-reg/:splat"
+status = 307
