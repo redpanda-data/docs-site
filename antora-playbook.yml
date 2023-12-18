@@ -23,7 +23,7 @@ content:
     branches: [main, v/*, api, shared, 'site-search',v-WIP/*,'!v-deprecated/*']
 ui:
   bundle:
-    url: https://github.com/redpanda-data/docs-ui/releases/download/v1.6.4/ui-bundle.zip
+    url: https://github.com/redpanda-data/docs-ui/releases/latest/download/ui-bundle.zip
     snapshot: true
 asciidoc:
   attributes:
