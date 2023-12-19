@@ -28,9 +28,9 @@ asciidoc:
   - '@redpanda-data/docs-extensions-and-macros/asciidoc-extensions/add-line-numbers-highlights'
 antora:
   extensions:
-  - '@redpanda-data/docs-extensions-and-macros/extensions/version-fetcher/set-latest-version'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/unlisted-pages'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/replace-attributes-in-attachments'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/add-global-attributes'
+  - '@redpanda-data/docs-extensions-and-macros/extensions/version-fetcher/set-latest-version'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/aggregate-terms'
 
