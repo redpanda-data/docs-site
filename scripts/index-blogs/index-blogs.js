@@ -81,6 +81,8 @@ async function indexUrlsInAlgolia(urls) {
         return null;
       }
       const { pathname } = new URL(url);
+      // To sort by date, Algolia requires Unix timestamps
+      const unixTimestamp = data.date ? convertToUnixTimestamp(data.date) : '';
       return {
         objectID: `${BASE_URL}${pathname}`,
         title: data.h1,
@@ -89,6 +91,7 @@ async function indexUrlsInAlgolia(urls) {
         category: data.category,
         image: data.imageUrl,
         date: data.date,
+        unixTimestamp: unixTimestamp,
         author: data.author,
         type: 'Blog',
         _tags: ['blogs']
@@ -158,6 +161,20 @@ async function indexUrlsInAlgolia(urls) {
   }).catch(error => {
     console.error(`Error uploading records to Algolia: ${error.message}`);
   });
+}
+
+function convertToUnixTimestamp(dateString) {
+  try {
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) {
+        console.log(`Invalid date in blog: ${dateString}`);
+        return '';
+      }
+      return Math.floor(date.getTime() / 1000);
+  } catch (error) {
+      console.error(error.message);
+      return '';
+  }
 }
 
 async function generateAlgoliaIndex(sitemapUrl) {
