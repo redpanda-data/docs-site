@@ -135,8 +135,3 @@ status = 301
 from = "/docs/*"
 to = "/current/:splat"
 status = 301
-
-[[redirects]]
-from = "/current/reference/redpanda-operator/*"
-to = "/23.2/upgrade/deprecated/cluster-resource"
-status = 301
