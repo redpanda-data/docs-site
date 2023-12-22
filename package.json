@@ -1,21 +1,18 @@
 {
   "name": "redpanda-docs-site",
-  "version": "1.0.0",
   "description": "The Antora playbook project for Redpanda documentation.",
   "license": "ISC",
   "scripts": {
-    "build": "antora --to-dir docs --fetch antora-playbook.yml",
+    "build": "if [ \"$PREVIEW\" = \"true\" ]; then antora --to-dir docs --fetch preview-antora-playbook.yml; else antora --to-dir docs --fetch antora-playbook.yml; fi",
+    "build-local": "antora --to-dir docs --fetch local-antora-playbook.yml",
     "start": "cross-env-shell LIVERELOAD=true npx gulp",
-    "serve": "wds --node-resolve --open home/index.html --watch --root-dir docs"
+    "serve": "wds --node-resolve --open / --watch --root-dir docs"
   },
   "dependencies": {
     "@antora/cli": "3.1.2",
     "@antora/site-generator": "3.1.2",
     "@asciidoctor/tabs": "^1.0.0-beta.5",
-    "@octokit/plugin-retry": "^4.1.3",
-    "@octokit/rest": "^19.0.7",
-    "@redpanda-data/docs-extensions-and-macros": "^2.5.0",
-    "algoliasearch": "^4.17.0"
+    "@redpanda-data/docs-extensions-and-macros": "latest"
   },
   "devDependencies": {
     "@web/dev-server": "^0.2.1",

@@ -1,14 +1,7 @@
 site:
   title: Redpanda Docs
   start_page: ROOT:home:index.adoc
-  url: https://docs.redpanda.com
-  robots: allow
-  keys:
-    google_analytics: GTM-WB2CSV5
-    announcement: false
-    announcement-text: 'Save your seat for our August 23 Masterclass:'
-    announcement-link-text: 'Day 2 Operations with Redpanda'
-    announcement-link: 'https://go.redpanda.com/masterclass-aug23-2023'
+  url: https://redpanda-antora-site.netlify.app
 urls:
   html_extension_style: indexify
   redirect_facility: netlify
@@ -20,7 +13,7 @@ output:
 content:
   sources:
   - url: https://github.com/redpanda-data/docs
-    branches: [main, v/*, api, shared, 'site-search',!v-WIP/*,'!v-end-of-life/*']
+    branches: [main, v/*, api, shared, site-search]
 ui:
   bundle:
     url: https://github.com/redpanda-data/docs-ui/releases/latest/download/ui-bundle.zip
@@ -36,8 +29,6 @@ asciidoc:
 antora:
   extensions:
   - '@redpanda-data/docs-extensions-and-macros/extensions/version-fetcher/set-latest-version'
-  - require: '@redpanda-data/docs-extensions-and-macros/extensions/algolia-indexer/index'
-    excludes: ['.thumbs','script', '.page-versions','.feedback-section','.banner-container']
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/unlisted-pages'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/replace-attributes-in-attachments'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/add-global-attributes'

@@ -1,11 +1,14 @@
 [build.environment]
-NODE_VERSION = "16"
+NODE_VERSION = "18"
 
 [[plugins]]
   package = "@netlify/plugin-lighthouse"
 
+  [plugins.inputs]
+    fail_deploy_on_score_thresholds = "true"
+
   [[plugins.inputs.audits]]
-    path = "home/index.html"
+    path = "current/home/index.html"
 
   [plugins.inputs.settings]
     preset = "desktop"
@@ -19,48 +22,103 @@ NODE_VERSION = "16"
 # NOTE the following redirects get appended to the redirects defined in the _redirects file
 
 [[redirects]]
-from = "/docs/23.1/home"
-to = "/home"
+from = "/docs/beta/*"
+to = "/current/:splat"
 status = 301
 
 [[redirects]]
-from = "/docs/22.3/home"
-to = "/home"
+from = "/home"
+to = "/current/home"
 status = 301
 
 [[redirects]]
-from = "/docs/22.2/home"
-to = "/home"
+from = "/docs/23.2/*"
+to = "/23.2/:splat"
 status = 301
 
 [[redirects]]
-from = "/docs/22.1/home"
-to = "/home"
+from = "/docs/23.1/platform/*"
+to = "/23.1/:splat"
 status = 301
 
 [[redirects]]
-from = "/docs/21.11/home"
-to = "/home"
+from = "/docs/23.1/*"
+to = "/23.1/:splat"
+status = 301
+
+[[redirects]]
+from = "/docs/22.3/platform/*"
+to = "/current/:splat"
 status = 301
 
 [[redirects]]
 from = "/docs/22.3/*"
-to = "/22.3/:splat"
+to = "/current/:splat"
+status = 301
+
+[[redirects]]
+from = "/22.3/*"
+to = "/current/:splat"
+status = 301
+
+[[redirects]]
+from = "/docs/22.2/platform/*"
+to = "/current/:splat"
 status = 301
 
 [[redirects]]
 from = "/docs/22.2/*"
-to = "/22.2/:splat"
+to = "/current/:splat"
+status = 301
+
+[[redirects]]
+from = "/22.2/*"
+to = "/current/:splat"
+status = 301
+
+[[redirects]]
+from = "/docs/22.1/platform/*"
+to = "/current/:splat"
 status = 301
 
 [[redirects]]
 from = "/docs/22.1/*"
-to = "/22.1/:splat"
+to = "/current/:splat"
+status = 301
+
+[[redirects]]
+from = "/22.1/*"
+to = "/current/:splat"
+status = 301
+
+[[redirects]]
+from = "/docs/21.11/platform/*"
+to = "/current/:splat"
 status = 301
 
 [[redirects]]
 from = "/docs/21.11/*"
-to = "/21.11/:splat"
+to = "/current/:splat"
+status = 301
+
+[[redirects]]
+from = "/21.11/*"
+to = "/current/:splat"
+status = 301
+
+[[redirects]]
+from = "/docs/21.1/*"
+to = "/current/:splat"
+status = 301
+
+[[redirects]]
+from = "/docs/home/*"
+to = "/current/home"
+status = 301
+
+[[redirects]]
+from = "/docs/reference/faq"
+to = "/current/home"
 status = 301
 
 [[redirects]]
@@ -69,6 +127,16 @@ to = "/api/:splat"
 status = 301
 
 [[redirects]]
+from = "/docs/platform/*"
+to = "/current/:splat"
+status = 301
+
+[[redirects]]
 from = "/docs/*"
 to = "/current/:splat"
+status = 301
+
+[[redirects]]
+from = "/current/reference/redpanda-operator/*"
+to = "/23.2/upgrade/deprecated/cluster-resource"
 status = 301

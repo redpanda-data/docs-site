@@ -1,6 +1,7 @@
 = Redpanda Documentation Style Guide
 :url-docs: https://docs.redpanda.com
 :url-org: https://github.com/redpanda-data
+:url-docs: {url-org}/documentation
 :url-ui: {url-org}/docs-ui
 :url-extensions: {url-org}/docs-extensions-and-macros
 :url-site: {url-org}/docs-site
@@ -10,6 +11,7 @@
 :url-netlify-docs: https://docs.netlify.com
 :url-antora-docs: https://docs.antora.org
 :url-redoc: https://github.com/Redocly/redoc
+:url-asciidoc: https://docs.asciidoctor.org/asciidoc/latest/syntax-quick-reference/
 :idprefix:
 :idseparator: -
 :experimental:
@@ -22,6 +24,8 @@ endif::[]
 
 The Redpanda Documentation Style Guide provides guidance on writing product documentation.
 
+TIP: For help with Asciidoc, see the link:++https://demo--redpanda-documentation.netlify.app/demo/get-started/index.html++[Antora and Asciidoc playground]. Or, see the {url-asciidoc}[Asciidoc syntax quick reference].
+
 == Style guide update and approval process
 
 This guide is intended to be helpful to documentation team writers and reviewers.
@@ -30,6 +34,7 @@ This guide is intended to be helpful to documentation team writers and reviewers
 * If you are not a member of the Redpanda doc team, you should start a conversation on https://rpnda.co/slack[the community channel].
 
 == Organization of product documentation
+
 Before you start writing, create an outline with the information you intend to add to each section. It might look something like this:
 
 * *Overview* - This is an introduction to the feature and contains use cases, architecture, and any important notes, such as whether the feature is in technical preview.
@@ -399,6 +404,39 @@ rpk topic create <topic-name> -c redpanda.remote.read=true
 ----
 ....
 
+To highlight line numbers, you must specify a source language and the lines you want to highlight. In this example, the source language is `js` and the lines are 1-3, 5, and 6:
+
+....
+[source,js,lines=1-3+5+6]
+----
+function helloWorld() {
+    console.log("Hello, World!") <sample>;
+    console.log("This is a sample.");
+    console.log("With multiple lines.");
+    console.log("Highlighted using Prism.");
+}
+----
+....
+
+NOTE: Line numbers are automatically added to all code blocks that include line highlighting.
+
+Examples:
+
+- A single number refers to the line with that number
++
+lines=5
++
+The 5th line
+- Ranges are denoted by two numbers, separated with a hyphen (-)
++
+lines=1-5
++
+Lines 1 through 5
+- Multiple line numbers or ranges are separated by pluses.
++
+lines=1-2+5+9-20
++
+Lines 1 through 2, line 5, lines 9 through 20
 
 For more details about code blocks, refer to link:https://asciidoctor.org/docs/asciidoc-syntax-quick-reference/#source-code[AsciiDoctor] documentation.
 
@@ -548,60 +586,46 @@ image::../images/context-switcher.png[]
 
 Defining glossary terms in documentation ensures clear and consistent communication by facilitating a common understanding among team members and users.
 
-Glossary terms in Redpanda documentation are rendered as links with a tooltip that displays the definition on hover.
+Glossary terms in Redpanda documentation are rendered with a tooltip that displays the definition on hover. Terms also include links to their full definition in the glossary page if one exists.
 
 image::../images/term.png[,100]
 
-To include glossary terms in Redpanda documentation, use the `glossterm` macro:
+To include glossary terms in Redpanda documentation:
+
+. Make sure that the term is defined in a file in the {url-docs}/tree/shared/modules/terms[`terms` module] of the `shared` branch.
+. If the term is not yet defined, submit a pull request to add a file for your term.
+. Use the `glossterm` macro:
+
+[,asciidoc]
+----
+This is an important glossterm:<term-name>:[]
+----
+
+Replace `<term-name>` with the term.
+
+At build time, the {url-extensions}[`aggregate-terms` extension] makes the `term-name` and `hover-text` attributes available to the `glossterm` macro. It also looks for a `reference:glossary.adoc` file in each component version and if it exists adds all the term file contents to it.
+
+For local development, you can define terms and their definitions inline:
 
 [,asciidoc]
 ----
 This is an important glossterm:<term-name>:[<definition>]
 ----
 
-Replace `<term-name>` with the term. Replace `<definition>` with the definition of the term.
-
-To facilitate reusing definitions across different pages of the docs, you can define terms and definitions in the `terms.yaml` file of the `global-attributes/` directory in the {url-site} repository or in the `antora.yml` file of a component. If terms are defined in either of these places, you can omit the description, and the macro will take care of inserting it during the build.
-
-.`global-attributes/terms.yaml`
-[,yaml]
-----
-terms:
-- term: tatting
-  definition: test
-  link: https://www.google.com
-----
-
-.`antora.yml`
-[,yaml]
-----
-asciidoc:
-  attributes:
-    local-terms:
-    - term: tatting2
-      definition: test2
-      link: https://www.google.com
-    - term: tatting
-      definition: test3
-      link: https://www.google.com
-----
-
-NOTE: If you want terms to link to external URLs, you must define them in one of these files and include the `link` property.
-
-IMPORTANT: Any terms defined in the `terms` attribute override those in the `local-terms` attribute.
+IMPORTANT: Links to the glossary page are provided only when terms are defined in the {url-docs}/tree/shared/modules/terms[`terms` module] of the `shared` branch.
 
 === Glossary pages
 
-To produce a glossary page with all terms that have been defined in the documentation, create an empty page called `z-glossary.adoc` and include the `glossary` macro:
+To produce a glossary page with all terms that have been defined in the `shared` component, create an empty page called `glossary.adoc` in the `reference` module and include a title:
 
 [,asciidoc]
 ----
 = Glossary
-
-glossary::[]
 ----
 
-During the build, the macro collects all the terms used in `glossterm` macros, sorts them alphabetically, and adds them to the page that includes the `glossary` macro. Any terms without a `link` property link to the glossary page.
+During the build, an extension collects all the terms in the {url-docs}/tree/shared/modules/terms[`terms` module] of the `shared` branch, sorts them alphabetically by the file name, and adds them to the page.
+
+IMPORTANT: Make sure to add the glossary page to the nav tree.
 
 == Link macros
 

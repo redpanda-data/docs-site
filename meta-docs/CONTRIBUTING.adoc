@@ -10,6 +10,7 @@
 :url-netlify-docs: https://docs.netlify.com
 :url-antora-docs: https://docs.antora.org
 :url-redoc: https://github.com/Redocly/redoc
+:url-asciidoc: https://docs.asciidoctor.org/asciidoc/latest/syntax-quick-reference/
 :idprefix:
 :idseparator: -
 :experimental:
@@ -21,6 +22,8 @@ endif::[]
 :toc-title: Contents
 
 The Redpanda docs are open source, and we welcome your contributions!
+
+TIP: For help with Asciidoc, see the link:++https://demo--redpanda-documentation.netlify.app/demo/get-started/index.html++[Antora and Asciidoc playground]. Or, see the {url-asciidoc}[Asciidoc syntax quick reference].
 
 toc::[]
 
@@ -69,6 +72,8 @@ The Redpanda docs team uses GitHub issues to track, plan, and prioritize tasks. 
 
 You have the option to assign the issue to yourself or leave the assignee field blank. The Redpanda docs team triages all new issues and will allocate a writer if one isn't already assigned.
 
+IMPORTANT: If you are a Redpanda employee, submit doc issues in `redpanda-data/documentation-private`.
+
 === Contribute content
 
 You have two options to contribute to the documentation:
@@ -102,7 +107,7 @@ image::../images/asciidoc-extension.gif[]
 
 === Clone the Redpanda docs repository
 
-Documentation is hosted in GitHub repositories. To work on a particular documentation repository, clone it on your local machine.
+Documentation is hosted in GitHub repositories. To work on the documentation repository, clone it on your local machine.
 
 TIP: You can find all documentation repositories in the `antora-playbook.yml` file under `content.sources`. See <<find-content, Find content>>
 
@@ -110,8 +115,8 @@ TIP: You can find all documentation repositories in the `antora-playbook.yml` fi
 +
 [source,bash,subs=attributes+]
 ----
-git clone {url-org}/documentation
-cd documentation
+git clone {url-org}/docs
+cd docs
 ----
 +
 IMPORTANT: If you're not a Redpanda employee, you'll need to fork the repository and work on your local fork instead.
@@ -132,7 +137,7 @@ git checkout -b <branch-name>
 
 === Make your changes
 
-After cloning a docs repository and checking out a new local branch, you're ready to make your changes.
+After cloning the docs repository and checking out a new local branch, you're ready to make your changes.
 
 [TIP]
 ====
@@ -153,7 +158,7 @@ To use the script:
 +
 [,bash]
 ----
-npm i
+npm install && npm update
 ----
 
 . If you're using Chrome, install the LiveReload https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei?hl=en[chrome extension].
@@ -226,19 +231,15 @@ For example:
 ----
 content:
   sources:
-  - url: {url-site} <1>
-    branches: main
-    start_paths: [site-search, home, api]
-  - url: https://github.com/redpanda-data/documentation <2>
-    branches: [v/*]
+  - url: https://github.com/redpanda-data/documentation <1>
+    branches: [v/*, api, shared, site-search]
 ----
 
-<1> Clone this repository to work on the main playbook, the home page, the OpenAPI docs, or the site search.
-<2> Clone this repository to work on Redpanda docs.
+<1> Clone this repository to work on Redpanda docs, the home page, shared content, the OpenAPI docs, or the site search.
 
 === Docs structure
 
-All content repositories are organized according to the same content hierarchy.
+All content sources are organized according to the same content hierarchy.
 
 ----
 📒 repository <1>
@@ -255,7 +256,6 @@ All content repositories are organized according to the same content hierarchy.
       📁 pages
   📁 packages <12>
 ----
-
 
 <1> (Required) The repository root and the content source root. Antora assumes the content source root is at the root of a repository unless the `start_path` or `start_paths` key is assigned a value on a content source in the site’s playbook.
 <2> (Required) A component version descriptor file, named `antora.yml`, is required at each content source root. An `antora.yml` file indicates to Antora that the contents of a directory named `modules/` should be collected and processed.
@@ -299,7 +299,7 @@ asciidoc:
     page-exclude-from-dropdown-selector: true
 ----
 
-For example, we use this attribute for the `home` component because the UI has been customized to provide a link to the home page at the top of each nav tree.
+For example, we use this attribute for the `api` component so that API is not displayed as a separate product in the component selector.
 
 == Create index pages
 
@@ -391,6 +391,18 @@ All doc repositories use a single navigation file for the nav tree, which is def
 To update the nav tree, edit the `nav.adoc` file.
 
 For more information about navigation files, see the {url-antora-docs}/antora/latest/navigation/include-lists/[Antora docs].
+
+== Cloud pages
+
+Redpanda Cloud pages should be tagged accordingly. If you create a Redpanda Cloud page make sure to add the attribute `page-cloud:true` to the top of the file under the title.
+
+=== Cloud beta feature
+
+Cloud has a different flavor of beta, where some specific features can be marked as beta. If that's the case, add the attribute `page-beta:true` to your page, after `page-cloud:true`.
+
+== Feature Flag
+
+If a feature is marked as a feature flag, please include the partial admonition that identifies it. To include the admonition, add `include::shared:partial$feature-flag.adoc[]` to the top of the page after the title and any attributes.
 
 == Style guide
 

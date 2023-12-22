@@ -1,2 +1,0 @@
-= Search the Documentation
-:page-layout: search

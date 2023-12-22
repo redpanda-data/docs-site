@@ -1,14 +1,16 @@
 site:
   title: Redpanda Docs
-  start_page: home:ROOT:index.adoc
-  url: http://localhost:5000
+  start_page: ROOT:home:index.adoc
+  url: http://localhost:8000
+urls:
+  html_extension_style: indexify
+  latest_version_segment: 'current'
+output:
+  clean: true
 content:
   sources:
-  - url: .
-    branches: HEAD
-    start_paths: [site-search, home, api]
-  - url: https://github.com/redpanda-data/documentation
-    branches: [v/*]
+  - url: https://github.com/redpanda-data/docs
+    branches: [main, v/*, api, shared, site-search]
 ui:
   bundle:
     url: https://github.com/redpanda-data/docs-ui/releases/latest/download/ui-bundle.zip
@@ -20,11 +22,9 @@ asciidoc:
   - '@redpanda-data/docs-extensions-and-macros/macros/glossary'
   - '@redpanda-data/docs-extensions-and-macros/macros/config-ref'
   - '@redpanda-data/docs-extensions-and-macros/macros/helm-ref'
+  - '@redpanda-data/docs-extensions-and-macros/asciidoc-extensions/add-line-numbers-highlights'
 antora:
   extensions:
-  - require: '@redpanda-data/docs-extensions-and-macros/extensions/version-fetcher/set-latest-version'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/unlisted-pages'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/add-global-attributes'
-    org: redpanda-data
-    repo: docs-site
-    branch: main
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/aggregate-terms'
