@@ -10,7 +10,7 @@ output:
 content:
   sources:
   - url: https://github.com/redpanda-data/docs
-    branches: [main, v/*, api, shared, site-search]
+    branches: [main, v/*, api, shared, site-search,v-WIP/*]
 ui:
   bundle:
     url: https://github.com/redpanda-data/docs-ui/releases/latest/download/ui-bundle.zip
