@@ -21,13 +21,16 @@ async function fetchYouTubeVideos() {
     try {
       const response = await axios.get(API_URL);
       const videos = response.data.items;
+      // To sort by date, Algolia requires Unix timestamps
+      const unixTimestamp = convertToUnixTimestamp(video.snippet.publishedAt);
       return videos
         .filter(video => video.id && video.id.videoId)
         .map(video => ({
           objectID: `https://www.youtube.com/watch?v=${video.id.videoId}`,
           title: video.snippet.title,
           intro: video.snippet.description,
-          publishedAt: video.snippet.publishedAt,
+          date: video.snippet.publishedAt,
+          unixTimestamp: unixTimestamp,
           image: video.snippet.thumbnails.high.url,
           type: 'Video',
           _tags: ['videos']
@@ -36,6 +39,20 @@ async function fetchYouTubeVideos() {
         console.error('Error fetching YouTube videos:', error);
         return [];
     }
+}
+
+function convertToUnixTimestamp(dateString) {
+  try {
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) {
+        console.log(`Invalid date in blog: ${dateString}`);
+        return '';
+      }
+      return Math.floor(date.getTime() / 1000);
+  } catch (error) {
+      console.error(error.message);
+      return '';
+  }
 }
 
 fetchYouTubeVideos().then(async (videos) => {

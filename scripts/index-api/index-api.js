@@ -15,6 +15,7 @@ if (!ALGOLIA_APP_ID || !ALGOLIA_ADMIN_API_KEY || !ALGOLIA_INDEX_NAME) {
 
 const client = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_ADMIN_API_KEY);
 const index = client.initIndex(ALGOLIA_INDEX_NAME);
+const unixTimestamp = Math.floor(Date.now() / 1000)
 
 async function fetchSitemapUrls(sitemapUrl) {
   try {
@@ -62,6 +63,7 @@ async function indexUrlsInAlgolia(urls) {
         title: data.h1,
         titles: data.titles,
         intro: data.intro,
+        unixTimestamp: unixTimestamp,
         type: 'Doc',
         _tags: ['docs','apis']
       };
