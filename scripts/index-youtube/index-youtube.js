@@ -30,7 +30,7 @@ async function fetchYouTubeVideos() {
           title: video.snippet.title,
           intro: video.snippet.description,
           date: video.snippet.publishedAt,
-          unixTimestamp,
+          unixTimestamp: unixTimestamp,
           image: video.snippet.thumbnails.high.url,
           type: 'Video',
           _tags: ['videos']
