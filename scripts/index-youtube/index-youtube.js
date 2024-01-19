@@ -21,8 +21,6 @@ async function fetchYouTubeVideos() {
     try {
       const response = await axios.get(API_URL);
       const videos = response.data.items;
-      // To sort by date, Algolia requires Unix timestamps
-      const unixTimestamp = convertToUnixTimestamp(video.snippet.publishedAt);
       return videos
         .filter(video => video.id && video.id.videoId)
         .map(video => ({
@@ -30,7 +28,7 @@ async function fetchYouTubeVideos() {
           title: video.snippet.title,
           intro: video.snippet.description,
           date: video.snippet.publishedAt,
-          unixTimestamp: unixTimestamp,
+          unixTimestamp: convertToUnixTimestamp(video.snippet.publishedAt),
           image: video.snippet.thumbnails.high.url,
           type: 'Video',
           _tags: ['videos']
