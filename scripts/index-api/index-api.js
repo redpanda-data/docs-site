@@ -45,7 +45,10 @@ async function indexUrlsInAlgolia(urls) {
         const titles = Array.from(document.querySelectorAll('h2,h3,h4,h5,h6'))
           .map(element => {
             const anchor = element.querySelector('a');
-            const href = anchor ? anchor.getAttribute('href') : null;
+            let href = anchor ? anchor.getAttribute('href') : null;
+            if (href && href.startsWith('#')) {
+                href = href.substring(1);
+            }
             return href ? { t: element.textContent.trim(), h: href } : null;
           })
           .filter(item => item !== null);
