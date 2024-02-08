@@ -72,7 +72,7 @@ The Redpanda docs team uses GitHub issues to track, plan, and prioritize tasks. 
 
 You have the option to assign the issue to yourself or leave the assignee field blank. The Redpanda docs team triages all new issues and will allocate a writer if one isn't already assigned.
 
-IMPORTANT: If you are a Redpanda employee, submit doc issues in `redpanda-data/documentation-private`.
+IMPORTANT: If you are a Redpanda employee, submit doc issues in https://github.com/redpanda-data/documentation-private[`redpanda-data/documentation-private`] repo.
 
 === Contribute content
 
@@ -330,7 +330,20 @@ The UI takes care of generating the links from the titles and description attrib
 
 == Move, delete, or rename pages
 
-If you move, delete, or rename pages, you must redirect those page URLs to an existing page in the docs using the `page-aliases` attribute.
+If you move, delete, or rename pages, you must either:
+
+- <<use-page-aliases, Redirect those page URLs to an existing page>> in the docs using the `page-aliases` attribute.
+- <<mark-as-removed, Mark those pages as intentionally removed>> without an alias.
+
+Warnings are logged to the console if any pages aren't marked as intentionally removed or not included in a page alias. For example:
+
+```
+/23.1/deploy/deployment-option/cloud/provision-a-dedicated-cluster/ does not exist in 23.3
+/23.2/upgrade/deprecated/cluster-resource/ does not exist in 23.3
+```
+
+[[page-aliases]]
+=== Use page aliases
 
 The `page-aliases` attribute is set in the page header of a target page using an attribute entry. The target page refers to the page you're redirecting a source page to. The source page refers to the deleted, renamed, or moved page that you're redirecting from. A source page's resource ID (its resource ID before it was deleted, renamed, or moved) is assigned to the `page-aliases` attribute in a target page. Multiple resource IDs can be assigned to the attribute in a comma-separated list.
 
@@ -346,6 +359,18 @@ NOTE: A resource ID assigned to a page-aliases attribute can be used in an xref.
 The content of the page-aliases attribute are used to create Netlify redirects in the `_redirects` file at build time.
 
 IMPORTANT: Make sure that links are relative to the current component version. Do not link to specific versions in page aliases.
+
+=== Mark a page as removed
+
+If you intentionally remove a page without a <<page-aliases, page alias>>, you can add it to the `antora.yml` file for the component version. For example:
+
+```yml
+asciidoc:
+  attributes:
+    removals-without-aliases:
+      - page: upgrade/deprecated/cluster-resource/
+        reason: The cluster resource was deprecated in version 23.2. We no longer need a page dedicated to migration in this version.
+```
 
 == Single-sourcing
 
@@ -400,7 +425,7 @@ Redpanda Cloud pages should be tagged accordingly. If you create a Redpanda Clou
 
 Cloud has a different flavor of beta, where some specific features can be marked as beta. If that's the case, add the attribute `page-beta:true` to your page, after `page-cloud:true`.
 
-== Feature Flag
+== Feature flag
 
 If a feature is marked as a feature flag, please include the partial admonition that identifies it. To include the admonition, add `include::shared:partial$feature-flag.adoc[]` to the top of the page after the title and any attributes.
 
@@ -425,6 +450,10 @@ Here's an excerpt from that report:
 ....
 
 Each message shows the repository source, the refname, and the path from the root of that repository.
+
+== Redpanda Labs
+
+To contribute to Redpanda Labs, see the https://github.com/redpanda-data/redpanda-labs/blob/main/docs/CONTRIBUTING.adoc[Redpanda Labs contribution guide].
 
 == Contact us
 

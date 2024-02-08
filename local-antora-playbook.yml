@@ -11,6 +11,9 @@ content:
   sources:
   - url: https://github.com/redpanda-data/docs
     branches: [main, v/*, api, shared, site-search,v-WIP/*]
+  - url: https://github.com/redpanda-data/redpanda-labs
+    branches: main
+    start_paths: [docs,'*/docs']
 ui:
   bundle:
     url: https://github.com/redpanda-data/docs-ui/releases/latest/download/ui-bundle.zip
@@ -27,4 +30,7 @@ antora:
   extensions:
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/unlisted-pages'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/add-global-attributes'
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/validate-attributes'
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/find-related-docs'
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/find-related-labs'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/aggregate-terms'

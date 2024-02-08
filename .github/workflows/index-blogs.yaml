@@ -2,7 +2,7 @@ name: Index Redpanda blogs and upload to Algolia
 
 on:
   schedule:
-    - cron: '0 22 * * 0'  # Runs every Sunday at midnight
+    - cron: '0 22 * * 0'  # Runs every Sunday at 10pm
   workflow_dispatch:
 
 jobs:
