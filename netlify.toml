@@ -14,10 +14,10 @@ NODE_VERSION = "18"
     preset = "desktop"
 
 # For future use. Allows us to host docs under the `/api/` path that other services such as Redpanda Cloud can consume.
-[[headers]]
-  for = "/api/*"
-  [headers.values]
-    Access-Control-Allow-Origin = "*"
+#[[headers]]
+#  for = "/api/*"
+#  [headers.values]
+#    Access-Control-Allow-Origin = "*"
 
 # NOTE the following redirects get appended to the redirects defined in the _redirects file
 
@@ -128,7 +128,12 @@ status = 301
 
 [[redirects]]
 from = "/docs/api/*"
-to = "/api/:splat"
+to = "/current/reference/api-reference/"
+status = 301
+
+[[redirects]]
+from = "/api/"
+to = "/current/reference/api-reference/"
 status = 301
 
 [[redirects]]
