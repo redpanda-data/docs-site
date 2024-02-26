@@ -19,7 +19,7 @@ jobs:
         node-version: '18'
 
     - name: Install dependencies
-      run: cd scripts/index-youtube && npm install
+      run: cd scripts/index-masterclasses && npm install
 
     - name: Run indexing script
       run: node scripts/index-masterclasses/index-masterclasses.js
