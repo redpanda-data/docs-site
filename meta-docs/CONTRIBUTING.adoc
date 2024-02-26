@@ -72,7 +72,7 @@ The Redpanda docs team uses GitHub issues to track, plan, and prioritize tasks. 
 
 You have the option to assign the issue to yourself or leave the assignee field blank. The Redpanda docs team triages all new issues and will allocate a writer if one isn't already assigned.
 
-IMPORTANT: If you are a Redpanda employee, submit doc issues in https://github.com/redpanda-data/documentation-private[`redpanda-data/documentation-private`] repo.
+IMPORTANT: If you are a Redpanda employee, submit doc issues in the https://github.com/redpanda-data/documentation-private[`redpanda-data/documentation-private`] repo.
 
 === Contribute content
 
@@ -442,7 +442,7 @@ This centralized approach allows the documentation team to maintain a coherent s
 
 === Contribute to category definitions
 
-The Redpanda docs team welcomes contributions and suggestions for improving or expanding the category definitions. If you have ideas for new categories or adjustments to existing ones that could enhance the organization and discoverability of content, we encourage you to contribute in the following ways:
+The Redpanda doc team welcomes contributions and suggestions for improving or expanding the category definitions. If you have ideas for new categories or adjustments to existing ones that could enhance the organization and discoverability of content, we encourage you to contribute in the following ways:
 
 . Open a pull request.
 +
