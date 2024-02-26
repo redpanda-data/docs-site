@@ -3,7 +3,7 @@ const algoliasearch = require('algoliasearch');
 const yaml = require('js-yaml');
 
 const INVITE_LINK_BASE = 'https://play.instruqt.com/redpanda/invite/'
-const VALID_CATEGORIES_URL = 'https://raw.githubusercontent.com/redanda-data/docs/shared/modules/ROOT/partials/valid-categories.yml'
+const VALID_CATEGORIES_URL = 'https://raw.githubusercontent.com/redpanda-data/docs/shared/modules/ROOT/partials/valid-categories.yml'
 const ALGOLIA_APP_ID = process.env.ALGOLIA_APP_ID;
 const ALGOLIA_ADMIN_API_KEY = process.env.ALGOLIA_ADMIN_API_KEY;
 const ALGOLIA_INDEX_NAME = process.env.ALGOLIA_INDEX_NAME;
