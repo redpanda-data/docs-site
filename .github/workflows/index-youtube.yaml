@@ -2,7 +2,7 @@ name: Index Redpanda YouTube videos and upload to Algolia
 
 on:
   schedule:
-    - cron: '0 23 * * 0'  # Runs every Sunday at midnight
+    - cron: '0 23 * * 0'  # Runs every Sunday at 11pm UTC
   workflow_dispatch:
 
 jobs:

@@ -13,6 +13,10 @@ if (!ALGOLIA_APP_ID || !ALGOLIA_ADMIN_API_KEY || !ALGOLIA_INDEX_NAME) {
   console.error('Algolia configuration is missing. Set ALGOLIA_APP_ID, ALGOLIA_ADMIN_API_KEY, and ALGOLIA_INDEX_NAME environment variables.');
   process.exit(1);
 }
+if (!YOUTUBE_API_KEY ) {
+  console.error('YouTube API key is missing. Set the YOUTUBE_API_KEY environment variables. See https://console.cloud.google.com/apis/api/youtube.googleapis.com');
+  process.exit(1);
+}
 
 const client = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_ADMIN_API_KEY);
 const index = client.initIndex(ALGOLIA_INDEX_NAME);
