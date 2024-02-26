@@ -5,10 +5,10 @@ site:
   robots: allow
   keys:
     google_analytics: GTM-WB2CSV5
-    announcement: false
-    announcement-text: 'Save your seat for our August 23 Masterclass:'
-    announcement-link-text: 'Day 2 Operations with Redpanda'
-    announcement-link: 'https://go.redpanda.com/masterclass-aug23-2023'
+    announcement: true
+    announcement-text: 'Try our collection of code examples:'
+    announcement-link-text: 'Redpanda Labs'
+    announcement-link: 'https://docs.redpanda.com/redpanda-labs/'
 urls:
   html_extension_style: indexify
   redirect_facility: netlify
