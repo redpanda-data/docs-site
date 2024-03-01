@@ -145,3 +145,88 @@ status = 301
 from = "/docs/*"
 to = "/current/:splat"
 status = 301
+
+[[redirects]]
+from = "/current/reference/docker-compose/"
+to = "/redpanda-labs/"
+status = 301
+
+[[redirects]]
+from = "/current/develop/chat-room/"
+to = "/redpanda-labs/"
+status = 301
+
+[[redirects]]
+from = "/current/develop/chat-room-docker/"
+to = "/redpanda-labs/"
+status = 301
+
+[[redirects]]
+from = "/current/get-started/code-samples/"
+to = "/redpanda-labs/"
+status = 301
+
+[[redirects]]
+from = "/current/development/code-samples/"
+to = "/redpanda-labs/"
+status = 301
+
+[[redirects]]
+from = "/current/introduction/code-samples/"
+to = "/redpanda-labs/"
+status = 301
+
+[[redirects]]
+from = "/current/develop/code-samples/"
+to = "/redpanda-labs/"
+status = 301
+
+[[redirects]]
+from = "/current/console/reference/docker-compose/"
+to = "/redpanda-labs/"
+status = 301
+
+[[redirects]]
+from = "/current/reference/console/docker-compose/"
+to = "/redpanda-labs/"
+status = 301
+
+[[redirects]]
+from = "/current/develop/guide-go-cloud/"
+to = "/redpanda-labs/"
+status = 301
+
+[[redirects]]
+from = "/current/develop/guide-python-cloud/"
+to = "/redpanda-labs/"
+status = 301
+
+[[redirects]]
+from = "/current/develop/guide-java-cloud/"
+to = "/redpanda-labs/"
+status = 301
+
+[[redirects]]
+from = "/current/develop/guide-nodejs-cloud/"
+to = "/redpanda-labs/"
+status = 301
+
+[[redirects]]
+from = "/current/develop/guide-go/"
+to = "/redpanda-labs/"
+status = 301
+
+[[redirects]]
+from = "/current/develop/guide-python/"
+to = "/redpanda-labs/"
+status = 301
+
+[[redirects]]
+from = "/current/develop/guide-java/"
+to = "/redpanda-labs/"
+status = 301
+
+[[redirects]]
+from = "/current/develop/guide-nodejs/"
+to = "/redpanda-labs/"
+status = 301
