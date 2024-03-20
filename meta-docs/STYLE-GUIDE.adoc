@@ -988,6 +988,9 @@ Incorrect: To enable Shadow Indexing on a cluster, set the following parameters 
 |streaming data
 |Write as two words.
 |
+|systemd
+|Do not write as SystemD or System D.
+|
 |that is
 |Do not use "i.e."
 |
