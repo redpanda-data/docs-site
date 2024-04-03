@@ -28,8 +28,10 @@ asciidoc:
   - '@redpanda-data/docs-extensions-and-macros/asciidoc-extensions/add-line-numbers-highlights'
 antora:
   extensions:
+  - '@antora/pdf-extension'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/unlisted-pages'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/add-global-attributes'
+  - '@redpanda-data/docs-extensions-and-macros/extensions/version-fetcher/set-latest-version'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/validate-attributes'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/find-related-docs'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/find-related-labs'

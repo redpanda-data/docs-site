@@ -1,0 +1,8 @@
+root_level: 0
+asciidoc:
+  attributes:
+    source-highlighter: rouge
+    allow-uri-read: ''
+build:
+  command: bundle exec asciidoctor-pdf --trace --sourcemap
+  publish: false
