@@ -37,19 +37,18 @@ async function indexUrlsInAlgolia(urls) {
     try {
       await page.goto(url, { waitUntil: 'networkidle0' });
       const data = await page.evaluate(() => {
+        const shadowHost = document.getElementById('api');
+        const shadowRoot = shadowHost.shadowRoot;
         const title = document.querySelector('title')?.innerText;
-        const h1 = document.querySelector('h1')?.innerText;
-        const intro = document.querySelector('div[data-role="redoc-description"] > p')?.innerText;
-        const metaVersion = document.querySelector('meta[name="latest-version"]');
-        const latestVersion = metaVersion.getAttribute('content');
-        const titles = Array.from(document.querySelectorAll('h2,h3,h4,h5,h6'))
+        const h1 = shadowRoot.querySelector('#api-title')?.innerText;
+        const intro = shadowRoot.querySelector('#api-description')?.innerText;
+        const metaVersion = document.querySelector('meta[name="latest-redpanda-version"]');
+        const latestVersion = metaVersion?.getAttribute('content');
+        const titles = Array.from(shadowRoot.querySelectorAll('div.expanded-endpoint-body[part^="section-operation"]'))
           .map(element => {
-            const anchor = element.querySelector('a');
-            let href = anchor ? anchor.getAttribute('href') : null;
-            if (href && href.startsWith('#')) {
-                href = href.substring(1);
-            }
-            return href ? { t: element.textContent.trim(), h: href } : null;
+            const title = element.querySelector('h2')?.textContent.trim()
+            const href = element.id;
+            return href ? { t: title, h: href } : null;
           })
           .filter(item => item !== null);
         return { title, h1, intro, titles, latestVersion };
@@ -68,7 +67,7 @@ async function indexUrlsInAlgolia(urls) {
         intro: data.intro,
         unixTimestamp: unixTimestamp,
         type: 'Doc',
-        _tags: ['docs']
+        _tags: [`Redpanda v${data.latestVersion}`]
       };
     } catch (error) {
       console.error(`Error processing URL ${url}:`, error);
