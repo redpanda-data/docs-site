@@ -27,11 +27,6 @@ to = "/current/:splat"
 status = 301
 
 [[redirects]]
-from = "/beta/*"
-to = "/current/:splat"
-status = 307
-
-[[redirects]]
 from = "/home"
 to = "/current/home"
 status = 301
