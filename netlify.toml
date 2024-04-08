@@ -23,13 +23,8 @@ NODE_VERSION = "18"
 
 [[redirects]]
 from = "/docs/beta/*"
-to = "/current/:splat"
+to = "/beta"
 status = 301
-
-[[redirects]]
-from = "/beta/*"
-to = "/current/:splat"
-status = 307
 
 [[redirects]]
 from = "/home"
