@@ -470,6 +470,26 @@ When you use a placeholder in text or code, explain the placeholder the first ti
 rpk topic create <topic-name>
 ----
 
+If you are working with a longer code block, such as a Bash script, that contains a large number of placeholders whose values need to be substituted, provide the code block with placeholders first, immediately followed by a bulleted list of descriptions or explanations for each placeholder:
+
+    [,bash]
+    ----
+    gcloud compute networks subnets create <subnet-name> \
+        --project=<project> \
+        --network=<network-name> \
+        --region=<region> \
+        --range=<subnet-range> \
+        --purpose=PRIVATE_SERVICE_CONNECT
+    ----
+    Replace these placeholder variables:
+    - `<subnet-name>`: The name of the NAT subnet.
+    - `<project>`: The host GCP project ID.
+    - `<network-name>`: The name of the VPC being used for your Redpanda Cloud cluster.
+    - `<region>`: The region of the Redpanda Cloud cluster.
+    - `<subnet-range>`: The CIDR range of the subnet. The mask should be at least /29. Each Private Service Connect connection takes up one IP address from the NAT subnet, so the CIDR must be able to accommodate all projects from which connections to the service attachment will be issued.
+
+Sometimes, engineers may provide a series of commands that explicitly set shell or environment variables first, and are then referenced in other code blocks afterwards (for example, using the `$` sign). Discuss with the engineers and SMEs how to keep the usage of placeholders versus references as consistent as possible. For instance, you might consolidate multiple steps into a single code block in which the placeholders need to be replaced only once before the entire block can be copied and run. Work with the engineers and SMEs to present the optimal user workflow in the doc, and adjust the usage of placeholders and references accordingly. 
+
 The Redpanda documentation UI includes a custom script that makes placeholder values in code blocks editable.
 
 NOTE: Editable placeholders are disabled in XML code blocks
