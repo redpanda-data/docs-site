@@ -68,12 +68,16 @@ In text, follow the standard capitalization rules for American English. Addition
 === Commands and code
 
 Don’t start a sentence with a command or code. Instead, try to move the code into the middle of the sentence. Introduce the command with the more descriptive word “run” instead of “use the X command".
-- *Correct:* Run the `rpk topic create` command to create a new topic.
-- *Incorrect:* `rpk topic create` creates a new topic.
++
+*Correct:* Run the `rpk topic create` command to create a new topic.
++
+*Incorrect:* `rpk topic create` creates a new topic.
 
-Similarly, do not start a sentence with a filename. For example:
-- *Correct:* The `redpanda.yaml` file contains configuration parameters.
-- *Incorrect:* `redpanda.yaml` contains configuration parameters.
+Similarly, do not start a sentence with a filename.
++
+*Correct:* The `redpanda.yaml` file contains configuration parameters.
++
+*Incorrect:* `redpanda.yaml` contains configuration parameters.
 
 === Commas
 
@@ -249,15 +253,20 @@ In general, when an abbreviation is likely to be unfamiliar to the audience, spe
 Cross-reference links should be constructed to provide meaning ("why") before the link. Introduce links to other documentation topics with “see”, not “refer to”. Be mindful that users on mobile might have a hard time clicking on small links.
 
 - Use meaningful link:https://developers.google.com/style/link-text[text].
-    **Correct:** To begin coding right away, see link:https://developer.android.com/training/basics/firstapp[Building your first app].
-    **Incorrect:** Click here.
-    **Incorrect:** See this blog post.
++
+*Correct:* To begin coding right away, see link:https://developer.android.com/training/basics/firstapp[Building your first app].
++
+*Incorrect:* Click here.
++
+*Incorrect:* See this blog post.
 
 - If a link downloads a file, then make that clear in the link text, and mention the file type.
-    **Correct:** For more information, see link:https://www.example.com/security.pdf[download the security features PDF].
++
+*Correct:* For more information, see link:https://www.example.com/security.pdf[download the security features PDF].
 
 - If the link text doesn’t clearly indicate why you're referring the reader to this information, then give an explanation. Make the explanation specific, but don't repeat the link text.
-    **Correct:** For more information about authentication and authorization, see link:https://developers.google.com/identity/protocols/oauth2[Using OAuth 2.0 to access Google APIs].
++
+*Correct:* For more information about authentication and authorization, see link:https://developers.google.com/identity/protocols/oauth2[Using OAuth 2.0 to access Google APIs].
 
 - Do not link to outside sources like wikipedia for definitions. Every link can distract readers away from the reason they came to that page in the first place.
 
