@@ -68,12 +68,16 @@ In text, follow the standard capitalization rules for American English. Addition
 === Commands and code
 
 Don’t start a sentence with a command or code. Instead, try to move the code into the middle of the sentence. Introduce the command with the more descriptive word “run” instead of “use the X command".
-- *Correct:* Run the `rpk topic create` command to create a new topic.
-- *Incorrect:* `rpk topic create` creates a new topic.
++
+*Correct:* Run the `rpk topic create` command to create a new topic.
++
+*Incorrect:* `rpk topic create` creates a new topic.
 
-Similarly, do not start a sentence with a filename. For example:
-- *Correct:* The `redpanda.yaml` file contains configuration parameters.
-- *Incorrect:* `redpanda.yaml` contains configuration parameters.
+Similarly, do not start a sentence with a filename.
++
+*Correct:* The `redpanda.yaml` file contains configuration parameters.
++
+*Incorrect:* `redpanda.yaml` contains configuration parameters.
 
 === Commas
 
@@ -134,36 +138,32 @@ In section titles within a doc, `<h2>` and below, use https://en.wikipedia.org/w
 Always use the imperative in headings. For example, use “Configure Producers” instead of “Configuring Producers”.
 
 == Voice and tone
-- Use the second person ("you") when speaking to or about the reader.
-- Don’t use "we", "our", or "let's" as if author and reader were a hybrid entity.
-**Good:** "Configure your terminal window"
-**Bad:** "We configure the terminal window" or "The terminal window is configured"
 
-- Start task instructions with the imperative. For example, say “Set the environment variable” instead of “To set the environment variable” or “You can set the environment variable”.
+* Use the second person ("you") when speaking to or about the reader.
+* Don’t use "we", "our", or "let's" as if author and reader were a hybrid entity.
++
+*Good:* "Configure your terminal window"
++
+*Bad:* "We configure the terminal window" or "The terminal window is configured"
 
-- Focus on facts, real user tasks, and real user benefits. Avoid promotional hype at all
+* Start task instructions with the imperative. For example, say “Set the environment variable” instead of “To set the environment variable” or “You can set the environment variable”.
+* Focus on facts, real user tasks, and real user benefits. Avoid promotional hype at all
 costs.
-
-- Use shorter words over longer alternatives. Examples: "helps" rather than "facilitates"
+* Use shorter words over longer alternatives. Examples: "helps" rather than "facilitates"
 and "uses" rather than "utilizes."
+* Use active voice where possible. Passive voice is acceptable when any of these
+conditions is true:  
+** The system performs the action.
+** It is more appropriate to focus on the receiver of the action.
+** You want to avoid blaming the user for an error, such as in an error message.
+** The information is clearer in passive voice.
 
-- Use active voice where possible. Passive voice is acceptable when any of these
-conditions is true:
-  - The system performs the action.
-  - It is more appropriate to focus on the receiver of the action.
-  - You want to avoid blaming the user for an error, such as in an error message.
-  - The information is clearer in passive voice.
-
-* Avoid calling out the version in text ("Starting in version x.x...") unless the feature was slipped in during a point/patch release and not announced in major version Release Notes. 
-
+* Avoid calling out the version in text ("Starting in version x.x...") unless the feature was slipped in during a point/patch release and not announced in major version Release Notes.
 * Avoid using future tense, such as "will". Especially avoid the use of future and
-passive used in tandem, such as "will not be". 
-
+passive used in tandem, such as "will not be".
 * If a sentence contains a conditional phrase, put it at the beginning of the sentence. That way, the reader can skip the rest of the sentence with confidence if the condition doesn't apply.
-
 * Aim for economical expression. Omit weak modifiers such as "quite," "very," and
 "extremely." Weak modifiers have a diluting effect.
-
 * Avoid weak verbs such as "is," "are," "has," "have," "do," "does," "provide," and "support." Weak verbs require more wordy constructions. Don’t start a sentence with "There is..." or "There are...", which are empty phrases that add no meaning. Instead, rearrange the sentence so the subject comes first. For example, change “There are three ways to do this” to “You can do this in three ways”.
 
 == GUI style guidelines
@@ -253,15 +253,20 @@ In general, when an abbreviation is likely to be unfamiliar to the audience, spe
 Cross-reference links should be constructed to provide meaning ("why") before the link. Introduce links to other documentation topics with “see”, not “refer to”. Be mindful that users on mobile might have a hard time clicking on small links.
 
 - Use meaningful link:https://developers.google.com/style/link-text[text].
-    **Correct:** To begin coding right away, see link:https://developer.android.com/training/basics/firstapp[Building your first app].
-    **Incorrect:** Click here.
-    **Incorrect:** See this blog post.
++
+*Correct:* To begin coding right away, see link:https://developer.android.com/training/basics/firstapp[Building your first app].
++
+*Incorrect:* Click here.
++
+*Incorrect:* See this blog post.
 
 - If a link downloads a file, then make that clear in the link text, and mention the file type.
-    **Correct:** For more information, see link:https://www.example.com/security.pdf[download the security features PDF].
++
+*Correct:* For more information, see link:https://www.example.com/security.pdf[download the security features PDF].
 
 - If the link text doesn’t clearly indicate why you're referring the reader to this information, then give an explanation. Make the explanation specific, but don't repeat the link text.
-    **Correct:** For more information about authentication and authorization, see link:https://developers.google.com/identity/protocols/oauth2[Using OAuth 2.0 to access Google APIs].
++
+*Correct:* For more information about authentication and authorization, see link:https://developers.google.com/identity/protocols/oauth2[Using OAuth 2.0 to access Google APIs].
 
 - Do not link to outside sources like wikipedia for definitions. Every link can distract readers away from the reason they came to that page in the first place.
 
