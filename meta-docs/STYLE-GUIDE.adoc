@@ -137,8 +137,8 @@ Always use the imperative in headings. For example, use “Configure Producers�
 
 * Use the second person ("you") when speaking to or about the reader.
 * Don’t use "we", "our", or "let's" as if author and reader were a hybrid entity.
-    *Good:* "Configure your terminal window"
-    *Bad:* "We configure the terminal window" or "The terminal window is configured"
+** *Good:* "Configure your terminal window"
+** *Bad:* "We configure the terminal window" or "The terminal window is configured"
 
 * Start task instructions with the imperative. For example, say “Set the environment variable” instead of “To set the environment variable” or “You can set the environment variable”.
 * Focus on facts, real user tasks, and real user benefits. Avoid promotional hype at all
