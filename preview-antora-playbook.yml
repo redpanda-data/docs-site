@@ -3,7 +3,7 @@ site:
   start_page: ROOT:home:index.adoc
   url: https://redpanda-antora-site.netlify.app
   keys:
-    announcement: true
+    announcement: false
     announcement-text: 'Try our collection of code examples:'
     announcement-link-text: 'Redpanda Labs'
     announcement-link: 'https://docs.redpanda.com/redpanda-labs/'
