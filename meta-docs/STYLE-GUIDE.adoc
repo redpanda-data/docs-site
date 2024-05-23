@@ -888,6 +888,13 @@ All subsequent references on the page.
 |as well as
 |Do not use to mean "and."
 |
+|assumes
+|Clusters, topics, applications--none are sentient beings capable of making assumptions. For these constructs, use: "based on the assumption".
+|Incorrect: The rest of this section assumes that the HTTP proxy port is 8082. 
+
+Correct: The rest of this section is based on the assumption that the HTTP proxy port is 8082.
+
+|
 |backend
 |Do not use "back end."
 |
