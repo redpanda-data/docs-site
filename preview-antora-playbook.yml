@@ -18,10 +18,12 @@ output:
 content:
   sources:
   - url: https://github.com/redpanda-data/docs
-    branches: [main, v/*, api, shared, site-search, 'v-WIP/24.1','!v-end-of-life/*']
+    branches: [main, v/*, api, shared, site-search,'!v-end-of-life/*']
   - url: https://github.com/redpanda-data/redpanda-labs
     branches: main
     start_paths: [docs,'*/docs']
+  - url: https://github.com/redpanda-data/rp-connect-docs
+    branches: main
 ui:
   bundle:
     url: https://github.com/redpanda-data/docs-ui/releases/latest/download/ui-bundle.zip
@@ -30,12 +32,14 @@ asciidoc:
   attributes:
   extensions:
   - '@asciidoctor/tabs'
+  - '@redpanda-data/docs-extensions-and-macros/macros/rp-connect-components'
   - '@redpanda-data/docs-extensions-and-macros/macros/glossary'
   - '@redpanda-data/docs-extensions-and-macros/macros/config-ref'
   - '@redpanda-data/docs-extensions-and-macros/macros/helm-ref'
   - '@redpanda-data/docs-extensions-and-macros/asciidoc-extensions/add-line-numbers-highlights'
 antora:
   extensions:
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/generate-rp-connect-categories'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/modify-redirects'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/unlisted-pages'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/add-global-attributes'
