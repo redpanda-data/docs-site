@@ -3,10 +3,10 @@ site:
   start_page: ROOT:home:index.adoc
   url: https://redpanda-antora-site.netlify.app
   keys:
-    announcement: false
-    announcement-text: 'Try our collection of code examples:'
-    announcement-link-text: 'Redpanda Labs'
-    announcement-link: 'https://docs.redpanda.com/redpanda-labs/'
+    announcement: true
+    announcement-text: 'BREAKING NEWS: Redpanda acquires Benthos & introduces Redpanda Connect with 220+ connectors. '
+    announcement-link-text: 'Learn More.'
+    announcement-link: 'https://docs.redpanda.com/redpanda-connect/about/'
 urls:
   html_extension_style: indexify
   redirect_facility: netlify
