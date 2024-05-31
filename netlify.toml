@@ -147,87 +147,87 @@ to = "/current/:splat"
 status = 301
 
 [[redirects]]
-from = "/current/reference/docker-compose/"
+from = "/*/reference/docker-compose/"
 to = "/redpanda-labs/"
 status = 301
 
 [[redirects]]
-from = "/current/develop/chat-room/"
+from = "/*/develop/chat-room/"
 to = "/redpanda-labs/"
 status = 301
 
 [[redirects]]
-from = "/current/develop/chat-room-docker/"
+from = "/*/develop/chat-room-docker/"
 to = "/redpanda-labs/"
 status = 301
 
 [[redirects]]
-from = "/current/get-started/code-samples/"
+from = "/*/get-started/code-samples/"
 to = "/redpanda-labs/"
 status = 301
 
 [[redirects]]
-from = "/current/development/code-samples/"
+from = "/*/development/code-samples/"
 to = "/redpanda-labs/"
 status = 301
 
 [[redirects]]
-from = "/current/introduction/code-samples/"
+from = "/*/introduction/code-samples/"
 to = "/redpanda-labs/"
 status = 301
 
 [[redirects]]
-from = "/current/develop/code-samples/"
+from = "/*/develop/code-samples/"
 to = "/redpanda-labs/"
 status = 301
 
 [[redirects]]
-from = "/current/console/reference/docker-compose/"
+from = "/*/console/reference/docker-compose/"
 to = "/redpanda-labs/"
 status = 301
 
 [[redirects]]
-from = "/current/reference/console/docker-compose/"
+from = "/*/reference/console/docker-compose/"
 to = "/redpanda-labs/"
 status = 301
 
 [[redirects]]
-from = "/current/develop/guide-go-cloud/"
+from = "/*/develop/guide-go-cloud/"
 to = "/redpanda-labs/"
 status = 301
 
 [[redirects]]
-from = "/current/develop/guide-python-cloud/"
+from = "/*/develop/guide-python-cloud/"
 to = "/redpanda-labs/"
 status = 301
 
 [[redirects]]
-from = "/current/develop/guide-java-cloud/"
+from = "/*/develop/guide-java-cloud/"
 to = "/redpanda-labs/"
 status = 301
 
 [[redirects]]
-from = "/current/develop/guide-nodejs-cloud/"
+from = "/*/develop/guide-nodejs-cloud/"
 to = "/redpanda-labs/"
 status = 301
 
 [[redirects]]
-from = "/current/develop/guide-go/"
+from = "/*/develop/guide-go/"
 to = "/redpanda-labs/"
 status = 301
 
 [[redirects]]
-from = "/current/develop/guide-python/"
+from = "/*/develop/guide-python/"
 to = "/redpanda-labs/"
 status = 301
 
 [[redirects]]
-from = "/current/develop/guide-java/"
+from = "/*/develop/guide-java/"
 to = "/redpanda-labs/"
 status = 301
 
 [[redirects]]
-from = "/current/develop/guide-nodejs/"
+from = "/*/develop/guide-nodejs/"
 to = "/redpanda-labs/"
 status = 301
 
