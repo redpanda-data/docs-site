@@ -21,7 +21,6 @@ NODE_VERSION = "18"
 
 # NOTE the following redirects get appended to the redirects defined in the _redirects file
 
-# ========Beta redirects==========
 [[redirects]]
 from = "/docs/beta/*"
 to = "/beta"
@@ -32,7 +31,6 @@ from = "/beta/*"
 to = "/current/:splat"
 status = 307
 
-# ===========Docusaurus to Antora migration redirects============
 [[redirects]]
 from = "/home"
 to = "/current/home"
@@ -64,12 +62,22 @@ to = "/current/:splat"
 status = 301
 
 [[redirects]]
+from = "/22.3/*"
+to = "/current/:splat"
+status = 301
+
+[[redirects]]
 from = "/docs/22.2/platform/*"
 to = "/current/:splat"
 status = 301
 
 [[redirects]]
 from = "/docs/22.2/*"
+to = "/current/:splat"
+status = 301
+
+[[redirects]]
+from = "/22.2/*"
 to = "/current/:splat"
 status = 301
 
@@ -84,12 +92,22 @@ to = "/current/:splat"
 status = 301
 
 [[redirects]]
+from = "/22.1/*"
+to = "/current/:splat"
+status = 301
+
+[[redirects]]
 from = "/docs/21.11/platform/*"
 to = "/current/:splat"
 status = 301
 
 [[redirects]]
 from = "/docs/21.11/*"
+to = "/current/:splat"
+status = 301
+
+[[redirects]]
+from = "/21.11/*"
 to = "/current/:splat"
 status = 301
 
@@ -128,33 +146,6 @@ from = "/docs/*"
 to = "/current/:splat"
 status = 301
 
-# ================End of life versions===================
-[[redirects]]
-from = "/23.1/*"
-to = "/current/:splat"
-status = 301
-
-[[redirects]]
-from = "/22.2/*"
-to = "/current/:splat"
-status = 301
-
-[[redirects]]
-from = "/22.3/*"
-to = "/current/:splat"
-status = 301
-
-[[redirects]]
-from = "/22.1/*"
-to = "/current/:splat"
-status = 301
-
-[[redirects]]
-from = "/21.11/*"
-to = "/current/:splat"
-status = 301
-
-# =========Bulk redirects from different components========
 [[redirects]]
 from = "/current/reference/docker-compose/"
 to = "/redpanda-labs/"
@@ -238,4 +229,9 @@ status = 301
 [[redirects]]
 from = "/current/develop/guide-nodejs/"
 to = "/redpanda-labs/"
+status = 301
+
+[[redirects]]
+from = "/23.1/*"
+to = "/current/:splat"
 status = 301
