@@ -235,3 +235,8 @@ status = 301
 from = "/23.1/*"
 to = "/current/:splat"
 status = 301
+
+[[redirects]]
+from = "/cookbooks/*"
+to = "/redpanda-connect/cookbooks/:splat"
+status = 301
