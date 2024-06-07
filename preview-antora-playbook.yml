@@ -2,6 +2,7 @@ site:
   title: Redpanda Docs
   start_page: ROOT:home:index.adoc
   url: https://redpanda-antora-site.netlify.app
+  robots: disallow
   keys:
     announcement: true
     announcement-text: 'BREAKING NEWS: Redpanda acquires Benthos & introduces Redpanda Connect with 220+ connectors. '
