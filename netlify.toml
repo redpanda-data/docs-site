@@ -13,6 +13,12 @@ NODE_VERSION = "18"
   [plugins.inputs.settings]
     preset = "desktop"
 
+# Allows us to fetch the API specs in local builds.
+[[headers]]
+  for = "/api/_attachments/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+
 # For future use. Allows us to host docs under the `/api/` path that other services such as Redpanda Cloud can consume.
 #[[headers]]
 #  for = "/api/*"
