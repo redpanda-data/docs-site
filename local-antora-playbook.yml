@@ -10,12 +10,14 @@ output:
 content:
   sources:
   - url: https://github.com/redpanda-data/docs
-    branches: [main, v/*, api, shared, site-search,'!v-end-of-life/*']
+    branches: ['main', v/*, '#2522-fix-api-links-to-new-cloud-docs-repo', '#2521-fix-glossary-links-with-new-cloud-docs-repo', site-search,'!v-end-of-life/*']
   - url: https://github.com/redpanda-data/redpanda-labs
     branches: main
     start_paths: [docs,'*/docs']
   - url: https://github.com/redpanda-data/rp-connect-docs
     branches: main
+  - url: https://github.com/redpanda-data/cloud-docs
+    branches: '#2524-update-readme-and-add-api-files'
 ui:
   bundle:
     url: https://github.com/redpanda-data/docs-ui/releases/latest/download/ui-bundle.zip
