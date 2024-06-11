@@ -10,7 +10,7 @@ output:
 content:
   sources:
   - url: https://github.com/redpanda-data/docs
-    branches: ['main', v/*, '#2522-fix-api-links-to-new-cloud-docs-repo', '#2521-fix-glossary-links-with-new-cloud-docs-repo', site-search,'!v-end-of-life/*']
+    branches: ['#2512-adjust-latest-docs-repo-for-new-cloud-docs-repo', v/*, '#2522-fix-api-links-to-new-cloud-docs-repo', '#2521-fix-glossary-links-with-new-cloud-docs-repo', site-search,'!v-end-of-life/*']
   - url: https://github.com/redpanda-data/redpanda-labs
     branches: main
     start_paths: [docs,'*/docs']
