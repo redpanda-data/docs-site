@@ -45,6 +45,7 @@ antora:
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/modify-redirects'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/algolia-indexer/index'
     excludes: ['.thumbs','script', '.page-versions','.feedback-section','.banner-container']
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/unpublish-pages'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/unlisted-pages'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/add-global-attributes'
   - '@redpanda-data/docs-extensions-and-macros/extensions/version-fetcher/set-latest-version'

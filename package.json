@@ -3,7 +3,7 @@
   "description": "The Antora playbook project for Redpanda documentation.",
   "license": "ISC",
   "scripts": {
-    "build": "if [ \"$PREVIEW\" = \"true\" ]; then antora --to-dir docs --fetch preview-antora-playbook.yml; else antora --to-dir docs --fetch antora-playbook.yml; fi",
+    "build": "if [ \"$PREVIEW\" = \"true\" ]; then antora --to-dir docs --fetch preview-antora-playbook.yml --stacktrace; else antora --to-dir docs --fetch antora-playbook.yml --stacktrace; fi",
     "build-local": "antora --to-dir docs --fetch local-antora-playbook.yml",
     "start": "cross-env-shell LIVERELOAD=true npx gulp",
     "serve": "wds --node-resolve --open / --watch --root-dir docs"
