@@ -8,6 +8,19 @@ jobs:
   update-algolia-index:
     runs-on: ubuntu-latest
     steps:
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_SM_READONLY_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SM_READONLY_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+      - name: get secrets from aws sm
+        uses: aws-actions/aws-secretsmanager-get-secrets@v2
+        with:
+          secret-ids: |
+            ,sdlc/prod/github/algolia
+            ,sdlc/prod/github/youtube_api_key
+          parse-json-secrets: true
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Set up Node.js
@@ -18,8 +31,3 @@ jobs:
         run: cd scripts/index-youtube && npm install
       - name: Run indexing script
         run: node scripts/index-youtube/index-youtube.js
-        env:
-          ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_APP_ID }}
-          ALGOLIA_ADMIN_API_KEY: ${{ secrets.ALGOLIA_ADMIN_API_KEY }}
-          ALGOLIA_INDEX_NAME: ${{ secrets.ALGOLIA_INDEX_NAME }}
-          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY}}
