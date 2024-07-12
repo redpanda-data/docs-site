@@ -252,12 +252,7 @@ to = "/redpanda-connect/cookbooks/:splat"
 status = 301
 
 [[redirects]]
-from = "/blog/2021/*"
-to = "/redpanda-connect/about/"
-status = 301
-
-[[redirects]]
-from = "/blog/2022/*"
+from = "/blog/*"
 to = "/redpanda-connect/about/"
 status = 301
 
