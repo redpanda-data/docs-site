@@ -279,8 +279,8 @@ to = "/redpanda-connect/components/processors/xml/"
 status = 301
 
 [[redirects]]
-from = "/redpanda-connect/components/input/xml"
-to = "/redpanda-connect/components/processors/xml/"
+from = "/redpanda-connect/components/outputs/aws_s"
+to = "/redpanda-connect/components/outputs/about/"
 status = 301
 
 [[redirects]]
