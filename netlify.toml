@@ -290,7 +290,7 @@ status = 301
 
 [[redirects]]
 from = "/redpanda-connect/components/processors/conditional"
-to = "/redpanda-connect/guides/bloblang/about/"
+to = "/redpanda-connect/components/processors/about"
 status = 301
 
 [[redirects]]
