@@ -9,6 +9,9 @@ output:
   clean: true
 content:
   sources:
+  - url: .
+    branches: HEAD
+    start_paths: [home]
   - url: https://github.com/redpanda-data/docs
     branches: [redesign-2024, v/*, api, shared, 'v-WIP/24.2', site-search,'!v-end-of-life/*']
   - url: https://github.com/redpanda-data/redpanda-labs
@@ -32,6 +35,17 @@ ui:
     snapshot: true
 asciidoc:
   attributes:
+    page-additional-resources:
+      - label: Redpanda.com
+        url: https://redpanda.com/
+      - label: Training
+        url:
+      - label: Blog
+        url: https://redpanda.com/blog
+      - label: GitHub
+        url: https://github.com/redpanda-data
+      - label: Contact
+        url: https://redpanda.com/contact
   extensions:
   - '@asciidoctor/tabs'
   - '@redpanda-data/docs-extensions-and-macros/macros/rp-connect-components'
