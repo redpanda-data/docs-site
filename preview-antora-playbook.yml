@@ -1,6 +1,6 @@
 site:
   title: Redpanda Docs
-  start_page: ROOT:home:index.adoc
+  start_page: home:ROOT:index.adoc
   url: https://redpanda-antora-site.netlify.app
   robots: disallow
   keys:
@@ -37,7 +37,7 @@ content:
     branches: redesign-2024
 ui:
   bundle:
-    url: https://github.com/redpanda-data/docs-ui/releases/download/v1.15.0-alpha/ui-bundle.zip
+    url: https://github.com/redpanda-data/docs-ui/releases/download/v2.0.0-beta/ui-bundle.zip
     snapshot: true
 asciidoc:
   attributes:

@@ -1,0 +1,3 @@
+= Welcome to Redpanda Documentation
+:page-role: home
+:description: Home page for the Redpanda docs site.
