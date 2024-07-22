@@ -1,6 +1,6 @@
 site:
   title: Redpanda Docs
-  start_page: ROOT:home:index.adoc
+  start_page: home:ROOT:index.adoc
   url: http://localhost:8000
 urls:
   html_extension_style: indexify
@@ -31,15 +31,15 @@ content:
     branches: redesign-2024
 ui:
   bundle:
-    url: https://github.com/redpanda-data/docs-ui/releases/download/v2.0.0-beta/ui-bundle.zip
+    url: ../docs-ui/build/ui-bundle.zip
     snapshot: true
 asciidoc:
   attributes:
     page-additional-resources:
       - label: Redpanda.com
         url: https://redpanda.com/
-      - label: Training
-        url:
+      - label: University
+        url: https://university.redpanda.com/
       - label: Blog
         url: https://redpanda.com/blog
       - label: GitHub

@@ -3,12 +3,6 @@ site:
   start_page: ROOT:home:index.adoc
   url: https://docs.redpanda.com
   robots: allow
-  keys:
-    google_analytics: GTM-WB2CSV5
-    announcement: true
-    announcement-text: 'NEWS: Redpanda acquires Benthos & introduces Redpanda Connect with 220+ connectors. '
-    announcement-link-text: 'Learn More.'
-    announcement-link: 'https://docs.redpanda.com/redpanda-connect/about/'
 urls:
   html_extension_style: indexify
   redirect_facility: netlify
