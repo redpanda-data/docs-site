@@ -5,7 +5,7 @@ site:
   robots: disallow
   keys:
     announcement: true
-    announcement-text: 'BREAKING NEWS: Redpanda acquires Benthos & introduces Redpanda Connect with 220+ connectors. '
+    announcement-text: 'NEWS: Redpanda acquires Benthos & introduces Redpanda Connect with 220+ connectors. '
     announcement-link-text: 'Learn More.'
     announcement-link: 'https://docs.redpanda.com/redpanda-connect/about/'
 urls:
@@ -22,7 +22,7 @@ content:
     branches: HEAD
     start_paths: [home]
   - url: https://github.com/redpanda-data/docs
-    branches: [redesign-2024, v/*, api, shared, 'v-WIP/24.2', site-search,'!v-end-of-life/*']
+    branches: [redesign-2024, redesign-2024-2, v/*, '!v/23.3', api, shared, 'v-WIP/24.2', site-search,'!v-end-of-life/*']
   - url: https://github.com/redpanda-data/redpanda-labs
     branches: redesign-2024
     start_paths: [docs,'*/docs']
@@ -40,15 +40,15 @@ content:
     branches: redesign-2024
 ui:
   bundle:
-    url: https://github.com/redpanda-data/docs-ui/releases/download/v2.0.0-beta/ui-bundle.zip
+    url: https://github.com/redpanda-data/docs-ui/releases/download/V2.0.0-BETA-2/ui-bundle.zip
     snapshot: true
 asciidoc:
   attributes:
     page-additional-resources:
       - label: Redpanda.com
         url: https://redpanda.com/
-      - label: Training
-        url:
+      - label: University
+        url: https://university.redpanda.com/
       - label: Blog
         url: https://redpanda.com/blog
       - label: GitHub
