@@ -30,7 +30,7 @@ asciidoc:
                 text: Serverless Quickstart
           - title: 'What is Redpanda?'
             image: console-icon.png
-            description: 'Redpanda is an event streaming platform that provides real-time data infrastructure, ensuring fast, reliable, and scalable event processing with compatibility for the Kafka API.'
+            description: 'Learn about Redpanda: a fast, reliable, and scalable event processing with compatibility for the Kafka API.'
             urls:
               - url: 'ROOT:get-started:intro-to-events.adoc'
           - title: 'Labs'
