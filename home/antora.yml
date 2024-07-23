@@ -16,7 +16,7 @@ asciidoc:
             image: enterprise.png
             description: 'Redpanda Enterprise is a powerful, self-hosted data streaming platform designed for modern infrastructure. Deploy Redpanda Enterprise on a variety of platforms including Linux, Docker, and Kubernetes.'
             url: 'ROOT:home:index.adoc'
-      - title: Or explore
+      - title: Learn about Redpanda
         items:
           - title: 'Connect'
             image: connect.png
