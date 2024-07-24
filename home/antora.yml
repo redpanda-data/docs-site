@@ -10,7 +10,7 @@ asciidoc:
         items:
           - title: 'Cloud'
             image: cloud.png
-            description: 'Redpanda Redpanda Cloud is a complete data streaming platform delivered as a fully-managed service with automated upgrades and patching, data and partition balancing, and 24x7 support.'
+            description: 'Redpanda Cloud is a complete data streaming platform delivered as a fully-managed service with automated upgrades and patching, data and partition balancing, and 24x7 support.'
             urls:
               - url: 'redpanda-cloud:home:index.adoc'
           - title: 'Enterprise'
