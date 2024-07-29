@@ -28,9 +28,9 @@ asciidoc:
                 text: Self-Hosted Quickstart
               - url: 'redpanda-cloud:get-started:cluster-types/serverless.adoc'
                 text: Serverless Quickstart
-          - title: 'What is Redpanda?'
+          - title: 'Intro to Redpanda'
             image: console-icon.png
-            description: 'Learn about Redpanda: a fast, reliable, and scalable event processing platform with compatibility for the Kafka API.'
+            description: 'Learn about Redpanda: a fast, reliable, and scalable event-processing platform with compatibility for the Kafka API.'
             urls:
               - url: 'ROOT:get-started:intro-to-events.adoc'
           - title: 'Labs'
