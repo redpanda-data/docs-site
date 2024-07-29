@@ -22,7 +22,7 @@ asciidoc:
         items:
           - title: 'Quickstart'
             image: quickstart.png
-            description: 'Get started with your own Redpanda cluster and start developing your apps.'
+            description: 'Get started with your own Redpanda cluster and start developing applications.'
             urls:
               - url: 'ROOT:get-started:quick-start.adoc'
                 text: Self-Hosted Quickstart
@@ -30,7 +30,7 @@ asciidoc:
                 text: Serverless Quickstart
           - title: 'What is Redpanda?'
             image: console-icon.png
-            description: 'Learn about Redpanda: a fast, reliable, and scalable event processing with compatibility for the Kafka API.'
+            description: 'Learn about Redpanda: a fast, reliable, and scalable event processing platform with compatibility for the Kafka API.'
             urls:
               - url: 'ROOT:get-started:intro-to-events.adoc'
           - title: 'Labs'
