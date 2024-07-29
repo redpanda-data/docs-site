@@ -35,7 +35,7 @@ content:
     branches: redesign-2024
 ui:
   bundle:
-    url: https://github.com/redpanda-data/docs-ui/releases/download/v2.0.0-beta-rc5/ui-bundle.zip
+    url: https://github.com/redpanda-data/docs-ui/releases/download/v2.0.0-beta-rc6/ui-bundle.zip
     snapshot: true
 asciidoc:
   attributes:
