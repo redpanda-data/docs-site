@@ -246,7 +246,55 @@ from = "/current/develop/guide-nodejs/"
 to = "/redpanda-labs/"
 status = 301
 
+
 [[redirects]]
 from = "/cookbooks/*"
 to = "/redpanda-connect/cookbooks/:splat"
+status = 301
+
+# =========Cloud redirects========
+
+[[redirects]]
+from = "/current/get-started/quick-start-cloud/"
+to = "/redpanda-cloud/get-started/cluster-types/dedicated/quick-start-cloud/"
+status = 301
+
+[[redirects]]
+from = "/24.1/get-started/quick-start-cloud/"
+to = "/redpanda-cloud/get-started/cluster-types/dedicated/quick-start-cloud/"
+status = 301
+
+[[redirects]]
+from = "/23.3/get-started/quick-start-cloud/"
+to = "/redpanda-cloud/get-started/cluster-types/dedicated/quick-start-cloud/"
+status = 301
+
+[[redirects]]
+from = "/current/deploy/deployment-option/cloud/*"
+to = "/redpanda-cloud/:splat"
+status = 301
+
+[[redirects]]
+from = "/24.1/deploy/deployment-option/cloud/*"
+to = "/redpanda-cloud/:splat"
+status = 301
+
+[[redirects]]
+from = "/23.3/deploy/deployment-option/cloud/*"
+to = "/redpanda-cloud/:splat"
+status = 301
+
+[[redirects]]
+from = "/current/develop/http-proxy-cloud/"
+to = "/redpanda-cloud/develop/http-proxy/"
+status = 301
+
+[[redirects]]
+from = "/24.1/develop/http-proxy-cloud/"
+to = "/redpanda-cloud/develop/http-proxy/"
+status = 301
+
+[[redirects]]
+from = "/23.3/develop/http-proxy-cloud/"
+to = "/redpanda-cloud/develop/http-proxy/"
 status = 301
