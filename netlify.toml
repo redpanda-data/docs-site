@@ -136,11 +136,6 @@ status = 301
 
 # ================End of life versions===================
 [[redirects]]
-from = "/23.2/*"
-to = "/current/:splat"
-status = 301
-
-[[redirects]]
 from = "/23.1/*"
 to = "/current/:splat"
 status = 301
