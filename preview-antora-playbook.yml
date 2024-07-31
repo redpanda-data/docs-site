@@ -39,17 +39,6 @@ ui:
     snapshot: true
 asciidoc:
   attributes:
-    page-additional-resources:
-      - label: Redpanda.com
-        url: https://redpanda.com/
-      - label: University
-        url: https://university.redpanda.com/
-      - label: Blog
-        url: https://redpanda.com/blog
-      - label: GitHub
-        url: https://github.com/redpanda-data
-      - label: Contact
-        url: https://redpanda.com/contact
   extensions:
   - '@asciidoctor/tabs'
   - '@redpanda-data/docs-extensions-and-macros/macros/rp-connect-components'
