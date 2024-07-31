@@ -5,7 +5,7 @@ site:
   robots: allow
   keys:
     google_analytics: GTM-WB2CSV5
-    announcement: true
+    announcement: false
     announcement-text: 'NEWS: Redpanda acquires Benthos & introduces Redpanda Connect with 220+ connectors. '
     announcement-link-text: 'Learn More.'
     announcement-link: 'https://docs.redpanda.com/redpanda-connect/about/'
