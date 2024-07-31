@@ -276,17 +276,17 @@ status = 301
 
 [[redirects]]
 from = "/current/deploy/deployment-option/cloud/*"
-to = "/redpanda-cloud/:splat"
+to = "/redpanda-cloud/deploy/deployment-option/cloud/:splat"
 status = 301
 
 [[redirects]]
 from = "/24.1/deploy/deployment-option/cloud/*"
-to = "/redpanda-cloud/:splat"
+to = "/redpanda-cloud/deploy/deployment-option/cloud/:splat"
 status = 301
 
 [[redirects]]
 from = "/23.3/deploy/deployment-option/cloud/*"
-to = "/redpanda-cloud/:splat"
+to = "/redpanda-cloud/deploy/deployment-option/cloud/:splat"
 status = 301
 
 [[redirects]]
