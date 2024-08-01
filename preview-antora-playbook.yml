@@ -17,7 +17,7 @@ content:
     branches: HEAD
     start_paths: [home]
   - url: https://github.com/redpanda-data/docs
-    branches: ['2609-remove-cloud-specific-files-from-docs-repo', 'remove-cloud-23-3', 'remove-cloud', v/*, '!v/24.1', '!v/23.3', '#2522-fix-api-links-to-new-cloud-docs-repo', shared, site-search,'!v-end-of-life/*']
+    branches: ['2609-remove-cloud-specific-files-from-docs-repo', 'remove-cloud-23-3', 'remove-cloud', v/*, '!v/24.1', '!v/23.3', '!v/23.2', '#2522-fix-api-links-to-new-cloud-docs-repo', shared, site-search,'!v-end-of-life/*']
   - url: https://github.com/redpanda-data/redpanda-labs
     branches: redesign-2024
     start_paths: [docs,'*/docs']
