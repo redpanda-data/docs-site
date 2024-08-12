@@ -6,7 +6,7 @@ asciidoc:
   attributes:
     # Data for the home page
     page-rows:
-      - title: Select a product
+      - title: Select a platform
         items:
           - title: 'Cloud'
             image: cloud.png
