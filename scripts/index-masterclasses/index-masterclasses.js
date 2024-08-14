@@ -66,7 +66,9 @@ const client = new GraphQLClient('https://play.instruqt.com/graphql', {
 async function fetchTracks() {
   try {
     const data = await client.request(GET_TRACKS_QUERY);
-    return data.tracks;
+    // Filter out tracks that are private or in maintenance mode
+    const filteredTracks = data.tracks.filter(track => !track.private && !track.maintenance);
+    return filteredTracks;
   } catch (error) {
     console.error('Error fetching tracks:', error);
     return [];
