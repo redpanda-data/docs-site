@@ -31,3 +31,5 @@ jobs:
         run: cd scripts/index-masterclasses && npm install
       - name: Run indexing script
         run: node scripts/index-masterclasses/index-masterclasses.js
+        env:
+          ALGOLIA_INDEX_NAME: dev_redpanda
