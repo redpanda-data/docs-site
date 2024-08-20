@@ -31,3 +31,5 @@ jobs:
         run: cd scripts/index-youtube && npm install
       - name: Run indexing script
         run: node scripts/index-youtube/index-youtube.js
+        env:
+          ALGOLIA_INDEX_NAME: redpanda
