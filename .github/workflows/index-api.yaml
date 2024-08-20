@@ -31,4 +31,4 @@ jobs:
       - name: Run indexing script
         run: node scripts/index-api/index-api.js
         env:
-          ALGOLIA_INDEX_NAME: dev_redpanda
+          ALGOLIA_INDEX_NAME: redpanda
