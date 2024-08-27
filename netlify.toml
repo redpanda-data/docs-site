@@ -1,6 +1,10 @@
 [build.environment]
 NODE_VERSION = "18"
 
+[dev]
+  publish = "docs/"
+  framework = "#static"
+
 [[plugins]]
   package = "@netlify/plugin-lighthouse"
 
