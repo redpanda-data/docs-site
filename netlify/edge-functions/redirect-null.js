@@ -1,8 +1,10 @@
 export default async (request, context) => {
   const url = new URL(request.url);
-  if (url.pathname.endsWith('/null') || url.pathname.endsWith('/null/')) {
+  const pathname = url.pathname;
+
+  if (pathname.endsWith('/null') || pathname.endsWith('/null/')) {
     // Remove the "/null" part from the URL
-    let newPathname = url.pathname.replace(/\/null\/?$/, '/');
+    let newPathname = pathname.replace(/\/null\/?$/, '/');
 
     // Ensure the URL ends with a "/" for local tests
     if (!newPathname.endsWith('/')) {
