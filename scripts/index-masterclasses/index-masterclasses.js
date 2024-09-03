@@ -7,7 +7,11 @@ const _ = require('lodash');
 
 async function main() {
   const INVITE_LINK_BASE = 'https://play.instruqt.com/redpanda/invite/';
-  const VALID_CATEGORIES_URL = 'https://raw.githubusercontent.com/redpanda-data/docs/shared/modules/ROOT/partials/valid-categories.yml';
+  const VALID_CATEGORIES_URL = 'modules/ROOT/partials/valid-categories.yml';
+  const GRAPHQL_API_URL = 'https://play.instruqt.com/graphql'
+  const GITHUB_OWNER = 'redpanda-data';
+  const ATTACHMENTS_PATH = '../../home/modules/ROOT/attachments'
+  const INSTRUQT_LABS_JSON_FILE = 'instruqt-labs.json'
   const ALGOLIA_APP_ID = process.env.ALGOLIA_APP_ID;
   const ALGOLIA_ADMIN_API_KEY = process.env.ALGOLIA_ADMIN_API_KEY;
   const ALGOLIA_INDEX_NAME = process.env.ALGOLIA_INDEX_NAME;
@@ -70,7 +74,7 @@ async function main() {
     }
   `;
 
-  const client = new GraphQLClient('https://play.instruqt.com/graphql', {
+  const client = new GraphQLClient(GRAPHQL_API_URL, {
     headers: {
       authorization: `Bearer ${INSTRUQT_API_KEY}`,
     },
@@ -91,7 +95,7 @@ async function main() {
     const trackIds = new Set();
     try {
       const { data: repoContents } = await octokit.repos.getContent({
-        owner: 'redpanda-data',
+        owner: GITHUB_OWNER,
         repo: 'instruqt-course',
         path: '',
       });
@@ -99,7 +103,7 @@ async function main() {
       for (const item of repoContents) {
         if (item.type === 'dir') {
           const { data: trackYml } = await octokit.repos.getContent({
-            owner: 'redpanda-data',
+            owner: GITHUB_OWNER,
             repo: 'instruqt-course',
             path: `${item.path}/track.yml`,
           });
@@ -123,15 +127,18 @@ async function main() {
   }
 
   async function fetchValidCategories() {
-    const fetch = (await import('node-fetch')).default;
-    const url = VALID_CATEGORIES_URL;
     try {
-      const response = await fetch(url);
-      const text = await response.text();
-      const data = yaml.load(text);
+      const { data: fileContent } = await octokit.rest.repos.getContent({
+        owner: GITHUB_OWNER,
+        repo: 'docs',
+        path: VALID_CATEGORIES_URL,
+        ref: 'shared',
+      });
+      const content = Buffer.from(fileContent.content, 'base64').toString('utf8');
+      const data = yaml.load(content);
       return data['page-valid-categories'];
     } catch (error) {
-      console.error('Error fetching valid categories:', error);
+      console.error('Error fetching valid categories from GitHub:', error);
       return [];
     }
   }
@@ -185,9 +192,9 @@ async function main() {
       let adjustedTrackTags = new Set();
 
       track.trackTags.forEach(tag => {
-        const tagValue = tag.value.toLowerCase();
+        const tagValue = tag.value.toLowerCase().trim();
         validCategoriesData.forEach(categoryInfo => {
-          const categoryLower = categoryInfo.category.toLowerCase();
+          const categoryLower = categoryInfo.category.toLowerCase().trim();
 
           if (categoryLower === tagValue || (categoryInfo.related && categoryInfo.related.map(r => r.toLowerCase()).includes(tagValue))) {
             adjustedTrackTags.add(categoryInfo.category);
@@ -205,7 +212,7 @@ async function main() {
         });
       });
 
-      const titleLower = track.title.toLowerCase();
+      const titleLower = track.title.toLowerCase().trim();
       const teaserLower = track.teaser.toLowerCase();
 
       validCategoriesData.forEach(categoryInfo => {
@@ -280,26 +287,23 @@ async function main() {
 
   let objectsToUpdate = [];
   let objectsToAdd = [];
-  const objectsToDelete = [];
-
+  // Initialize objectsToDelete with the keys from the existingObjectsMap
+  let objectsToDelete = [...existingObjectsMap.keys()];
   for (const obj of algoliaRecords) {
     const existingObject = existingObjectsMap.get(obj.id);
     if (existingObject) {
       if (!_.isEqual(existingObject, obj)) {
         objectsToUpdate.push(obj);
       }
-      existingObjectsMap.delete(obj.id); // Remove from map if found
+      // Remove from objectsToDelete if it exists in existingObjectsMap and is handled
+      objectsToDelete.splice(objectsToDelete.indexOf(obj.id), 1);
     } else {
       objectsToAdd.push(obj);
     }
   }
-  // Any object remaining in existingObjectsMap should be deleted
-  for (const [objectID] of existingObjectsMap) {
-    objectsToDelete.push(objectID);
-  }
 
   const combinedRecords = [...existingObjectsMap.values(), ...algoliaRecords];
-  saveRecordsToFile(combinedRecords, path.resolve(__dirname, '../../home/modules/ROOT/attachments'), 'instruqt-labs.json');
+  saveRecordsToFile(combinedRecords, path.resolve(__dirname, ATTACHMENTS_PATH), INSTRUQT_LABS_JSON_FILE);
 
   if (objectsToUpdate.length > 0 || objectsToAdd.length > 0) {
     try {
