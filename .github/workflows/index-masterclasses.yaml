@@ -20,6 +20,7 @@ jobs:
           secret-ids: |
             ,sdlc/prod/github/algolia
             ,sdlc/prod/github/instruqt_api_key
+            ,sdlc/prod/github/actions_bot_token
           parse-json-secrets: true
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -33,3 +34,13 @@ jobs:
         run: node scripts/index-masterclasses/index-masterclasses.js
         env:
           ALGOLIA_INDEX_NAME: redpanda
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "auto-docs: Update Instruqt records"
+          token: ${{ env.ACTIONS_BOT_TOKEN }}
+          branch: update-instruqt-records
+          title: "auto-docs: Update Instruqt records"
+          body: "Updates the Instruqt courses that are made available to docs for purposes such as automated cross-linking."
+          labels: auto-docs
+          reviewers: JakeSCahill, Deflaimun

@@ -10,9 +10,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@octokit/rest": "^21.0.2",
     "algoliasearch": "^4.22.1",
     "graphql-request": "^6.1.0",
     "js-yaml": "^4.1.0",
+    "lodash": "^4.17.21",
     "node-fetch": "^3.3.2"
   }
 }
