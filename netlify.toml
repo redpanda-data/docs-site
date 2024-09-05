@@ -264,6 +264,11 @@ status = 301
 # =========Cloud redirects========
 
 [[redirects]]
+from = "/current/reference/rpk/rpk-cloud/*"
+to = "/redpanda-cloud/reference/rpk/rpk-cloud/:splat"
+status = 301
+
+[[redirects]]
 from = "/current/get-started/quick-start-cloud/"
 to = "/redpanda-cloud/get-started/cluster-types/dedicated/quick-start-cloud/"
 status = 301
