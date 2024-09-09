@@ -1,6 +1,5 @@
 [
   {
-    "objectID": "https://play.instruqt.com/redpanda/invite/dk2sd2uxkdij",
     "title": "Algorithmic trading with Flink",
     "id": "swq1dku9s6xv",
     "image": "https://play.instruqt.com/assets/tracks/swq1dku9s6xv/a14ef7c8e2b15f26df995e91699c4428/assets/Red%20Leader%20Avatar%20Circle_Blue.png",
@@ -22,7 +21,7 @@
       }
     ],
     "interactive": true,
-    "unixTimestamp": 1725287207,
+    "unixTimestamp": 1725288564,
     "type": "Lab",
     "_tags": [
       "labs"
@@ -30,10 +29,43 @@
     "categories": [
       "Development",
       "Stream Processing"
-    ]
+    ],
+    "objectID": "https://play.instruqt.com/redpanda/invite/x7iy27pxusgb"
   },
   {
-    "objectID": "https://play.instruqt.com/redpanda/invite/3rqmeyhcwf0y",
+    "title": "Batch to Stream workshop",
+    "id": "0st1el5ivnc9",
+    "image": "https://res.cloudinary.com/practicaldev/image/fetch/s--W2NpA-Jj--/c_fill,f_auto,fl_progressive,h_320,q_auto,w_320/https://dev-to-uploads.s3.amazonaws.com/uploads/organization/profile_image/5327/ea54f4c7-abf0-46fc-a971-766b484ab9bd.png",
+    "intro": "Explore the integration of Apache Spark, Scylladb, PostgreSQL, Redpanda, Debezium, and Benthos to master building advanced real-time data pipelines.",
+    "slug": "osdc-batch-2-stream",
+    "deployment": "",
+    "titles": [
+      {
+        "t": "Building a container image"
+      },
+      {
+        "t": "Introducing CDC and live stream processing"
+      },
+      {
+        "t": "Consuming Files in real time"
+      },
+      {
+        "t": "Flink SQL and real time flight map"
+      }
+    ],
+    "interactive": true,
+    "unixTimestamp": 1725288564,
+    "type": "Lab",
+    "_tags": [
+      "labs"
+    ],
+    "categories": [
+      "Development",
+      "Stream Processing"
+    ],
+    "objectID": "https://play.instruqt.com/redpanda/invite/yxcm3nqsie95"
+  },
+  {
     "title": "Building a Batch ETL Pipeline",
     "id": "9hxz99swfr5l",
     "image": "https://play.instruqt.com/assets/tracks/f5hs59mjtmbk/d280183e4fb88cd1ec9c5eb8477dc5ac/assets/redpanda-thumbnail.png",
@@ -46,7 +78,7 @@
       }
     ],
     "interactive": true,
-    "unixTimestamp": 1725287207,
+    "unixTimestamp": 1725288564,
     "type": "Lab",
     "_tags": [
       "labs"
@@ -54,10 +86,34 @@
     "categories": [
       "Development",
       "Stream Processing"
-    ]
+    ],
+    "objectID": "https://play.instruqt.com/redpanda/invite/y9yt4cb5xfz3"
   },
   {
-    "objectID": "https://play.instruqt.com/redpanda/invite/xx6sx9koxvxf",
+    "title": "Building an Streaming ETL Pipeline",
+    "id": "c8yuazgzkwx8",
+    "image": "https://play.instruqt.com/assets/tracks/f5hs59mjtmbk/d280183e4fb88cd1ec9c5eb8477dc5ac/assets/redpanda-thumbnail.png",
+    "intro": "Upgrade the batch pipeline to an streaming ETL pipeline with Redpanda and Flink.",
+    "slug": "streaming-etl",
+    "deployment": "",
+    "titles": [
+      {
+        "t": "Building a streaming ETL pipeline with Redpanda and Apache Flink"
+      }
+    ],
+    "interactive": true,
+    "unixTimestamp": 1725288564,
+    "type": "Lab",
+    "_tags": [
+      "labs"
+    ],
+    "categories": [
+      "Development",
+      "Stream Processing"
+    ],
+    "objectID": "https://play.instruqt.com/redpanda/invite/8ojmfmhtvrxv"
+  },
+  {
     "title": "Cluster operations with Redpanda",
     "id": "qjkrrfqkbdbp",
     "image": "https://play.instruqt.com/assets/tracks/qjkrrfqkbdbp/a14ef7c8e2b15f26df995e91699c4428/assets/Red%20Leader%20Avatar%20Circle_Blue.png",
@@ -103,74 +159,15 @@
       }
     ],
     "interactive": true,
-    "unixTimestamp": 1725287207,
+    "unixTimestamp": 1725288564,
     "type": "Lab",
     "_tags": [
       "labs"
     ],
-    "categories": []
+    "categories": [],
+    "objectID": "https://play.instruqt.com/redpanda/invite/6ifwo9ecgxai"
   },
   {
-    "objectID": "https://play.instruqt.com/redpanda/invite/xvl39jxrllev",
-    "title": "Redpanda Connect GenAI demo",
-    "id": "o3ubpinwv2wr",
-    "image": "https://res.cloudinary.com/practicaldev/image/fetch/s--W2NpA-Jj--/c_fill,f_auto,fl_progressive,h_320,q_auto,w_320/https://dev-to-uploads.s3.amazonaws.com/uploads/organization/profile_image/5327/ea54f4c7-abf0-46fc-a971-766b484ab9bd.png",
-    "intro": "Show case Redpanda Connect used in GenAI inference with a gaming demo",
-    "slug": "connect-genai-gaming-demo",
-    "deployment": "",
-    "titles": [
-      {
-        "t": "Setting up environment"
-      },
-      {
-        "t": "Interacting with LLM using Redpanda connect"
-      },
-      {
-        "t": "Update app with RAG by loading documents, retrieve similar documents for context"
-      },
-      {
-        "t": "Adding bonus"
-      }
-    ],
-    "interactive": true,
-    "unixTimestamp": 1725287207,
-    "type": "Lab",
-    "_tags": [
-      "labs"
-    ],
-    "categories": []
-  },
-  {
-    "objectID": "https://play.instruqt.com/redpanda/invite/wc3cybcuhytx",
-    "title": "Day Two OPS -Commissioning Redpanda Brokers",
-    "id": "ug6zmieyscrw",
-    "image": "https://res.cloudinary.com/practicaldev/image/fetch/s--W2NpA-Jj--/c_fill,f_auto,fl_progressive,h_320,q_auto,w_320/https://dev-to-uploads.s3.amazonaws.com/uploads/organization/profile_image/5327/ea54f4c7-abf0-46fc-a971-766b484ab9bd.png",
-    "intro": "Learn how to build Kubernetes-based tracks with this template",
-    "slug": "day2-ops-broker-mgmt",
-    "deployment": "Kubernetes",
-    "titles": [
-      {
-        "t": "Adding new brokers"
-      },
-      {
-        "t": "Removing old brokers"
-      },
-      {
-        "t": "Challenge"
-      }
-    ],
-    "interactive": true,
-    "unixTimestamp": 1725287207,
-    "type": "Lab",
-    "_tags": [
-      "labs"
-    ],
-    "categories": [
-      "Management"
-    ]
-  },
-  {
-    "objectID": "https://play.instruqt.com/redpanda/invite/tjowbumsyw7r",
     "title": "Day Two OPS - Monitoring and Alerting",
     "id": "edd8tpc6y2mv",
     "image": "https://res.cloudinary.com/practicaldev/image/fetch/s--W2NpA-Jj--/c_fill,f_auto,fl_progressive,h_320,q_auto,w_320/https://dev-to-uploads.s3.amazonaws.com/uploads/organization/profile_image/5327/ea54f4c7-abf0-46fc-a971-766b484ab9bd.png",
@@ -189,7 +186,7 @@
       }
     ],
     "interactive": true,
-    "unixTimestamp": 1725287207,
+    "unixTimestamp": 1725288564,
     "type": "Lab",
     "_tags": [
       "labs"
@@ -197,10 +194,39 @@
     "categories": [
       "Management",
       "Monitoring"
-    ]
+    ],
+    "objectID": "https://play.instruqt.com/redpanda/invite/vfqqbxm2x1ys"
   },
   {
-    "objectID": "https://play.instruqt.com/redpanda/invite/mqdmxc7bpzyn",
+    "title": "Day Two OPS -Commissioning Redpanda Brokers",
+    "id": "ug6zmieyscrw",
+    "image": "https://res.cloudinary.com/practicaldev/image/fetch/s--W2NpA-Jj--/c_fill,f_auto,fl_progressive,h_320,q_auto,w_320/https://dev-to-uploads.s3.amazonaws.com/uploads/organization/profile_image/5327/ea54f4c7-abf0-46fc-a971-766b484ab9bd.png",
+    "intro": "Learn how to build Kubernetes-based tracks with this template",
+    "slug": "day2-ops-broker-mgmt",
+    "deployment": "Kubernetes",
+    "titles": [
+      {
+        "t": "Adding new brokers"
+      },
+      {
+        "t": "Removing old brokers"
+      },
+      {
+        "t": "Challenge"
+      }
+    ],
+    "interactive": true,
+    "unixTimestamp": 1725288564,
+    "type": "Lab",
+    "_tags": [
+      "labs"
+    ],
+    "categories": [
+      "Management"
+    ],
+    "objectID": "https://play.instruqt.com/redpanda/invite/dqvsjilrpkib"
+  },
+  {
     "title": "Day Two OPS -Upgrading Redpanda",
     "id": "lss1caheavzi",
     "image": "https://res.cloudinary.com/practicaldev/image/fetch/s--W2NpA-Jj--/c_fill,f_auto,fl_progressive,h_320,q_auto,w_320/https://dev-to-uploads.s3.amazonaws.com/uploads/organization/profile_image/5327/ea54f4c7-abf0-46fc-a971-766b484ab9bd.png",
@@ -225,17 +251,17 @@
       }
     ],
     "interactive": true,
-    "unixTimestamp": 1725287207,
+    "unixTimestamp": 1725288564,
     "type": "Lab",
     "_tags": [
       "labs"
     ],
     "categories": [
       "Management"
-    ]
+    ],
+    "objectID": "https://play.instruqt.com/redpanda/invite/3ummupdd5ekv"
   },
   {
-    "objectID": "https://play.instruqt.com/redpanda/invite/tlhq97ppqv2n",
     "title": "Flink Algorithmic Trading",
     "id": "llkiblxtig1n",
     "image": "https://res.cloudinary.com/practicaldev/image/fetch/s--W2NpA-Jj--/c_fill,f_auto,fl_progressive,h_320,q_auto,w_320/https://dev-to-uploads.s3.amazonaws.com/uploads/organization/profile_image/5327/ea54f4c7-abf0-46fc-a971-766b484ab9bd.png",
@@ -254,7 +280,7 @@
       }
     ],
     "interactive": true,
-    "unixTimestamp": 1725287207,
+    "unixTimestamp": 1725288564,
     "type": "Lab",
     "_tags": [
       "labs"
@@ -262,10 +288,10 @@
     "categories": [
       "Development",
       "Stream Processing"
-    ]
+    ],
+    "objectID": "https://play.instruqt.com/redpanda/invite/z4ooecxq58n2"
   },
   {
-    "objectID": "https://play.instruqt.com/redpanda/invite/afnjzwdc5cx2",
     "title": "Flink Stream Processing",
     "id": "sewkkxkt1oog",
     "image": "https://res.cloudinary.com/practicaldev/image/fetch/s--W2NpA-Jj--/c_fill,f_auto,fl_progressive,h_320,q_auto,w_320/https://dev-to-uploads.s3.amazonaws.com/uploads/organization/profile_image/5327/ea54f4c7-abf0-46fc-a971-766b484ab9bd.png",
@@ -284,7 +310,7 @@
       }
     ],
     "interactive": true,
-    "unixTimestamp": 1725287207,
+    "unixTimestamp": 1725288564,
     "type": "Lab",
     "_tags": [
       "labs"
@@ -292,10 +318,40 @@
     "categories": [
       "Development",
       "Stream Processing"
-    ]
+    ],
+    "objectID": "https://play.instruqt.com/redpanda/invite/r8foibwgpac7"
   },
   {
-    "objectID": "https://play.instruqt.com/redpanda/invite/u97i4firdmak",
+    "title": "Getting started with Data Transforms",
+    "id": "p0znfvmigieb",
+    "image": "https://res.cloudinary.com/practicaldev/image/fetch/s--W2NpA-Jj--/c_fill,f_auto,fl_progressive,h_320,q_auto,w_320/https://dev-to-uploads.s3.amazonaws.com/uploads/organization/profile_image/5327/ea54f4c7-abf0-46fc-a971-766b484ab9bd.png",
+    "intro": "Fresh Predictions on the Fly Using Real-Time Data for Machine Learning with Redpanda Transforms powered by WASM",
+    "slug": "wasm-ml-tensorflow",
+    "deployment": "",
+    "titles": [
+      {
+        "t": "Setup environment"
+      },
+      {
+        "t": "Transform data in broker"
+      },
+      {
+        "t": "Continuous Machine Learning"
+      }
+    ],
+    "interactive": true,
+    "unixTimestamp": 1725288564,
+    "type": "Lab",
+    "_tags": [
+      "labs"
+    ],
+    "categories": [
+      "Development",
+      "Data Transforms"
+    ],
+    "objectID": "https://play.instruqt.com/redpanda/invite/qvmgqlbxqsyh"
+  },
+  {
     "title": "Getting Started With Redpanda",
     "id": "o7qhgnbfxtfr",
     "image": "https://play.instruqt.com/assets/tracks/o7qhgnbfxtfr/a14ef7c8e2b15f26df995e91699c4428/assets/Red%20Leader%20Avatar%20Circle_Blue.png",
@@ -326,47 +382,44 @@
       }
     ],
     "interactive": true,
-    "unixTimestamp": 1725287207,
+    "unixTimestamp": 1725288564,
     "type": "Lab",
     "_tags": [
       "labs"
     ],
     "categories": [
       "rpk"
-    ]
+    ],
+    "objectID": "https://play.instruqt.com/redpanda/invite/gtwublt7fzkm"
   },
   {
-    "objectID": "https://play.instruqt.com/redpanda/invite/kq1pghyxfi5t",
-    "title": "Streaming Camel K pipelines on K8s",
-    "id": "31skkipcjlvg",
+    "title": "GitOps for Redpanda in K8s",
+    "id": "mj2t8ttr0xme",
     "image": "https://res.cloudinary.com/practicaldev/image/fetch/s--W2NpA-Jj--/c_fill,f_auto,fl_progressive,h_320,q_auto,w_320/https://dev-to-uploads.s3.amazonaws.com/uploads/organization/profile_image/5327/ea54f4c7-abf0-46fc-a971-766b484ab9bd.png",
-    "intro": "Learning how to run streaming pipelines on k8s",
-    "slug": "getting-started-with-streaming-on-k8s",
+    "intro": "GitOps for Redpanda in K8s",
+    "slug": "redpanda-k8s-gitops",
     "deployment": "Kubernetes",
     "titles": [
       {
-        "t": "Provision Redpanda in K8s"
+        "t": "Initial setup for GitOps"
       },
       {
-        "t": "Deploy python piepeline"
+        "t": "Manage Redpanda cluster using GitOps"
       },
       {
-        "t": "Running Camel"
-      },
-      {
-        "t": "Redpanda transform"
+        "t": "Manage Redpanda topics using GitOps"
       }
     ],
     "interactive": true,
-    "unixTimestamp": 1725287207,
+    "unixTimestamp": 1725288564,
     "type": "Lab",
     "_tags": [
       "labs"
     ],
-    "categories": []
+    "categories": [],
+    "objectID": "https://play.instruqt.com/redpanda/invite/mtrmrjrkjvwp"
   },
   {
-    "objectID": "https://play.instruqt.com/redpanda/invite/edtmuazgj9vq",
     "title": "Introduction to Flink",
     "id": "rtguxx8mlhis",
     "image": "https://res.cloudinary.com/practicaldev/image/fetch/s--W2NpA-Jj--/c_fill,f_auto,fl_progressive,h_320,q_auto,w_320/https://dev-to-uploads.s3.amazonaws.com/uploads/organization/profile_image/5327/ea54f4c7-abf0-46fc-a971-766b484ab9bd.png",
@@ -385,7 +438,7 @@
       }
     ],
     "interactive": true,
-    "unixTimestamp": 1725287207,
+    "unixTimestamp": 1725288564,
     "type": "Lab",
     "_tags": [
       "labs"
@@ -393,10 +446,10 @@
     "categories": [
       "Development",
       "Stream Processing"
-    ]
+    ],
+    "objectID": "https://play.instruqt.com/redpanda/invite/hqvswco6xf3a"
   },
   {
-    "objectID": "https://play.instruqt.com/redpanda/invite/cs1calrh60sj",
     "title": "Migration to Redpanda using MirrorMaker 2",
     "id": "bx2y7cta3hsd",
     "image": "https://res.cloudinary.com/practicaldev/image/fetch/s--W2NpA-Jj--/c_fill,f_auto,fl_progressive,h_320,q_auto,w_320/https://dev-to-uploads.s3.amazonaws.com/uploads/organization/profile_image/5327/ea54f4c7-abf0-46fc-a971-766b484ab9bd.png",
@@ -418,15 +471,15 @@
       }
     ],
     "interactive": true,
-    "unixTimestamp": 1725287207,
+    "unixTimestamp": 1725288564,
     "type": "Lab",
     "_tags": [
       "labs"
     ],
-    "categories": []
+    "categories": [],
+    "objectID": "https://play.instruqt.com/redpanda/invite/pmpfqzfo4evq"
   },
   {
-    "objectID": "https://play.instruqt.com/redpanda/invite/tardcz0wxgp4",
     "title": "Observability for Redpanda in K8s",
     "id": "zscbql3tfckr",
     "image": "https://res.cloudinary.com/practicaldev/image/fetch/s--W2NpA-Jj--/c_fill,f_auto,fl_progressive,h_320,q_auto,w_320/https://dev-to-uploads.s3.amazonaws.com/uploads/organization/profile_image/5327/ea54f4c7-abf0-46fc-a971-766b484ab9bd.png",
@@ -445,7 +498,7 @@
       }
     ],
     "interactive": true,
-    "unixTimestamp": 1725287207,
+    "unixTimestamp": 1725288564,
     "type": "Lab",
     "_tags": [
       "labs"
@@ -453,43 +506,10 @@
     "categories": [
       "Management",
       "Monitoring"
-    ]
+    ],
+    "objectID": "https://play.instruqt.com/redpanda/invite/vkcqzsos7yjs"
   },
   {
-    "objectID": "https://play.instruqt.com/redpanda/invite/lgb2cmswqiz4",
-    "title": "Batch to Stream workshop",
-    "id": "0st1el5ivnc9",
-    "image": "https://res.cloudinary.com/practicaldev/image/fetch/s--W2NpA-Jj--/c_fill,f_auto,fl_progressive,h_320,q_auto,w_320/https://dev-to-uploads.s3.amazonaws.com/uploads/organization/profile_image/5327/ea54f4c7-abf0-46fc-a971-766b484ab9bd.png",
-    "intro": "Explore the integration of Apache Spark, Scylladb, PostgreSQL, Redpanda, Debezium, and Benthos to master building advanced real-time data pipelines.",
-    "slug": "osdc-batch-2-stream",
-    "deployment": "",
-    "titles": [
-      {
-        "t": "Building a container image"
-      },
-      {
-        "t": "Introducing CDC and live stream processing"
-      },
-      {
-        "t": "Consuming Files in real time"
-      },
-      {
-        "t": "Flink SQL and real time flight map"
-      }
-    ],
-    "interactive": true,
-    "unixTimestamp": 1725287207,
-    "type": "Lab",
-    "_tags": [
-      "labs"
-    ],
-    "categories": [
-      "Development",
-      "Stream Processing"
-    ]
-  },
-  {
-    "objectID": "https://play.instruqt.com/redpanda/invite/nxgmgmu5ybtb",
     "title": "Provision Redpanda in K8s (Operator)",
     "id": "iubirmptfjkv",
     "image": "https://res.cloudinary.com/practicaldev/image/fetch/s--W2NpA-Jj--/c_fill,f_auto,fl_progressive,h_320,q_auto,w_320/https://dev-to-uploads.s3.amazonaws.com/uploads/organization/profile_image/5327/ea54f4c7-abf0-46fc-a971-766b484ab9bd.png",
@@ -511,42 +531,45 @@
       }
     ],
     "interactive": true,
-    "unixTimestamp": 1725287207,
+    "unixTimestamp": 1725288564,
     "type": "Lab",
     "_tags": [
       "labs"
     ],
-    "categories": []
+    "categories": [],
+    "objectID": "https://play.instruqt.com/redpanda/invite/olzxq4wlka2x"
   },
   {
-    "objectID": "https://play.instruqt.com/redpanda/invite/fxaqfnnztqn3",
-    "title": "GitOps for Redpanda in K8s",
-    "id": "mj2t8ttr0xme",
+    "title": "Redpanda Connect GenAI demo",
+    "id": "o3ubpinwv2wr",
     "image": "https://res.cloudinary.com/practicaldev/image/fetch/s--W2NpA-Jj--/c_fill,f_auto,fl_progressive,h_320,q_auto,w_320/https://dev-to-uploads.s3.amazonaws.com/uploads/organization/profile_image/5327/ea54f4c7-abf0-46fc-a971-766b484ab9bd.png",
-    "intro": "GitOps for Redpanda in K8s",
-    "slug": "redpanda-k8s-gitops",
-    "deployment": "Kubernetes",
+    "intro": "Show case Redpanda Connect used in GenAI inference with a gaming demo",
+    "slug": "connect-genai-gaming-demo",
+    "deployment": "",
     "titles": [
       {
-        "t": "Initial setup for GitOps"
+        "t": "Setting up environment"
       },
       {
-        "t": "Manage Redpanda cluster using GitOps"
+        "t": "Interacting with LLM using Redpanda connect"
       },
       {
-        "t": "Manage Redpanda topics using GitOps"
+        "t": "Update app with RAG by loading documents, retrieve similar documents for context"
+      },
+      {
+        "t": "Adding bonus"
       }
     ],
     "interactive": true,
-    "unixTimestamp": 1725287207,
+    "unixTimestamp": 1725288564,
     "type": "Lab",
     "_tags": [
       "labs"
     ],
-    "categories": []
+    "categories": [],
+    "objectID": "https://play.instruqt.com/redpanda/invite/z1k5iq6fxndn"
   },
   {
-    "objectID": "https://play.instruqt.com/redpanda/invite/h6zfyq3zpecm",
     "title": "Securing Redpanda in K8s",
     "id": "9rh8eqluaptp",
     "image": "https://res.cloudinary.com/practicaldev/image/fetch/s--W2NpA-Jj--/c_fill,f_auto,fl_progressive,h_320,q_auto,w_320/https://dev-to-uploads.s3.amazonaws.com/uploads/organization/profile_image/5327/ea54f4c7-abf0-46fc-a971-766b484ab9bd.png",
@@ -562,7 +585,7 @@
       }
     ],
     "interactive": true,
-    "unixTimestamp": 1725287207,
+    "unixTimestamp": 1725288564,
     "type": "Lab",
     "_tags": [
       "labs"
@@ -570,34 +593,10 @@
     "categories": [
       "Management",
       "Security"
-    ]
+    ],
+    "objectID": "https://play.instruqt.com/redpanda/invite/14bhvwk31ypc"
   },
   {
-    "objectID": "https://play.instruqt.com/redpanda/invite/gyacy3sxtsky",
-    "title": "Building an Streaming ETL Pipeline",
-    "id": "c8yuazgzkwx8",
-    "image": "https://play.instruqt.com/assets/tracks/f5hs59mjtmbk/d280183e4fb88cd1ec9c5eb8477dc5ac/assets/redpanda-thumbnail.png",
-    "intro": "Upgrade the batch pipeline to an streaming ETL pipeline with Redpanda and Flink.",
-    "slug": "streaming-etl",
-    "deployment": "",
-    "titles": [
-      {
-        "t": "Building a streaming ETL pipeline with Redpanda and Apache Flink"
-      }
-    ],
-    "interactive": true,
-    "unixTimestamp": 1725287207,
-    "type": "Lab",
-    "_tags": [
-      "labs"
-    ],
-    "categories": [
-      "Development",
-      "Stream Processing"
-    ]
-  },
-  {
-    "objectID": "https://play.instruqt.com/redpanda/invite/mtyodbnia4bu",
     "title": "Stream Processing with Redpanda",
     "id": "vrcrunjpdyt8",
     "image": "https://play.instruqt.com/assets/tracks/vrcrunjpdyt8/a14ef7c8e2b15f26df995e91699c4428/assets/Red%20Leader%20Avatar%20Circle_Blue.png",
@@ -622,41 +621,42 @@
       }
     ],
     "interactive": true,
-    "unixTimestamp": 1725287207,
+    "unixTimestamp": 1725288564,
     "type": "Lab",
     "_tags": [
       "labs"
     ],
-    "categories": []
+    "categories": [],
+    "objectID": "https://play.instruqt.com/redpanda/invite/abmpw9ywozyp"
   },
   {
-    "objectID": "https://play.instruqt.com/redpanda/invite/i7jcbvnmd2z0",
-    "title": "Getting started with Data Transforms",
-    "id": "p0znfvmigieb",
+    "title": "Streaming Camel K pipelines on K8s",
+    "id": "31skkipcjlvg",
     "image": "https://res.cloudinary.com/practicaldev/image/fetch/s--W2NpA-Jj--/c_fill,f_auto,fl_progressive,h_320,q_auto,w_320/https://dev-to-uploads.s3.amazonaws.com/uploads/organization/profile_image/5327/ea54f4c7-abf0-46fc-a971-766b484ab9bd.png",
-    "intro": "Fresh Predictions on the Fly Using Real-Time Data for Machine Learning with Redpanda Transforms powered by WASM",
-    "slug": "wasm-ml-tensorflow",
-    "deployment": "",
+    "intro": "Learning how to run streaming pipelines on k8s",
+    "slug": "getting-started-with-streaming-on-k8s",
+    "deployment": "Kubernetes",
     "titles": [
       {
-        "t": "Setup environment"
+        "t": "Provision Redpanda in K8s"
       },
       {
-        "t": "Transform data in broker"
+        "t": "Deploy python piepeline"
       },
       {
-        "t": "Continuous Machine Learning"
+        "t": "Running Camel"
+      },
+      {
+        "t": "Redpanda transform"
       }
     ],
     "interactive": true,
-    "unixTimestamp": 1725287207,
+    "unixTimestamp": 1725288564,
     "type": "Lab",
     "_tags": [
       "labs"
     ],
-    "categories": [
-      "Development",
-      "Data Transforms"
-    ]
+    "categories": [],
+    "objectID": "https://play.instruqt.com/redpanda/invite/5klf71u71sew"
   }
 ]
