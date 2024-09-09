@@ -20,6 +20,7 @@ jobs:
           secret-ids: |
             ,sdlc/prod/github/algolia
             ,sdlc/prod/github/youtube_api_key
+            ,sdlc/prod/github/actions_bot_token
           parse-json-secrets: true
       - name: Checkout repository
         uses: actions/checkout@v4
