@@ -44,6 +44,7 @@ antora:
   extensions:
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/generate-rp-connect-info'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/generate-rp-connect-categories'
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/rp-connect-info'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/modify-redirects'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/algolia-indexer/index'
     excludes: ['.thumbs','script', '.page-versions','.feedback-section','.banner-container']
