@@ -303,6 +303,18 @@ async function main() {
   }
 
   const combinedRecords = [...existingObjectsMap.values(), ...algoliaRecords];
+  // Sort combinedRecords alphabetically by title
+  combinedRecords.sort((a, b) => {
+    const titleA = a.title.toLowerCase();
+    const titleB = b.title.toLowerCase();
+    if (titleA < titleB) {
+      return -1;
+    }
+    if (titleA > titleB) {
+      return 1;
+    }
+    return 0;
+  });
   saveRecordsToFile(combinedRecords, path.resolve(__dirname, ATTACHMENTS_PATH), INSTRUQT_LABS_JSON_FILE);
 
   if (objectsToUpdate.length > 0 || objectsToAdd.length > 0) {
