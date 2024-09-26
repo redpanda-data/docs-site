@@ -670,6 +670,17 @@ This is an important glossterm:<term-name>:[<definition>]
 
 IMPORTANT: Links to the glossary page are provided only when terms are defined in the {url-docs}/tree/shared/modules/terms[`terms` module] of the `shared` branch.
 
+To add custom link text for a term, which can be useful for displaying plurals or context-specific variations of the term without changing the term reference, use this syntax:
+
+[,asciidoc]
+----
+glossterm:<term-name>[,<custom-link-text>]
+----
+
+Here, replace `<custom-link-text>` with text that will appear as the link. For example:
+
+glossterm:test term[,This link text is custom.]
+
 === Glossary pages
 
 To produce a glossary page with all terms that have been defined in the `shared` component, create an empty page called `glossary.adoc` in the `reference` module and include a title:
