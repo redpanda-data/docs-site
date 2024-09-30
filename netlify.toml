@@ -264,6 +264,24 @@ status = 301
 # =========Cloud redirects========
 
 [[redirects]]
+from = "/*/kafka_migrator"
+to = "/:splat/redpanda_migrator"
+status = 301
+force = true
+
+[[redirects]]
+from = "/*/kafka_migrator_bundle"
+to = "/:splat/redpanda_migrator_bundle"
+status = 301
+force = true
+
+[[redirects]]
+from = "/*/kafka_migrator_offsets"
+to = "/:splat/redpanda_migrator_offsets"
+status = 301
+force = true
+
+[[redirects]]
 from = "/current/reference/rpk/rpk-cloud/*"
 to = "/redpanda-cloud/reference/rpk/rpk-cloud/:splat"
 status = 301
