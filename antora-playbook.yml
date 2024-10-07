@@ -6,7 +6,7 @@ site:
   keys:
     announcement: true
     announcement-text: 'Join the Redpanda AI Hackathon! '
-    announcement-link-text: 'Link to the details at:'
+    announcement-link-text: 'Learn more.'
     announcement-link: 'https://redpanda-hackathon.devpost.com/'
     google_analytics: GTM-WB2CSV5
 urls:

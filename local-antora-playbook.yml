@@ -4,8 +4,8 @@ site:
   url: http://localhost:8000
   keys:
     announcement: true
-    announcement-text: 'Join the Redpanda AI Hackathon! '
-    announcement-link-text: 'Link to the details at:'
+    announcement-text: 'Join the Redpanda AI Hackathon!'
+    announcement-link-text: 'Learn more.'
     announcement-link: 'https://redpanda-hackathon.devpost.com/'
 urls:
   html_extension_style: indexify

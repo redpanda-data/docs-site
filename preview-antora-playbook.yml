@@ -2,6 +2,11 @@ site:
   title: Redpanda Docs
   start_page: home:ROOT:index.adoc
   url: https://redpanda-antora-site.netlify.app
+  keys:
+    announcement: true
+    announcement-text: 'Join the Redpanda AI Hackathon!'
+    announcement-link-text: 'Learn more.'
+    announcement-link: 'https://redpanda-hackathon.devpost.com/'
   robots: disallow
 urls:
   html_extension_style: indexify
