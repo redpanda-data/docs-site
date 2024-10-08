@@ -4,9 +4,9 @@ site:
   url: http://localhost:8000
   keys:
     announcement: true
-    announcement-text: 'BREAKING NEWS: Redpanda acquires Benthos & introduces Redpanda Connect with 220+ connectors. '
-    announcement-link-text: 'Learn More.'
-    announcement-link: 'https://docs.redpanda.com/redpanda-connect/about/'
+    announcement-text: 'Join the Redpanda AI Hackathon!'
+    announcement-link-text: 'Learn more.'
+    announcement-link: 'https://redpanda-hackathon.devpost.com/'
 urls:
   html_extension_style: indexify
   latest_version_segment: 'current'

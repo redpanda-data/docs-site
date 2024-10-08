@@ -4,6 +4,10 @@ site:
   url: https://docs.redpanda.com
   robots: allow
   keys:
+    announcement: true
+    announcement-text: 'Join the Redpanda AI Hackathon! '
+    announcement-link-text: 'Learn more.'
+    announcement-link: 'https://redpanda-hackathon.devpost.com/'
     google_analytics: GTM-WB2CSV5
 urls:
   html_extension_style: indexify
