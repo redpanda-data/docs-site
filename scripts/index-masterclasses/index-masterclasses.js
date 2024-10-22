@@ -67,7 +67,7 @@ async function main() {
 
   const CREATE_INVITE_MUTATION = gql`
     mutation CreateInvite($trackId: String!) {
-      createTrackInvite(invite: {publicTitle: "Invite from Redpanda docs", title: "Invite from Redpanda docs", trackIDs: [$trackId], allowAnonymous: true}) {
+      createTrackInvite(invite: {publicTitle: "Invite from Redpanda docs", title: "Invite from Redpanda docs", trackIDs: [$trackId], allowAnonymous: false, playLimit: 5}) {
         id
         title
       }
