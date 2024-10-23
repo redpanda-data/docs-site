@@ -60,14 +60,14 @@ async function indexUrlsInAlgolia(urls) {
       const { pathname } = new URL(url);
       return {
         objectID: pathname,
-        product: "Redpanda",
+        product: "Self-Managed",
         version: data.latestVersion,
         title: data.h1,
         titles: data.titles,
         intro: data.intro,
         unixTimestamp: unixTimestamp,
         type: 'Doc',
-        _tags: [`Redpanda v${data.latestVersion}`]
+        _tags: [`Self-Managed v${data.latestVersion}`]
       };
     } catch (error) {
       console.error(`Error processing URL ${url}:`, error);
