@@ -166,6 +166,15 @@ passive used in tandem, such as "will not be".
 "extremely." Weak modifiers have a diluting effect.
 * Avoid weak verbs such as "is," "are," "has," "have," "do," "does," "provide," and "support." Weak verbs require more wordy constructions. Don’t start a sentence with "There is..." or "There are...", which are empty phrases that add no meaning. Instead, rearrange the sentence so the subject comes first. For example, change “There are three ways to do this” to “You can do this in three ways”.
 
+== Third-party products
+Redpanda configurations often rely on third-party products. Generally, always link to the third-party documentation, and, if you must document another product within a Redpanda topic, keep it as simple as possible. 
+
+In cases where you _must_ include specific instructions for third-party products:
+
+- Don't use screenshots. If the product changes and the screenshot is out-of-date, it could lead to a failed configuration and poor user experience with Redpanda.
+- Consider using a disclaimer: This configuration refers to a third-party product. Specific UI elements may not be up to date.
+- Provide an end-to-end user experience, but always link to the third-party documentation.
+
 == GUI style guidelines
 
 === Screenshots
