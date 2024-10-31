@@ -522,7 +522,7 @@ Avoid mentioning any future features or releases within the documentation. Such 
 
 == Placeholders
 
-Placeholders in sample code and commands represent values that the user must replace. Placeholders in example output can also represent other values that vary. A placeholder has a descriptive name as its value. Separate words with a dash. *Do not* use possessives or instructions as values, such as replace-with or my-value.
+Placeholders in sample code and commands represent values that the user must replace. Placeholders in example output can also represent other values that vary. A placeholder has a descriptive name as its value. Always separate words with a dash. *Do not* use possessives or instructions as values, such as replace-with or my-value.
 
 If your sample code and command placeholders occur in a sentence, use the following formatting:
 
@@ -535,9 +535,18 @@ When you use a placeholder in text or code, explain the placeholder the first ti
 rpk topic create <topic-name>
 ----
 
+=== Editable placeholders
+
 The Redpanda documentation UI includes a custom script that makes placeholder values in code blocks editable.
 
-NOTE: Editable placeholders are disabled in XML code blocks
+If you don't want placeholders to be made editable, add the `no-placeholders` role to the code block. For example:
+
+[,bash,role=“no-placeholders”]
+----
+rpk topic create <topic-name>
+----
+
+NOTE: Editable placeholders are disabled in `xml`, `html`, `rust`, `coffeescript`, and `text` code blocks.
 
 == Tabs
 
