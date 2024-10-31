@@ -5,9 +5,9 @@ site:
   robots: allow
   keys:
     announcement: true
-    announcement-text: 'Join the Redpanda AI Hackathon! '
+    announcement-text: 'Join us for Redpanda Streamfest, Dec 12, 2024!'
     announcement-link-text: 'Learn more.'
-    announcement-link: 'https://redpanda-hackathon.devpost.com/'
+    announcement-link: 'https://www.redpanda.com/streamfest'
     google_analytics: GTM-WB2CSV5
 urls:
   html_extension_style: indexify
