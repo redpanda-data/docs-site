@@ -522,7 +522,13 @@ Avoid mentioning any future features or releases within the documentation. Such 
 
 == Placeholders
 
-Placeholders in sample code and commands represent values that the user must replace. Placeholders in example output can also represent other values that vary. A placeholder has a descriptive name as its value. Separate words with a dash. *Do not* use possessives or instructions as values, such as replace-with or my-value.
+Placeholders in sample code and commands represent values that the user must replace. Placeholders in example output can also represent other values that vary. Here are some rules for using placeholders:
+
+- Wrap placeholders in angled brackets like so `<placeholder>`.
+- Use a descriptive name as the placeholder value. For example `<broker-id>`.
+- Use lowercase characters.
+- Separate words with a dash.
+- Do not use possessives or instructions as values, such as `<replace-with> or <my-value>`.
 
 If your sample code and command placeholders occur in a sentence, use the following formatting:
 
@@ -535,9 +541,20 @@ When you use a placeholder in text or code, explain the placeholder the first ti
 rpk topic create <topic-name>
 ----
 
-The Redpanda documentation UI includes a custom script that makes placeholder values in code blocks editable.
+Replace `<topic-name>` with the name that you want to give your new topic.
 
-NOTE: Editable placeholders are disabled in XML code blocks
+=== Editable placeholders
+
+The Redpanda documentation UI includes a custom script that makes placeholder values in code blocks editable. Inline code fences are not editable.
+
+If you don't want placeholders to be made editable, add the `no-placeholders` role to the code block. For example:
+
+[,bash,role=“no-placeholders”]
+----
+rpk topic create <topic-name>
+----
+
+NOTE: Editable placeholders are disabled in `xml`, `html`, `rust`, `coffeescript`, and `text` code blocks.
 
 == Tabs
 
@@ -549,7 +566,7 @@ Tabs in documentation can enhance the user experience and make information more 
 
 - Instead of having long, scrollable pages, tabs allow for a more compact, efficient use of space.
 
-CAUTION: Too many tabs can lead to confusion, and important information can be missed if it is hidden in a less obvious tab. The use of tabs should enhance the user experience, not detract from it.
+CAUTION: Too many tabs can lead to confusion, and important information can be missed if it is hidden in a tab. The use of tabs should enhance the user experience, not detract from it.
 
 .Tabs syntax
 ....
