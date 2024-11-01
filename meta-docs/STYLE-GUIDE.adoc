@@ -524,6 +524,7 @@ Avoid mentioning any future features or releases within the documentation. Such 
 
 Placeholders in sample code and commands represent values that the user must replace. Placeholders in example output can also represent other values that vary. Here are some rules for using placeholders:
 
+- Wrap placeholders in angled brackets like so `<placeholder>`.
 - Use a descriptive name as the placeholder value. For example `<broker-id>`.
 - Use lowercase characters.
 - Separate words with a dash.
@@ -539,6 +540,8 @@ When you use a placeholder in text or code, explain the placeholder the first ti
 ----
 rpk topic create <topic-name>
 ----
+
+Replace `<topic-name>` with the name that you want to give your new topic.
 
 === Editable placeholders
 
@@ -563,7 +566,7 @@ Tabs in documentation can enhance the user experience and make information more 
 
 - Instead of having long, scrollable pages, tabs allow for a more compact, efficient use of space.
 
-CAUTION: Too many tabs can lead to confusion, and important information can be missed if it is hidden in a less obvious tab. The use of tabs should enhance the user experience, not detract from it.
+CAUTION: Too many tabs can lead to confusion, and important information can be missed if it is hidden in a tab. The use of tabs should enhance the user experience, not detract from it.
 
 .Tabs syntax
 ....
