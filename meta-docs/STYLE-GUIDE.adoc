@@ -522,7 +522,12 @@ Avoid mentioning any future features or releases within the documentation. Such 
 
 == Placeholders
 
-Placeholders in sample code and commands represent values that the user must replace. Placeholders in example output can also represent other values that vary. A placeholder has a descriptive name as its value. Always separate words with a dash. *Do not* use possessives or instructions as values, such as replace-with or my-value.
+Placeholders in sample code and commands represent values that the user must replace. Placeholders in example output can also represent other values that vary. Here are some rules for using placeholders:
+
+- Use a descriptive name as the placeholder value. For example `<broker-id>`.
+- Use lowercase characters.
+- Separate words with a dash.
+- Do not use possessives or instructions as values, such as `<replace-with or my-value>`.
 
 If your sample code and command placeholders occur in a sentence, use the following formatting:
 
