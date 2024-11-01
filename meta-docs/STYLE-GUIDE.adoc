@@ -528,7 +528,7 @@ Placeholders in sample code and commands represent values that the user must rep
 - Use a descriptive name as the placeholder value. For example `<broker-id>`.
 - Use lowercase characters.
 - Separate words with a dash.
-- Do not use possessives or instructions as values, such as `<replace-with or my-value>`.
+- Do not use possessives or instructions as values, such as `<replace-with> or <my-value>`.
 
 If your sample code and command placeholders occur in a sentence, use the following formatting:
 
