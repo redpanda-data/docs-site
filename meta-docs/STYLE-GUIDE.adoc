@@ -545,7 +545,7 @@ Replace `<topic-name>` with the name that you want to give your new topic.
 
 === Editable placeholders
 
-The Redpanda documentation UI includes a custom script that makes placeholder values in code blocks editable.
+The Redpanda documentation UI includes a custom script that makes placeholder values in code blocks editable. Inline code fences are not editable.
 
 If you don't want placeholders to be made editable, add the `no-placeholders` role to the code block. For example:
 
