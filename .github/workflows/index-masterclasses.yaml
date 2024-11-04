@@ -36,6 +36,7 @@ jobs:
         run: node scripts/index-masterclasses/index-masterclasses.js
         env:
           ALGOLIA_INDEX_NAME: redpanda
+          GITHUB_TOKEN: ${{ env.ACTIONS_BOT_TOKEN }}
       - name: Create pull request
         uses: peter-evans/create-pull-request@v6
         with:
