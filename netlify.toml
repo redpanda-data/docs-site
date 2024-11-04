@@ -37,10 +37,10 @@ NODE_VERSION = "18"
 #to = "/beta"
 #status = 301
 
-[[redirects]]
-from = "/beta/*"
-to = "/current/:splat"
-status = 307
+#[[redirects]]
+#from = "/beta/*"
+#to = "/current/:splat"
+#status = 307
 
 # ===========Docusaurus to Antora migration redirects============
 [[redirects]]
