@@ -1,0 +1,70 @@
+# Redpanda Documentation
+
+> The Redpanda documentation site provides comprehensive resources for understanding, deploying, and managing Redpanda, a high-performance Kafka®-compatible streaming data platform. It includes guides, API references, tutorials, and best practices for self-managed and cloud deployments.
+
+## Overview
+
+Redpanda docs serves both new and experienced users, offering detailed technical resources across Redpanda's product suite.
+
+- **[Redpanda Self-Managed](https://docs.redpanda.com/current/):** Deploy and manage Redpanda in your environment for ultimate control, high performance, and fault tolerance with Kafka compatibility and advanced enterprise features like Tiered Storage.
+- **[Redpanda Cloud](https://docs.redpanda.com/redpanda-cloud/):** Simplify streaming with a fully-managed service: Serverless, Bring Your Own Cloud (BYOC), or Dedicated. Serverless is the fastest and easiest way to start data streaming. Choose BYOC for full data sovereignty.
+- **[Redpanda Connect](https://docs.redpanda.com/redpanda-connect/):** Effortlessly integrate data across systems with hundreds of prebuilt connectors, change data capture (CDC) capabilities, and YAML-configurable workflows. Available as a standalone solution or as part of Redpanda Self-Managed, Redpanda Connect empowers organizations to build scalable, high-performance data pipelines with minimal complexity.
+- **[Redpanda Console](https://docs.redpanda.com/current/console/):** Streamline operations with an intuitive Kafka UI for managing topics, partitions, and consumer groups, providing visibility and control over your data pipeline.
+
+## Core documentation
+
+- [Home](https://docs.redpanda.com): Start here for an overview of Redpanda's documentation.
+- [Get started](https://docs.redpanda.com/current/get-started/quickstarts): Fast-track your journey with Redpanda Self-Managed.
+- [Redpanda concepts](https://docs.redpanda.com/current/get-started/architecture): Deep-dive into key concepts like Tiered Storage, partitions, replication, and data streaming architecture.
+
+## Deployment guides
+
+- [Redpanda Self-Managed](https://docs.redpanda.com/current/deploy/): Install and configure Redpanda and Redpanda Console in self-hosted environments, including production best practices. Choose from Linux (bare-metal) or Kubernetes deployment instructions.
+- [Redpanda Cloud](https://docs.redpanda.com/redpanda-cloud/get-started/cluster-types): Guides for using Redpanda Cloud across Serverless, BYOC, and Dedicated options.
+- [Redpanda Connect](https://docs.redpanda.com/redpanda-connect): Standalone documentation for deploying and managing Redpanda Connect, with or without Redpanda.
+
+## rpk CLI
+
+Learn about `rpk`, the comprehensive command-line interface tool for managing Redpanda clusters.
+
+- [rpk documentation for Redpanda Self-Managed](https://docs.redpanda.com/current/reference/rpk/rpk-commands)
+- [rpk documentation for Redpanda Cloud](https://docs.redpanda.com/redpanda-cloud/reference/rpk/rpk-commands)
+
+## Redpanda Console
+
+- [About Redpanda Console](https://docs.redpanda.com/current/console): Learn about Redpanda's Kafka UI for managing topics, partitions, and consumer groups.
+- [Configure Redpanda Console](https://docs.redpanda.com/current/console/config/): Learn how to configure Redpanda Console for your needs.
+
+## API references
+
+- [Admin API](https://docs.redpanda.com/api/admin-api): Manage and monitor Redpanda clusters using this REST API, including operations for configuration, partitions, and node health.
+- [Schema Registry API](https://docs.redpanda.com/api/pandaproxy-schema-registry): Use Redpanda's Kafka-compatible schema registry for managing and evolving schemas in your data streams.
+- [HTTP Proxy API](https://docs.redpanda.com/api/pandaproxy-rest): Simplify interactions with Kafka topics and partitions with Redpanda's HTTP Proxy API, enabling easier data production and consumption over HTTP.
+- [Cloud API](https://docs.redpanda.com/api/cloud-api): Access and manage Redpanda Cloud resources programmatically, including provisioning clusters, monitoring usage, and configuring deployments.
+
+## Tutorials & use cases
+
+- [Redpanda labs](https://docs.redpanda.com/redpanda-labs): Step-by-step guides, best practices, and innovative projects demonstrating how to use Redpanda for real-world applications.
+- [Use cases](https://redpanda.com/case-study): Explore how Redpanda is used for AI, analytics, IoT, and more.
+
+## Troubleshooting
+
+- [Troubleshooting guide](https://docs.redpanda.com/current/troubleshoot): Resolve common issues with installation, configuration, and performance.
+- [Debug bundles](https://docs.redpanda.com/current/troubleshoot/debug-bundle): Generate and analyze debug bundles for diagnosing cluster issues.
+
+## Self-Managed versioning
+
+The site includes versioned documentation for **Redpanda Self-Managed**:
+- **Latest version**: The most up-to-date documentation is available at [docs.redpanda.com/current](https://docs.redpanda.com/current).
+- **Previous versions**: Previous versions can be accessed at `/{version_number}` (for example `https://docs.redpanda.com/24.1`).
+
+## Related resources
+
+- [Redpanda website](https://www.redpanda.com): Overview of Redpanda’s platform, features, and products, including solutions for real-time analytics, AI, and streaming applications.
+- [Redpanda blog](https://www.redpanda.com/blog): Insights, tutorials, industry news, and deep dives into streaming data technologies.
+- [Redpanda AI](https://ai.redpanda.com): Explore Redpanda’s AI capabilities, integrations, and use cases in AI-driven applications.
+- [GitHub repositories](https://github.com/redpanda-data): Access the open-source code and projects maintained by Redpanda, including Redpanda itself, connectors, and labs projects.
+- [Redpanda YouTube channel](https://www.youtube.com/@redpandadata): Video tutorials, webinars, and conference talks on Redpanda’s features and use cases.
+- [X](https://x.com/redpandadata): Follow Redpanda for updates, product announcements, and tips.
+- [Documentation sitemap index](https://docs.redpanda.com/sitemap-index.xml): Explore all available sitemaps for Redpanda documentation.
+
