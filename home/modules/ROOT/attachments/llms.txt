@@ -7,8 +7,8 @@
 Redpanda docs serves both new and experienced users, offering detailed technical resources across Redpanda's product suite.
 
 - **[Redpanda Self-Managed](https://docs.redpanda.com/current/):** Deploy and manage Redpanda in your environment for ultimate control, high performance, and fault tolerance with Kafka compatibility and advanced enterprise features like Tiered Storage.
-- **[Redpanda Cloud](https://docs.redpanda.com/redpanda-cloud/):** Simplify streaming with a fully managed service. Choose Serverless for scalability, BYOC for data sovereignty, or Dedicated clusters for performance isolation.
-- **[Redpanda Connect](https://docs.redpanda.com/redpanda-connect/):** Effortlessly integrate data across systems with 270+ prebuilt connectors, Change Data Capture (CDC), and YAML-configurable workflows, available as a standalone or with Redpanda Self-Managed.
+- **[Redpanda Cloud](https://docs.redpanda.com/redpanda-cloud/):** Simplify streaming with a fully-managed service: Serverless, Bring Your Own Cloud (BYOC), or Dedicated. Serverless is the fastest and easiest way to start data streaming. Choose BYOC for full data sovereignty.
+- **[Redpanda Connect](https://docs.redpanda.com/redpanda-connect/):** Effortlessly integrate data across systems with hundreds of prebuilt connectors, change data capture (CDC) capabilities, and YAML-configurable workflows. Available as a standalone solution or as part of Redpanda Self-Managed, Redpanda Connect empowers organizations to build scalable, high-performance data pipelines with minimal complexity.
 - **[Redpanda Console](https://docs.redpanda.com/current/console/):** Streamline operations with an intuitive Kafka UI for managing topics, partitions, and consumer groups, providing visibility and control over your data pipeline.
 
 ## Core documentation
