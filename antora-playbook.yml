@@ -26,7 +26,7 @@ content:
     branches: HEAD
     start_paths: [home]
   - url: https://github.com/redpanda-data/docs
-    branches: [main, v/*, api, shared, 'site-search', '!v-end-of-life/*',v-WIP/24.3]
+    branches: [main, v/*, api, shared, 'site-search', '!v-end-of-life/*']
   - url: https://github.com/redpanda-data/redpanda-labs
     branches: main
     start_paths: [docs,'*/docs']
