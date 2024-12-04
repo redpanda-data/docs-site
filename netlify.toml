@@ -283,6 +283,12 @@ status = 301
 force = true
 
 [[redirects]]
+from = "/*/pg_stream"
+to = "/:splat/postgres_cdc"
+status = 301
+force = true
+
+[[redirects]]
 from = "/current/reference/rpk/rpk-cloud/*"
 to = "/redpanda-cloud/reference/rpk/rpk-cloud/:splat"
 status = 301
