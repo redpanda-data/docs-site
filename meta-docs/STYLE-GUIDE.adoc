@@ -1100,6 +1100,9 @@ Incorrect: To enable Shadow Indexing on a cluster, set the following parameters 
 |topic
 |A topic is a stream of related events. A doc topic is content in Redpanda product doc library.
 |
+|topic partition
+|Write without hyphens. A topic may be partitioned through multiple brokers. A "topic partition" represents this logical separation on Redpanda. It is managed by Raft, applying voting mechanisms such as Round Robin. In contrast, other Kafka applications use ZooKeeper to manage their partitions. In Redpanda this is managed natively by Raft. 
+|Incorrect: topic-partition (hyphenated) 
 |truststore
 |Write as one word. Capitalization might depend on context. Match when it is in a parameter.
 |
