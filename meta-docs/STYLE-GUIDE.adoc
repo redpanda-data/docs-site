@@ -1101,7 +1101,7 @@ Incorrect: To enable Shadow Indexing on a cluster, set the following parameters 
 |A topic is a stream of related events. A doc topic is content in Redpanda product doc library.
 |
 |topic partition
-|Write as two words, without hyphens.
+|Write as 2 words, not 1 hyphenated word. 
 |Incorrect: topic-partition (hyphenated) 
 |truststore
 |Write as one word. Capitalization might depend on context. Match when it is in a parameter.
