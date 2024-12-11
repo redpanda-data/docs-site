@@ -165,11 +165,29 @@ from = "/21.11/*"
 to = "/current/:splat"
 status = 301
 
-# =========Bulk redirects from different components========
+# ========= Docker example redirects =====================
+
 [[redirects]]
 from = "/current/reference/docker-compose/"
-to = "/redpanda-labs/"
+to = "/current/get-started/docker-compose-labs/"
 status = 301
+
+[[redirects]]
+from = "/current/console/reference/docker-compose/"
+to = "/current/get-started/docker-compose-labs/"
+status = 301
+
+[[redirects]]
+from = "/current/reference/console/docker-compose/"
+to = "/current/get-started/docker-compose-labs/"
+status = 301
+
+[[redirects]]
+from = "/23.2/reference/docker-compose/"
+to = "/current/get-started/docker-compose-labs/"
+status = 301
+
+# =========Bulk redirects from different components========
 
 [[redirects]]
 from = "/current/develop/chat-room/"
@@ -198,16 +216,6 @@ status = 301
 
 [[redirects]]
 from = "/current/develop/code-samples/"
-to = "/redpanda-labs/"
-status = 301
-
-[[redirects]]
-from = "/current/console/reference/docker-compose/"
-to = "/redpanda-labs/"
-status = 301
-
-[[redirects]]
-from = "/current/reference/console/docker-compose/"
 to = "/redpanda-labs/"
 status = 301
 
