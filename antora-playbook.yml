@@ -4,7 +4,7 @@ site:
   url: https://docs.redpanda.com
   robots: allow
   keys:
-    announcement: true
+    announcement: false
     announcement-text: 'Join us for Redpanda Streamfest, Dec 12, 2024!'
     announcement-link-text: 'Learn more.'
     announcement-link: 'https://www.redpanda.com/streamfest'
