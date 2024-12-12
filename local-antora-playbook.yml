@@ -43,6 +43,14 @@ antora:
   extensions:
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/generate-rp-connect-categories'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/collect-bloblang-samples'
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/generate-index-data'
+    data:
+      sets:
+        docker_labs:
+          component: redpanda-labs
+          filter: docker-compose
+          env_type: Docker
+          attribute_name: docker-labs-index
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/add-pages-to-root'
     files: ['home:ROOT:attachment$llms.txt']
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/generate-rp-connect-info'
