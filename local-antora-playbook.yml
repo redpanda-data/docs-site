@@ -53,6 +53,14 @@ antora:
           attribute_name: docker-labs-index
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/add-pages-to-root'
     files: ['home:ROOT:attachment$llms.txt']
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/end-of-life'
+    data:
+      eol_settings:
+        - component: 'ROOT'
+          supported_months: 12
+          warning_weeks: 13
+          eol_doc: https://support.redpanda.com/hc/en-us/articles/20617574366743-Redpanda-Supported-Versions
+          upgrade_doc: ROOT:upgrade:index.adoc
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/generate-rp-connect-info'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/modify-redirects'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/unpublish-pages'
