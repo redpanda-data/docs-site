@@ -53,7 +53,7 @@ antora:
           attribute_name: docker-labs-index
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/add-pages-to-root'
     files: ['home:ROOT:attachment$llms.txt']
-  - require: '@redpanda-data/docs-extensions-and-macros/extensions/end-of-life'
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/compute-end-of-life'
     data:
       eol_settings:
         - component: 'ROOT'

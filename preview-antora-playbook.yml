@@ -56,7 +56,7 @@ antora:
           filter: docker-compose
           env_type: Docker
           attribute_name: docker-labs-index
-  - require: '@redpanda-data/docs-extensions-and-macros/extensions/end-of-life'
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/compute-end-of-life'
     data:
       eol_settings:
         - component: 'ROOT'
