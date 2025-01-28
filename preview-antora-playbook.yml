@@ -72,6 +72,7 @@ antora:
       theme: base
       theme_variables:
         line_color: '#e2401b'
+        font_family: Inter, sans-serif
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/modify-redirects'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/unpublish-pages'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/unlisted-pages'
