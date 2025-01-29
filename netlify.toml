@@ -187,6 +187,16 @@ from = "/23.2/reference/docker-compose/"
 to = "/current/get-started/docker-compose-labs/"
 status = 301
 
+[[redirects]]
+from = "/current/get-started/_attachments/single-broker/docker-compose.yml"
+to = "/redpanda-labs/docker-compose/_attachments/single-broker/docker-compose.yml"
+status = 301
+
+[[redirects]]
+from = "/current/get-started/_attachments/three-brokers/docker-compose.yml"
+to = "/redpanda-labs/docker-compose/_attachments/three-brokers/docker-compose.yml"
+status = 301
+
 # =========Bulk redirects from different components========
 
 [[redirects]]
