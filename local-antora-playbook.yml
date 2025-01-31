@@ -3,10 +3,10 @@ site:
   start_page: home:ROOT:index.adoc
   url: http://localhost:8000
   keys:
-    announcement: false
-    announcement-text: 'Join us for Redpanda Streamfest, Dec 12, 2024!'
+    announcement: true
+    announcement-text: 'Try our new Snowflake Connector — the simplest way to stream data to Snowflake.'
     announcement-link-text: 'Learn more.'
-    announcement-link: 'https://www.redpanda.com/streamfest'
+    announcement-link: 'https://www.redpanda.com/use-case/snowflake-connector-for-redpanda-connect'
 urls:
   html_extension_style: indexify
   latest_version_segment: 'current'
