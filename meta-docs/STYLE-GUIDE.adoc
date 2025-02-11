@@ -412,7 +412,7 @@ rpk topic create <topic-name> -c redpanda.remote.read=true
 To add more than one role, use a comma:
 
 ....
-[,bash,role="line-numbers,no-copy"]
+[,bash,role="line-numbers,no-copy, no-placeholders"]
 ----
 rpk topic create <topic-name> -c redpanda.remote.read=true
 ----
@@ -534,7 +534,7 @@ If your sample code and command placeholders occur in a sentence, use the follow
 
 `<placeholder-value>`
 
-When you use a placeholder in text or code, explain the placeholder the first time you use it. It's not necessary to repeat the explanation in the document unless doing so might benefit the user. For example:
+When you use a placeholder in text or code, explain the placeholder the first time you use it. Repeating the explanation in the document is unnecessary unless doing so might benefit the user. For example:
 
 .Create the topic
 ----
