@@ -65,6 +65,13 @@ antora:
     excludes: ['.thumbs','script', '.page-versions','.feedback-section','.banner-container']
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/add-pages-to-root'
     files: ['home:ROOT:attachment$llms.txt']
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/archive-attachments'
+    data:
+      archives:
+        - component: 'ROOT'
+          output_archive: 'redpanda-quickstart.tar.gz'
+          file_patterns:
+            - '**/test-resources/**/docker-compose/**'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/compute-end-of-life'
     data:
       eol_settings:

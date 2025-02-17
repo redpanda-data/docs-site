@@ -56,6 +56,13 @@ antora:
           filter: docker-compose
           env_type: Docker
           attribute_name: docker-labs-index
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/archive-attachments'
+    data:
+      archives:
+        - component: 'ROOT'
+          output_archive: 'redpanda-quickstart.tar.gz'
+          file_patterns:
+            - '**/test-resources/**/docker-compose/**'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/compute-end-of-life'
     data:
       eol_settings:
