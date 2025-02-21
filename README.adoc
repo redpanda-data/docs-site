@@ -105,7 +105,7 @@ We use the https://gitlab.com/antora/antora-assembler[PDF generator extension] t
 
 To generate a PDF, do the following:
 
-. Make sure you have at least Ruby 2.7 installed.
+. Make sure you have at least Ruby 3.0.0 installed.
 +
 To check if you have Ruby available, run the ruby command to print the installed version:
 +
