@@ -99,6 +99,47 @@ NOTE: When you delete, rename, or move an existing page, use the {url-antora-doc
 
 For details about this file, see the link:{url-netlify-docs}/configure-builds/file-based-configuration/[Netlify documentation].
 
+== Generate PDFs
+
+We use the https://gitlab.com/antora/antora-assembler[PDF generator extension] to generate PDFs for the Redpanda docs site.
+
+To generate a PDF, do the following:
+
+. Make sure you have at least Ruby 2.7 installed.
++
+To check if you have Ruby available, run the ruby command to print the installed version:
++
+[,bash]
+----
+ruby -v
+----
++
+You should see a version string, such as:
++
+[.no-copy]
+----
+ruby 3.3.0 (2023-12-25 revision 5124f9ac75) [x86_64-linux]
+----
+
+. Install the required Ruby gems:
++
+[,bash]
+----
+bundle install
+----
+
+. In the `local-antora-playbook.yml` file temporarily update the `site.url` field to `https://docs.redpanda.com` to generate the PDFs with the correct links.
+
+. Run the local build:
++
+[,bash]
+----
+npm run build-local
+----
+
+. Your PDFs are generated in the `build/` directory.
+
+
 == Contributing
 
 To learn how to use the playbook and generate the docs site locally, see our link:{url-contributing}[contributing guide].

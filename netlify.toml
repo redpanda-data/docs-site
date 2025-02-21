@@ -1,6 +1,10 @@
 [build.environment]
 NODE_VERSION = "18"
 
+[dev]
+  publish = "docs/"
+  framework = "#static"
+
 [[plugins]]
   package = "@netlify/plugin-lighthouse"
 
@@ -13,6 +17,12 @@ NODE_VERSION = "18"
   [plugins.inputs.settings]
     preset = "desktop"
 
+# Allows us to fetch the API specs in local builds.
+[[headers]]
+  for = "/api/_attachments/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+
 # For future use. Allows us to host docs under the `/api/` path that other services such as Redpanda Cloud can consume.
 #[[headers]]
 #  for = "/api/*"
@@ -21,16 +31,13 @@ NODE_VERSION = "18"
 
 # NOTE the following redirects get appended to the redirects defined in the _redirects file
 
-[[redirects]]
-from = "/docs/beta/*"
-to = "/current/:splat"
-status = 301
-
+# ========Beta redirects==========
 [[redirects]]
 from = "/beta/*"
 to = "/current/:splat"
 status = 307
 
+# ===========Docusaurus to Antora migration redirects============
 [[redirects]]
 from = "/home"
 to = "/current/home"
@@ -62,22 +69,12 @@ to = "/current/:splat"
 status = 301
 
 [[redirects]]
-from = "/22.3/*"
-to = "/current/:splat"
-status = 301
-
-[[redirects]]
 from = "/docs/22.2/platform/*"
 to = "/current/:splat"
 status = 301
 
 [[redirects]]
 from = "/docs/22.2/*"
-to = "/current/:splat"
-status = 301
-
-[[redirects]]
-from = "/22.2/*"
 to = "/current/:splat"
 status = 301
 
@@ -92,22 +89,12 @@ to = "/current/:splat"
 status = 301
 
 [[redirects]]
-from = "/22.1/*"
-to = "/current/:splat"
-status = 301
-
-[[redirects]]
 from = "/docs/21.11/platform/*"
 to = "/current/:splat"
 status = 301
 
 [[redirects]]
 from = "/docs/21.11/*"
-to = "/current/:splat"
-status = 301
-
-[[redirects]]
-from = "/21.11/*"
 to = "/current/:splat"
 status = 301
 
@@ -146,10 +133,71 @@ from = "/docs/*"
 to = "/current/:splat"
 status = 301
 
+# ================End of life versions===================
+
+[[redirects]]
+from = "/23.2/*"
+to = "/current/:splat"
+status = 301
+
+[[redirects]]
+from = "/23.1/*"
+to = "/current/:splat"
+status = 301
+
+[[redirects]]
+from = "/22.2/*"
+to = "/current/:splat"
+status = 301
+
+[[redirects]]
+from = "/22.3/*"
+to = "/current/:splat"
+status = 301
+
+[[redirects]]
+from = "/22.1/*"
+to = "/current/:splat"
+status = 301
+
+[[redirects]]
+from = "/21.11/*"
+to = "/current/:splat"
+status = 301
+
+# ========= Docker example redirects =====================
+
 [[redirects]]
 from = "/current/reference/docker-compose/"
-to = "/redpanda-labs/"
+to = "/current/get-started/docker-compose-labs/"
 status = 301
+
+[[redirects]]
+from = "/current/console/reference/docker-compose/"
+to = "/current/get-started/docker-compose-labs/"
+status = 301
+
+[[redirects]]
+from = "/current/reference/console/docker-compose/"
+to = "/current/get-started/docker-compose-labs/"
+status = 301
+
+[[redirects]]
+from = "/23.2/reference/docker-compose/"
+to = "/current/get-started/docker-compose-labs/"
+status = 301
+
+[[redirects]]
+from = "/current/get-started/_attachments/single-broker/docker-compose.yml"
+to = "/redpanda-labs/docker-compose/_attachments/single-broker/docker-compose.yml"
+status = 301
+
+[[redirects]]
+from = "/current/get-started/_attachments/three-brokers/docker-compose.yml"
+to = "/redpanda-labs/docker-compose/_attachments/three-brokers/docker-compose.yml"
+status = 301
+
+# =========Bulk redirects from different components========
 
 [[redirects]]
 from = "/current/develop/chat-room/"
@@ -178,16 +226,6 @@ status = 301
 
 [[redirects]]
 from = "/current/develop/code-samples/"
-to = "/redpanda-labs/"
-status = 301
-
-[[redirects]]
-from = "/current/console/reference/docker-compose/"
-to = "/redpanda-labs/"
-status = 301
-
-[[redirects]]
-from = "/current/reference/console/docker-compose/"
 to = "/redpanda-labs/"
 status = 301
 
@@ -229,4 +267,122 @@ status = 301
 [[redirects]]
 from = "/current/develop/guide-nodejs/"
 to = "/redpanda-labs/"
+status = 301
+
+
+[[redirects]]
+from = "/cookbooks/*"
+to = "/redpanda-connect/cookbooks/:splat"
+status = 301
+
+[[redirects]]
+from = "/blog/*"
+to = "/redpanda-connect/about/"
+status = 301
+
+# =========Cloud redirects========
+
+[[redirects]]
+from = "/*/kafka_migrator"
+to = "/:splat/redpanda_migrator"
+status = 301
+force = true
+
+[[redirects]]
+from = "/*/kafka_migrator_bundle"
+to = "/:splat/redpanda_migrator_bundle"
+status = 301
+force = true
+
+[[redirects]]
+from = "/*/kafka_migrator_offsets"
+to = "/:splat/redpanda_migrator_offsets"
+status = 301
+force = true
+
+[[redirects]]
+from = "/current/reference/rpk/rpk-cloud/*"
+to = "/redpanda-cloud/reference/rpk/rpk-cloud/:splat"
+status = 301
+
+[[redirects]]
+from = "/current/get-started/quick-start-cloud/"
+to = "/redpanda-cloud/get-started/cluster-types/dedicated/quick-start-cloud/"
+status = 301
+
+[[redirects]]
+from = "/24.1/get-started/quick-start-cloud/"
+to = "/redpanda-cloud/get-started/cluster-types/dedicated/quick-start-cloud/"
+status = 301
+
+[[redirects]]
+from = "/23.3/get-started/quick-start-cloud/"
+to = "/redpanda-cloud/get-started/cluster-types/dedicated/quick-start-cloud/"
+status = 301
+
+[[redirects]]
+from = "/current/deploy/deployment-option/cloud/*"
+to = "/redpanda-cloud/deploy/deployment-option/cloud/:splat"
+status = 301
+
+[[redirects]]
+from = "/24.1/deploy/deployment-option/cloud/*"
+to = "/redpanda-cloud/deploy/deployment-option/cloud/:splat"
+status = 301
+
+[[redirects]]
+from = "/23.3/deploy/deployment-option/cloud/*"
+to = "/redpanda-cloud/deploy/deployment-option/cloud/:splat"
+status = 301
+
+[[redirects]]
+from = "/current/develop/http-proxy-cloud/"
+to = "/redpanda-cloud/develop/http-proxy/"
+status = 301
+
+[[redirects]]
+from = "/24.1/develop/http-proxy-cloud/"
+to = "/redpanda-cloud/develop/http-proxy/"
+status = 301
+
+[[redirects]]
+from = "/23.3/develop/http-proxy-cloud/"
+to = "/redpanda-cloud/develop/http-proxy/"
+status = 301
+
+# ===========Temporary redirects for autogenerated pages in Redpanda Connect============
+
+[[redirects]]
+from = "/redpanda-connect/components/processors/process_field"
+to = "/redpanda-connect/components/processors/branch/"
+status = 301
+
+[[redirects]]
+from = "/redpanda-connect/components/processors/function"
+to = "/redpanda-connect/components/processors/about/"
+status = 301
+
+[[redirects]]
+from = "/redpanda-connect/components/input/xml"
+to = "/redpanda-connect/components/processors/xml/"
+status = 301
+
+[[redirects]]
+from = "/redpanda-connect/components/outputs/aws_s"
+to = "/redpanda-connect/components/outputs/about/"
+status = 301
+
+[[redirects]]
+from = "/redpanda-connect/components/inputs/amqp_09/"
+to = "/redpanda-connect/components/inputs/amqp_0_9/"
+status = 301
+
+[[redirects]]
+from = "/redpanda-connect/components/processors/conditional"
+to = "/redpanda-connect/components/processors/about"
+status = 301
+
+[[redirects]]
+from = "/redpanda-connect/components/input/mongodb/"
+to = "/redpanda-connect/components/inputs/mongodb/"
 status = 301

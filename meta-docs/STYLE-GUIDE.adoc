@@ -68,12 +68,16 @@ In text, follow the standard capitalization rules for American English. Addition
 === Commands and code
 
 Don’t start a sentence with a command or code. Instead, try to move the code into the middle of the sentence. Introduce the command with the more descriptive word “run” instead of “use the X command".
-- *Correct:* Run the `rpk topic create` command to create a new topic.
-- *Incorrect:* `rpk topic create` creates a new topic.
++
+*Correct:* Run the `rpk topic create` command to create a new topic.
++
+*Incorrect:* `rpk topic create` creates a new topic.
 
-Similarly, do not start a sentence with a filename. For example:
-- *Correct:* The `redpanda.yaml` file contains configuration parameters.
-- *Incorrect:* `redpanda.yaml` contains configuration parameters.
+Similarly, do not start a sentence with a filename.
++
+*Correct:* The `redpanda.yaml` file contains configuration parameters.
++
+*Incorrect:* `redpanda.yaml` contains configuration parameters.
 
 === Commas
 
@@ -134,37 +138,42 @@ In section titles within a doc, `<h2>` and below, use https://en.wikipedia.org/w
 Always use the imperative in headings. For example, use “Configure Producers” instead of “Configuring Producers”.
 
 == Voice and tone
-- Use the second person ("you") when speaking to or about the reader.
-- Don’t use "we", "our", or "let's" as if author and reader were a hybrid entity.
-**Good:** "Configure your terminal window"
-**Bad:** "We configure the terminal window" or "The terminal window is configured"
 
-- Start task instructions with the imperative. For example, say “Set the environment variable” instead of “To set the environment variable” or “You can set the environment variable”.
+* Use the second person ("you") when speaking to or about the reader.
+* Don’t use "we", "our", or "let's" as if author and reader were a hybrid entity.
++
+*Good:* "Configure your terminal window"
++
+*Bad:* "We configure the terminal window" or "The terminal window is configured"
 
-- Focus on facts, real user tasks, and real user benefits. Avoid promotional hype at all
+* Start task instructions with the imperative. For example, say “Set the environment variable” instead of “To set the environment variable” or “You can set the environment variable”.
+* Focus on facts, real user tasks, and real user benefits. Avoid promotional hype at all
 costs.
-
-- Use shorter words over longer alternatives. Examples: "helps" rather than "facilitates"
+* Use shorter words over longer alternatives. Examples: "helps" rather than "facilitates"
 and "uses" rather than "utilizes."
+* Use active voice where possible. Passive voice is acceptable when any of these
+conditions is true:  
+** The system performs the action.
+** It is more appropriate to focus on the receiver of the action.
+** You want to avoid blaming the user for an error, such as in an error message.
+** The information is clearer in passive voice.
 
-- Use active voice where possible. Passive voice is acceptable when any of these
-conditions is true:
-  - The system performs the action.
-  - It is more appropriate to focus on the receiver of the action.
-  - You want to avoid blaming the user for an error, such as in an error message.
-  - The information is clearer in passive voice.
-
-* Avoid calling out the version in text ("Starting in version x.x...") unless the feature was slipped in during a point/patch release and not announced in major version Release Notes. 
-
+* Avoid calling out the version in text ("Starting in version x.x...") unless the feature was slipped in during a point/patch release and not announced in major version Release Notes.
 * Avoid using future tense, such as "will". Especially avoid the use of future and
-passive used in tandem, such as "will not be". 
-
+passive used in tandem, such as "will not be".
 * If a sentence contains a conditional phrase, put it at the beginning of the sentence. That way, the reader can skip the rest of the sentence with confidence if the condition doesn't apply.
-
 * Aim for economical expression. Omit weak modifiers such as "quite," "very," and
 "extremely." Weak modifiers have a diluting effect.
-
 * Avoid weak verbs such as "is," "are," "has," "have," "do," "does," "provide," and "support." Weak verbs require more wordy constructions. Don’t start a sentence with "There is..." or "There are...", which are empty phrases that add no meaning. Instead, rearrange the sentence so the subject comes first. For example, change “There are three ways to do this” to “You can do this in three ways”.
+
+== Third-party products
+Redpanda configurations often rely on third-party products. Generally, always link to the third-party documentation, and, if you must document another product within a Redpanda topic, keep it as simple as possible. 
+
+In cases where you _must_ include specific instructions for third-party products:
+
+- Don't use screenshots. If the product changes and the screenshot is out-of-date, it could lead to a failed configuration and poor user experience with Redpanda.
+- Consider using a disclaimer: This configuration refers to a third-party product. Specific UI elements may not be up to date.
+- Provide an end-to-end user experience, but always link to the third-party documentation.
 
 == GUI style guidelines
 
@@ -253,15 +262,20 @@ In general, when an abbreviation is likely to be unfamiliar to the audience, spe
 Cross-reference links should be constructed to provide meaning ("why") before the link. Introduce links to other documentation topics with “see”, not “refer to”. Be mindful that users on mobile might have a hard time clicking on small links.
 
 - Use meaningful link:https://developers.google.com/style/link-text[text].
-    **Correct:** To begin coding right away, see link:https://developer.android.com/training/basics/firstapp[Building your first app].
-    **Incorrect:** Click here.
-    **Incorrect:** See this blog post.
++
+*Correct:* To begin coding right away, see link:https://developer.android.com/training/basics/firstapp[Building your first app].
++
+*Incorrect:* Click here.
++
+*Incorrect:* See this blog post.
 
 - If a link downloads a file, then make that clear in the link text, and mention the file type.
-    **Correct:** For more information, see link:https://www.example.com/security.pdf[download the security features PDF].
++
+*Correct:* For more information, see link:https://www.example.com/security.pdf[download the security features PDF].
 
 - If the link text doesn’t clearly indicate why you're referring the reader to this information, then give an explanation. Make the explanation specific, but don't repeat the link text.
-    **Correct:** For more information about authentication and authorization, see link:https://developers.google.com/identity/protocols/oauth2[Using OAuth 2.0 to access Google APIs].
++
+*Correct:* For more information about authentication and authorization, see link:https://developers.google.com/identity/protocols/oauth2[Using OAuth 2.0 to access Google APIs].
 
 - Do not link to outside sources like wikipedia for definitions. Every link can distract readers away from the reason they came to that page in the first place.
 
@@ -398,7 +412,7 @@ rpk topic create <topic-name> -c redpanda.remote.read=true
 To add more than one role, use a comma:
 
 ....
-[,bash,role="line-numbers,no-copy"]
+[,bash,role="line-numbers,no-copy, no-placeholders"]
 ----
 rpk topic create <topic-name> -c redpanda.remote.read=true
 ----
@@ -440,6 +454,57 @@ Lines 1 through 2, line 5, lines 9 through 20
 
 For more details about code blocks, refer to link:https://asciidoctor.org/docs/asciidoc-syntax-quick-reference/#source-code[AsciiDoctor] documentation.
 
+==== Side-by-side code blocks
+
+You can display two code blocks adjacent to each other horizontally. This option is useful when you want to compare code snippets or demonstrate variations of a code example in a parallel view.
+
+To implement side-by-side code blocks, enclose the blocks you want to display with the `[.side-by-side]` attribute followed by `--` delimiters.
+
+For example:
+
+....
+
+[.side-by-side]
+--
+.Strimzi
+[source,yaml]
+----
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: my-topic <1>
+  labels:
+    strimzi.io/cluster: my-kafka-cluster <2>
+spec:
+  partitions: 3 <3>
+  replicas: 3 <4>
+----
+
+.Redpanda
+[source,yaml]
+----
+apiVersion: cluster.redpanda.com/v1alpha1
+kind: Topic
+metadata:
+  name: my-topic <1>
+spec:
+  kafkaApiSpec: <2>
+    brokers:
+      - "redpanda-0.redpanda.<namespace>.svc.cluster.local:9093"
+      - "redpanda-1.redpanda.<namespace>.svc.cluster.local:9093"
+      - "redpanda-2.redpanda.<namespace>.svc.cluster.local:9093"
+    tls:
+      caCertSecretRef:
+        name: "redpanda-default-cert"
+        key: "ca.crt"
+  partitions: 3 <3>
+  replicationFactor: 3 <4>
+----
+--
+....
+
+image::../images/side-by-side-code-block.png[]
+
 === Bold text
 
 Use bold text to indicate that a string is UI text. Do not use a bold font to emphasize a word or phrase.
@@ -457,22 +522,39 @@ Avoid mentioning any future features or releases within the documentation. Such 
 
 == Placeholders
 
-Placeholders in sample code and commands represent values that the user must replace. Placeholders in example output can also represent other values that vary. A placeholder has a descriptive name as its value. Separate words with a dash. *Do not* use possessives or instructions as values, such as replace-with or my-value.
+Placeholders in sample code and commands represent values that the user must replace. Placeholders in example output can also represent other values that vary. Here are some rules for using placeholders:
+
+- Wrap placeholders in angled brackets like so `<placeholder>`.
+- Use a descriptive name as the placeholder value. For example `<broker-id>`.
+- Use lowercase characters.
+- Separate words with a dash.
+- Do not use possessives or instructions as values, such as `<replace-with> or <my-value>`.
 
 If your sample code and command placeholders occur in a sentence, use the following formatting:
 
 `<placeholder-value>`
 
-When you use a placeholder in text or code, explain the placeholder the first time you use it. It's not necessary to repeat the explanation in the document unless doing so might benefit the user. For example:
+When you use a placeholder in text or code, explain the placeholder the first time you use it. Repeating the explanation in the document is unnecessary unless doing so might benefit the user. For example:
 
 .Create the topic
 ----
 rpk topic create <topic-name>
 ----
 
-The Redpanda documentation UI includes a custom script that makes placeholder values in code blocks editable.
+Replace `<topic-name>` with the name that you want to give your new topic.
 
-NOTE: Editable placeholders are disabled in XML code blocks
+=== Editable placeholders
+
+The Redpanda documentation UI includes a custom script that makes placeholder values in code blocks editable. Inline code fences are not editable.
+
+If you don't want placeholders to be made editable, add the `no-placeholders` role to the code block. For example:
+
+[,bash,role=“no-placeholders”]
+----
+rpk topic create <topic-name>
+----
+
+NOTE: Editable placeholders are disabled in `xml`, `html`, `rust`, `coffeescript`, and `text` code blocks.
 
 == Tabs
 
@@ -484,7 +566,7 @@ Tabs in documentation can enhance the user experience and make information more 
 
 - Instead of having long, scrollable pages, tabs allow for a more compact, efficient use of space.
 
-CAUTION: Too many tabs can lead to confusion, and important information can be missed if it is hidden in a less obvious tab. The use of tabs should enhance the user experience, not detract from it.
+CAUTION: Too many tabs can lead to confusion, and important information can be missed if it is hidden in a tab. The use of tabs should enhance the user experience, not detract from it.
 
 .Tabs syntax
 ....
@@ -613,6 +695,17 @@ This is an important glossterm:<term-name>:[<definition>]
 ----
 
 IMPORTANT: Links to the glossary page are provided only when terms are defined in the {url-docs}/tree/shared/modules/terms[`terms` module] of the `shared` branch.
+
+To add custom link text for a term, which can be useful for displaying plurals or context-specific variations of the term without changing the term reference, use this syntax:
+
+[,asciidoc]
+----
+glossterm:<term-name>[,<custom-link-text>]
+----
+
+Here, replace `<custom-link-text>` with text that will appear as the link. For example:
+
+glossterm:test term[,This link text is custom.]
 
 === Glossary pages
 
@@ -825,13 +918,20 @@ For details about creating Asciidoc tables, see https://docs.asciidoctor.org/asc
 |(s)
 |Do not use to indicate an optional plural. Use the plural.
 |
-|Access control list (ACL)
-|Spell it out the first time you introduce it on a page, with the acronym in parentheses. After that, you can just use the acronym. Always capitalize the acronym. Do not capitalize access control list unless it’s the first word in a sentence. The plural is ACLs. First time you introduce it on a page: access control list (ACL), access control lists (ACLs). 
+|access control list (ACL)
+|Lowercase. Spell it out the first time you introduce it on a page, with the acronym in parentheses. After that, you can just use the acronym. Always capitalize the acronym. Do not capitalize access control list unless it’s the first word in a sentence. The plural is ACLs. First time you introduce it on a page: access control list (ACL), access control lists (ACLs). 
 All subsequent references on the page.
 |
 |as well as
 |Do not use to mean "and."
 |
+|assumes
+|Clusters, topics, applications--none are sentient beings capable of making assumptions. For these constructs, use: "based on the assumption".
+|Incorrect: The rest of this section assumes that the HTTP proxy port is 8082. 
+
+Correct: The rest of this section is based on the assumption that the HTTP proxy port is 8082.
+
+
 |backend
 |Do not use "back end."
 |
@@ -988,6 +1088,9 @@ Incorrect: To enable Shadow Indexing on a cluster, set the following parameters 
 |streaming data
 |Write as two words.
 |
+|systemd
+|Do not write as SystemD or System D.
+|
 |that is
 |Do not use "i.e."
 |
@@ -997,6 +1100,9 @@ Incorrect: To enable Shadow Indexing on a cluster, set the following parameters 
 |topic
 |A topic is a stream of related events. A doc topic is content in Redpanda product doc library.
 |
+|topic partition
+|Write as 2 words, not 1 hyphenated word. 
+|Incorrect: topic-partition (hyphenated) 
 |truststore
 |Write as one word. Capitalization might depend on context. Match when it is in a parameter.
 |

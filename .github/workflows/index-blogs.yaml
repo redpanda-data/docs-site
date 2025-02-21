@@ -1,29 +1,36 @@
+---
 name: Index Redpanda blogs and upload to Algolia
-
 on:
   schedule:
     - cron: '0 22 * * 0'  # Runs every Sunday at 10pm UTC
   workflow_dispatch:
-
 jobs:
   update-algolia-index:
     runs-on: ubuntu-latest
-
+    permissions:
+      id-token: write
+      contents: read
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18'
-
-    - name: Install dependencies
-      run: cd scripts/index-blogs && npm install
-
-    - name: Run indexing script
-      run: node scripts/index-blogs/index-blogs.js
-      env:
-        ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_APP_ID }}
-        ALGOLIA_ADMIN_API_KEY: ${{ secrets.ALGOLIA_ADMIN_API_KEY }}
-        ALGOLIA_INDEX_NAME: ${{ secrets.ALGOLIA_INDEX_NAME }}
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ vars.RP_AWS_CRED_REGION }}
+          role-to-assume: arn:aws:iam::${{ secrets.RP_AWS_CRED_ACCOUNT_ID }}:role/${{ vars.RP_AWS_CRED_BASE_ROLE_NAME }}${{ github.event.repository.name }}
+      - name: get secrets from aws sm
+        uses: aws-actions/aws-secretsmanager-get-secrets@v2
+        with:
+          secret-ids: |
+            ,sdlc/prod/github/algolia
+          parse-json-secrets: true
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Install dependencies
+        run: cd scripts/index-blogs && npm install
+      - name: Run indexing script
+        run: node scripts/index-blogs/index-blogs.js
+        env:
+          ALGOLIA_INDEX_NAME: redpanda
