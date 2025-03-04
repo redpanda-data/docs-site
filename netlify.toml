@@ -32,10 +32,10 @@ NODE_VERSION = "18"
 # NOTE the following redirects get appended to the redirects defined in the _redirects file
 
 # ========Beta redirects==========
-[[redirects]]
-from = "/beta/*"
-to = "/current/:splat"
-status = 307
+#[[redirects]]
+#from = "/beta/*"
+#to = "/current/:splat"
+#status = 307
 
 # ===========Docusaurus to Antora migration redirects============
 [[redirects]]
