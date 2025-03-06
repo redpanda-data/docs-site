@@ -412,13 +412,13 @@ rpk topic create <topic-name> -c redpanda.remote.read=true
 To add more than one role, use a comma:
 
 ....
-[,bash,role="line-numbers,no-copy, no-placeholders"]
+[,bash,role="line-numbers no-copy no-placeholders"]
 ----
 rpk topic create <topic-name> -c redpanda.remote.read=true
 ----
 ....
 
-To highlight line numbers, you must specify a source language and the lines you want to highlight. In this example, the source language is `js` and the lines are 1-3, 5, and 6:
+To highlight line numbers, specify a source language and the lines you want to highlight. In this example, the source language is `js` and the lines are 1-3, 5, and 6:
 
 ....
 [source,js,lines=1-3+5+6]
