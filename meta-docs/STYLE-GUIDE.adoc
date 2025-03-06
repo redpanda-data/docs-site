@@ -409,6 +409,19 @@ rpk topic create <topic-name> -c redpanda.remote.read=true
 ----
 ....
 
+To make sure the code doesn't wrap and scrolls instead, add the `no-wrap` role:
+
+....
+[,bash,role="no-wrap"]
+----
++-----------------------------------+---------+--------------+--------------------------+
+| redpanda                          | user_id | event_type   | ts                       |
++-----------------------------------+---------+--------------+--------------------------+
+| {"partition":0,"offset":0,"timestamp":2025-03-05 15:09:20.436,"headers":null,"key":null} | 2324    | BUTTON_CLICK | 2024-11-25T20:23:59.380Z |
++-----------------------------------+---------+--------------+--------------------------+
+----
+....
+
 To add more than one role, use a comma:
 
 ....
