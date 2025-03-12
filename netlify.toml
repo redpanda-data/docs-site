@@ -31,6 +31,12 @@ NODE_VERSION = "18"
 
 # NOTE the following redirects get appended to the redirects defined in the _redirects file
 
+[[redirects]]
+from = "https://docs.vectorized.io/*"
+to = "https://docs.redpanda.com/:splat"
+status = 301
+force = true
+
 # ========Beta redirects==========
 #[[redirects]]
 #from = "/beta/*"
