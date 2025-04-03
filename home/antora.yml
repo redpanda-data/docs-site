@@ -5,36 +5,30 @@ start_page: ROOT:index.adoc
 asciidoc:
   attributes:
     # Data for the home page
-    page-rows:
-      - title: Select a platform
+    page-ai-suggestions:
+      - "How to get started with Redpanda Serverless?"
+      - "What's the difference between Redpanda and Kafka?"
+      - "How to set up Redpanda in a Docker container?"
+    page-row:
+      - title: Get started
         items:
           - title: 'Cloud'
-            image: cloud.png
-            description: 'Redpanda Cloud is a complete data streaming platform delivered as a fully-managed service with automated upgrades and patching, data and partition balancing, and 24x7 support.'
+            #image: cloud.png
+            description: 'Simplify streaming with a fully managed service: Serverless, Bring Your Own Cloud (BYOC), or Dedicated. Serverless is the fastest and easiest way to start data streaming. Choose BYOC for full data sovereignty.'
             urls:
               - url: 'redpanda-cloud:home:index.adoc'
           - title: 'Self-Managed'
-            image: enterprise.png
-            description: 'Redpanda Self-Managed is a powerful, self-hosted data streaming platform designed for modern infrastructure. Deploy Redpanda Self-Managed on a variety of platforms including Linux, Docker, and Kubernetes.'
+            #image: enterprise.png
+            description: 'Deploy and manage Redpanda in your environment for full control, high performance, and fault tolerance with Kafka compatibility and advanced enterprise features like Tiered Storage.'
             urls:
               - url: 'ROOT:home:index.adoc'
-      - title: Learn about Redpanda
-        items:
-          - title: 'Quickstart'
-            image: quickstart.png
-            description: 'Get started with your own Redpanda cluster and start developing applications.'
+          - title: 'Redpanda Connect'
+            #image: enterprise.png
+            description: 'Integrate data across systems with hundreds of prebuilt connectors, change data capture (CDC) capabilities, and YAML-configurable workflows. Redpanda Connect empowers you to build scalable, high-performance data pipelines with minimal complexity.'
             urls:
-              - url: 'ROOT:get-started:quick-start.adoc'
-                text: Self-Managed Quickstart
-              - url: 'redpanda-cloud:get-started:cluster-types/serverless.adoc'
-                text: Serverless Quickstart
-          - title: 'Intro to Redpanda'
-            image: console-icon.png
-            description: 'Learn about Redpanda: a fast, reliable, and scalable event-processing platform with compatibility for the Kafka API.'
-            urls:
-              - url: 'ROOT:get-started:intro-to-events.adoc'
-          - title: 'Labs'
-            image: labs.png
-            description: 'Explore real-world examples in Redpanda Labs.'
+              - url: 'redpanda-connect:home:index.adoc'
+          - title: 'Redpanda Labs'
+            #image: enterprise.png
+            description: 'Explore step-by-step guides, best practices, and innovative projects demonstrating how to use Redpanda for real-world applications.'
             urls:
               - url: 'redpanda-labs:ROOT:index.adoc'
