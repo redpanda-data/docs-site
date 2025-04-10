@@ -72,7 +72,7 @@ The Redpanda docs team uses GitHub issues to track, plan, and prioritize tasks. 
 
 You have the option to assign the issue to yourself or leave the assignee field blank. The Redpanda docs team triages all new issues and will allocate a writer if one isn't already assigned.
 
-IMPORTANT: If you are a Redpanda employee, submit doc issues in the https://redpandadata.atlassian.net/jira/software/c/projects/DOC/boards/65[Jira].
+IMPORTANT: If you are a Redpanda employee, submit doc issues in https://redpandadata.atlassian.net/jira/software/c/projects/DOC/boards/65[Jira].
 
 === Contribute content
 
@@ -317,7 +317,7 @@ For example:
 ** xref:get-started:code-examples.adoc[Build a Sample Application]
 ....
 
-<1> This page is an index. After the build, it will contains the titles and descriptions of all the topics underneath it.
+<1> This page is an index. After the build, it will contain the titles and descriptions of all the topics underneath it.
 
 To create an index page, give it a title and the `page-layout: index` attribute.
 
@@ -356,7 +356,7 @@ Antora calculates the URL for a source page's resource ID and generates redirect
 
 NOTE: A resource ID assigned to a page-aliases attribute can be used in an xref. Therefore, if you delete, rename, or move a page, you don't need to update any references to it in your source files.
 
-The content of the page-aliases attribute are used to create Netlify redirects in the `_redirects` file at build time.
+The content of the page-aliases attribute is used to create Netlify redirects in the `_redirects` file at build time.
 
 IMPORTANT: Make sure that links are relative to the current component version. Do not link to specific versions in page aliases.
 
@@ -393,7 +393,7 @@ This will be rendered only if the pages you include the partial in do not have t
 \endif::[]
 
 \ifdef::env-kubernetes[]
-This will be rendered only if the pages you include the partial in has the `env-kubernetes` attribute.
+This will be rendered only if the pages you include the partial in have the `env-kubernetes` attribute.
 \endif::[]
 ----
 
