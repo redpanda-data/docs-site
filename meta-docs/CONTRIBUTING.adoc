@@ -374,9 +374,9 @@ asciidoc:
 
 == Single-sourcing
 
-Practice the DRY (Don't Repeat Yourself) principle by single-sourcing repeated content. Common examples of single-sourced content include prerequisites, contact info, and foundational steps of how-to guides.
+Practice the DRY (don't repeat yourself) principle by single-sourcing repeated content. Common examples of single-sourced content include prerequisites, contact info, and foundational steps of how-to guides.
 
-For single-sourcing content in _different_ repositories, see <<single-sourcing-across-repos, Single-sourcing across repos>>.
+For single-sourcing content in _different_ repositories, see <<single-sourcing-pages-across-repos, Single-sourcing across repos>>.
 
 For single-sourcing content in the _same_ repository, put shared content in the `partials/` directory.  For details about partials, see {url-antora-docs}/antora/latest/page/partials/[Partials] in the Antora docs.
 
@@ -411,13 +411,13 @@ If you need to link to different pages in partials depending on the context of t
 To learn more, see xref:{data-archiving-link}[Data Archiving]
 ----
 
-=== Single-sourcing across repos
+=== Single-sourcing pages across repos
 
 Redpanda documentation sits in different repositories for Self-Managed, Cloud, Redpanda Connect, and Labs. (See <<find-content, Find content>>.)
 
-To single-source content across repos:
+To single-source pages across repos:
 
-. Wrap single-sourced content with `// tag::single-source[]`. 
+. In the source repository, wrap the single-sourced page, after the title and aliases, with `// tag::single-source[]`. 
 . In the other repository, add the content with an `include` directive and the `single-source` tag. For example:
 +
 `include::ROOT:get-started:partner-integration.adoc[tag=single-source]`
@@ -445,14 +445,14 @@ Learn about Redpanda integrations built and supported by our partners.
 // end::single-source[]
 ----
 
-The single-sourced version of this file in the `cloud-docs` repo looks like this:
+The shared version of this page in the `cloud-docs` repo looks like this:
 [,asciidoc]
 ----
 = Partner Integrations
-include::ROOT:get-started:partner-integration.adoc[tag=single-source]
+/include::ROOT:get-started:partner-integration.adoc[tag=single-source]
 ----
 
-Single-sourcing across repos usually requires two PRs (one for each repo) as well as conditionals. For example:
+Single-sourcing pages across repos usually requires two PRs (one for each repo) as well as conditionals. For example:
 [,asciidoc]
 ----
 * xref:get-started:rpk-install.adoc[]
@@ -462,6 +462,39 @@ Single-sourcing across repos usually requires two PRs (one for each repo) as wel
 * xref:get-started:rpk-quickstart.adoc[]
 /endif::[]
 ----
+
+=== Single-sourcing content across repos
+
+To single source certain content:
+
+. In the source repository, wrap the single-sourced content with a `tag`.
+. In the other repository, add the tag in an `include` directive.  
+
+For example, in the `cluster-properties.adoc` source file in the `docs` repo, add: 
+
+[,asciidoc]
+----
+// tag::audit_excluded_principals[]
+=== audit_excluded_principals
+
+List of user principals to exclude from auditing.
+
+*Requires restart:* No
+
+*Visibility:* `user`
+
+*Type:* array
+
+*Default:* `null`
+
+---
+
+// end::audit_excluded_principals[]
+----
+
+In the `cloud-docs` file where you want to add this shared content, add an include directive:
+
+`include::ROOT:reference:properties/cluster-properties.adoc[tags=audit_excluded_principals]`
 
 == Update the nav tree
 
