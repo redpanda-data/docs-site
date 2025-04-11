@@ -504,13 +504,9 @@ To update the nav tree, edit the `nav.adoc` file.
 
 For more information about navigation files, see the {url-antora-docs}/antora/latest/navigation/include-lists/[Antora docs].
 
-== Cloud pages
+=== beta features
 
-Redpanda Cloud pages should be tagged accordingly. If you create a Redpanda Cloud page make sure to add the attribute `page-cloud:true` to the top of the file under the title.
-
-=== Cloud beta feature
-
-Cloud has a different flavor of beta, where some specific features can be marked as beta. If that's the case, add the attribute `page-beta:true` to your page, after `page-cloud:true`.
+In `cloud-docs`, and occasionally in other repos, individual features can exist in beta status. If that's the case, add the attribute `page-beta:true` to your page header. 
 
 == Feature flag
 
