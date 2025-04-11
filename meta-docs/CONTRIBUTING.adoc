@@ -380,7 +380,7 @@ For single-sourcing content in _different_ repositories, see <<single-sourcing-p
 
 For single-sourcing content in the _same_ repository, put shared content in the `partials/` directory.  For details about partials, see {url-antora-docs}/antora/latest/page/partials/[Partials] in the Antora docs.
 
-NOTE: You can include partials inside other partials.
+NOTE: You can include partials inside other partials. You can also reference partials when single-sourcing across repos. 
 
 Inside partials, you can conditionally render content depending on attributes that are available on the page that you include them in.
 
