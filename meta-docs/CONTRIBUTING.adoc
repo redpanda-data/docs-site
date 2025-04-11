@@ -72,7 +72,7 @@ The Redpanda docs team uses GitHub issues to track, plan, and prioritize tasks. 
 
 You have the option to assign the issue to yourself or leave the assignee field blank. The Redpanda docs team triages all new issues and will allocate a writer if one isn't already assigned.
 
-IMPORTANT: If you are a Redpanda employee, submit doc issues in the https://github.com/redpanda-data/documentation-private[`redpanda-data/documentation-private`] repo.
+IMPORTANT: If you are a Redpanda employee, submit doc issues in https://redpandadata.atlassian.net/jira/software/c/projects/DOC/boards/65[Jira].
 
 === Contribute content
 
@@ -317,7 +317,7 @@ For example:
 ** xref:get-started:code-examples.adoc[Build a Sample Application]
 ....
 
-<1> This page is an index. After the build, it will contains the titles and descriptions of all the topics underneath it.
+<1> This page is an index. After the build, it will contain the titles and descriptions of all the topics underneath it.
 
 To create an index page, give it a title and the `page-layout: index` attribute.
 
@@ -356,7 +356,7 @@ Antora calculates the URL for a source page's resource ID and generates redirect
 
 NOTE: A resource ID assigned to a page-aliases attribute can be used in an xref. Therefore, if you delete, rename, or move a page, you don't need to update any references to it in your source files.
 
-The content of the page-aliases attribute are used to create Netlify redirects in the `_redirects` file at build time.
+The content of the page-aliases attribute is used to create Netlify redirects in the `_redirects` file at build time.
 
 IMPORTANT: Make sure that links are relative to the current component version. Do not link to specific versions in page aliases.
 
@@ -374,11 +374,13 @@ asciidoc:
 
 == Single-sourcing
 
-Practice the DRY (Don't Repeat Yourself) principle by single-sourcing repeated content. Common examples of single-sourced content include prerequisites, contact info, and foundational steps of how-to guides.
+Practice the DRY (don't repeat yourself) principle by single-sourcing repeated content. Common examples of single-sourced content include prerequisites, contact info, and foundational steps of how-to guides.
 
-Antora supports single-sourcing Asciidoc files that are located in the `partials/` directory. For details about partials, see {url-antora-docs}/antora/latest/page/partials/[Partials] in the Antora docs.
+For single-sourcing content in _different_ repositories, see <<single-sourcing-pages-across-repos, Single-sourcing across repos>>.
 
-NOTE: You can include partials inside other partials.
+For single-sourcing content in the _same_ repository, put shared content in the `partials/` directory.  For details about partials, see {url-antora-docs}/antora/latest/page/partials/[Partials] in the Antora docs.
+
+NOTE: You can include partials inside other partials. You can also reference partials when single-sourcing across repos. 
 
 Inside partials, you can conditionally render content depending on attributes that are available on the page that you include them in.
 
@@ -391,7 +393,7 @@ This will be rendered only if the pages you include the partial in do not have t
 \endif::[]
 
 \ifdef::env-kubernetes[]
-This will be rendered only if the pages you include the partial in has the `env-kubernetes` attribute.
+This will be rendered only if the pages you include the partial in have the `env-kubernetes` attribute.
 \endif::[]
 ----
 
@@ -409,6 +411,91 @@ If you need to link to different pages in partials depending on the context of t
 To learn more, see xref:{data-archiving-link}[Data Archiving]
 ----
 
+=== Single-sourcing pages across repos
+
+Redpanda documentation sits in different repositories for Self-Managed, Cloud, Redpanda Connect, and Labs. (See <<find-content, Find content>>.)
+
+To single-source pages across repos:
+
+. In the source repository, wrap the single-sourced page, after the title and aliases, with `// tag::single-source[]`. 
+. In the other repository, add the content with an `include` directive and the `single-source` tag. For example:
++
+`include::ROOT:get-started:partner-integration.adoc[tag=single-source]`
++
+For more information about the include directive, see the https://docs.asciidoctor.org/asciidoc/latest/directives/include/[Asciidoc docs].
+
+For an example of a page single-sourced from the `docs` repo into the `cloud-docs` repo, see https://docs.redpanda.com/current/get-started/partner-integration/ and https://docs.redpanda.com/redpanda-cloud/get-started/partner-integration/.
+
+The file source in the `docs` repo looks like this: 
+[,asciidoc]
+----
+= Partner Integrations
+:page-aliases: reference:partner-integration.adoc
+// tag::single-source[]
+:description: Learn about Redpanda integrations built and supported by our partners.
+
+Learn about Redpanda integrations built and supported by our partners.
+
+[.no-clip]
+[cols="1a,2a,1a"]
+|===
+|*Partner* |*Description* |*More information*
+...
+
+// end::single-source[]
+----
+
+The shared version of this page in the `cloud-docs` repo looks like this:
+[,asciidoc]
+----
+= Partner Integrations
+\include::ROOT:get-started:partner-integration.adoc[tag=single-source]
+----
+
+Single-sourcing pages across repos usually requires two PRs (one for each repo) as well as conditionals. For example:
+[,asciidoc]
+----
+* xref:get-started:rpk-install.adoc[]
+* xref:get-started:config-rpk-profile.adoc[]
+// This topic is not available in our Cloud docs.
+\ifndef::env-cloud[]
+* xref:get-started:rpk-quickstart.adoc[]
+\endif::[]
+----
+
+=== Single-sourcing content across repos
+
+To single source certain content:
+
+. In the source repository, wrap the single-sourced content with a `tag`.
+. In the other repository, add the tag in an `include` directive.  
+
+For example, in the `cluster-properties.adoc` source file in the `docs` repo, add: 
+
+[,asciidoc]
+----
+// tag::audit_excluded_principals[]
+=== audit_excluded_principals
+
+List of user principals to exclude from auditing.
+
+*Requires restart:* No
+
+*Visibility:* `user`
+
+*Type:* array
+
+*Default:* `null`
+
+---
+
+// end::audit_excluded_principals[]
+----
+
+In the `cloud-docs` file where you want to add this shared content, add an include directive:
+
+`include::ROOT:reference:properties/cluster-properties.adoc[tags=audit_excluded_principals]`
+
 == Update the nav tree
 
 All doc repositories use a single navigation file for the nav tree, which is defined in the `nav.adoc` file of the `ROOT` module.
@@ -417,13 +504,9 @@ To update the nav tree, edit the `nav.adoc` file.
 
 For more information about navigation files, see the {url-antora-docs}/antora/latest/navigation/include-lists/[Antora docs].
 
-== Cloud pages
+=== beta features
 
-Redpanda Cloud pages should be tagged accordingly. If you create a Redpanda Cloud page make sure to add the attribute `page-cloud:true` to the top of the file under the title.
-
-=== Cloud beta feature
-
-Cloud has a different flavor of beta, where some specific features can be marked as beta. If that's the case, add the attribute `page-beta:true` to your page, after `page-cloud:true`.
+In `cloud-docs`, and occasionally in other repos, individual features can exist in beta status. If that's the case, add the attribute `page-beta:true` to your page header. 
 
 == Feature flag
 
