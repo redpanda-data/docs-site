@@ -449,7 +449,7 @@ The shared version of this page in the `cloud-docs` repo looks like this:
 [,asciidoc]
 ----
 = Partner Integrations
-/include::ROOT:get-started:partner-integration.adoc[tag=single-source]
+\include::ROOT:get-started:partner-integration.adoc[tag=single-source]
 ----
 
 Single-sourcing pages across repos usually requires two PRs (one for each repo) as well as conditionals. For example:
@@ -458,9 +458,9 @@ Single-sourcing pages across repos usually requires two PRs (one for each repo) 
 * xref:get-started:rpk-install.adoc[]
 * xref:get-started:config-rpk-profile.adoc[]
 // This topic is not available in our Cloud docs.
-/ifndef::env-cloud[]
+\ifndef::env-cloud[]
 * xref:get-started:rpk-quickstart.adoc[]
-/endif::[]
+\endif::[]
 ----
 
 === Single-sourcing content across repos
