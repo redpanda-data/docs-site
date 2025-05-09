@@ -9,26 +9,27 @@ asciidoc:
       - "How to get started with Redpanda Serverless?"
       - "What's the difference between Redpanda and Kafka?"
       - "How to set up Redpanda in a Docker container?"
+    page-intro: 'Find tutorials, guides, and API references to help you build with Redpanda, the modern streaming data platform for mission-critical workloads.'
     page-row:
       - title: Get started
         items:
-          - title: 'Cloud'
-            #image: cloud.png
-            description: 'Simplify streaming with a fully managed service: Serverless, Bring Your Own Cloud (BYOC), or Dedicated. Serverless is the fastest and easiest way to start data streaming. Choose BYOC for full data sovereignty.'
+          - title: 'Serverless'
+            image: serverless.svg
+            description: 'Fast, efficient, and scalable data streaming without infrastructure management.'
             urls:
-              - url: 'redpanda-cloud:home:index.adoc'
-          - title: 'Self-Managed'
-            #image: enterprise.png
-            description: 'Deploy and manage Redpanda in your environment for full control, high performance, and fault tolerance with Kafka compatibility and advanced enterprise features like Tiered Storage.'
+              - url: 'redpanda-cloud:get-started:cluster-types/serverless.adoc'
+          - title: 'Bring Your Own Cloud'
+            image: byoc.svg
+            description: 'Deploy Redpanda on your existing cloud infrastructure with full control and flexibility.'
             urls:
-              - url: 'ROOT:home:index.adoc'
-          - title: 'Redpanda Connect'
-            #image: enterprise.png
-            description: 'Integrate data across systems with hundreds of prebuilt connectors, change data capture (CDC) capabilities, and YAML-configurable workflows. Redpanda Connect empowers you to build scalable, high-performance data pipelines with minimal complexity.'
+              - url: 'redpanda-cloud:get-started:cluster-types/byoc.adoc'
+          - title: 'Connect'
+            image: connect.svg
+            description: 'Integrate data across systems with hundreds of prebuilt connectors, AI and change data capture (CDC) capabilities, and YAML-configurable workflows.'
             urls:
               - url: 'redpanda-connect:home:index.adoc'
-          - title: 'Redpanda Labs'
-            #image: enterprise.png
-            description: 'Explore step-by-step guides, best practices, and innovative projects demonstrating how to use Redpanda for real-world applications.'
+          - title: 'Self-Managed'
+            image: self-managed.svg
+            description: 'Run Redpanda on your own infrastructure with complete control over your deployment and configuration.'
             urls:
-              - url: 'redpanda-labs:ROOT:index.adoc'
+              - url: 'ROOT:home:index.adoc'
