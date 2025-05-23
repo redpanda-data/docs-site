@@ -10,7 +10,7 @@ export default async (request, context) => {
 
   const bumpRes = await fetch(bumpUrl, {
     headers: {
-      "X-BUMP-SH-PROXY": `"${secret}"`,
+      "X-BUMP-SH-PROXY": secret,
       "Accept": "*/*"
     },
   });
