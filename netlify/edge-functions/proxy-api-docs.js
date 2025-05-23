@@ -5,7 +5,7 @@ export default async (request, context) => {
     return Response.redirect(`${url.origin}/api/doc/admin-api/`, 301);
   }
 
-  const bumpUrl = `https://bump.sh/redpanda/hub/redpanda${new URL(request.url).pathname.replace('/api', '')}`;
+  const bumpUrl = `https://bump.sh/redpanda/hub/redpanda${url.pathname.replace('/api', '')}${url.search}`;
   const secret = Netlify.env.get("BUMP_PROXY_SECRET");
 
   const bumpRes = await fetch(bumpUrl, {
