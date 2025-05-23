@@ -1,8 +1,17 @@
 export default async (request, context) => {
   const url = new URL(request.url);
-  // Manual redirect from /api/admin-api to /api/doc/admin-api
-  if (url.pathname === "/api/admin-api/") {
-    return Response.redirect(`${url.origin}/api/doc/admin-api/`, 301);
+  // Redirects from the old API paths to the new Bump.sh ones
+  const redirects = {
+    "/api/admin-api/": "/api/doc/admin/",
+    "/api/http-proxy-api/": "/api/doc/http-proxy/",
+    "/api/schema-registry-api/": "/api/doc/schema-registry/",
+    "/api/cloud-controlplane-api/": "/api/doc/cloud-controlplane/",
+    "/api/cloud-dataplane-api/": "/api/doc/cloud-dataplane/",
+  };
+
+  const target = redirects[url.pathname];
+  if (target) {
+    return Response.redirect(`${url.origin}${target}`, 301);
   }
 
   const bumpUrl = `https://bump.sh/redpanda/hub/redpanda${url.pathname.replace('/api', '')}${url.search}`;
