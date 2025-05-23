@@ -1,8 +1,8 @@
 export default async (request, context) => {
   const url = new URL(request.url);
   // Manual redirect from /api/admin-api to /api/doc/admin-api
-  if (url.pathname === "/api/admin-api") {
-    return Response.redirect(`${url.origin}/api/doc/admin-api`, 302);
+  if (url.pathname === "/api/admin-api/") {
+    return Response.redirect(`${url.origin}/api/doc/admin-api/`, 301);
   }
 
   const bumpUrl = `https://bump.sh/redpanda/hub/redpanda${new URL(request.url).pathname.replace('/api', '')}`;
