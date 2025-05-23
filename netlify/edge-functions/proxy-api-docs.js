@@ -22,9 +22,9 @@ export default async (request, context) => {
     const originalHtml = await bumpRes.text();
 
     const modifiedHtml = originalHtml
-      .replace("</head>", `  <meta name="custom-head" />\n</head>`)
-      .replace("<body>", `<body>\n  <div id="embed-top-body"></div>`)
-      .replace("</body>", `  <div id="embed-bottom-body"></div>\n</body>`);
+      .replace(`<meta name="custom-head" />`, `<meta name="custom-head-hello" />`)
+      .replace(`<div id="embed-top-body"></div>`, `<div id="embed-top-body-hello"></div>`)
+      .replace(`<div id="embed-bottom-body"></div>`, `<div id="embed-bottom-body-hello"></div>`);
 
     return new Response(modifiedHtml, {
       status: 200,
