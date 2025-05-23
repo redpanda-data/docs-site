@@ -2,14 +2,18 @@ export default async (request, context) => {
   const url = new URL(request.url);
   // Redirects from the old API paths to the new Bump.sh ones
   const redirects = {
-    "/api/admin-api/": "/api/doc/admin/",
-    "/api/http-proxy-api/": "/api/doc/http-proxy/",
-    "/api/schema-registry-api/": "/api/doc/schema-registry/",
-    "/api/cloud-controlplane-api/": "/api/doc/cloud-controlplane/",
-    "/api/cloud-dataplane-api/": "/api/doc/cloud-dataplane/",
+    "/api/admin-api": "/api/doc/admin/",
+    "/api/http-proxy-api": "/api/doc/http-proxy/",
+    "/api/schema-registry-api": "/api/doc/schema-registry/",
+    "/api/cloud-controlplane-api": "/api/doc/cloud-controlplane/",
+    "/api/cloud-dataplane-api": "/api/doc/cloud-dataplane/",
   };
 
-  const target = redirects[url.pathname];
+  const normalizedPath = url.pathname.endsWith("/")
+    ? url.pathname.slice(0, -1)
+    : url.pathname;
+
+  const target = redirects[normalizedPath];
   if (target) {
     return Response.redirect(`${url.origin}${target}`, 301);
   }
