@@ -17,6 +17,10 @@ export default async (request, context) => {
 
   const contentType = bumpRes.headers.get("content-type") || "";
 
+  if (url.searchParams.has("partial")) {
+    return bumpRes;
+  }
+
   // Only inject if it's HTML
   if (contentType.includes("text/html")) {
     const originalHtml = await bumpRes.text();
