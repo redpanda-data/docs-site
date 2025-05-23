@@ -37,12 +37,9 @@ to = "https://docs.redpanda.com/:splat"
 status = 301
 force = true
 
-[[redirects]]
-from = "/api/*"
-to = "https://bump.sh/redpanda/hub/redpanda/:splat"
-status = 200
-force = true
-headers = {X-BUMP-SH-PROXY = "r52s2vzdkfah9n1ooZuQfi6Rq5oU9L1d"}
+[[edge_functions]]
+path = "/api/*"
+function = "proxy-api-docs"
 
 # ========Beta redirects==========
 [[redirects]]
