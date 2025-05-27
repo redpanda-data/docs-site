@@ -1,5 +1,5 @@
 export default async (request, context) => {
-  const url = new URL(request.url);
+  const url = new URL(url);
   // Redirects from the old API paths to the new Bump.sh ones
   const redirects = {
     "/api/admin-api": "/api/doc/admin/",
@@ -46,16 +46,16 @@ export default async (request, context) => {
       footerWidget,
     ] = await Promise.all([
       bumpRes.text(),
-      fetch(`${request.url.origin}/_/assets/widgets/head-styles.html`).then((res) =>
+      fetch(`${url.origin}/_/assets/widgets/head-styles.html`).then((res) =>
         res.ok ? res.text() : ""
       ),
-      fetch(`${request.url.origin}/_/assets/widgets/head-script.html`).then((res) =>
+      fetch(`${url.origin}/_/assets/widgets/head-script.html`).then((res) =>
         res.ok ? res.text() : ""
       ),
-      fetch(`${request.url.origin}/_/assets/widgets/header-content.html`).then((res) =>
+      fetch(`${url.origin}/_/assets/widgets/header-content.html`).then((res) =>
         res.ok ? res.text() : ""
       ),
-      fetch(`${request.url.origin}/_/assets/widgets/footer.html`).then((res) =>
+      fetch(`${url.origin}/_/assets/widgets/footer.html`).then((res) =>
         res.ok ? res.text() : ""
       ),
     ]);
