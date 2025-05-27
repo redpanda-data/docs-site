@@ -46,16 +46,16 @@ export default async (request, context) => {
       footerWidget,
     ] = await Promise.all([
       bumpRes.text(),
-      fetch(`${originalOrigin}/_/assets/widgets/head-styles.html`).then((res) =>
+      fetch(`${originalOrigin}/assets/widgets/head-styles.html`).then((res) =>
         res.ok ? res.text() : ""
       ),
-      fetch(`${originalOrigin}/_/assets/widgets/head-script.html`).then((res) =>
+      fetch(`${originalOrigin}/assets/widgets/head-script.html`).then((res) =>
         res.ok ? res.text() : ""
       ),
-      fetch(`${originalOrigin}/_/assets/widgets/header-content.html`).then((res) =>
+      fetch(`${originalOrigin}/assets/widgets/header-content.html`).then((res) =>
         res.ok ? res.text() : ""
       ),
-      fetch(`${originalOrigin}/_/assets/widgets/footer.html`).then((res) =>
+      fetch(`${originalOrigin}/assets/widgets/footer.html`).then((res) =>
         res.ok ? res.text() : ""
       ),
     ]);
