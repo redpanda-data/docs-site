@@ -37,18 +37,33 @@ export default async (request, context) => {
 
   // Only inject if it's HTML
   if (contentType.includes("text/html")) {
-    const [originalHtml, headerWidget, footerWidget] = await Promise.all([
+    // Fetch original HTML and all widget fragments
+    const [
+      originalHtml,
+      headStyles,
+      headScript,
+      headerWidget,
+      footerWidget,
+    ] = await Promise.all([
       bumpRes.text(),
-      fetch(`${url.origin}/_/assets/widgets/header-content.html`).then((res) =>
+      fetch(`${request.url.origin}/_/assets/widgets/head-styles.html`).then((res) =>
         res.ok ? res.text() : ""
       ),
-      fetch(`${url.origin}/_/assets/widgets/footer.html`).then((res) =>
+      fetch(`${request.url.origin}/_/assets/widgets/head-script.html`).then((res) =>
+        res.ok ? res.text() : ""
+      ),
+      fetch(`${request.url.origin}/_/assets/widgets/header-content.html`).then((res) =>
+        res.ok ? res.text() : ""
+      ),
+      fetch(`${request.url.origin}/_/assets/widgets/footer.html`).then((res) =>
         res.ok ? res.text() : ""
       ),
     ]);
 
+    const combinedHead = `${headStyles}\n${headScript}`;
+
     const modifiedHtml = originalHtml
-      .replace(`<meta name="custom-head" />`, `<meta name="custom-head-hello" />`)
+      .replace(`<meta name="custom-head" />`, combinedHead)
       .replace(`<div id="embed-top-body" data-embed-target="top"></div>`, headerWidget)
       .replace(`<div id="embed-bottom-body-hello"></div>`, footerWidget);
 
