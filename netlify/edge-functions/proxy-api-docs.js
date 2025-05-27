@@ -18,22 +18,22 @@ export default async (request, context) => {
     return Response.redirect(`${url.origin}${target}`, 301);
   }
 
-  const bumpUrl = `https://bump.sh/redpanda/hub/redpanda${url.pathname.replace('/api', '')}${url.search}`;
+  // Change target host to Bump.sh
+  url.host = "bump.sh";
+  // Change target path to Bump.sh' Redpanda Hub
+  url.pathname = `/redpanda/hub/redpanda${url.pathname.replace('/api', '')}`;
+  const bumpUrl = url;
   const secret = Netlify.env.get("BUMP_PROXY_SECRET");
 
   const bumpRes = await fetch(bumpUrl, {
     headers: {
       "X-BUMP-SH-PROXY": secret,
       "X-BUMP-SH-EMBED": "true",
-      "Accept": "*/*"
     },
   });
 
   const contentType = bumpRes.headers.get("content-type") || "";
 
-  if (url.searchParams.has("partial")) {
-    return bumpRes;
-  }
 
   // Only inject if it's HTML
   if (contentType.includes("text/html")) {
