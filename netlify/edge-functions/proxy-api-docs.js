@@ -37,12 +37,20 @@ export default async (request, context) => {
 
   // Only inject if it's HTML
   if (contentType.includes("text/html")) {
-    const originalHtml = await bumpRes.text();
+    const [originalHtml, headerWidget, footerWidget] = await Promise.all([
+      bumpRes.text(),
+      fetch(`${url.origin}/_/assets/widgets/header-content.html`).then((res) =>
+        res.ok ? res.text() : ""
+      ),
+      fetch(`${url.origin}/_/assets/widgets/footer.html`).then((res) =>
+        res.ok ? res.text() : ""
+      ),
+    ]);
 
     const modifiedHtml = originalHtml
       .replace(`<meta name="custom-head" />`, `<meta name="custom-head-hello" />`)
-      .replace(`<div id="embed-top-body"></div>`, `<div id="embed-top-body-hello"></div>`)
-      .replace(`<div id="embed-bottom-body"></div>`, `<div id="embed-bottom-body-hello"></div>`);
+      .replace(`<div id="embed-top-body" data-embed-target="top"></div>`, headerWidget)
+      .replace(`<div id="embed-bottom-body-hello"></div>`, footerWidget);
 
     return new Response(modifiedHtml, {
       status: 200,
