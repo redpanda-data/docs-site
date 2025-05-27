@@ -1,5 +1,5 @@
 export default async (request, context) => {
-  const url = new URL(url);
+  const url = new URL(request.url);
   // Redirects from the old API paths to the new Bump.sh ones
   const redirects = {
     "/api/admin-api": "/api/doc/admin/",
