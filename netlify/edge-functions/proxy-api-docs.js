@@ -1,6 +1,10 @@
+import { DOMParser } from "https://deno.land/x/deno_dom/deno-dom-wasm.ts";
+
 export default async (request, context) => {
   const url = new URL(request.url);
-  const originalOrigin = url.origin;  // Redirects from the old API paths to the new Bump.sh ones
+  const originalOrigin = url.origin;
+
+  // Redirects from old API paths to new ones
   const redirects = {
     "/api/admin-api": "/api/doc/admin/",
     "/api/http-proxy-api": "/api/doc/http-proxy/",
@@ -13,16 +17,15 @@ export default async (request, context) => {
     ? url.pathname.slice(0, -1)
     : url.pathname;
 
-  const target = redirects[normalizedPath];
-  if (target) {
-    return Response.redirect(`${url.origin}${target}`, 301);
+  if (redirects[normalizedPath]) {
+    return Response.redirect(`${url.origin}${redirects[normalizedPath]}`, 301);
   }
 
-  // Change target host to Bump.sh
+  // Build the proxied Bump.sh URL
   const bumpUrl = new URL(request.url);
   bumpUrl.host = "bump.sh";
-  // Change target path to Bump.sh' Redpanda Hub
-  bumpUrl.pathname = `/redpanda/hub/redpanda${bumpUrl.pathname.replace('/api', '')}`;
+  bumpUrl.pathname = `/redpanda/hub/redpanda${bumpUrl.pathname.replace("/api", "")}`;
+
   const secret = Netlify.env.get("BUMP_PROXY_SECRET");
 
   const bumpRes = await fetch(bumpUrl, {
@@ -34,47 +37,80 @@ export default async (request, context) => {
 
   const contentType = bumpRes.headers.get("content-type") || "";
 
+  // If not HTML, pass through the response
+  if (!contentType.includes("text/html")) {
+    return bumpRes;
+  }
 
-  // Only inject if it's HTML
-  if (contentType.includes("text/html")) {
-    // Fetch original HTML and all widget fragments
-    const [
-      originalHtml,
-      headStyles,
-      headScript,
-      headerWidget,
-      footerWidget,
-    ] = await Promise.all([
-      bumpRes.text(),
-      fetch(`${originalOrigin}/assets/widgets/head-styles.html`).then((res) =>
-        res.ok ? res.text() : ""
-      ),
-      fetch(`${originalOrigin}/assets/widgets/head-script.html`).then((res) =>
-        res.ok ? res.text() : ""
-      ),
-      fetch(`${originalOrigin}/assets/widgets/header-content.html`).then((res) =>
-        res.ok ? res.text() : ""
-      ),
-      fetch(`${originalOrigin}/assets/widgets/footer.html`).then((res) =>
-        res.ok ? res.text() : ""
-      ),
-    ]);
+  // Load Bump.sh page and widgets
+  const [
+    originalHtml,
+    headScript,
+    headerWidget,
+    footerWidget,
+  ] = await Promise.all([
+    bumpRes.text(),
+    fetchWidget(`${originalOrigin}/assets/widgets/head-script.html`, "head-script"),
+    fetchWidget(`${originalOrigin}/assets/widgets/header.html`, "header"),
+    fetchWidget(`${originalOrigin}/assets/widgets/footer.html`, "footer"),
+  ]);
 
-    const combinedHead = `${headStyles}\n${headScript}`;
-
-    const modifiedHtml = originalHtml
-      .replace(`<meta name="custom-head" />`, combinedHead)
-      .replace(`<div id="embed-top-body" data-embed-target="top"></div>`, headerWidget)
-      .replace(`<div id="embed-bottom-body"></div>`, footerWidget);
-
-    return new Response(modifiedHtml, {
+  const document = new DOMParser().parseFromString(originalHtml, "text/html");
+  if (!document) {
+    console.error("❌ Failed to parse Bump.sh HTML.");
+    return new Response(originalHtml, {
       status: 200,
-      headers: {
-        "content-type": "text/html; charset=utf-8",
-      },
+      headers: { "content-type": "text/html; charset=utf-8" },
     });
   }
 
-  // For JS, JSON, CSS, just pass through the response
-  return bumpRes;
+  // Inject head script safely (into <head>)
+  const head = document.querySelector("head");
+  if (head && headScript) {
+    const temp = document.createElement("div");
+    temp.innerHTML = headScript;
+    for (const node of temp.childNodes) {
+      head.appendChild(node);
+    }
+  }
+
+  // Inject header widget
+  const topBody = document.querySelector('#embed-top-body');
+  if (topBody && headerWidget) {
+    const wrapper = document.createElement("div");
+    wrapper.innerHTML = headerWidget;
+    while (wrapper.firstChild) {
+      topBody.appendChild(wrapper.firstChild);
+    }
+  }
+
+  // Inject footer widget
+  const bottomBody = document.querySelector('#embed-bottom-body');
+  if (bottomBody && footerWidget) {
+    const wrapper = document.createElement("div");
+    wrapper.innerHTML = footerWidget;
+    while (wrapper.firstChild) {
+      bottomBody.appendChild(wrapper.firstChild);
+    }
+  }
+
+  return new Response(document.documentElement.outerHTML, {
+    status: 200,
+    headers: {
+      "content-type": "text/html; charset=utf-8",
+    },
+  });
 };
+
+// Helper function to fetch widget content with fallback
+async function fetchWidget(url, label) {
+  try {
+    const res = await fetch(url);
+    if (res.ok) return await res.text();
+    console.warn(`⚠️ Failed to load ${label} widget from ${url}`);
+    return "";
+  } catch (err) {
+    console.error(`❌ Error fetching ${label} widget:`, err);
+    return "";
+  }
+}
