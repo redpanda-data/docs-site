@@ -50,7 +50,7 @@ export default async (request, context) => {
     footerWidget,
   ] = await Promise.all([
     bumpRes.text(),
-    fetchWidget(`${originalOrigin}/assets/widgets/head-script.html`, "head-script"),
+    fetchWidget(`${originalOrigin}/assets/widgets/head-scripts.html`, "head-scripts"),
     fetchWidget(`${originalOrigin}/assets/widgets/header.html`, "header"),
     fetchWidget(`${originalOrigin}/assets/widgets/footer.html`, "footer"),
   ]);
