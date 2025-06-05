@@ -6,30 +6,26 @@ asciidoc:
   attributes:
     # Data for the home page
     page-ai-suggestions:
-      - "How to get started with Redpanda Serverless?"
+      - "How do I write from Redpanda Self-Managed to Snowflake?"
+      - "How do I create a CDC pipeline from MongoDB to Redpanda Cloud?"
       - "What's the difference between Redpanda and Kafka?"
-      - "How to set up Redpanda in a Docker container?"
+      - "Which Iceberg catalogs does Redpanda Cloud support?"
     page-intro: 'Find tutorials, guides, and API references to help you build with Redpanda, the modern streaming data platform for mission-critical workloads.'
     page-row:
       - title: Get started
         items:
           - title: 'Serverless'
             image: serverless.svg
-            description: 'Fast, efficient, and scalable data streaming without infrastructure management.'
+            description: 'Get fast, efficient, and scalable data streaming without infrastructure management.'
             urls:
               - url: 'redpanda-cloud:get-started:cluster-types/serverless.adoc'
-          - title: 'Bring Your Own Cloud'
-            image: byoc.svg
-            description: 'Deploy Redpanda on your existing cloud infrastructure with full control and flexibility.'
-            urls:
-              - url: 'redpanda-cloud:get-started:cluster-types/byoc.adoc'
           - title: 'Connect'
             image: connect.svg
-            description: 'Integrate data across systems with hundreds of prebuilt connectors, AI and change data capture (CDC) capabilities, and YAML-configurable workflows.'
+            description: 'Integrate data across systems with hundreds of prebuilt connectors, including AI and change data capture (CDC).'
             urls:
-              - url: 'redpanda-connect:home:index.adoc'
+              - url: 'redpanda-connect:get-started:quickstarts/rpk.adoc'
           - title: 'Self-Managed'
             image: self-managed.svg
             description: 'Run Redpanda on your own infrastructure with complete control over your deployment and configuration.'
             urls:
-              - url: 'ROOT:home:index.adoc'
+              - url: 'ROOT:get-started:quick-start.adoc'
