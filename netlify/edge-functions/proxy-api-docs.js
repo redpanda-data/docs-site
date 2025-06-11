@@ -21,6 +21,18 @@ export default async (request, context) => {
     return Response.redirect(`${url.origin}${redirects[normalizedPath]}`, 301);
   }
 
+  // Map paths to header background colors
+  const headerColors = {
+    "/api/doc/admin": "#107569",
+    "/api/doc/cloud-controlplane": "#014F86",
+    "/api/doc/cloud-dataplane": "#014F86",
+  };
+
+  const matchedPath = Object.keys(headerColors).find((path) =>
+    normalizedPath.startsWith(path)
+  );
+  const headerColor = headerColors[matchedPath] || "#d73d23";
+
   // Build the proxied Bump.sh URL
   const bumpUrl = new URL(request.url);
   bumpUrl.host = "bump.sh";
@@ -37,7 +49,6 @@ export default async (request, context) => {
 
   const contentType = bumpRes.headers.get("content-type") || "";
 
-  // If not HTML, pass through the response
   if (!contentType.includes("text/html")) {
     return bumpRes;
   }
@@ -64,7 +75,7 @@ export default async (request, context) => {
     });
   }
 
-  // Inject head script safely (into <head>)
+  // Inject head script
   const head = document.querySelector("head");
   if (head && headScript) {
     const temp = document.createElement("div");
@@ -74,18 +85,23 @@ export default async (request, context) => {
     }
   }
 
-  // Inject header widget
-  const topBody = document.querySelector('#embed-top-body');
+  // Inject header with dynamic background color
+  const topBody = document.querySelector("#embed-top-body");
   if (topBody && headerWidget) {
+    const coloredHeader = headerWidget.replace(
+      /(<nav[^>]*style="[^"]*background-color:\s*)#[^";]+/,
+      `$1${headerColor}`
+    );
+
     const wrapper = document.createElement("div");
-    wrapper.innerHTML = headerWidget;
+    wrapper.innerHTML = coloredHeader;
     while (wrapper.firstChild) {
       topBody.appendChild(wrapper.firstChild);
     }
   }
 
-  // Inject footer widget
-  const bottomBody = document.querySelector('#embed-bottom-body');
+  // Inject footer
+  const bottomBody = document.querySelector("#embed-bottom-body");
   if (bottomBody && footerWidget) {
     const wrapper = document.createElement("div");
     wrapper.innerHTML = footerWidget;
