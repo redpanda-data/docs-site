@@ -37,20 +37,18 @@ async function indexUrlsInAlgolia(urls) {
     try {
       await page.goto(url, { waitUntil: 'networkidle0' });
       const data = await page.evaluate(() => {
-        const shadowHost = document.getElementById('api');
-        const shadowRoot = shadowHost.shadowRoot;
         const title = document.querySelector('title')?.innerText;
-        const h1 = shadowRoot.querySelector('#api-title')?.innerText;
-        const intro = shadowRoot.querySelector('#api-description')?.innerText;
+        const h1 = document.querySelector('h1.doc-section-title')?.innerText?.trim();
+        const intro = document.querySelector('.markdown-content p')?.innerText?.trim();
         const metaVersion = document.querySelector('meta[name="latest-redpanda-version"]');
         const latestVersion = metaVersion?.getAttribute('content');
-        const titles = Array.from(shadowRoot.querySelectorAll('div.expanded-endpoint-body[part^="section-operation"]'))
+        const titles = Array.from(document.querySelectorAll('turbo-frame[id^="operation-"] h2.operation-title'))
           .map(element => {
-            const title = element.querySelector('h2')?.textContent.trim()
-            const href = element.id;
-            return href ? { t: title, h: href } : null;
+            const titleText = element.textContent?.trim();
+            const anchor = element.querySelector('a')?.getAttribute('href');
+            return anchor ? { t: titleText, h: anchor.replace(window.location.origin, '') } : null;
           })
-          .filter(item => item !== null);
+          .filter(Boolean);
         return { title, h1, intro, titles, latestVersion };
       });
       if (!data.h1) {
