@@ -94,5 +94,5 @@ antora:
             - '**/docker-compose.yml'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/validate-attributes'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/find-related-docs'
-  - require: '../docs-extensions-and-macros/extensions/find-related-labs'
+  - require: '@redpanda-data/docs-extensions-and-macros/docs-extensions-and-macros/extensions/find-related-labs'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/aggregate-terms'
