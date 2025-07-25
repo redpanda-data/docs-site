@@ -61,6 +61,7 @@ antora:
           attribute_name: docker-labs-index
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/generate-rp-connect-categories'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/modify-redirects'
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/process-context-switcher'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/algolia-indexer/index'
     excludes: ['.thumbs','script', '.page-versions','.feedback-section','.banner-container']
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/add-pages-to-root'
