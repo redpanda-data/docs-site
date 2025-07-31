@@ -93,61 +93,6 @@ server.registerTool(
   }
 );
 
-server.registerTool(
-  "search_redpanda_sources",
-  {
-    title: "Search Redpanda Sources",
-    description: "Search across Redpanda documentation sources",
-    inputSchema: { query: z.string() },
-  },
-  async ({ query }) => {
-    try {
-      const response = await fetch(
-        `${API_BASE}/query/v1/projects/${KAPA_PROJECT_ID}/search/`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-API-KEY": KAPA_API_KEY,
-          },
-          body: JSON.stringify({
-            integration_id: KAPA_INTEGRATION_ID,
-            query: query,
-          }),
-        }
-      );
-      if (!response.ok) {
-        return {
-          content: [
-            {
-              type: "text",
-              text: `Redpanda Docs MCP error: ${response.status} - ${response.statusText}`,
-            },
-          ],
-        };
-      }
-      const searchData = await response.json();
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(searchData, null, 2),
-          },
-        ],
-      };
-    } catch (error) {
-      return {
-        content: [
-          {
-            type: "text",
-            text: `Error: Failed to call kapa.ai API - ${error instanceof Error ? error.message : String(error)}`,
-          },
-        ],
-      };
-    }
-  }
-);
-
 // Wrap the server with the Netlify Edge handler
 // ---------------------------------------------
 // The `handle` function from `@modelfetch/netlify` does several things:
