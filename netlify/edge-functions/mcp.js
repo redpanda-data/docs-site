@@ -1,5 +1,3 @@
-// netlify/edge-functions/mcp.js
-
 // Redpanda Docs MCP Server on Netlify Edge Functions
 // ---------------------------------------------------
 // This Edge Function implements an authless MCP (Model Context Protocol) server
@@ -8,9 +6,9 @@
 // JSON-RPC over HTTP and SSE streaming.
 //
 // For background and reference implementations, see:
-// • Kapa AI blog: Build an MCP Server with Kapa AI
+// - Kapa AI blog: Build an MCP Server with Kapa AI
 //   https://www.kapa.ai/blog/build-an-mcp-server-with-kapa-ai
-// • Netlify guide: Writing MCPs on Netlify
+// - Netlify guide: Writing MCPs on Netlify
 //   https://developers.netlify.com/guides/write-mcps-on-netlify/
 //
 // Key challenges on Netlify Edge:
@@ -20,11 +18,11 @@
 //    - Modelfetch GitHub: https://github.com/modelcontextprotocol/modelfetch
 // 3. Header requirements: MCP expects both application/json and text/event-stream in Accept,
 //    and requires Content-Type: application/json on incoming JSON-RPC messages.
-// 4. Unbuffered streaming: ensure the ReadableStream from Kapa’s SSE chat API is proxied directly through the Edge function without interim buffering.
 
 import { McpServer } from 'https://esm.sh/@modelcontextprotocol/sdk@1.17.0/server/mcp.js'
 import { z } from 'https://esm.sh/zod@3.22.4'
 import handle from "https://esm.sh/@modelfetch/netlify@0.15.2";
+import  rateLimiter  from 'https://esm.sh/hono-rate-limiter@0.1.0';
 
 const API_BASE = "https://api.kapa.ai";
 // Fetch Netlify env vars
@@ -61,26 +59,28 @@ server.registerTool(
           }),
         }
       );
+      // Always handle as JSON (Kapa API returns JSON)
       if (!response.ok) {
         return {
           content: [
             {
               type: "text",
-              text: `Error: kapa.ai API returned ${response.status} - ${response.statusText}`,
+              text: `Redpanda Docs MCP error: ${response.status} - ${response.statusText}`,
             },
           ],
         };
       }
-      const data = await response.json();
+      const chatData = await response.json();
       return {
         content: [
           {
             type: "text",
-            text: data.answer || "No answer received",
+            text: (chatData.answer || "No answer received"),
           },
         ],
       };
     } catch (error) {
+      console.log(`[ask_redpanda_question] Exception:`, error);
       return {
         content: [
           {
@@ -121,17 +121,17 @@ server.registerTool(
           content: [
             {
               type: "text",
-              text: `Error: kapa.ai API returned ${response.status} - ${response.statusText}`,
+              text: `Redpanda Docs MCP error: ${response.status} - ${response.statusText}`,
             },
           ],
         };
       }
-      const data = await response.json();
+      const searchData = await response.json();
       return {
         content: [
           {
             type: "text",
-            text: JSON.stringify(data, null, 2),
+            text: JSON.stringify(searchData, null, 2),
           },
         ],
       };
@@ -157,25 +157,29 @@ server.registerTool(
 // 3. Routes `initialize`, `tool:discover`, and `tool:invoke` JSON-RPC methods
 //    to the registered tools on our `server` instance.
 // 4. Manages Server-Sent Events (SSE) streaming: it takes ReadableStreams
-//    returned by streaming tools (e.g., chat API SSE) and writes them as
+//    returned by streaming tools and writes them as
 //    text/event-stream chunks back through the Edge Function response.
 // 5. Handles error formatting according to JSON-RPC (wrapping exceptions in
 //    appropriate error objects).
-const baseHandler = handle(server);
+const baseHandler = handle({
+  server: server,
+  pre: (app) => {
+    app.use(
+      "/mcp",
+      rateLimiter.rateLimiter({
+        windowMs: 15 * 60 * 1000, // 15 minutes
+        limit: 50, // 50 requests per window
+        keyGenerator: (c) => c.ip,
+      }),
+    );
+  },
+});
 
 // Wrapper to ensure the Accept header includes both JSON and SSE
 export default async (request, context) => {
-  // Clone and patch headers
-  const origAccept = request.headers.get('accept') || '';
-  let accept = origAccept;
-  if (!origAccept.includes('application/json')) {
-    accept = origAccept
-      ? `${origAccept}, application/json`
-      : 'application/json, text/event-stream';
-  }
+  // Always set Accept to both application/json and text/event-stream for MCP protocol compliance
   const patchedHeaders = new Headers(request.headers);
-  patchedHeaders.set('accept', accept);
-  // Ensure the request Content-Type is JSON for initialization and calls
+  patchedHeaders.set('accept', 'application/json, text/event-stream');
   patchedHeaders.set('content-type', 'application/json');
 
   const patchedRequest = new Request(request, { headers: patchedHeaders });
