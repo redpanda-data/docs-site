@@ -113,7 +113,7 @@ const baseHandler = handle({
       "/mcp",
       rateLimiter.rateLimiter({
         windowMs: 15 * 60 * 1000, // 15 minutes
-        limit: 50, // 50 requests per window
+        limit: 30, // 30 requests per window
         keyGenerator: (c) => c.ip,
       }),
     );
