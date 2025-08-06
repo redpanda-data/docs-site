@@ -1,7 +1,7 @@
 = MCP Remote Server for Redpanda Documentation
-:description: Learn how to connect to the Redpanda documentation MCP server in Cursor, VSCode, and other AI tools.
+:description: Learn how to connect to the Redpanda documentation MCP server in Cursor, VS Code, and other AI tools.
 
-Redpanda provides a remote link:https://modelcontextprotocol.io[Model Context Protocol (MCP) server^] that lets you access documentation directly from your IDE or AI tool such as Cursor, VSCode or Claude.
+Redpanda provides a remote link:https://modelcontextprotocol.io[Model Context Protocol (MCP) server^] that lets you access documentation directly from your IDE or AI tool, such as Cursor, VS Code, or Claude.
 
 The MCP server is hosted at: `https://docs.redpanda.com/mcp`.
 You can add this endpoint to any AI agent that supports MCP.
@@ -28,10 +28,10 @@ Or, manually add it by editing your `.cursor/mcp.json` file, as explained in the
 }
 ----
 --
-VSCode::
+VS Code::
 +
 --
-link:https://vscode.dev/redirect/mcp/install?name=redpanda&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fdocs.redpanda.com%2Fmcp%22%7D[Automatically add the Redpanda MCP server to VSCode].
+link:https://vscode.dev/redirect/mcp/install?name=redpanda&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fdocs.redpanda.com%2Fmcp%22%7D[Automatically add the Redpanda MCP server to VS Code].
 
 Or, manually create a `.vscode/mcp.json` file in your workspace:
 
@@ -49,7 +49,7 @@ Or, manually create a `.vscode/mcp.json` file in your workspace:
 
 To configure globally, run **MCP: Open User Configuration** from the Command Palette and add the same JSON to the `mcp` section.
 
-For more, see the https://code.visualstudio.com/docs/copilot/chat/mcp-servers[VSCode MCP documentation^].
+For more, see the https://code.visualstudio.com/docs/copilot/chat/mcp-servers[VS Code MCP documentation^].
 --
 Claude Desktop::
 +
@@ -90,7 +90,7 @@ https://docs.redpanda.com/mcp
 
 Popular tools that support MCP:
 
-* https://github.com/microsoft/vscode-copilot[GitHub Copilot^] (VSCode 1.102+)
+* https://github.com/microsoft/vscode-copilot[GitHub Copilot^] (VS Code 1.102+)
 * https://www.jetbrains.com/ai/[JetBrains AI Assistant^]
 * https://zed.dev/[Zed Editor^]
 * Tools built with the https://modelcontextprotocol.io/[MCP SDK^]
