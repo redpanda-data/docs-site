@@ -40,14 +40,28 @@ export default async (request, context) => {
 
   const secret = Netlify.env.get("BUMP_PROXY_SECRET");
 
-  const bumpRes = await fetch(bumpUrl, {
-    headers: {
-      "X-BUMP-SH-PROXY": secret,
-      "X-BUMP-SH-EMBED": "true",
-    },
-  });
+  // Validate secret exists
+  if (!secret) {
+    console.error("❌ BUMP_PROXY_SECRET environment variable not set");
+    return new Response("Service temporarily unavailable", { status: 503 });
+  }
 
-  const contentType = bumpRes.headers.get("content-type") || "";
+  try {
+    const bumpRes = await fetchWithRetry(bumpUrl, {
+      headers: {
+        "X-BUMP-SH-PROXY": secret,
+        "X-BUMP-SH-EMBED": "true",
+        "User-Agent": "Redpanda-Docs-Proxy/1.0",
+      },
+    });
+
+    // Handle non-successful responses
+    if (!bumpRes.ok) {
+      console.error(`❌ Bump.sh returned ${bumpRes.status}: ${bumpRes.statusText}`);
+      throw new Error(`Bump.sh API error: ${bumpRes.status}`);
+    }
+
+    const contentType = bumpRes.headers.get("content-type") || "";
 
   if (!contentType.includes("text/html")) {
     return bumpRes;
@@ -114,14 +128,51 @@ export default async (request, context) => {
     status: 200,
     headers: {
       "content-type": "text/html; charset=utf-8",
+      "cache-control": "public, max-age=300", // Cache for 5 minutes
     },
   });
+
+  } catch (error) {
+    console.error("❌ Failed to fetch from Bump.sh after retries:", error);
+
+    // Return a graceful fallback response
+    return new Response(
+      `<html><head><title>API Documentation Temporarily Unavailable</title></head><body><h1>API Documentation Temporarily Unavailable</h1><p>Please try again later.</p></body></html>`,
+      {
+        status: 503,
+        headers: { "content-type": "text/html; charset=utf-8" }
+      }
+    );
+  }
 };
+
+// Fetch with retry logic and exponential backoff
+async function fetchWithRetry(url, options, maxRetries = 3) {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const response = await fetch(url, {
+        ...options,
+        signal: AbortSignal.timeout(10000), // 10 second timeout
+      });
+      return response;
+    } catch (error) {
+      console.warn(`Attempt ${attempt} failed for ${url}:`, error.message);
+
+      if (attempt === maxRetries) {
+        throw error;
+      }
+
+      // Exponential backoff: wait 2^attempt seconds
+      const delay = Math.pow(2, attempt) * 1000;
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+  }
+}
 
 // Helper function to fetch widget content with fallback
 async function fetchWidget(url, label) {
   try {
-    const res = await fetch(url);
+    const res = await fetchWithRetry(url, {}, 2); // 2 retries for widgets
     if (res.ok) return await res.text();
     console.warn(`⚠️ Failed to load ${label} widget from ${url}`);
     return "";
