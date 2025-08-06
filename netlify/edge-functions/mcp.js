@@ -120,9 +120,35 @@ const baseHandler = handle({
   },
 });
 
-// Wrapper to ensure the Accept header includes both JSON and SSE
+// Wrapper to handle both browser requests (show docs) and MCP client requests
 export default async (request, context) => {
-  // Always set Accept to both application/json and text/event-stream for MCP protocol compliance
+  // Check if this is a browser request (not an MCP client)
+  const userAgent = request.headers.get('user-agent') || '';
+  const accept = request.headers.get('accept') || '';
+  const contentType = request.headers.get('content-type') || '';
+
+  // Detect browser requests:
+  // - User-Agent contains browser identifiers
+  // - Accept header includes text/html
+  // - NOT a JSON-RPC POST request
+  const isBrowserRequest = (
+    request.method === 'GET' &&
+    (userAgent.includes('Mozilla') || userAgent.includes('Chrome') || userAgent.includes('Safari') || userAgent.includes('Edge')) &&
+    accept.includes('text/html') &&
+    !contentType.includes('application/json')
+  );
+
+  // If it's a browser request, redirect to the documentation page
+  if (isBrowserRequest) {
+    return new Response(null, {
+      status: 302,
+      headers: {
+        'Location': '/home/mcp-setup', // Redirect to the built docs page
+      },
+    });
+  }
+
+  // Otherwise, handle as MCP client request
   const patchedHeaders = new Headers(request.headers);
   patchedHeaders.set('accept', 'application/json, text/event-stream');
   patchedHeaders.set('content-type', 'application/json');

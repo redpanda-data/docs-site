@@ -1,0 +1,76 @@
+= MCP Remote Server
+:description: Learn how to connect to the Redpanda documentation MCP server in Cursor, VSCode, and other AI tools.
+
+The Redpanda documentation provides a remote *Model Context Protocol (MCP)* server that allows you to find information from the Redpanda documentation in your IDEs or AI tools, such as Cursor.
+
+Redpanda hosts a Streamable HTTP MCP server available at `https://docs.redpanda.com/mcp`. You can add it to AI agents that support connecting to MCP servers.
+
+== Set up
+
+[tabs]
+====
+Cursor::
++
+--
+link:cursor://mcp/add?name=redpanda&url=https://docs.redpanda.com/mcp[Automatically add the Redpanda MCP server to Cursor].
+
+Or, to manually connect to the Redpanda MCP server in Cursor, add the following to your `.cursor/mcp.json` file or Cursor settings, as explained in the https://docs.cursor.com/context/model-context-protocol[Cursor documentation^]:
+
+[source,json]
+----
+{
+  "mcpServers": {
+    "redpanda": {
+      "url": "https://docs.redpanda.com/mcp"
+    }
+  }
+}
+----
+--
+VSCode::
++
+--
+link:https://vscode.dev/redirect/mcp/install?name=redpanda&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fdocs.redpanda.com%2Fmcp%22%7D[Automatically add the Redpanda MCP server to VSCode].
+
+Or, to manually connect to the Redpanda MCP server in VSCode, add the following to your `settings.json` file:
+
+[source,json]
+----
+{
+  "mcp": {
+    "servers": {
+      "redpanda": {
+        "url": "https://docs.redpanda.com/mcp"
+      }
+    }
+  }
+}
+----
+--
+====
+
+== Other AI tools
+
+Any AI tool that supports MCP servers can connect to the Redpanda documentation server using the URL:
+
+[source,text]
+----
+https://docs.redpanda.com/mcp
+----
+
+This MCP server is powered by the Redpanda documentation and provides real-time access to our knowledge base.
+
+== What you can do
+
+When you're connected, you can ask the MCP server questions about Redpanda directly from your AI assistant. For example:
+
+* "How do I configure Redpanda for production?"
+* "What are the best practices for Redpanda topic partitioning?"
+* "How do I set up Redpanda Connect?"
+* "What are Redpanda's security features?"
+
+== Usage limits
+
+The MCP server has a rate limit of *30 questions per 15-minute window* to ensure fair usage and optimal performance for all users.
+
+If you exceed this limit, you'll need to wait before making additional requests.
