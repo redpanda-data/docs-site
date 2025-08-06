@@ -1,4 +1,4 @@
-= MCP Remote Server
+= MCP Remote Server for Redpanda Documentation
 :description: Learn how to connect to the Redpanda documentation MCP server in Cursor, VSCode, and other AI tools.
 
 Redpanda provides a remote *Model Context Protocol (MCP)* server that lets you access documentation directly from your IDE or AI tool such as Cursor, VSCode or Claude.
