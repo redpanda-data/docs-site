@@ -19,7 +19,6 @@ endif::[]
 :toc:
 :toc-title: Contents
 
-
 image:https://img.shields.io/badge/slack-purple[Slack, link="https://redpanda.com/slack"]
 image:https://img.shields.io/twitter/follow/redpandadata.svg?style=social&label=Follow[Twitter, link="https://twitter.com/intent/follow?screen_name=redpandadata"]
 image:https://api.netlify.com/api/v1/badges/5b89dd6f-1847-419c-b3be-a1650ce8992f/deploy-status[Netlify Status, link="https://app.netlify.com/sites/redpanda-documentation/deploys"]
