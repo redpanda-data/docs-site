@@ -5,7 +5,7 @@ site:
   robots: allow
   keys:
     announcement: true
-    announcement-text: 'New! Access Redpanda docs directly in your IDE with our MCP server for Cursor, VS Code, and Claude.'
+    announcement-text: 'New! Access Redpanda docs directly in your IDE with our MCP server.'
     announcement-link-text: 'Get started.'
     announcement-link: 'https://docs.redpanda.com/home/mcp-setup/'
     google_analytics: GTM-WB2CSV5
