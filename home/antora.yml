@@ -24,7 +24,7 @@ asciidoc:
               - url: 'redpanda-cloud:get-started:cluster-types/serverless.adoc'
           - title: 'BYOC'
             image: byoc.svg
-            description: 'Run fully-managed Redpanda clusters in your own cloud (AWS, Azure, or GCP) for additional security and data isolation.'
+            description: 'Run fully managed Redpanda clusters in your own cloud (AWS, Azure, or GCP) for additional security and data isolation.'
             urls:
               - url: 'redpanda-cloud:get-started:cluster-types/byoc/index.adoc'
           - title: 'Self-Managed'
