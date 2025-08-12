@@ -22,6 +22,11 @@ asciidoc:
             description: 'Get fast, efficient, and scalable data streaming without infrastructure management.'
             urls:
               - url: 'redpanda-cloud:get-started:cluster-types/serverless.adoc'
+          - title: 'BYOC'
+            image: byoc.svg
+            description: 'Deploy Redpanda in your own cloud (AWS, Azure, or GCP) with data contained in your environment for additional security and isolation.'
+            urls:
+              - url: 'redpanda-cloud:get-started:cluster-types/byoc/index.adoc'
           - title: 'Self-Managed'
             image: self-managed.svg
             description: 'Run Redpanda on your own infrastructure with complete control over your deployment and configuration.'
