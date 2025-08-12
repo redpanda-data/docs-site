@@ -4,9 +4,9 @@ site:
   url: http://localhost:8000
   keys:
     announcement: true
-    announcement-text: 'New! Query streaming data instantly with Apache Iceberg Topics in Redpanda.'
-    announcement-link-text: 'Learn more.'
-    announcement-link: 'https://www.redpanda.com/use-case/streaming-iceberg-tables'
+    announcement-text: 'New! Access Redpanda docs directly in your IDE with our MCP server.'
+    announcement-link-text: 'Get started.'
+    announcement-link: 'https://docs.redpanda.com/home/mcp-setup/'
 urls:
   html_extension_style: indexify
   latest_version_segment: 'current'
