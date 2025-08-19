@@ -5,9 +5,9 @@ site:
   robots: allow
   keys:
     announcement: true
-    announcement-text: 'Try our new Snowflake Connector — the simplest way to stream data to Snowflake.'
-    announcement-link-text: 'Learn more.'
-    announcement-link: 'https://www.redpanda.com/use-case/snowflake-connector-for-redpanda-connect'
+    announcement-text: 'New! Access Redpanda docs directly in your IDE with our MCP server.'
+    announcement-link-text: 'Get started'
+    announcement-link: 'https://docs.redpanda.com/home/mcp-setup/'
     google_analytics: GTM-WB2CSV5
 urls:
   html_extension_style: indexify
@@ -44,6 +44,7 @@ asciidoc:
   - '@asciidoctor/tabs'
   - '@redpanda-data/docs-extensions-and-macros/macros/rp-connect-components'
   - '@redpanda-data/docs-extensions-and-macros/macros/glossary'
+  - '@redpanda-data/docs-extensions-and-macros/macros/badge'
   - '@redpanda-data/docs-extensions-and-macros/macros/config-ref'
   - '@redpanda-data/docs-extensions-and-macros/macros/helm-ref'
   - '@redpanda-data/docs-extensions-and-macros/asciidoc-extensions/add-line-numbers-highlights'
@@ -61,6 +62,7 @@ antora:
           attribute_name: docker-labs-index
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/generate-rp-connect-categories'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/modify-redirects'
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/process-context-switcher'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/algolia-indexer/index'
     excludes: ['.thumbs','script', '.page-versions','.feedback-section','.banner-container']
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/add-pages-to-root'
