@@ -24,7 +24,10 @@ const client = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_ADMIN_API_KEY);
 const index = client.initIndex(ALGOLIA_INDEX_NAME);
 
 async function scrapeAndIndex() {
-  const browser = await puppeteer.launch({ headless: 'new' });
+  const browser = await puppeteer.launch({
+  headless: 'new',
+  args: ['--no-sandbox', '--disable-setuid-sandbox']
+  });
   const allRecords = [];
 
   for (const path of DOC_PATHS) {
