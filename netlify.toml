@@ -358,22 +358,22 @@ status = 301
 
 [[redirects]]
 from = "/redpanda-cloud/manage/api/cloud-api-quickstart/"
-to = "/api/doc/cloud-controlplane/topic/topic-quickstart"
+to = "/api/doc/cloud-controlplane/topic/topic-quickstart/"
 status = 301
 
 [[redirects]]
 from = "/redpanda-cloud/manage/api/cloud-api-overview/"
-to = "/api/doc/cloud-controlplane/topic/topic-cloud-api-overview"
+to = "/api/doc/cloud-controlplane/topic/topic-cloud-api-overview/"
 status = 301
 
 [[redirects]]
 from = "/redpanda-cloud/manage/api/cloud-api-authentication/"
-to = "/api/doc/cloud-controlplane/authentication"
+to = "/api/doc/cloud-controlplane/authentication/"
 status = 301
 
 [[redirects]]
 from = "/redpanda-cloud/manage/api/cloud-api-errors/"
-to = "/api/doc/cloud-controlplane/topic/topic-error-and-status-codes"
+to = "/api/doc/cloud-controlplane/topic/topic-error-and-status-codes/"
 status = 301
 
 [[redirects]]
