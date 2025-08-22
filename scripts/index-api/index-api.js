@@ -193,6 +193,7 @@ async function scrapeAndIndex() {
           await framePage.goto(frameInfo.src, { waitUntil: 'networkidle0', timeout: 30000 });
 
           const operationRecord = await framePage.evaluate((frameInfo, pageInfo) => {
+            const MIN_DESC_LENGTH = 10;
             const operationId = frameInfo.operationId;
             let method = '';
             let path = '';
@@ -215,6 +216,11 @@ async function scrapeAndIndex() {
               title = operationId.replace('operation-', '').replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
             }
 
+            // Enforce minimum description length
+            if (!description || description.length < MIN_DESC_LENGTH) {
+              description = `API endpoint: ${title}`;
+            }
+
             const urlPath = `/api/doc/${pageInfo.basePath.split('/').filter(Boolean).pop()}/operation/${operationId}`;
 
             const rec = {
@@ -227,7 +233,7 @@ async function scrapeAndIndex() {
               title,
               displayTitle: title,
               searchTitle: `${title} (${pageInfo.apiName})`,
-              description: description || `API endpoint: ${title}`,
+              description,
               apiBaseUrl: pageInfo.apiBaseUrl || undefined,
               url: `${location.origin}${urlPath}`,
               _tags: [pageInfo.apiName],
