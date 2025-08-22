@@ -163,7 +163,25 @@ async function scrapeAndIndex() {
           })
           .filter(Boolean);
 
-        // Collect operation frame srcs for full endpoint pages
+        /* Collect operation frame srcs for full endpoint pages
+        * The problem: Direct DOM querying fails because turbo-frames are empty shells.
+         * When we have <turbo-frame id="operation-get_brokers" loading="lazy" src="...">, 
+         * the frame has no content initially. Attempting to find .operation-verb or 
+         * .operation-path returns null, resulting in method="UNKNOWN" and path="UNKNOWN" 
+         * for all endpoints.
+         * 
+         * The solution: Extract the 'src' attribute and navigate to it individually.
+         * Each frame has a src attribute like:
+         * src="https://docs.redpanda.com/api/doc/admin/operation/operation-get_brokers"
+         * 
+         * This URL contains the complete, fully-loaded endpoint documentation. By visiting 
+         * this URL directly, we bypass the lazy-loading mechanism entirely.
+         * 
+         * Technical implementation:
+         * We collect all operation turbo-frames from the main page, extract their 'src' 
+         * attribute (the individual endpoint URL), and store the operationId + src for 
+         * later individual processing. This approach scales efficiently to hundreds of endpoints.
+        */
         const operationElements = document.querySelectorAll('turbo-frame[id^="operation-"]');
         const frameUrls = Array.from(operationElements)
           .map((el) => {
