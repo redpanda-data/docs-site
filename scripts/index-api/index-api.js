@@ -131,7 +131,7 @@ async function scrapeAndIndex() {
           apiBaseUrl: apiBaseUrl || undefined,
           apiDefinitionVersion: apiDefinitionVersion || undefined,
           url: `${location.origin}${basePath}`,
-          _tags: isCloudAPI ? ['Cloud', apiName] : [`Self-Managed v${latestVersion}`, apiName],
+          _tags: [apiName],
           _source: basePath,
         };
         if (!isCloudAPI) apiRoot.version = latestVersion;
@@ -155,7 +155,7 @@ async function scrapeAndIndex() {
               description: `API endpoints for ${title}`,
               apiBaseUrl: apiBaseUrl || undefined,
               url: `${location.origin}${urlPath}`,
-              _tags: isCloudAPI ? ['Cloud', apiName] : [`Self-Managed v${latestVersion}`, apiName],
+              _tags: [apiName],
               _source: basePath,
             };
             if (!isCloudAPI) rec.version = latestVersion;
@@ -230,7 +230,7 @@ async function scrapeAndIndex() {
               description: description || `API endpoint: ${title}`,
               apiBaseUrl: pageInfo.apiBaseUrl || undefined,
               url: `${location.origin}${urlPath}`,
-              _tags: pageInfo.isCloudAPI ? ['Cloud', pageInfo.apiName] : [`Self-Managed v${pageInfo.latestVersion}`, pageInfo.apiName],
+              _tags: [pageInfo.apiName],
               _source: pageInfo.basePath,
             };
             if (!pageInfo.isCloudAPI) rec.version = pageInfo.latestVersion;
@@ -258,7 +258,7 @@ async function scrapeAndIndex() {
             description: 'API endpoint',
             apiBaseUrl: pageInfo.apiBaseUrl || undefined,
             url: `${BASE_URL}${urlPath}`,
-            _tags: pageInfo.isCloudAPI ? ['Cloud', pageInfo.apiName] : [`Self-Managed v${pageInfo.latestVersion}`, pageInfo.apiName],
+            _tags: [pageInfo.apiName],
             _source: pageInfo.basePath,
           };
           if (!pageInfo.isCloudAPI) fallbackRecord.version = pageInfo.latestVersion;
@@ -284,16 +284,36 @@ async function scrapeAndIndex() {
   }
 
   // Summary
-  const summary = {
-    total: allRecords.length,
+  const TYPE_API = 'api';
+  const TYPE_API_GROUP = 'api group';
+  const TYPE_API_ENDPOINT = 'api endpoint';
+  const PRODUCT_SELF_MANAGED = 'self-managed';
+  const PRODUCT_CLOUD = 'cloud';
+
+  // Reduce for summary stats, force lower-case for type/product
+  const summary = allRecords.reduce((acc, r) => {
+    const type = (r.type || '').toLowerCase();
+    const product = (r.product || '').toLowerCase();
+    acc.total++;
+    if (type === TYPE_API_GROUP) acc.groups++;
+    if (type === TYPE_API_ENDPOINT) {
+      acc.endpoints++;
+      if (r.method && r.method !== 'UNKNOWN') acc.withMethod++;
+      if (r.path && r.path !== 'UNKNOWN') acc.withPath++;
+    }
+    if (product === PRODUCT_SELF_MANAGED) acc.selfManaged++;
+    if (product === PRODUCT_CLOUD) acc.cloud++;
+    return acc;
+  }, {
+    total: 0,
     apis: apiRootRecords.length,
-    groups: allRecords.filter((r) => r.type === 'API Group').length,
-    endpoints: allRecords.filter((r) => r.type === 'API Endpoint').length,
-    withMethod: allRecords.filter((r) => r.type === 'API Endpoint' && r.method && r.method !== 'UNKNOWN').length,
-    withPath: allRecords.filter((r) => r.type === 'API Endpoint' && r.path && r.path !== 'UNKNOWN').length,
-    selfManaged: allRecords.filter((r) => r.product === 'Self-Managed').length,
-    cloud: allRecords.filter((r) => r.product === 'Cloud').length,
-  };
+    groups: 0,
+    endpoints: 0,
+    withMethod: 0,
+    withPath: 0,
+    selfManaged: 0,
+    cloud: 0
+  });
 
   console.log('\\n📊 EXTRACTION SUMMARY:');
   console.log(`API roots: ${summary.apis}`);
@@ -349,9 +369,10 @@ async function configureIndex(index, apiRootRecords) {
     removeWordsIfNoResults: 'allOptional',
   });
 
+
   // Synonyms ("admin api" ↔ "Admin API", etc.)
   const synonyms = Object.entries(API_NAME_BY_PATH).map(([path, apiName]) => {
-    const slug = apiName.toLowerCase().replace(/\\s+/g, '-');
+    const slug = apiName.toLowerCase().replace(/\s+/g, '-').replace(/[^A-Za-z0-9_-]/g, '');
     const variants = [
       apiName,
       apiName.replace(/ api$/i, ''), // "Admin"
@@ -363,26 +384,12 @@ async function configureIndex(index, apiRootRecords) {
       `${apiName.toLowerCase()} docs`,
       `${apiName.toLowerCase()} endpoints`,
       `${apiName.toLowerCase()} reference`,
-      apiName.toLowerCase().replace(/\\s+/g, '-'), // admin-api
-      `${apiName.toLowerCase().replace(/\\s+/g, '-')} docs`,
+      apiName.toLowerCase().replace(/\s+/g, '-'), // admin-api
+      `${apiName.toLowerCase().replace(/\s+/g, '-')} docs`,
     ];
     return { objectID: `syn_${slug}`, type: 'synonym', synonyms: Array.from(new Set(variants)) };
   });
   await index.saveSynonyms(synonyms, { replaceExistingSynonyms: false });
-
-  // Query rules: pin API root records for generic queries like "<api> api"
-  const rules = apiRootRecords.map((api) => {
-    const apiName = api.api; // e.g., 'Admin API'
-    const pattern = `${apiName.replace(/ api$/i, '')} api`.toLowerCase(); // 'admin api'
-    return {
-      objectID: `rule_pin_${apiName.toLowerCase().replace(/\\s+/g, '_')}`,
-      condition: { anchoring: 'contains', pattern },
-      consequence: { promote: [{ objectID: api.objectID, position: 0 }] },
-      description: `Pin ${apiName} root for generic queries`,
-      enabled: true,
-    };
-  });
-  await index.saveRules(rules, { replaceExistingRules: false });
 
   console.log('✅ Index configured.');
 }
