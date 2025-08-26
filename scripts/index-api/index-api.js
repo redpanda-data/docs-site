@@ -136,7 +136,7 @@ async function scrapeAndIndex() {
           apiBaseUrl: apiBaseUrl || undefined,
           apiDefinitionVersion: apiDefinitionVersion || undefined,
           url: `${location.origin}${basePath}`,
-          _tags: isCloudAPI ? ['Cloud', apiName] : [`Self-Managed v${latestVersion}`, apiName],
+          _tags: [apiName],
           _source: basePath,
         };
         if (!isCloudAPI) apiRoot.version = latestVersion;
@@ -160,7 +160,7 @@ async function scrapeAndIndex() {
               description: `API endpoints for ${title}`,
               apiBaseUrl: apiBaseUrl || undefined,
               url: `${location.origin}${urlPath}`,
-              _tags: isCloudAPI ? ['Cloud', apiName] : [`Self-Managed v${latestVersion}`, apiName],
+              _tags: [apiName],
               _source: basePath,
             };
             if (!isCloudAPI) rec.version = latestVersion;
@@ -260,7 +260,7 @@ async function scrapeAndIndex() {
               description,
               apiBaseUrl: pageInfo.apiBaseUrl || undefined,
               url: `${location.origin}${urlPath}`,
-              _tags: pageInfo.isCloudAPI ? ['Cloud', pageInfo.apiName] : [`Self-Managed v${pageInfo.latestVersion}`, pageInfo.apiName],
+              _tags: [pageInfo.apiName],
               _source: pageInfo.basePath,
             };
             if (!pageInfo.isCloudAPI) rec.version = pageInfo.latestVersion;
@@ -288,7 +288,7 @@ async function scrapeAndIndex() {
             description: 'API endpoint',
             apiBaseUrl: pageInfo.apiBaseUrl || undefined,
             url: `${BASE_URL}${urlPath}`,
-            _tags: pageInfo.isCloudAPI ? ['Cloud', pageInfo.apiName] : [`Self-Managed v${pageInfo.latestVersion}`, pageInfo.apiName],
+            _tags: [pageInfo.apiName],
             _source: pageInfo.basePath,
           };
           if (!pageInfo.isCloudAPI) fallbackRecord.version = pageInfo.latestVersion;
