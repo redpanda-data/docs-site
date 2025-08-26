@@ -139,7 +139,6 @@ async function scrapeAndIndex() {
           _tags: [apiName],
           _source: basePath,
         };
-        if (!isCloudAPI) apiRoot.version = latestVersion;
 
         // API groups (immediately present)
         const groupElements = document.querySelectorAll('turbo-frame[id^="endpoint-"]');
@@ -163,7 +162,6 @@ async function scrapeAndIndex() {
               _tags: [apiName],
               _source: basePath,
             };
-            if (!isCloudAPI) rec.version = latestVersion;
             return rec;
           })
           .filter(Boolean);
@@ -263,7 +261,6 @@ async function scrapeAndIndex() {
               _tags: [pageInfo.apiName],
               _source: pageInfo.basePath,
             };
-            if (!pageInfo.isCloudAPI) rec.version = pageInfo.latestVersion;
             return rec;
           }, frameInfo, pageInfo);
 
@@ -291,7 +288,6 @@ async function scrapeAndIndex() {
             _tags: [pageInfo.apiName],
             _source: pageInfo.basePath,
           };
-          if (!pageInfo.isCloudAPI) fallbackRecord.version = pageInfo.latestVersion;
           allRecords.push(fallbackRecord);
         } finally {
           await framePage.close();
@@ -381,12 +377,13 @@ async function configureIndex(index, apiRootRecords) {
   // Settings
   await index.setSettings({
     searchableAttributes: [
-      'unordered(searchTitle)',  // indexing-only helper
       'unordered(title)',
-      'unordered(path)',
-      'unordered(method)',
+      'unordered(intro)',
       'unordered(description)',
       'unordered(api)',
+      'unordered(searchTitle)',
+      'unordered(path)',
+      'unordered(method)',
       'unordered(product)',
       'unordered(version)',
     ],
