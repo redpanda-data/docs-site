@@ -92,7 +92,12 @@ async function scrapeAndIndex() {
         const basePath = window.location.pathname; // e.g., /api/doc/admin/
         const latestVersion = document.querySelector('meta[name="latest-redpanda-version"]')?.getAttribute('content');
         const isCloudAPI = basePath.includes('/cloud-');
-        const product = isCloudAPI ? 'Cloud' : 'Self-Managed';
+        // For HTTP Proxy and Schema Registry, set both products
+        const isMultiProduct = [
+          '/api/doc/http-proxy/',
+          '/api/doc/schema-registry/'
+        ].includes(basePath);
+        const products = isMultiProduct ? ['Cloud', 'Self-Managed'] : [isCloudAPI ? 'Cloud' : 'Self-Managed'];
 
         // --- Extract clean API title (exclude version chip), definition version, and Base URL ---
         const h1 = document.querySelector('h1.doc-section-title');
@@ -121,7 +126,7 @@ async function scrapeAndIndex() {
         const apiDesc = firstPara?.textContent?.trim() || `Endpoints for ${apiName}.`;
         const apiRoot = {
           objectID: basePath,
-          product,
+          products,
           api: apiName,
           type: 'API',
           title: apiTitle,
@@ -146,7 +151,7 @@ async function scrapeAndIndex() {
             const urlPath = `/api/doc/${basePath.split('/').filter(Boolean).pop()}/group/${id}`;
             const rec = {
               objectID: urlPath,
-              product,
+              products,
               api: apiName,
               type: 'API Group',
               title,
@@ -163,7 +168,25 @@ async function scrapeAndIndex() {
           })
           .filter(Boolean);
 
-        // Collect operation frame srcs for full endpoint pages
+        /* Collect operation frame srcs for full endpoint pages
+        * The problem: Direct DOM querying fails because turbo-frames are empty shells.
+         * When we have <turbo-frame id="operation-get_brokers" loading="lazy" src="...">, 
+         * the frame has no content initially. Attempting to find .operation-verb or 
+         * .operation-path returns null, resulting in method="UNKNOWN" and path="UNKNOWN" 
+         * for all endpoints.
+         * 
+         * The solution: Extract the 'src' attribute and navigate to it individually.
+         * Each frame has a src attribute like:
+         * src="https://docs.redpanda.com/api/doc/admin/operation/operation-get_brokers"
+         * 
+         * This URL contains the complete, fully-loaded endpoint documentation. By visiting 
+         * this URL directly, we bypass the lazy-loading mechanism entirely.
+         * 
+         * Technical implementation:
+         * We collect all operation turbo-frames from the main page, extract their 'src' 
+         * attribute (the individual endpoint URL), and store the operationId + src for 
+         * later individual processing. This approach scales efficiently to hundreds of endpoints.
+        */
         const operationElements = document.querySelectorAll('turbo-frame[id^="operation-"]');
         const frameUrls = Array.from(operationElements)
           .map((el) => {
@@ -174,11 +197,10 @@ async function scrapeAndIndex() {
           })
           .filter(Boolean);
 
-        return { basePath, latestVersion, isCloudAPI, product, apiName, apiRoot, groups, frameUrls };
+        return { basePath, latestVersion, isCloudAPI, products, apiName, apiRoot, groups, frameUrls, apiBaseUrl };
       }, apiName);
 
       console.log(`📄 Found 1 API root, ${pageInfo.groups.length} groups and ${pageInfo.frameUrls.length} operations`);
-
       // Add API root + groups
       apiRootRecords.push(pageInfo.apiRoot);
       allRecords.push(pageInfo.apiRoot, ...pageInfo.groups);
@@ -188,11 +210,14 @@ async function scrapeAndIndex() {
       let errorCount = 0;
 
       for (const frameInfo of pageInfo.frameUrls) {
+      // (moved up) Add API root + groups and process operation frames
+
         const framePage = await browser.newPage();
         try {
           await framePage.goto(frameInfo.src, { waitUntil: 'networkidle0', timeout: 30000 });
 
           const operationRecord = await framePage.evaluate((frameInfo, pageInfo) => {
+            const MIN_DESC_LENGTH = 10;
             const operationId = frameInfo.operationId;
             let method = '';
             let path = '';
@@ -215,11 +240,16 @@ async function scrapeAndIndex() {
               title = operationId.replace('operation-', '').replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
             }
 
+            // Enforce minimum description length
+            if (!description || description.length < MIN_DESC_LENGTH) {
+              description = `API endpoint: ${title}`;
+            }
+
             const urlPath = `/api/doc/${pageInfo.basePath.split('/').filter(Boolean).pop()}/operation/${operationId}`;
 
             const rec = {
               objectID: urlPath,
-              product: pageInfo.product,
+              products: pageInfo.products,
               api: pageInfo.apiName,
               type: 'API Endpoint',
               method: method || 'UNKNOWN',
@@ -227,7 +257,7 @@ async function scrapeAndIndex() {
               title,
               displayTitle: title,
               searchTitle: `${title} (${pageInfo.apiName})`,
-              description: description || `API endpoint: ${title}`,
+              description,
               apiBaseUrl: pageInfo.apiBaseUrl || undefined,
               url: `${location.origin}${urlPath}`,
               _tags: pageInfo.isCloudAPI ? ['Cloud', pageInfo.apiName] : [`Self-Managed v${pageInfo.latestVersion}`, pageInfo.apiName],
@@ -247,7 +277,7 @@ async function scrapeAndIndex() {
           const title = frameInfo.operationId.replace('operation-', '').replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
           const fallbackRecord = {
             objectID: urlPath,
-            product: pageInfo.product,
+            products: pageInfo.products,
             api: pageInfo.apiName,
             type: 'API Endpoint',
             method: 'UNKNOWN',
@@ -284,17 +314,39 @@ async function scrapeAndIndex() {
   }
 
   // Summary
-  const summary = {
-    total: allRecords.length,
-    apis: apiRootRecords.length,
-    groups: allRecords.filter((r) => r.type === 'API Group').length,
-    endpoints: allRecords.filter((r) => r.type === 'API Endpoint').length,
-    withMethod: allRecords.filter((r) => r.type === 'API Endpoint' && r.method && r.method !== 'UNKNOWN').length,
-    withPath: allRecords.filter((r) => r.type === 'API Endpoint' && r.path && r.path !== 'UNKNOWN').length,
-    selfManaged: allRecords.filter((r) => r.product === 'Self-Managed').length,
-    cloud: allRecords.filter((r) => r.product === 'Cloud').length,
-  };
+  // Summary using products array
+  const TYPE_API = 'api';
+  const TYPE_API_GROUP = 'api group';
+  const TYPE_API_ENDPOINT = 'api endpoint';
+  const PRODUCT_SELF_MANAGED = 'self-managed';
+  const PRODUCT_CLOUD = 'cloud';
 
+  // Reduce for summary stats, force lower-case for type/product
+  const summary = allRecords.reduce((acc, r) => {
+    const type = (r.type || '').toLowerCase();
+    const products = (r.products || []);
+    acc.total++;
+    if (type === TYPE_API_GROUP) acc.groups++;
+    if (type === TYPE_API_ENDPOINT) {
+      acc.endpoints++;
+      if (r.method && r.method !== 'UNKNOWN') acc.withMethod++;
+      if (r.path && r.path !== 'UNKNOWN') acc.withPath++;
+    }
+    if (Array.isArray(products)) {
+      if (products.map(p => (p || '').toLowerCase()).includes(PRODUCT_SELF_MANAGED)) acc.selfManaged++;
+      if (products.map(p => (p || '').toLowerCase()).includes(PRODUCT_CLOUD)) acc.cloud++;
+    }
+    return acc;
+  }, {
+    total: 0,
+    apis: apiRootRecords.length,
+    groups: 0,
+    endpoints: 0,
+    withMethod: 0,
+    withPath: 0,
+    selfManaged: 0,
+    cloud: 0
+  });
   console.log('\\n📊 EXTRACTION SUMMARY:');
   console.log(`API roots: ${summary.apis}`);
   console.log(`API groups: ${summary.groups}`);
@@ -351,7 +403,7 @@ async function configureIndex(index, apiRootRecords) {
 
   // Synonyms ("admin api" ↔ "Admin API", etc.)
   const synonyms = Object.entries(API_NAME_BY_PATH).map(([path, apiName]) => {
-    const slug = apiName.toLowerCase().replace(/\\s+/g, '-');
+    const slug = apiName.toLowerCase().replace(/\s+/g, '-').replace(/[^A-Za-z0-9_-]/g, '');
     const variants = [
       apiName,
       apiName.replace(/ api$/i, ''), // "Admin"
@@ -363,27 +415,12 @@ async function configureIndex(index, apiRootRecords) {
       `${apiName.toLowerCase()} docs`,
       `${apiName.toLowerCase()} endpoints`,
       `${apiName.toLowerCase()} reference`,
-      apiName.toLowerCase().replace(/\\s+/g, '-'), // admin-api
-      `${apiName.toLowerCase().replace(/\\s+/g, '-')} docs`,
+      apiName.toLowerCase().replace(/\s+/g, '-'), // admin-api
+      `${apiName.toLowerCase().replace(/\s+/g, '-')} docs`,
     ];
     return { objectID: `syn_${slug}`, type: 'synonym', synonyms: Array.from(new Set(variants)) };
   });
   await index.saveSynonyms(synonyms, { replaceExistingSynonyms: false });
-
-  // Query rules: pin API root records for generic queries like "<api> api"
-  const rules = apiRootRecords.map((api) => {
-    const apiName = api.api; // e.g., 'Admin API'
-    const pattern = `${apiName.replace(/ api$/i, '')} api`.toLowerCase(); // 'admin api'
-    return {
-      objectID: `rule_pin_${apiName.toLowerCase().replace(/\\s+/g, '_')}`,
-      condition: { anchoring: 'contains', pattern },
-      consequence: { promote: [{ objectID: api.objectID, position: 0 }] },
-      description: `Pin ${apiName} root for generic queries`,
-      enabled: true,
-    };
-  });
-  await index.saveRules(rules, { replaceExistingRules: false });
-
   console.log('✅ Index configured.');
 }
 
