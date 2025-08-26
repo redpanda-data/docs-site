@@ -236,7 +236,7 @@ async function main() {
         interactive: true,
         unixTimestamp: unixTimestamp,
         type: 'Lab',
-        _tags: ['labs'],
+        _tags: ['Labs'],
         categories: [...adjustedTrackTags]
       };
     });

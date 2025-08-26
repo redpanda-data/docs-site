@@ -94,7 +94,7 @@ async function indexUrlsInAlgolia(urls) {
         unixTimestamp: unixTimestamp,
         author: data.author,
         type: 'Blog',
-        _tags: ['blogs']
+        _tags: ['Blogs']
       };
     } catch (error) {
       console.error(`Error processing URL ${url}:`, error);

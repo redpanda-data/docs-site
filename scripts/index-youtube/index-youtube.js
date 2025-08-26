@@ -35,7 +35,7 @@ async function fetchYouTubeVideos() {
           unixTimestamp: convertToUnixTimestamp(video.snippet.publishedAt),
           image: video.snippet.thumbnails.high.url,
           type: 'Video',
-          _tags: ['videos']
+          _tags: ['Videos']
       }));
     } catch (error) {
         console.error('Error fetching YouTube videos:', error);
