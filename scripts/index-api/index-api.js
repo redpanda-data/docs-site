@@ -92,7 +92,12 @@ async function scrapeAndIndex() {
         const basePath = window.location.pathname; // e.g., /api/doc/admin/
         const latestVersion = document.querySelector('meta[name="latest-redpanda-version"]')?.getAttribute('content');
         const isCloudAPI = basePath.includes('/cloud-');
-        const product = isCloudAPI ? 'Cloud' : 'Self-Managed';
+        // For HTTP Proxy and Schema Registry, set both products
+        const isMultiProduct = [
+          '/api/doc/http-proxy/',
+          '/api/doc/schema-registry/'
+        ].includes(basePath);
+        const products = isMultiProduct ? ['Cloud', 'Self-Managed'] : [isCloudAPI ? 'Cloud' : 'Self-Managed'];
 
         // --- Extract clean API title (exclude version chip), definition version, and Base URL ---
         const h1 = document.querySelector('h1.doc-section-title');
@@ -121,7 +126,7 @@ async function scrapeAndIndex() {
         const apiDesc = firstPara?.textContent?.trim() || `Endpoints for ${apiName}.`;
         const apiRoot = {
           objectID: basePath,
-          product,
+          products,
           api: apiName,
           type: 'API',
           title: apiTitle,
@@ -134,7 +139,6 @@ async function scrapeAndIndex() {
           _tags: [apiName],
           _source: basePath,
         };
-        if (!isCloudAPI) apiRoot.version = latestVersion;
 
         // API groups (immediately present)
         const groupElements = document.querySelectorAll('turbo-frame[id^="endpoint-"]');
@@ -146,7 +150,7 @@ async function scrapeAndIndex() {
             const urlPath = `/api/doc/${basePath.split('/').filter(Boolean).pop()}/group/${id}`;
             const rec = {
               objectID: urlPath,
-              product,
+              products,
               api: apiName,
               type: 'API Group',
               title,
@@ -158,7 +162,6 @@ async function scrapeAndIndex() {
               _tags: [apiName],
               _source: basePath,
             };
-            if (!isCloudAPI) rec.version = latestVersion;
             return rec;
           })
           .filter(Boolean);
@@ -192,11 +195,10 @@ async function scrapeAndIndex() {
           })
           .filter(Boolean);
 
-        return { basePath, latestVersion, isCloudAPI, product, apiName, apiRoot, groups, frameUrls };
+        return { basePath, latestVersion, isCloudAPI, products, apiName, apiRoot, groups, frameUrls, apiBaseUrl };
       }, apiName);
 
       console.log(`📄 Found 1 API root, ${pageInfo.groups.length} groups and ${pageInfo.frameUrls.length} operations`);
-
       // Add API root + groups
       apiRootRecords.push(pageInfo.apiRoot);
       allRecords.push(pageInfo.apiRoot, ...pageInfo.groups);
@@ -206,6 +208,8 @@ async function scrapeAndIndex() {
       let errorCount = 0;
 
       for (const frameInfo of pageInfo.frameUrls) {
+      // (moved up) Add API root + groups and process operation frames
+
         const framePage = await browser.newPage();
         try {
           await framePage.goto(frameInfo.src, { waitUntil: 'networkidle0', timeout: 30000 });
@@ -243,7 +247,7 @@ async function scrapeAndIndex() {
 
             const rec = {
               objectID: urlPath,
-              product: pageInfo.product,
+              products: pageInfo.products,
               api: pageInfo.apiName,
               type: 'API Endpoint',
               method: method || 'UNKNOWN',
@@ -257,7 +261,6 @@ async function scrapeAndIndex() {
               _tags: [pageInfo.apiName],
               _source: pageInfo.basePath,
             };
-            if (!pageInfo.isCloudAPI) rec.version = pageInfo.latestVersion;
             return rec;
           }, frameInfo, pageInfo);
 
@@ -271,7 +274,7 @@ async function scrapeAndIndex() {
           const title = frameInfo.operationId.replace('operation-', '').replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
           const fallbackRecord = {
             objectID: urlPath,
-            product: pageInfo.product,
+            products: pageInfo.products,
             api: pageInfo.apiName,
             type: 'API Endpoint',
             method: 'UNKNOWN',
@@ -285,7 +288,6 @@ async function scrapeAndIndex() {
             _tags: [pageInfo.apiName],
             _source: pageInfo.basePath,
           };
-          if (!pageInfo.isCloudAPI) fallbackRecord.version = pageInfo.latestVersion;
           allRecords.push(fallbackRecord);
         } finally {
           await framePage.close();
@@ -308,6 +310,7 @@ async function scrapeAndIndex() {
   }
 
   // Summary
+  // Summary using products array
   const TYPE_API = 'api';
   const TYPE_API_GROUP = 'api group';
   const TYPE_API_ENDPOINT = 'api endpoint';
@@ -317,7 +320,7 @@ async function scrapeAndIndex() {
   // Reduce for summary stats, force lower-case for type/product
   const summary = allRecords.reduce((acc, r) => {
     const type = (r.type || '').toLowerCase();
-    const product = (r.product || '').toLowerCase();
+    const products = (r.products || []);
     acc.total++;
     if (type === TYPE_API_GROUP) acc.groups++;
     if (type === TYPE_API_ENDPOINT) {
@@ -325,8 +328,10 @@ async function scrapeAndIndex() {
       if (r.method && r.method !== 'UNKNOWN') acc.withMethod++;
       if (r.path && r.path !== 'UNKNOWN') acc.withPath++;
     }
-    if (product === PRODUCT_SELF_MANAGED) acc.selfManaged++;
-    if (product === PRODUCT_CLOUD) acc.cloud++;
+    if (Array.isArray(products)) {
+      if (products.map(p => (p || '').toLowerCase()).includes(PRODUCT_SELF_MANAGED)) acc.selfManaged++;
+      if (products.map(p => (p || '').toLowerCase()).includes(PRODUCT_CLOUD)) acc.cloud++;
+    }
     return acc;
   }, {
     total: 0,
@@ -338,7 +343,6 @@ async function scrapeAndIndex() {
     selfManaged: 0,
     cloud: 0
   });
-
   console.log('\\n📊 EXTRACTION SUMMARY:');
   console.log(`API roots: ${summary.apis}`);
   console.log(`API groups: ${summary.groups}`);
@@ -373,12 +377,13 @@ async function configureIndex(index, apiRootRecords) {
   // Settings
   await index.setSettings({
     searchableAttributes: [
-      'unordered(searchTitle)',  // indexing-only helper
       'unordered(title)',
-      'unordered(path)',
-      'unordered(method)',
+      'unordered(intro)',
       'unordered(description)',
       'unordered(api)',
+      'unordered(searchTitle)',
+      'unordered(path)',
+      'unordered(method)',
       'unordered(product)',
       'unordered(version)',
     ],
@@ -392,7 +397,6 @@ async function configureIndex(index, apiRootRecords) {
     ignorePlurals: true,
     removeWordsIfNoResults: 'allOptional',
   });
-
 
   // Synonyms ("admin api" ↔ "Admin API", etc.)
   const synonyms = Object.entries(API_NAME_BY_PATH).map(([path, apiName]) => {
@@ -414,7 +418,6 @@ async function configureIndex(index, apiRootRecords) {
     return { objectID: `syn_${slug}`, type: 'synonym', synonyms: Array.from(new Set(variants)) };
   });
   await index.saveSynonyms(synonyms, { replaceExistingSynonyms: false });
-
   console.log('✅ Index configured.');
 }
 
