@@ -29,7 +29,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
       - name: Install dependencies
         run: cd scripts/index-masterclasses && npm install
       - name: Run indexing script
@@ -37,12 +37,13 @@ jobs:
         env:
           ALGOLIA_INDEX_NAME: redpanda
           GITHUB_TOKEN: ${{ env.ACTIONS_BOT_TOKEN }}
-      - name: Commit changes
-        run: |
-          git config --global user.name "vbotbuildovich"
-          git config --global user.email "vbotbuildovich@users.noreply.github.com"
-          git add home/modules/ROOT/attachments/instruqt-labs.json
-          git commit -m "auto-docs: Update Instruqt records"
-          git push origin main
-        env:
-          ACCESS_TOKEN: ${{ env.ACTIONS_BOT_TOKEN }}
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ env.ACTIONS_BOT_TOKEN }}
+          base: main
+          branch: auto-docs/update-masterclass-index
+          title: 'auto-docs: Update Masterclass docs'
+          commit-message: 'docs: Update Masterclass docs'
+          body: Update the Masterclass docs to reflect the latest courses and labs available on Instruqt.
+          labels: auto-docs
