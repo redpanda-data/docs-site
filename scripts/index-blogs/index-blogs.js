@@ -33,7 +33,10 @@ async function fetchSitemapUrls(sitemapUrl) {
 }
 
 async function indexUrlsInAlgolia(urls) {
-  const browser = await puppeteer.launch({headless: "new"});
+  const browser = await puppeteer.launch({
+    headless: 'new',
+    args: ['--no-sandbox', '--disable-setuid-sandbox']
+  });
   const records = await Promise.all(urls.map(async (url) => {
     if (!url.includes('/blog/')) return null
     const page = await browser.newPage();
