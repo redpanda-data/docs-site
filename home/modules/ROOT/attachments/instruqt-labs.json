@@ -21,7 +21,7 @@
       }
     ],
     "interactive": true,
-    "unixTimestamp": 1731272693,
+    "unixTimestamp": 1747602309,
     "type": "Lab",
     "_tags": [
       "labs"
@@ -54,7 +54,7 @@
       }
     ],
     "interactive": true,
-    "unixTimestamp": 1731272693,
+    "unixTimestamp": 1747602309,
     "type": "Lab",
     "_tags": [
       "labs"
@@ -78,7 +78,7 @@
       }
     ],
     "interactive": true,
-    "unixTimestamp": 1731272693,
+    "unixTimestamp": 1747602309,
     "type": "Lab",
     "_tags": [
       "labs"
@@ -102,7 +102,7 @@
       }
     ],
     "interactive": true,
-    "unixTimestamp": 1731272693,
+    "unixTimestamp": 1747602309,
     "type": "Lab",
     "_tags": [
       "labs"
@@ -159,7 +159,7 @@
       }
     ],
     "interactive": true,
-    "unixTimestamp": 1731272693,
+    "unixTimestamp": 1747602309,
     "type": "Lab",
     "_tags": [
       "labs"
@@ -186,7 +186,7 @@
       }
     ],
     "interactive": true,
-    "unixTimestamp": 1731272693,
+    "unixTimestamp": 1747602309,
     "type": "Lab",
     "_tags": [
       "labs"
@@ -216,7 +216,7 @@
       }
     ],
     "interactive": true,
-    "unixTimestamp": 1731272693,
+    "unixTimestamp": 1747602309,
     "type": "Lab",
     "_tags": [
       "labs"
@@ -251,7 +251,7 @@
       }
     ],
     "interactive": true,
-    "unixTimestamp": 1731272693,
+    "unixTimestamp": 1747602309,
     "type": "Lab",
     "_tags": [
       "labs"
@@ -280,7 +280,7 @@
       }
     ],
     "interactive": true,
-    "unixTimestamp": 1731272693,
+    "unixTimestamp": 1747602309,
     "type": "Lab",
     "_tags": [
       "labs"
@@ -307,7 +307,7 @@
       }
     ],
     "interactive": true,
-    "unixTimestamp": 1731272693,
+    "unixTimestamp": 1747602309,
     "type": "Lab",
     "_tags": [
       "labs"
@@ -337,7 +337,7 @@
       }
     ],
     "interactive": true,
-    "unixTimestamp": 1731272693,
+    "unixTimestamp": 1747602309,
     "type": "Lab",
     "_tags": [
       "labs"
@@ -367,7 +367,7 @@
       }
     ],
     "interactive": true,
-    "unixTimestamp": 1731272693,
+    "unixTimestamp": 1747602309,
     "type": "Lab",
     "_tags": [
       "labs"
@@ -409,7 +409,7 @@
       }
     ],
     "interactive": true,
-    "unixTimestamp": 1731272693,
+    "unixTimestamp": 1747602309,
     "type": "Lab",
     "_tags": [
       "labs"
@@ -438,7 +438,7 @@
       }
     ],
     "interactive": true,
-    "unixTimestamp": 1731272693,
+    "unixTimestamp": 1747602309,
     "type": "Lab",
     "_tags": [
       "labs"
@@ -465,7 +465,7 @@
       }
     ],
     "interactive": true,
-    "unixTimestamp": 1731272693,
+    "unixTimestamp": 1747602309,
     "type": "Lab",
     "_tags": [
       "labs"
@@ -475,6 +475,39 @@
       "Stream Processing"
     ],
     "objectID": "https://play.instruqt.com/redpanda/invite/1drawiyfgrlx"
+  },
+  {
+    "title": "Kafka Building Blocks",
+    "id": "kq8gp5fhj5fl",
+    "image": "https://play.instruqt.com/assets/tracks/vrcrunjpdyt8/a14ef7c8e2b15f26df995e91699c4428/assets/Red%20Leader%20Avatar%20Circle_Blue.png",
+    "intro": "Learn the basics of Kafka for streaming data and get a hands-on introduction to creating Kafka consumers and producers.",
+    "slug": "kafka-building-blocks",
+    "deployment": "",
+    "titles": [
+      {
+        "t": "Storage Layer - Clusters and Brokers"
+      },
+      {
+        "t": "Storage Layer - Topics and Partitions"
+      },
+      {
+        "t": "Communication Layer - Writing Producers"
+      },
+      {
+        "t": "Communication Layer - Writing Consumers"
+      },
+      {
+        "t": "The Road Ahead"
+      }
+    ],
+    "interactive": true,
+    "unixTimestamp": 1747602309,
+    "type": "Lab",
+    "_tags": [
+      "labs"
+    ],
+    "categories": [],
+    "objectID": "https://play.instruqt.com/redpanda/invite/3guk85pjfsdy"
   },
   {
     "title": "Migration to Redpanda using MirrorMaker 2",
@@ -498,7 +531,7 @@
       }
     ],
     "interactive": true,
-    "unixTimestamp": 1731272693,
+    "unixTimestamp": 1747602309,
     "type": "Lab",
     "_tags": [
       "labs"
@@ -525,7 +558,7 @@
       }
     ],
     "interactive": true,
-    "unixTimestamp": 1731272693,
+    "unixTimestamp": 1747602309,
     "type": "Lab",
     "_tags": [
       "labs"
@@ -558,13 +591,34 @@
       }
     ],
     "interactive": true,
-    "unixTimestamp": 1731272693,
+    "unixTimestamp": 1747602309,
     "type": "Lab",
     "_tags": [
       "labs"
     ],
     "categories": [],
     "objectID": "https://play.instruqt.com/redpanda/invite/ilhmeyt0mbri"
+  },
+  {
+    "title": "Redpanda Connect and AI Workshop",
+    "id": "mfhgyqrw4dyc",
+    "image": "",
+    "intro": "Some quick demo for showcasing Redpanda Connect at Current 2024",
+    "slug": "streamfest-ai-workshop",
+    "deployment": "",
+    "titles": [
+      {
+        "t": "Enhancing AI workflows with real-time data processing"
+      }
+    ],
+    "interactive": true,
+    "unixTimestamp": 1747602309,
+    "type": "Lab",
+    "_tags": [
+      "labs"
+    ],
+    "categories": [],
+    "objectID": "https://play.instruqt.com/redpanda/invite/oahvkja0xojg"
   },
   {
     "title": "Redpanda Connect GenAI demo",
@@ -588,7 +642,7 @@
       }
     ],
     "interactive": true,
-    "unixTimestamp": 1731272693,
+    "unixTimestamp": 1747602309,
     "type": "Lab",
     "_tags": [
       "labs"
@@ -618,13 +672,42 @@
       }
     ],
     "interactive": true,
-    "unixTimestamp": 1731272693,
+    "unixTimestamp": 1747602309,
     "type": "Lab",
     "_tags": [
       "labs"
     ],
     "categories": [],
     "objectID": "https://play.instruqt.com/redpanda/invite/wisuxrqoezzs"
+  },
+  {
+    "title": "Redpanda Ecosystem",
+    "id": "c7jcmb1fqepe",
+    "image": "https://play.instruqt.com/assets/tracks/vrcrunjpdyt8/a14ef7c8e2b15f26df995e91699c4428/assets/Red%20Leader%20Avatar%20Circle_Blue.png",
+    "intro": "Meet the must-know tools in the Kafka space and get hands-on with connectors and schema registry.",
+    "slug": "redpanda-ecosystem",
+    "deployment": "",
+    "titles": [
+      {
+        "t": "The Ecosystem at a Glance"
+      },
+      {
+        "t": "Kafka Connect"
+      },
+      {
+        "t": "Schema Registry"
+      }
+    ],
+    "interactive": true,
+    "unixTimestamp": 1747602309,
+    "type": "Lab",
+    "_tags": [
+      "labs"
+    ],
+    "categories": [
+      "Schema Registry"
+    ],
+    "objectID": "https://play.instruqt.com/redpanda/invite/fney1jjvkjbq"
   },
   {
     "title": "Securing Redpanda in K8s",
@@ -642,7 +725,7 @@
       }
     ],
     "interactive": true,
-    "unixTimestamp": 1731272693,
+    "unixTimestamp": 1747602309,
     "type": "Lab",
     "_tags": [
       "labs"
@@ -678,7 +761,7 @@
       }
     ],
     "interactive": true,
-    "unixTimestamp": 1731272693,
+    "unixTimestamp": 1747602309,
     "type": "Lab",
     "_tags": [
       "labs"
@@ -708,12 +791,36 @@
       }
     ],
     "interactive": true,
-    "unixTimestamp": 1731272693,
+    "unixTimestamp": 1747602309,
     "type": "Lab",
     "_tags": [
       "labs"
     ],
     "categories": [],
     "objectID": "https://play.instruqt.com/redpanda/invite/mmqqzcopkyhz"
+  },
+  {
+    "title": "Streaming Fundamentals",
+    "id": "znqfoe6tbsqd",
+    "image": "https://play.instruqt.com/assets/tracks/vrcrunjpdyt8/a14ef7c8e2b15f26df995e91699c4428/assets/Red%20Leader%20Avatar%20Circle_Blue.png",
+    "intro": "Kick off your streaming journey by learning the fundamentals of event streaming and Redpanda.",
+    "slug": "streaming-fundamentals",
+    "deployment": "",
+    "titles": [
+      {
+        "t": "Streaming Basics"
+      },
+      {
+        "t": "Redpanda Overview"
+      }
+    ],
+    "interactive": true,
+    "unixTimestamp": 1747602309,
+    "type": "Lab",
+    "_tags": [
+      "labs"
+    ],
+    "categories": [],
+    "objectID": "https://play.instruqt.com/redpanda/invite/z3cxzcy0xc7a"
   }
 ]
