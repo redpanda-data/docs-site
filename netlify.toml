@@ -129,6 +129,22 @@ to = "/api/"
 status = 301
 
 [[redirects]]
+from = "/api"
+to = "/api/"
+status = 301
+
+[[redirects]]
+from = "/api/doc"
+to = "/api/"
+status = 301
+
+[[redirects]]
+from = "/api/doc/"
+to = "/api/"
+status = 301
+
+
+[[redirects]]
 from = "/docs/platform/*"
 to = "/current/:splat"
 status = 301
