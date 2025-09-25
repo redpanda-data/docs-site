@@ -1,0 +1,78 @@
+name: Update MCP registry
+
+on:
+  pull_request:
+    paths:
+      - "netlify/mcp.js"
+  push:
+    branches: [ main ]
+    paths:
+      - "server.json"
+      - "netlify/mcp.js"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  bump_version_on_pr:
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          persist-credentials: true
+
+      - name: Setup Node (for jq availability on some runners)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+
+      - name: Compute new version and update server.json
+        run: |
+          VERSION="$(date -u +%Y.%m.%d)+pr${{ github.event.number }}-${GITHUB_SHA::7}"
+          echo "New version: $VERSION"
+          jq --arg v "$VERSION" '.version = $v' server.json > server.tmp.json
+          mv server.tmp.json server.json
+          git diff -- server.json || true
+
+      - name: Commit and push version bump (if changed)
+        run: |
+          if ! git diff --quiet -- server.json; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add server.json
+            git commit -m "chore: bump server.json version to ${VERSION} (PR #${{ github.event.number }})"
+            git push
+          else
+            echo "No changes to server.json; skipping commit."
+          fi
+
+  publish_on_main:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install MCP Publisher
+        run: |
+          curl -L "https://github.com/modelcontextprotocol/registry/releases/download/v1.0.0/mcp-publisher_1.0.0_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/').tar.gz" \
+            | tar xz mcp-publisher
+          chmod +x mcp-publisher
+          ./mcp-publisher --version
+
+      # DNS login using your Ed25519 private key (hex)
+      - name: Log in to MCP Registry (DNS)
+        run: ./mcp-publisher login dns --domain redpanda.com --private-key "${{ secrets.MCP_REGISTRY_PRIVATE_KEY }}"
+
+      - name: Publish to MCP Registry
+        run: ./mcp-publisher publish
+
+    concurrency:
+      group: mcp-publish-${{ github.ref }}
+      cancel-in-progress: false
