@@ -104,11 +104,9 @@ if (MCPCAT_PROJECT) {
     globalThis['process'] = undefined;
 
     const mcpcat = await import(
-      "https://esm.sh/mcpcat@0.1.4?target=deno&conditions=browser&bundle"
+      "https://esm.sh/mcpcat@0.1.5?target=deno&conditions=browser&bundle"
     );
-    mcpcat.track(server, MCPCAT_PROJECT, {
-      identify: async () => null,
-    });
+    mcpcat.track(server, MCPCAT_PROJECT);
   } catch (e) {
     // Don't crash the MCP server if analytics fail to load.
     console.warn("[mcpcat] disabled due to import error:", e);
