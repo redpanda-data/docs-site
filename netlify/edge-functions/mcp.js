@@ -23,7 +23,6 @@ import { McpServer } from 'https://esm.sh/@modelcontextprotocol/sdk@1.17.0/serve
 import { z } from 'https://esm.sh/zod@3.22.4'
 import handle from "https://esm.sh/@modelfetch/netlify@0.15.2";
 import  rateLimiter  from 'https://esm.sh/hono-rate-limiter@0.1.0';
-import * as mcpcat from "https://esm.sh/mcpcat@latest?target=deno";
 
 const API_BASE = "https://api.kapa.ai";
 // Fetch Netlify env vars
@@ -99,9 +98,21 @@ server.registerTool(
 // MCPcat is an open-source analytics platform for MCP usage tracking.
 // See https://www.mcpcat.com/ for details.
 if (MCPCAT_PROJECT) {
-  mcpcat.track(server, MCPCAT_PROJECT, {
-    identify: async () => null,
-  });
+  const prevProcess = globalThis['process']
+  try {
+    // Steer module resolution away from Node branches some bundlers pick up.
+    globalThis['process'] = undefined;
+
+    const mcpcat = await import(
+      "https://esm.sh/mcpcat@0.1.4?target=deno&conditions=browser&bundle"
+    );
+    mcpcat.track(server, MCPCAT_PROJECT);
+  } catch (e) {
+    // Don't crash the MCP server if analytics fail to load.
+    console.warn("[mcpcat] disabled due to import error:", e);
+  } finally {
+    globalThis['process'] = prevProcess;
+  }
 }
 
 // Wrap the server with the Netlify Edge handler
