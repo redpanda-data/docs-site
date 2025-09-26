@@ -15,7 +15,6 @@
     "@redpanda-data/docs-extensions-and-macros": "^4.0.0",
     "@sntke/antora-mermaid-extension": "^0.0.6",
     "algoliasearch": "^5.35.0",
-    "mcpcat": "^0.1.4",
     "puppeteer": "^24.15.0"
   },
   "devDependencies": {
