@@ -375,7 +375,7 @@ status = 301
 # Redirect to Control Plane API reference as a starting point
 [[redirects]]
 from = "/api/cloud-api"
-to = ""
+to = "/api/doc/cloud-controlplane"
 status = 301
 
 # Old quickstart from beta release
