@@ -341,6 +341,12 @@ from = "/23.3/get-started/quick-start-cloud/"
 to = "/redpanda-cloud/get-started/cluster-types/dedicated/quick-start-cloud/"
 status = 301
 
+# Old quickstart from beta release
+[[redirects]]
+from = "/current/deploy/deployment-option/cloud/api/cloud-api-quickstart"
+to = "/api/doc/cloud-controlplane/topic/topic-quickstart/"
+status = 301
+
 [[redirects]]
 from = "/current/deploy/deployment-option/cloud/*"
 to = "/redpanda-cloud/deploy/deployment-option/cloud/:splat"
@@ -369,19 +375,6 @@ status = 301
 [[redirects]]
 from = "/23.3/develop/http-proxy-cloud/"
 to = "/redpanda-cloud/develop/http-proxy/"
-status = 301
-
-# Redirect from Cloud API beta links:
-# Redirect to Control Plane API reference as a starting point
-[[redirects]]
-from = "/api/cloud-api"
-to = "/api/doc/cloud-controlplane"
-status = 301
-
-# Old quickstart from beta release
-[[redirects]]
-from = "/current/deploy/deployment-option/cloud/api/cloud-api-quickstart"
-to = "/api/doc/cloud-controlplane/topic/topic-quickstart/"
 status = 301
 
 [[redirects]]
