@@ -6,6 +6,7 @@ export default async (request, context) => {
 
   // Redirects from old API paths to new ones
   const redirects = {
+    "/api/doc": "/api",
     "/api/admin-api": "/api/doc/admin/",
     "/api/http-proxy-api": "/api/doc/http-proxy/",
     "/api/schema-registry-api": "/api/doc/schema-registry/",
