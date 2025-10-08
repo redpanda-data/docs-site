@@ -11,6 +11,7 @@ export default async (request, context) => {
     "/api/schema-registry-api": "/api/doc/schema-registry/",
     "/api/cloud-controlplane-api": "/api/doc/cloud-controlplane/",
     "/api/cloud-dataplane-api": "/api/doc/cloud-dataplane/",
+    "/api/cloud-api": "/api/doc/cloud-controlplane/",
   };
 
   const normalizedPath = url.pathname.endsWith("/")
