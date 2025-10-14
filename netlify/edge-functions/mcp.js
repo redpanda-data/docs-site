@@ -29,6 +29,7 @@ const API_BASE = "https://api.kapa.ai";
 const KAPA_API_KEY = Netlify.env.get('KAPA_API_KEY');
 const KAPA_PROJECT_ID = Netlify.env.get('KAPA_PROJECT_ID');
 const KAPA_INTEGRATION_ID = Netlify.env.get('KAPA_INTEGRATION_ID');
+const MCPCAT_PROJECT = Netlify.env.get('MCPCAT_PROJECT');
 
 // Initialize MCP Server and register tools
 const server = new McpServer({
@@ -92,6 +93,27 @@ server.registerTool(
     }
   }
 );
+
+// Initialize MCPcat tracking (if MCPCAT_PROJECT is set)
+// MCPcat is an open-source analytics platform for MCP usage tracking.
+// See https://www.mcpcat.com/ for details.
+if (MCPCAT_PROJECT) {
+  const prevProcess = globalThis['process']
+  try {
+    // Steer module resolution away from Node branches some bundlers pick up.
+    globalThis['process'] = undefined;
+
+    const mcpcat = await import(
+      "https://esm.sh/mcpcat@0.1.5?target=deno&conditions=browser&bundle"
+    );
+    mcpcat.track(server, MCPCAT_PROJECT);
+  } catch (e) {
+    // Don't crash the MCP server if analytics fail to load.
+    console.warn("[mcpcat] disabled due to import error:", e);
+  } finally {
+    globalThis['process'] = prevProcess;
+  }
+}
 
 // Wrap the server with the Netlify Edge handler
 // ---------------------------------------------
