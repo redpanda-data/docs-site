@@ -22,13 +22,48 @@
 import { McpServer } from 'https://esm.sh/@modelcontextprotocol/sdk@1.17.0/server/mcp.js'
 import { z } from 'https://esm.sh/zod@3.22.4'
 import handle from "https://esm.sh/@modelfetch/netlify@0.15.2";
-import  rateLimiter  from 'https://esm.sh/hono-rate-limiter@0.1.0';
+// NOTE: some esm.sh builds of hono-rate-limiter export differently; this shim ensures compatibility.
+import rateLimiterModule from 'https://esm.sh/hono-rate-limiter@0.1.0';
+const makeRateLimiter = rateLimiterModule.rateLimiter || rateLimiterModule;
 
 const API_BASE = "https://api.kapa.ai";
 // Fetch Netlify env vars
 const KAPA_API_KEY = Netlify.env.get('KAPA_API_KEY');
 const KAPA_PROJECT_ID = Netlify.env.get('KAPA_PROJECT_ID');
 const KAPA_INTEGRATION_ID = Netlify.env.get('KAPA_INTEGRATION_ID');
+<<<<<<< Updated upstream
+=======
+
+// Helper to compute a stable limiter key (shared IPs, proxy headers, or fallback)
+const computeLimiterKey = (c) => {
+  const h = (name) => c.req.header(name) || '';
+
+  // Allow clients to provide their own stable identifier
+  const clientKey = h('x-client-key');
+  if (clientKey) return `ck:${clientKey}`;
+
+  // Try Netlify’s client IP first
+  const nfIp = h('x-nf-client-connection-ip');
+  if (nfIp) return `ip:${nfIp}`;
+
+  // Then Cloudflare
+  const cfIp = h('cf-connecting-ip');
+  if (cfIp) return `ip:${cfIp}`;
+
+  // Then generic proxy chain
+  const xff = h('x-forwarded-for').split(',')[0]?.trim();
+  if (xff) return `ip:${xff}`;
+
+  // Then Real-IP
+  const realIp = h('x-real-ip');
+  if (realIp) return `ip:${realIp}`;
+
+  // Fallback: use user-agent + accept header
+  const ua = h('user-agent');
+  const accept = h('accept');
+  return `ua:${ua}|${accept}`;
+};
+>>>>>>> Stashed changes
 
 // Initialize MCP Server and register tools
 const server = new McpServer({
@@ -111,10 +146,12 @@ const baseHandler = handle({
   pre: (app) => {
     app.use(
       "/mcp",
-      rateLimiter.rateLimiter({
+      makeRateLimiter({
         windowMs: 15 * 60 * 1000, // 15 minutes
-        limit: 30, // 30 requests per window
-        keyGenerator: (c) => c.ip,
+        limit: 60, // limit each key to 60 requests per windowMs
+        keyGenerator: computeLimiterKey, // use our custom key generator
+        standardHeaders: true, // send RateLimit-* headers if supported
+        legacyHeaders: true,   // also send X-RateLimit-* headers
       }),
     );
   },
@@ -158,4 +195,3 @@ export default async (request, context) => {
 };
 
 export const config = { path: "/mcp" };
-
