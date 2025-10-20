@@ -13,9 +13,7 @@ You can add this endpoint to any AI agent that supports MCP.
 Cursor::
 +
 --
-link:cursor://mcp/add?name=redpanda&url=https://docs.redpanda.com/mcp[Automatically add the Redpanda MCP server to Cursor].
-
-Or, manually add it by editing your `.cursor/mcp.json` file:
+Add the following to your `.cursor/mcp.json` file:
 
 [source,json]
 ----
@@ -35,9 +33,7 @@ VS Code::
 --
 *Prerequisites:* VS Code 1.102+ with GitHub Copilot enabled.
 
-link:https://vscode.dev/redirect/mcp/install?name=redpanda&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fdocs.redpanda.com%2Fmcp%22%7D[Automatically add the Redpanda MCP server to VS Code].
-
-Or, manually create an `mcp.json` file in your workspace `.vscode` folder:
+Create an `mcp.json` file in your workspace `.vscode` folder:
 
 .`.vscode/mcp.json`
 [source,json]
@@ -60,9 +56,9 @@ To configure globally for all workspaces:
 
 *Using MCP in VS Code:*
 
-. Open the Chat view (kbd:[Ctrl+Cmd+I] / kbd:[Ctrl+Alt+I])
-. Select **Agent mode** from the dropdown
-. Click the **Tools** button to see available MCP tools
+. Open the Chat view (kbd:[Ctrl+Cmd+I] / kbd:[Ctrl+Alt+I]).
+. Select **Agent mode** from the dropdown.
+. Click the **Tools** button to see available MCP tools.
 . Ask questions about Redpanda and the AI automatically uses the documentation.
 
 For more details, see the https://code.visualstudio.com/docs/copilot/customization/mcp-servers[VS Code MCP documentation^].
