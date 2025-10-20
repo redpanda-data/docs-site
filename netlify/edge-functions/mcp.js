@@ -31,8 +31,6 @@ const API_BASE = "https://api.kapa.ai";
 const KAPA_API_KEY = Netlify.env.get('KAPA_API_KEY');
 const KAPA_PROJECT_ID = Netlify.env.get('KAPA_PROJECT_ID');
 const KAPA_INTEGRATION_ID = Netlify.env.get('KAPA_INTEGRATION_ID');
-<<<<<<< Updated upstream
-=======
 
 // Helper to compute a stable limiter key (shared IPs, proxy headers, or fallback)
 const computeLimiterKey = (c) => {
@@ -63,7 +61,6 @@ const computeLimiterKey = (c) => {
   const accept = h('accept');
   return `ua:${ua}|${accept}`;
 };
->>>>>>> Stashed changes
 
 // Initialize MCP Server and register tools
 const server = new McpServer({
