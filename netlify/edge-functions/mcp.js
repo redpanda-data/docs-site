@@ -41,6 +41,10 @@ const computeLimiterKey = (c) => {
   if (clientKey) return `ck:${clientKey}`;
 
   // Try Netlify’s client IP first
+  // Prefer context.ip / c.ip if present
+  if (c.ip) return `ip:${c.ip}`;
+
+  // fallback to headers (for older runtimes)
   const nfIp = h('x-nf-client-connection-ip');
   if (nfIp) return `ip:${nfIp}`;
 
