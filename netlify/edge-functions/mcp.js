@@ -21,113 +21,131 @@
 
 import { McpServer } from 'https://esm.sh/@modelcontextprotocol/sdk@1.17.0/server/mcp.js'
 import { z } from 'https://esm.sh/zod@3.22.4'
-import handle from "https://esm.sh/@modelfetch/netlify@0.15.2";
+import handle from 'https://esm.sh/@modelfetch/netlify@0.15.2'
 // NOTE: some esm.sh builds of hono-rate-limiter export differently; this shim ensures compatibility.
-import rateLimiterModule from 'https://esm.sh/hono-rate-limiter@0.1.0';
-const makeRateLimiter = rateLimiterModule.rateLimiter || rateLimiterModule;
+import rateLimiterModule from 'https://esm.sh/hono-rate-limiter@0.1.0'
+const makeRateLimiter = rateLimiterModule.rateLimiter || rateLimiterModule
 
-const API_BASE = "https://api.kapa.ai";
+const API_BASE = 'https://api.kapa.ai'
 // Fetch Netlify env vars
-const KAPA_API_KEY = Netlify.env.get('KAPA_API_KEY');
-const KAPA_PROJECT_ID = Netlify.env.get('KAPA_PROJECT_ID');
-const KAPA_INTEGRATION_ID = Netlify.env.get('KAPA_INTEGRATION_ID');
+const KAPA_API_KEY = Netlify.env.get('KAPA_API_KEY')
+const KAPA_PROJECT_ID = Netlify.env.get('KAPA_PROJECT_ID')
+const KAPA_INTEGRATION_ID = Netlify.env.get('KAPA_INTEGRATION_ID')
 
 // Helper to compute a stable limiter key (shared IPs, proxy headers, or fallback)
 const computeLimiterKey = (c) => {
-  const h = (name) => c.req.header(name) || '';
+  const h = (name) => c.req.header(name) || ''
 
   // Allow clients to provide their own stable identifier
-  const clientKey = h('x-client-key');
-  if (clientKey) return `ck:${clientKey}`;
+  const clientKey = h('x-client-key')
+  if (clientKey) return `ck:${clientKey}`
 
   // Try Netlify’s client IP first
   // Prefer context.ip / c.ip if present
-  if (c.ip) return `ip:${c.ip}`;
+  if (c.ip) return `ip:${c.ip}`
 
-  // fallback to headers (for older runtimes)
-  const nfIp = h('x-nf-client-connection-ip');
-  if (nfIp) return `ip:${nfIp}`;
+  // Fall back to headers (for older runtimes)
+  const nfIp = h('x-nf-client-connection-ip')
+  if (nfIp) return `ip:${nfIp}`
 
   // Then Cloudflare
-  const cfIp = h('cf-connecting-ip');
-  if (cfIp) return `ip:${cfIp}`;
+  const cfIp = h('cf-connecting-ip')
+  if (cfIp) return `ip:${cfIp}`
 
   // Then generic proxy chain
-  const xff = h('x-forwarded-for').split(',')[0]?.trim();
-  if (xff) return `ip:${xff}`;
+  const xff = h('x-forwarded-for').split(',')[0]?.trim()
+  if (xff) return `ip:${xff}`
 
   // Then Real-IP
-  const realIp = h('x-real-ip');
-  if (realIp) return `ip:${realIp}`;
+  const realIp = h('x-real-ip')
+  if (realIp) return `ip:${realIp}`
 
   // Fallback: use user-agent + accept header
-  const ua = h('user-agent');
-  const accept = h('accept');
-  return `ua:${ua}|${accept}`;
-};
+  const ua = h('user-agent')
+  const accept = h('accept')
+  return `ua:${ua}|${accept}`
+}
 
 // Initialize MCP Server and register tools
 const server = new McpServer({
-  name: "Redpanda Docs MCP", // Display name visible for inspectors
-  version: "0.1.0",
-});
+  name: 'Redpanda Docs MCP', // Display name visible for inspectors
+  version: '0.2.0',
+})
 
 server.registerTool(
-  "ask_redpanda_question",
+  'ask_redpanda_question',
   {
-    title: "Ask Redpanda Question",
-    description: "Ask a question about Redpanda documentation",
-    inputSchema: { question: z.string() },
+    title: 'Search Redpanda Sources',
+    description: 'Search the Redpanda documentation and return raw retrieval results (array of {source_url, content}).',
+    // Parameter descriptions help LLMs call this tool correctly.
+    inputSchema: z.object({
+      query: z
+        .string()
+        .describe('The text query to search Redpanda documentation for.'),
+    }),
   },
-  async ({ question }) => {
+  async ({ query }) => {
+    const q = (query || '').trim()
+    if (!q) {
+      return {
+        content: [{
+          type: 'text',
+          text: JSON.stringify({ error: 'missing_query', message: 'Provide a non-empty "query".' })
+        }]
+      }
+    }
+
     try {
       const response = await fetch(
-        `${API_BASE}/query/v1/projects/${KAPA_PROJECT_ID}/chat/`,
+        `${API_BASE}/query/v1/projects/${KAPA_PROJECT_ID}/retrieval/`,
         {
-          method: "POST",
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
-            "X-API-KEY": KAPA_API_KEY,
+            'Content-Type': 'application/json',
+            'X-API-KEY': KAPA_API_KEY,
           },
           body: JSON.stringify({
             integration_id: KAPA_INTEGRATION_ID,
-            query: question,
+            query: q,
           }),
         }
-      );
-      // Always handle as JSON (Kapa API returns JSON)
+      )
+
+      const raw = await response.text()
+      let data
+      try { data = raw ? JSON.parse(raw) : [] } catch { data = [] }
+
       if (!response.ok) {
         return {
-          content: [
-            {
-              type: "text",
-              text: `Redpanda Docs MCP error: ${response.status} - ${response.statusText}`,
-            },
-          ],
-        };
+          content: [{
+            type: 'text',
+            text: JSON.stringify({
+              error: 'upstream_error',
+              status: response.status,
+              statusText: response.statusText,
+              body: raw || null,
+            })
+          }]
+        }
       }
-      const chatData = await response.json();
+
+      // Return the raw retrieval items (let Kapa control count/size).
+      const arr = Array.isArray(data) ? data : []
       return {
-        content: [
-          {
-            type: "text",
-            text: (chatData.answer || "No answer received"),
-          },
-        ],
-      };
+        content: [{
+          type: 'text',
+          text: JSON.stringify(arr)
+        }]
+      }
+
     } catch (error) {
-      console.log(`[ask_redpanda_question] Exception:`, error);
+      const msg = error instanceof Error ? error.message : String(error)
       return {
-        content: [
-          {
-            type: "text",
-            text: `Error: Failed to call kapa.ai API - ${error instanceof Error ? error.message : String(error)}`,
-          },
-        ],
-      };
+        content: [{ type: 'text', text: JSON.stringify({ error: 'exception', message: msg }) }]
+      }
     }
   }
-);
+)
 
 // Wrap the server with the Netlify Edge handler
 // ---------------------------------------------
@@ -146,24 +164,31 @@ const baseHandler = handle({
   server: server,
   pre: (app) => {
     app.use(
-      "/mcp",
+      '/mcp',
       makeRateLimiter({
         windowMs: 15 * 60 * 1000, // 15 minutes
-        limit: 60, // limit each key to 60 requests per windowMs
+        limit: 60,                // limit each key to 60 requests per windowMs (tune as needed)
         keyGenerator: computeLimiterKey, // use our custom key generator
-        standardHeaders: true, // send RateLimit-* headers if supported
-        legacyHeaders: true,   // also send X-RateLimit-* headers
+        standardHeaders: true,    // send RateLimit-* headers if supported
+        legacyHeaders: true,      // also send X-RateLimit-* headers
       }),
-    );
+    )
   },
-});
+})
 
 // Wrapper to handle both browser requests (show docs) and MCP client requests
 export default async (request, context) => {
+  const url = new URL(request.url)
+
+  // Simple health check for POP/routing tests (no SSE)
+  if (request.method === 'GET' && url.pathname === '/mcp/health') {
+    return new Response('ok', { status: 200, headers: { 'cache-control': 'no-store' } })
+  }
+
   // Check if this is a browser request (not an MCP client)
-  const userAgent = request.headers.get('user-agent') || '';
-  const accept = request.headers.get('accept') || '';
-  const contentType = request.headers.get('content-type') || '';
+  const userAgent = request.headers.get('user-agent') || ''
+  const accept = request.headers.get('accept') || ''
+  const contentType = request.headers.get('content-type') || ''
 
   // Detect browser requests:
   // - User-Agent contains browser identifiers
@@ -174,7 +199,7 @@ export default async (request, context) => {
     (userAgent.includes('Mozilla') || userAgent.includes('Chrome') || userAgent.includes('Safari') || userAgent.includes('Edge')) &&
     accept.includes('text/html') &&
     !contentType.includes('application/json')
-  );
+  )
 
   // If it's a browser request, redirect to the documentation page
   if (isBrowserRequest) {
@@ -183,16 +208,21 @@ export default async (request, context) => {
       headers: {
         'Location': '/home/mcp-setup', // Redirect to the built docs page
       },
-    });
+    })
+  }
+
+  // Enforce POST for /mcp (some tools accidentally send GET)
+  if (url.pathname === '/mcp' && request.method !== 'POST') {
+    return new Response('Method not allowed', { status: 405, headers: { 'Allow': 'POST' } })
   }
 
   // Otherwise, handle as MCP client request
-  const patchedHeaders = new Headers(request.headers);
-  patchedHeaders.set('accept', 'application/json, text/event-stream');
-  patchedHeaders.set('content-type', 'application/json');
+  const patchedHeaders = new Headers(request.headers)
+  patchedHeaders.set('accept', 'application/json, text/event-stream')
+  patchedHeaders.set('content-type', 'application/json')
 
-  const patchedRequest = new Request(request, { headers: patchedHeaders });
-  return baseHandler(patchedRequest, context);
-};
+  const patchedRequest = new Request(request, { headers: patchedHeaders })
+  return baseHandler(patchedRequest, context)
+}
 
-export const config = { path: "/mcp" };
+export const config = { path: '/mcp' }
