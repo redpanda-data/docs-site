@@ -136,7 +136,13 @@ Once connected, you can ask context-aware questions about Redpanda from within y
 
 To ensure fair use and performance, the server enforces a rate limit of **60 questions per 15-minute window**.
 
-If you exceed the limit, you'll see a rate limit error message. Wait a few minutes before retrying.
+If you exceed the limit, you receive an HTTP 429 response. Wait a few minutes before retrying.
+
+.Expected response
+[source,text]
+----
+HTTP 429 Too Many Requests
+----
 
 == Troubleshooting
 
