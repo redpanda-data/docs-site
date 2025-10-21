@@ -72,29 +72,20 @@ const server = new McpServer({
   version: '0.2.0',
 })
 
+const ArgsSchema = z
+  .object({ query: z.string().min(1).describe('Preferred search string for Redpanda docs.') })
+  .or(z.object({ question: z.string().min(1).describe('Legacy alias of "query".') }))
+  .transform(v => ({ query: (v.query ?? v.question).trim() }));
+
 server.registerTool(
   'ask_redpanda_question',
   {
     title: 'Search Redpanda Sources',
     description: 'Search the Redpanda documentation and return raw retrieval results (array of {source_url, content}).',
-    // Parameter descriptions help LLMs call this tool correctly.
-    inputSchema: z.object({
-      query: z
-        .string()
-        .describe('The text query to search Redpanda documentation for.'),
-    }),
+    inputSchema: ArgsSchema,
   },
-  async ({ query }) => {
-    const q = (query || '').trim()
-    if (!q) {
-      return {
-        content: [{
-          type: 'text',
-          text: JSON.stringify({ error: 'missing_query', message: 'Provide a non-empty "query".' })
-        }]
-      }
-    }
-
+  async (args) => {
+    const q = args.query; // normalized by the schema
     try {
       const response = await fetch(
         `${API_BASE}/query/v1/projects/${KAPA_PROJECT_ID}/retrieval/`,
@@ -109,11 +100,10 @@ server.registerTool(
             query: q,
           }),
         }
-      )
+      );
 
-      const raw = await response.text()
-      let data
-      try { data = raw ? JSON.parse(raw) : [] } catch { data = [] }
+      const raw = await response.text();
+      let data; try { data = raw ? JSON.parse(raw) : []; } catch { data = []; }
 
       if (!response.ok) {
         return {
@@ -126,26 +116,18 @@ server.registerTool(
               body: raw || null,
             })
           }]
-        }
+        };
       }
 
-      // Return the raw retrieval items (let Kapa control count/size).
-      const arr = Array.isArray(data) ? data : []
-      return {
-        content: [{
-          type: 'text',
-          text: JSON.stringify(arr)
-        }]
-      }
+      const arr = Array.isArray(data) ? data : [];
+      return { content: [{ type: 'text', text: JSON.stringify(arr) }] };
 
     } catch (error) {
-      const msg = error instanceof Error ? error.message : String(error)
-      return {
-        content: [{ type: 'text', text: JSON.stringify({ error: 'exception', message: msg }) }]
-      }
+      const msg = error instanceof Error ? error.message : String(error);
+      return { content: [{ type: 'text', text: JSON.stringify({ error: 'exception', message: msg }) }] };
     }
   }
-)
+);
 
 // Wrap the server with the Netlify Edge handler
 // ---------------------------------------------
@@ -173,6 +155,10 @@ const baseHandler = handle({
         legacyHeaders: true,      // also send X-RateLimit-* headers
       }),
     )
+    app.use('/mcp', async (c, next) => {
+      await next();
+      c.res.headers.set('X-MCP-Server', `Redpanda Docs MCP/${server.version || 'unknown'}`);
+    });
   },
 })
 
