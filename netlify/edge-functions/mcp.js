@@ -66,26 +66,46 @@ const computeLimiterKey = (c) => {
   return `ua:${ua}|${accept}`
 }
 
+const SERVER_VERSION = '0.2.0';
+
 // Initialize MCP Server and register tools
 const server = new McpServer({
   name: 'Redpanda Docs MCP', // Display name visible for inspectors
-  version: '0.2.0',
+  version: SERVER_VERSION,
 })
 
-const ArgsSchema = z
-  .object({ query: z.string().min(1).describe('Preferred search string for Redpanda docs.') })
-  .or(z.object({ question: z.string().min(1).describe('Legacy alias of "query".') }))
-  .transform(v => ({ query: (v.query ?? v.question).trim() }));
 
 server.registerTool(
   'ask_redpanda_question',
   {
     title: 'Search Redpanda Sources',
     description: 'Search the Redpanda documentation and return raw retrieval results (array of {source_url, content}).',
-    inputSchema: ArgsSchema,
+    inputSchema: {
+      type: 'object',
+      properties: {
+        query: {
+          type: 'string',
+          description: 'Preferred search string for Redpanda docs.'
+        },
+        question: {
+          type: 'string',
+          description: 'Legacy alias of "query".'
+        }
+      },
+      anyOf: [
+        { required: ['query'] },
+        { required: ['question'] }
+      ],
+      additionalProperties: false
+    }
   },
   async (args) => {
-    const q = args.query; // normalized by the schema
+    const q = (args?.query ?? args?.question ?? '').trim();
+    if (!q) {
+      return {
+        content: [{ type: 'text', text: JSON.stringify({ error: 'missing_query', message: 'Provide a non-empty "query" or "question".' }) }]
+      };
+    }
     try {
       const response = await fetch(
         `${API_BASE}/query/v1/projects/${KAPA_PROJECT_ID}/retrieval/`,
@@ -157,7 +177,7 @@ const baseHandler = handle({
     )
     app.use('/mcp', async (c, next) => {
       await next();
-      c.res.headers.set('X-MCP-Server', `Redpanda Docs MCP/${server.version || 'unknown'}`);
+      c.res.headers.set('X-MCP-Server', `Redpanda Docs MCP/${SERVER_VERSION}`);
     });
   },
 })
