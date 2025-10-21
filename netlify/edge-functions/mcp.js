@@ -90,7 +90,6 @@ server.registerTool(
             "X-API-KEY": KAPA_API_KEY,
           },
           body: JSON.stringify({
-            integration_id: KAPA_INTEGRATION_ID,
             query: question,
           }),
         }
