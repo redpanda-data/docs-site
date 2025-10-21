@@ -1,7 +1,7 @@
 = MCP Server for Redpanda Documentation
-:description: Learn how to connect to the Redpanda documentation MCP server in Cursor, VS Code, and other AI tools.
+:description: Learn how to connect to the Redpanda documentation MCP server in Cursor, VS Code, ChatGPT, and other AI tools.
 
-Redpanda provides a remote link:https://modelcontextprotocol.io[Model Context Protocol (MCP) server^] that lets you access documentation directly from your IDE or AI tool, such as Cursor, VS Code, or Claude.
+Redpanda provides a remote link:https://modelcontextprotocol.io[Model Context Protocol (MCP) server^] that lets you access authoritative Redpanda documentation directly from your IDE or AI tool, such as Cursor, VS Code, ChatGPT, or Claude.
 
 The MCP server is hosted at: `https://docs.redpanda.com/mcp`.
 You can add this endpoint to any AI agent that supports MCP.
@@ -13,9 +13,7 @@ You can add this endpoint to any AI agent that supports MCP.
 Cursor::
 +
 --
-link:cursor://mcp/add?name=redpanda&url=https://docs.redpanda.com/mcp[Automatically add the Redpanda MCP server to Cursor].
-
-Or, manually add it by editing your `.cursor/mcp.json` file, as explained in the https://docs.cursor.com/context/model-context-protocol[Cursor documentation^]:
+Add the following to your `.cursor/mcp.json` file:
 
 [source,json]
 ----
@@ -27,13 +25,15 @@ Or, manually add it by editing your `.cursor/mcp.json` file, as explained in the
   }
 }
 ----
+
+For more information about MCP in Cursor, see the https://docs.cursor.com/context/model-context-protocol[Cursor documentation^].
 --
 VS Code::
 +
 --
-link:https://vscode.dev/redirect/mcp/install?name=redpanda&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fdocs.redpanda.com%2Fmcp%22%7D[Automatically add the Redpanda MCP server to VS Code].
+*Prerequisites:* VS Code 1.102+ with GitHub Copilot enabled.
 
-Or, manually create a `.vscode/mcp.json` file in your workspace:
+Create an `mcp.json` file in your workspace `.vscode` folder:
 
 .`.vscode/mcp.json`
 [source,json]
@@ -41,15 +41,44 @@ Or, manually create a `.vscode/mcp.json` file in your workspace:
 {
   "servers": {
     "redpanda": {
+      "type": "http",
       "url": "https://docs.redpanda.com/mcp"
     }
   }
 }
 ----
 
-To configure globally, run **MCP: Open User Configuration** from the Command Palette and add the same JSON to the `mcp` section.
+To configure globally for all workspaces:
 
-For more, see the https://code.visualstudio.com/docs/copilot/chat/mcp-servers[VS Code MCP documentation^].
+. Open Command Palette (kbd:[Cmd+Shift+P] / kbd:[Ctrl+Shift+P])
+. Run **MCP: Open User Configuration**
+. Add the same JSON configuration
+
+*Using MCP in VS Code:*
+
+. Open the Chat view (kbd:[Ctrl+Cmd+I] / kbd:[Ctrl+Alt+I]).
+. Select **Agent mode** from the dropdown.
+. Click the **Tools** button to see available MCP tools.
+. Ask questions about Redpanda and the AI automatically uses the documentation.
+
+For more details, see the https://code.visualstudio.com/docs/copilot/customization/mcp-servers[VS Code MCP documentation^].
+--
+ChatGPT Desktop::
++
+--
+ChatGPT Desktop supports MCP servers in developer mode. To enable:
+
+. Open ChatGPT Desktop.
+. Go to **Settings** > **Features**.
+. Enable **Developer mode**.
+. Navigate to **Settings** > **MCP Servers**.
+. Click **Add Server** and enter:
++
+- **Name**: `redpanda`
+- **URL**: `https://docs.redpanda.com/mcp`
+
+
+For more information, see the https://platform.openai.com/docs/guides/developer-mode[ChatGPT Desktop MCP documentation^].
 --
 Claude Desktop::
 +
@@ -76,6 +105,8 @@ Add this configuration:
 ----
 
 Restart Claude Desktop for changes to take effect.
+
+For more details, see the https://support.anthropic.com/en/articles/9487310-desktop-app[Claude Desktop documentation^].
 --
 ====
 
@@ -88,25 +119,47 @@ Any tool that supports MCP servers can connect using the following URL:
 https://docs.redpanda.com/mcp
 ----
 
-Popular tools that support MCP:
-
-* https://github.com/microsoft/vscode-copilot[GitHub Copilot^] (VS Code 1.102+)
-* https://www.jetbrains.com/ai/[JetBrains AI Assistant^]
-* https://zed.dev/[Zed Editor^]
-* Tools built with the https://modelcontextprotocol.io/[MCP SDK^]
+NOTE: MCP support varies by tool and version. Check the specific tool's documentation for MCP setup instructions.
 
 == What you can do
 
-Once connected, you can ask context-aware questions from within your editor:
+Once connected, you can ask context-aware questions about Redpanda from within your editor:
 
 * "How do I configure Redpanda for production?"
-* "What are the instructions for running Redpanda in a local kind cluster?"
-* "What are the best practices for topic partitioning?"
-* "How do I set up Redpanda Connect?"
-* "What are Redpanda's security features?"
+* "What are the instructions for running Redpanda in a local Kind cluster?"
+* "What are the best practices for topic partitioning in Redpanda?"
+* "What are Redpanda's security features and authentication methods?"
+* "How do I monitor Redpanda cluster performance?"
+* "What's the difference between Redpanda Cloud and self-hosted deployment?"
 
 == Usage limits
 
-To ensure fair use and performance, the server enforces a rate limit of **30 questions per 15-minute window**.
+To ensure fair use and performance, the server enforces a rate limit of **60 questions per 15-minute window**.
 
-If you exceed the limit, wait a few minutes before retrying.
+If you exceed the limit, you receive an HTTP 429 response. Wait a few minutes before retrying.
+
+.Expected response
+[source,text]
+----
+HTTP 429 Too Many Requests
+----
+
+== Troubleshooting
+
+=== Server not connecting
+
+* Verify the URL is exactly: `https://docs.redpanda.com/mcp`.
+* Check your internet connection.
+* Ensure your AI tool supports HTTP-based MCP servers.
+* Restart your AI tool after adding the configuration.
+
+=== VS Code specific issues
+
+* Ensure you have VS Code 1.102 or later.
+* Verify GitHub Copilot is installed and enabled.
+* Try running **MCP: Reset Cached Tools** from the Command Palette.
+* Check the Output panel (*View* > *Output* > *MCP*) for error messages.
+
+=== Other issues
+
+Check the https://github.com/modelcontextprotocol/servers[MCP GitHub repository^] for additional troubleshooting guidance or https://github.com/redpanda-data/docs-site/issues[report an issue^] with our documentation.
