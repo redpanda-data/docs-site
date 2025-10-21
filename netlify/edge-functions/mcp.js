@@ -106,7 +106,13 @@ server.registerTool(
       );
 
       const raw = await response.text();
-      let data; try { data = raw ? JSON.parse(raw) : []; } catch { data = []; }
+      let data; 
+      try { 
+        data = raw ? JSON.parse(raw) : []; 
+      } catch (error) { 
+        console.error('JSON parse error from upstream response:', error.message, 'Raw response:', raw);
+        data = []; 
+      }
 
       if (!response.ok) {
         return {
