@@ -80,27 +80,10 @@ server.registerTool(
   {
     title: 'Search Redpanda Sources',
     description: 'Search the Redpanda documentation and return raw retrieval results (array of {source_url, content}).',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        query: {
-          type: 'string',
-          description: 'Preferred search string for Redpanda docs.'
-        },
-        question: {
-          type: 'string',
-          description: 'Legacy alias of "query".'
-        }
-      },
-      anyOf: [
-        { required: ['query'] },
-        { required: ['question'] }
-      ],
-      additionalProperties: false
-    }
+    inputSchema: { question: z.string() },
   },
   async (args) => {
-    const q = (args?.query ?? args?.question ?? '').trim();
+    const q = (args?.question ?? '').trim();
     if (!q) {
       return {
         content: [{ type: 'text', text: JSON.stringify({ error: 'missing_query', message: 'Provide a non-empty "query" or "question".' }) }]
