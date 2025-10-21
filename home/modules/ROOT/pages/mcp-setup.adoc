@@ -77,26 +77,6 @@ ChatGPT Desktop supports MCP servers in developer mode. To enable:
 - **Name**: `redpanda`
 - **URL**: `https://docs.redpanda.com/mcp`
 
-Alternatively, you can manually edit the configuration file:
-
-**On macOS:**
-`~/Library/Application Support/ChatGPT/mcp_servers.json`
-
-**On Windows:**
-`%APPDATA%\ChatGPT\mcp_servers.json`
-
-Add this configuration:
-
-[source,json]
-----
-{
-  "servers": {
-    "redpanda": {
-      "url": "https://docs.redpanda.com/mcp"
-    }
-  }
-}
-----
 
 For more information, see the https://platform.openai.com/docs/guides/developer-mode[ChatGPT Desktop MCP documentation^].
 --
