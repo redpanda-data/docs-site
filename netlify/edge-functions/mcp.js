@@ -82,7 +82,7 @@ server.registerTool(
   async ({ question }) => {
     try {
       const response = await fetch(
-        `${API_BASE}/query/v1/projects/${KAPA_PROJECT_ID}/chat/`,
+        `${API_BASE}/query/v1/projects/${KAPA_PROJECT_ID}/retrieval/`,
         {
           method: "POST",
           headers: {
