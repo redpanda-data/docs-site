@@ -79,14 +79,14 @@ server.registerTool(
   'ask_redpanda_question',
   {
     title: 'Search Redpanda Sources',
-    description: 'Search the Redpanda documentation and return raw retrieval results (array of {source_url, content}).',
+    description: 'Search the official Redpanda documentation and return the most relevant sections from it for a user query. Each returned section includes the url and its actual content in markdown. Use this tool to for all queries that require Redpanda knowledge.',
     inputSchema: { question: z.string() },
   },
   async (args) => {
     const q = (args?.question ?? '').trim();
     if (!q) {
       return {
-        content: [{ type: 'text', text: JSON.stringify({ error: 'missing_query', message: 'Provide a non-empty "query" or "question".' }) }]
+        content: [{ type: 'text', text: JSON.stringify({ error: 'missing_query', message: 'Provide a non-empty "question".' }) }]
       };
     }
     try {
