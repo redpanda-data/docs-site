@@ -18,8 +18,16 @@ async function main() {
   const INSTRUQT_API_KEY = process.env.INSTRUQT_API_KEY;
   const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 
-  if (!ALGOLIA_APP_ID || !ALGOLIA_ADMIN_API_KEY || !ALGOLIA_INDEX_NAME) {
-    console.error('Missing Algolia configuration.');
+  const requiredAlgoliaVars = [
+    'ALGOLIA_APP_ID',
+    'ALGOLIA_ADMIN_API_KEY',
+    'ALGOLIA_INDEX_NAME'
+  ];
+  const missingAlgoliaVars = requiredAlgoliaVars.filter(
+    (name) => !process.env[name]
+  );
+  if (missingAlgoliaVars.length > 0) {
+    console.error(`Missing Algolia configuration. The following environment variables are required but not set: ${missingAlgoliaVars.join(', ')}`);
     process.exit(1);
   }
 
@@ -177,14 +185,22 @@ async function main() {
 
   async function createInvitesForTracks(tracks, existingIds, existingById) {
     return Promise.all(tracks.map(async (track) => {
-      // If already exists, reuse existing objectID; don't create new invite
+      let objectID;
       if (existingIds.has(track.id)) {
         const existing = chooseNewest(existingById.get(track.id) || []);
-        return { ...track, objectID: existing?.objectID };
+        if (!existing || !existing.objectID) {
+          // No valid objectID, create new invite
+          const inviteData = await client.request(CREATE_INVITE_MUTATION, { trackId: track.id });
+          objectID = INVITE_LINK_BASE + inviteData.createTrackInvite.id;
+        } else {
+          objectID = existing.objectID;
+        }
+      } else {
+        // New track: create one invite
+        const inviteData = await client.request(CREATE_INVITE_MUTATION, { trackId: track.id });
+        objectID = INVITE_LINK_BASE + inviteData.createTrackInvite.id;
       }
-      // New track: create one invite
-      const inviteData = await client.request(CREATE_INVITE_MUTATION, { trackId: track.id });
-      return { ...track, objectID: INVITE_LINK_BASE + inviteData.createTrackInvite.id };
+      return { ...track, objectID };
     }));
   }
 
@@ -266,8 +282,14 @@ async function main() {
 
   const objectsToAdd = algoliaRecords.filter(r => !existingIds.has(r.id));
   const objectsToUpdate = algoliaRecords.filter(r => {
-    const existing = chooseNewest(existingById.get(r.id) || []);
-    return existing && !_.isEqual(existing, r);
+  const existing = chooseNewest(existingById.get(r.id) || []);
+  if (!existing) return false;
+  // Exclude unixTimestamp from comparison
+  const cloneExisting = { ...existing };
+  const cloneNew = { ...r };
+  delete cloneExisting.unixTimestamp;
+  delete cloneNew.unixTimestamp;
+  return !_.isEqual(cloneExisting, cloneNew);
   });
 
   const combinedRecords = [...existingObjects, ...algoliaRecords]
