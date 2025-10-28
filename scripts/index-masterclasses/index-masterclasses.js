@@ -12,22 +12,17 @@ async function main() {
   const GITHUB_OWNER = 'redpanda-data';
   const ATTACHMENTS_PATH = '../../home/modules/ROOT/attachments';
   const INSTRUQT_LABS_JSON_FILE = 'instruqt-labs.json';
+
   const ALGOLIA_APP_ID = process.env.ALGOLIA_APP_ID;
   const ALGOLIA_ADMIN_API_KEY = process.env.ALGOLIA_ADMIN_API_KEY;
   const ALGOLIA_INDEX_NAME = process.env.ALGOLIA_INDEX_NAME;
   const INSTRUQT_API_KEY = process.env.INSTRUQT_API_KEY;
   const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 
-  const requiredAlgoliaVars = [
-    'ALGOLIA_APP_ID',
-    'ALGOLIA_ADMIN_API_KEY',
-    'ALGOLIA_INDEX_NAME'
-  ];
-  const missingAlgoliaVars = requiredAlgoliaVars.filter(
-    (name) => !process.env[name]
-  );
+  const requiredAlgoliaVars = ['ALGOLIA_APP_ID','ALGOLIA_ADMIN_API_KEY','ALGOLIA_INDEX_NAME'];
+  const missingAlgoliaVars = requiredAlgoliaVars.filter(name => !process.env[name]);
   if (missingAlgoliaVars.length > 0) {
-    console.error(`Missing Algolia configuration. The following environment variables are required but not set: ${missingAlgoliaVars.join(', ')}`);
+    console.error(`Missing Algolia configuration. Set: ${missingAlgoliaVars.join(', ')}`);
     process.exit(1);
   }
 
@@ -119,7 +114,7 @@ async function main() {
       const { data: fileContent } = await octokit.rest.repos.getContent({
         owner: GITHUB_OWNER, repo: 'docs', path: VALID_CATEGORIES_URL, ref: 'shared',
       });
-      const content = Buffer.from(fileContent.content, 'base64').toString('utf8');
+    const content = Buffer.from(fileContent.content, 'base64').toString('utf8');
       const data = yaml.load(content);
       return data['page-valid-categories'];
     } catch (e) {
@@ -145,15 +140,15 @@ async function main() {
     return deploymentType;
   }
 
+  // Fetch EVERYTHING. No tag/interactive filters (we want to see dupes).
   async function fetchExistingRecordsFromAlgolia() {
     const existing = [];
     try {
       await index.browseObjects({
         query: '',
-        tagFilters: 'labs',
         batch: (batch) => {
           for (const obj of batch) {
-            if (obj.id && obj.interactive) existing.push(obj);
+            if (obj && obj.id) existing.push(obj);
           }
         },
       });
@@ -168,6 +163,7 @@ async function main() {
     return [...list].sort((a, b) => (b.unixTimestamp || 0) - (a.unixTimestamp || 0))[0];
   }
 
+  // Identify duplicates by business `id`; keep newest; delete others by objectID
   function computeDuplicateDeletes(existing) {
     const byId = new Map();
     for (const o of existing) {
@@ -175,91 +171,131 @@ async function main() {
       byId.get(o.id).push(o);
     }
     const toDelete = [];
-    for (const [id, list] of byId.entries()) {
+    for (const list of byId.values()) {
       if (list.length <= 1) continue;
       const keep = chooseNewest(list);
-      for (const o of list) if (o.objectID !== keep.objectID) toDelete.push(o.objectID);
+      for (const o of list) {
+        if (o.objectID && o.objectID !== keep.objectID) toDelete.push(o.objectID);
+      }
     }
-    return { toDelete, byId };
+    return { toDelete: [...new Set(toDelete)], byId };
   }
 
+  // IMPORTANT RULE: If a record exists for this id, DO NOT create a new invite/record.
   async function createInvitesForTracks(tracks, existingIds, existingById) {
     return Promise.all(tracks.map(async (track) => {
-      let objectID;
       if (existingIds.has(track.id)) {
+        // Reuse the newest existing objectID (no new invite)
         const existing = chooseNewest(existingById.get(track.id) || []);
-        if (!existing || !existing.objectID) {
-          // No valid objectID, create new invite
-          const inviteData = await client.request(CREATE_INVITE_MUTATION, { trackId: track.id });
-          objectID = INVITE_LINK_BASE + inviteData.createTrackInvite.id;
-        } else {
-          objectID = existing.objectID;
+        if (!existing?.objectID) {
+          console.warn(`Track ${track.id} exists but has no objectID; skipping re-index to avoid new record.`);
+          return { ...track, objectID: undefined }; // will be filtered out later
         }
-      } else {
-        // New track: create one invite
-        const inviteData = await client.request(CREATE_INVITE_MUTATION, { trackId: track.id });
-        objectID = INVITE_LINK_BASE + inviteData.createTrackInvite.id;
+        return { ...track, objectID: existing.objectID };
       }
-      return { ...track, objectID };
+      // New track: create one invite
+      const inviteData = await client.request(CREATE_INVITE_MUTATION, { trackId: track.id });
+      return { ...track, objectID: INVITE_LINK_BASE + inviteData.createTrackInvite.id };
     }));
   }
 
+  function normalizeForCompare(obj) {
+    // shallow clone and drop volatile fields
+    const clone = { ...obj };
+    delete clone.unixTimestamp;
+    // normalize array orderings to avoid false diffs
+    if (Array.isArray(clone.titles)) {
+      clone.titles = [...clone.titles].sort((a, b) => (a.t || '').localeCompare(b.t || ''));
+    }
+    if (Array.isArray(clone.categories)) {
+      clone.categories = [...clone.categories].sort((a, b) => a.localeCompare(b));
+    }
+    if (Array.isArray(clone._tags)) {
+      clone._tags = [...clone._tags].sort((a, b) => a.localeCompare(b));
+    }
+    return clone;
+  }
+
   function formatForAlgolia(tracks, validCategoriesData) {
-    return tracks.map((track) => {
-      const adjusted = new Set();
+    return tracks
+      .filter(track => !!track.objectID) // skip those we intentionally refused to recreate
+      .map((track) => {
+        const adjusted = new Set();
 
-      track.trackTags.forEach((tag) => {
-        const tagValue = tag.value.toLowerCase().trim();
-        validCategoriesData.forEach((ci) => {
-          const cat = ci.category.toLowerCase().trim();
-          if (cat === tagValue || (ci.related && ci.related.map(r => r.toLowerCase()).includes(tagValue))) {
-            adjusted.add(ci.category);
-          }
-          if (ci.subcategories) {
-            ci.subcategories.forEach((sub) => {
-              const subLower = sub.category.toLowerCase();
-              if (subLower === tagValue || (sub.related && sub.related.map(r => r.toLowerCase()).includes(tagValue))) {
-                adjusted.add(ci.category);
-                adjusted.add(sub.category);
-              }
-            });
-          }
+        track.trackTags.forEach((tag) => {
+          const tagValue = tag.value.toLowerCase().trim();
+          validCategoriesData.forEach((ci) => {
+            const cat = ci.category.toLowerCase().trim();
+            if (cat === tagValue || (ci.related && ci.related.map(r => r.toLowerCase()).includes(tagValue))) {
+              adjusted.add(ci.category);
+            }
+            if (ci.subcategories) {
+              ci.subcategories.forEach((sub) => {
+                const subLower = sub.category.toLowerCase();
+                if (subLower === tagValue || (sub.related && sub.related.map(r => r.toLowerCase()).includes(tagValue))) {
+                  adjusted.add(ci.category);
+                  adjusted.add(sub.category);
+                }
+              });
+            }
+          });
         });
+
+        const titleLower = track.title.toLowerCase();
+        const teaserLower = track.teaser.toLowerCase();
+        validCategoriesData.forEach((ci) => {
+          const cat = ci.category.toLowerCase();
+          if (titleLower.includes(cat) || teaserLower.includes(cat)) adjusted.add(ci.category);
+        });
+
+        const deploymentType = determineDeploymentType(track);
+
+        return {
+          objectID: track.objectID,        // keeping invite URL as objectID
+          id: track.id,
+          title: track.title,
+          image: track.icon,
+          intro: track.teaser,
+          slug: track.slug,
+          deployment: deploymentType,
+          titles: track.challenges.map(ch => ({ t: ch.title })),
+          interactive: true,
+          unixTimestamp,
+          type: 'Lab',
+          _tags: ['Labs'],
+          categories: [...adjusted],
+        };
       });
-
-      const titleLower = track.title.toLowerCase();
-      const teaserLower = track.teaser.toLowerCase();
-      validCategoriesData.forEach((ci) => {
-        const cat = ci.category.toLowerCase();
-        if (titleLower.includes(cat) || teaserLower.includes(cat)) adjusted.add(ci.category);
-      });
-
-      const deploymentType = determineDeploymentType(track);
-
-      return {
-        objectID: track.objectID,
-        id: track.id,
-        title: track.title,
-        image: track.icon,
-        intro: track.teaser,
-        slug: track.slug,
-        deployment: deploymentType,
-        titles: track.challenges.map(ch => ({ t: ch.title })),
-        interactive: true,
-        unixTimestamp,
-        type: 'Lab',
-        _tags: ['Labs'],
-        categories: [...adjusted],
-      };
-    });
   }
 
   function saveRecordsToFile(records, outputDir, fileName) {
     const outputFile = path.join(outputDir, fileName);
     try {
       if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir, { recursive: true });
-      fs.writeFileSync(outputFile, JSON.stringify(records, null, 2));
-      console.log(`Saved Algolia records to ${outputFile}`);
+      let shouldWrite = true;
+      if (fs.existsSync(outputFile)) {
+        const existingRaw = fs.readFileSync(outputFile, 'utf8');
+        let existingRecords;
+        try {
+          existingRecords = JSON.parse(existingRaw);
+        } catch {
+          existingRecords = [];
+        }
+        // Normalize both arrays by removing unixTimestamp
+        const normalize = arr => arr.map(o => {
+          const { unixTimestamp, ...rest } = o;
+          return rest;
+        });
+        if (_.isEqual(normalize(existingRecords), normalize(records))) {
+          shouldWrite = false;
+        }
+      }
+      if (shouldWrite) {
+        fs.writeFileSync(outputFile, JSON.stringify(records, null, 2));
+        console.log(`Saved Algolia records to ${outputFile}`);
+      } else {
+        console.log(`No content changes for ${outputFile}; not updated (only unixTimestamp changed).`);
+      }
     } catch (e) {
       console.error('Error saving JSON:', e);
     }
@@ -273,37 +309,42 @@ async function main() {
   const validCategories = await fetchValidCategories();
   const existingObjects = await fetchExistingRecordsFromAlgolia();
 
-  // Remove duplicates from Algolia first
+  // 1) Pre-clean duplicates already in Algolia
   const { toDelete, byId: existingById } = computeDuplicateDeletes(existingObjects);
   const existingIds = new Set(existingById.keys());
 
+  // 2) Ensure we never create new for already-existing ids
   const tracksWithInvites = await createInvitesForTracks(filteredTracks, existingIds, existingById);
+
+  // 3) Build records (skip any with undefined objectID to honor "no new for existing ids")
   const algoliaRecords = formatForAlgolia(tracksWithInvites, validCategories);
 
-  const objectsToAdd = algoliaRecords.filter(r => !existingIds.has(r.id));
+  // 4) Plan adds/updates
+  const objectsToAdd = algoliaRecords.filter(r => !existingIds.has(r.id)); // truly new ids
   const objectsToUpdate = algoliaRecords.filter(r => {
-  const existing = chooseNewest(existingById.get(r.id) || []);
-  if (!existing) return false;
-  // Exclude unixTimestamp from comparison
-  const cloneExisting = { ...existing };
-  const cloneNew = { ...r };
-  delete cloneExisting.unixTimestamp;
-  delete cloneNew.unixTimestamp;
-  return !_.isEqual(cloneExisting, cloneNew);
+    const existing = chooseNewest(existingById.get(r.id) || []);
+    if (!existing) return false;
+    const a = normalizeForCompare(existing);
+    const b = normalizeForCompare(r);
+    return !_.isEqual(a, b);
   });
 
-  const combinedRecords = [...existingObjects, ...algoliaRecords]
-    .reduce((map, obj) => {
-      if (!map.has(obj.id) || (obj.unixTimestamp || 0) > (map.get(obj.id).unixTimestamp || 0))
-        map.set(obj.id, obj);
-      return map;
-    }, new Map());
-  const finalRecords = [...combinedRecords.values()].sort((a, b) =>
+  // 5) Write a deduped artifact by `id` (keep newest among existing+new)
+  const byIdArtifact = new Map();
+  for (const o of existingObjects) {
+    const cur = byIdArtifact.get(o.id);
+    if (!cur || (o.unixTimestamp || 0) > (cur.unixTimestamp || 0)) byIdArtifact.set(o.id, o);
+  }
+  for (const o of algoliaRecords) {
+    const cur = byIdArtifact.get(o.id);
+    if (!cur || (o.unixTimestamp || 0) > (cur.unixTimestamp || 0)) byIdArtifact.set(o.id, o);
+  }
+  const finalRecords = [...byIdArtifact.values()].sort((a, b) =>
     (a.title || '').localeCompare(b.title || '', undefined, { sensitivity: 'base' })
   );
-
   saveRecordsToFile(finalRecords, path.resolve(__dirname, ATTACHMENTS_PATH), INSTRUQT_LABS_JSON_FILE);
 
+  // 6) Apply adds/updates
   try {
     if (objectsToAdd.length || objectsToUpdate.length) {
       const batch = [
@@ -319,6 +360,7 @@ async function main() {
     console.error('Error uploading to Algolia:', e);
   }
 
+  // 7) Delete duplicates discovered in step 1
   if (toDelete.length) {
     try {
       await index.deleteObjects(toDelete);
