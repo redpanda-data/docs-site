@@ -1,6 +1,5 @@
 [
   {
-    "objectID": "https://play.instruqt.com/redpanda/invite/rgjb7i39ecnw",
     "id": "swq1dku9s6xv",
     "title": "Algorithmic trading with Flink",
     "image": "https://play.instruqt.com/assets/tracks/swq1dku9s6xv/a14ef7c8e2b15f26df995e91699c4428/assets/Red%20Leader%20Avatar%20Circle_Blue.png",
@@ -22,7 +21,7 @@
       }
     ],
     "interactive": true,
-    "unixTimestamp": 1761658440,
+    "unixTimestamp": 1760907897,
     "type": "Lab",
     "_tags": [
       "Labs"
@@ -30,10 +29,10 @@
     "categories": [
       "Development",
       "Stream Processing"
-    ]
+    ],
+    "objectID": "https://play.instruqt.com/redpanda/invite/tzboiwmbxaia"
   },
   {
-    "objectID": "https://play.instruqt.com/redpanda/invite/z3yrwxw9zhmy",
     "id": "0st1el5ivnc9",
     "title": "Batch to Stream workshop",
     "image": "https://res.cloudinary.com/practicaldev/image/fetch/s--W2NpA-Jj--/c_fill,f_auto,fl_progressive,h_320,q_auto,w_320/https://dev-to-uploads.s3.amazonaws.com/uploads/organization/profile_image/5327/ea54f4c7-abf0-46fc-a971-766b484ab9bd.png",
@@ -63,10 +62,10 @@
     "categories": [
       "Development",
       "Stream Processing"
-    ]
+    ],
+    "objectID": "https://play.instruqt.com/redpanda/invite/z3yrwxw9zhmy"
   },
   {
-    "objectID": "https://play.instruqt.com/redpanda/invite/tigw0olgusdm",
     "id": "9hxz99swfr5l",
     "title": "Building a Batch ETL Pipeline",
     "image": "https://play.instruqt.com/assets/tracks/f5hs59mjtmbk/d280183e4fb88cd1ec9c5eb8477dc5ac/assets/redpanda-thumbnail.png",
@@ -87,10 +86,10 @@
     "categories": [
       "Development",
       "Stream Processing"
-    ]
+    ],
+    "objectID": "https://play.instruqt.com/redpanda/invite/tigw0olgusdm"
   },
   {
-    "objectID": "https://play.instruqt.com/redpanda/invite/jxvuxhbxpl7z",
     "id": "c8yuazgzkwx8",
     "title": "Building an Streaming ETL Pipeline",
     "image": "https://play.instruqt.com/assets/tracks/f5hs59mjtmbk/d280183e4fb88cd1ec9c5eb8477dc5ac/assets/redpanda-thumbnail.png",
@@ -111,10 +110,10 @@
     "categories": [
       "Development",
       "Stream Processing"
-    ]
+    ],
+    "objectID": "https://play.instruqt.com/redpanda/invite/jxvuxhbxpl7z"
   },
   {
-    "objectID": "https://play.instruqt.com/redpanda/invite/fpln6xfn3ykp",
     "id": "qjkrrfqkbdbp",
     "title": "Cluster operations with Redpanda",
     "image": "https://play.instruqt.com/assets/tracks/qjkrrfqkbdbp/a14ef7c8e2b15f26df995e91699c4428/assets/Red%20Leader%20Avatar%20Circle_Blue.png",
@@ -165,10 +164,10 @@
     "_tags": [
       "Labs"
     ],
-    "categories": []
+    "categories": [],
+    "objectID": "https://play.instruqt.com/redpanda/invite/fpln6xfn3ykp"
   },
   {
-    "objectID": "https://play.instruqt.com/redpanda/invite/wzdcy9ydk58s",
     "id": "edd8tpc6y2mv",
     "title": "Day Two OPS - Monitoring and Alerting",
     "image": "https://res.cloudinary.com/practicaldev/image/fetch/s--W2NpA-Jj--/c_fill,f_auto,fl_progressive,h_320,q_auto,w_320/https://dev-to-uploads.s3.amazonaws.com/uploads/organization/profile_image/5327/ea54f4c7-abf0-46fc-a971-766b484ab9bd.png",
@@ -195,10 +194,10 @@
     "categories": [
       "Management",
       "Monitoring"
-    ]
+    ],
+    "objectID": "https://play.instruqt.com/redpanda/invite/wzdcy9ydk58s"
   },
   {
-    "objectID": "https://play.instruqt.com/redpanda/invite/3qwgviekqwp0",
     "id": "ug6zmieyscrw",
     "title": "Day Two OPS -Commissioning Redpanda Brokers",
     "image": "https://res.cloudinary.com/practicaldev/image/fetch/s--W2NpA-Jj--/c_fill,f_auto,fl_progressive,h_320,q_auto,w_320/https://dev-to-uploads.s3.amazonaws.com/uploads/organization/profile_image/5327/ea54f4c7-abf0-46fc-a971-766b484ab9bd.png",
@@ -224,10 +223,10 @@
     ],
     "categories": [
       "Management"
-    ]
+    ],
+    "objectID": "https://play.instruqt.com/redpanda/invite/3qwgviekqwp0"
   },
   {
-    "objectID": "https://play.instruqt.com/redpanda/invite/oal409bxzpta",
     "id": "lss1caheavzi",
     "title": "Day Two OPS -Upgrading Redpanda",
     "image": "https://res.cloudinary.com/practicaldev/image/fetch/s--W2NpA-Jj--/c_fill,f_auto,fl_progressive,h_320,q_auto,w_320/https://dev-to-uploads.s3.amazonaws.com/uploads/organization/profile_image/5327/ea54f4c7-abf0-46fc-a971-766b484ab9bd.png",
@@ -259,10 +258,10 @@
     ],
     "categories": [
       "Management"
-    ]
+    ],
+    "objectID": "https://play.instruqt.com/redpanda/invite/oal409bxzpta"
   },
   {
-    "objectID": "https://play.instruqt.com/redpanda/invite/uibujtylrpaj",
     "id": "s1ns63a0kjcq",
     "title": "Demo for Current (Redpanda Connect)",
     "image": "https://res.cloudinary.com/practicaldev/image/fetch/s--W2NpA-Jj--/c_fill,f_auto,fl_progressive,h_320,q_auto,w_320/https://dev-to-uploads.s3.amazonaws.com/uploads/organization/profile_image/5327/ea54f4c7-abf0-46fc-a971-766b484ab9bd.png",
@@ -286,10 +285,10 @@
     "_tags": [
       "Labs"
     ],
-    "categories": []
+    "categories": [],
+    "objectID": "https://play.instruqt.com/redpanda/invite/uibujtylrpaj"
   },
   {
-    "objectID": "https://play.instruqt.com/redpanda/invite/bfjaowbs7dyj",
     "id": "llkiblxtig1n",
     "title": "Flink Algorithmic Trading",
     "image": "https://res.cloudinary.com/practicaldev/image/fetch/s--W2NpA-Jj--/c_fill,f_auto,fl_progressive,h_320,q_auto,w_320/https://dev-to-uploads.s3.amazonaws.com/uploads/organization/profile_image/5327/ea54f4c7-abf0-46fc-a971-766b484ab9bd.png",
@@ -316,10 +315,10 @@
     "categories": [
       "Development",
       "Stream Processing"
-    ]
+    ],
+    "objectID": "https://play.instruqt.com/redpanda/invite/bfjaowbs7dyj"
   },
   {
-    "objectID": "https://play.instruqt.com/redpanda/invite/rx6mchfugiz8",
     "id": "sewkkxkt1oog",
     "title": "Flink Stream Processing",
     "image": "https://res.cloudinary.com/practicaldev/image/fetch/s--W2NpA-Jj--/c_fill,f_auto,fl_progressive,h_320,q_auto,w_320/https://dev-to-uploads.s3.amazonaws.com/uploads/organization/profile_image/5327/ea54f4c7-abf0-46fc-a971-766b484ab9bd.png",
@@ -346,10 +345,10 @@
     "categories": [
       "Development",
       "Stream Processing"
-    ]
+    ],
+    "objectID": "https://play.instruqt.com/redpanda/invite/rx6mchfugiz8"
   },
   {
-    "objectID": "https://play.instruqt.com/redpanda/invite/h4kbmepxrrc3",
     "id": "p0znfvmigieb",
     "title": "Getting started with Data Transforms",
     "image": "https://res.cloudinary.com/practicaldev/image/fetch/s--W2NpA-Jj--/c_fill,f_auto,fl_progressive,h_320,q_auto,w_320/https://dev-to-uploads.s3.amazonaws.com/uploads/organization/profile_image/5327/ea54f4c7-abf0-46fc-a971-766b484ab9bd.png",
@@ -376,10 +375,10 @@
     "categories": [
       "Development",
       "Data Transforms"
-    ]
+    ],
+    "objectID": "https://play.instruqt.com/redpanda/invite/h4kbmepxrrc3"
   },
   {
-    "objectID": "https://play.instruqt.com/redpanda/invite/cvwo0yummqfy",
     "id": "o7qhgnbfxtfr",
     "title": "Getting Started With Redpanda",
     "image": "https://play.instruqt.com/assets/tracks/o7qhgnbfxtfr/a14ef7c8e2b15f26df995e91699c4428/assets/Red%20Leader%20Avatar%20Circle_Blue.png",
@@ -417,10 +416,10 @@
     ],
     "categories": [
       "rpk"
-    ]
+    ],
+    "objectID": "https://play.instruqt.com/redpanda/invite/cvwo0yummqfy"
   },
   {
-    "objectID": "https://play.instruqt.com/redpanda/invite/mlgd50hoyx9s",
     "id": "mj2t8ttr0xme",
     "title": "GitOps for Redpanda in K8s",
     "image": "https://res.cloudinary.com/practicaldev/image/fetch/s--W2NpA-Jj--/c_fill,f_auto,fl_progressive,h_320,q_auto,w_320/https://dev-to-uploads.s3.amazonaws.com/uploads/organization/profile_image/5327/ea54f4c7-abf0-46fc-a971-766b484ab9bd.png",
@@ -444,10 +443,10 @@
     "_tags": [
       "Labs"
     ],
-    "categories": []
+    "categories": [],
+    "objectID": "https://play.instruqt.com/redpanda/invite/mlgd50hoyx9s"
   },
   {
-    "objectID": "https://play.instruqt.com/redpanda/invite/wchyfwaexve1",
     "id": "rtguxx8mlhis",
     "title": "Introduction to Flink",
     "image": "https://res.cloudinary.com/practicaldev/image/fetch/s--W2NpA-Jj--/c_fill,f_auto,fl_progressive,h_320,q_auto,w_320/https://dev-to-uploads.s3.amazonaws.com/uploads/organization/profile_image/5327/ea54f4c7-abf0-46fc-a971-766b484ab9bd.png",
@@ -474,10 +473,10 @@
     "categories": [
       "Development",
       "Stream Processing"
-    ]
+    ],
+    "objectID": "https://play.instruqt.com/redpanda/invite/wchyfwaexve1"
   },
   {
-    "objectID": "https://play.instruqt.com/redpanda/invite/o5eef69qyqq6",
     "id": "kq8gp5fhj5fl",
     "title": "Kafka Building Blocks",
     "image": "https://play.instruqt.com/assets/tracks/vrcrunjpdyt8/a14ef7c8e2b15f26df995e91699c4428/assets/Red%20Leader%20Avatar%20Circle_Blue.png",
@@ -507,10 +506,10 @@
     "_tags": [
       "Labs"
     ],
-    "categories": []
+    "categories": [],
+    "objectID": "https://play.instruqt.com/redpanda/invite/o5eef69qyqq6"
   },
   {
-    "objectID": "https://play.instruqt.com/redpanda/invite/gcv31uccqxj2",
     "id": "bx2y7cta3hsd",
     "title": "Migration to Redpanda using MirrorMaker 2",
     "image": "https://res.cloudinary.com/practicaldev/image/fetch/s--W2NpA-Jj--/c_fill,f_auto,fl_progressive,h_320,q_auto,w_320/https://dev-to-uploads.s3.amazonaws.com/uploads/organization/profile_image/5327/ea54f4c7-abf0-46fc-a971-766b484ab9bd.png",
@@ -537,10 +536,10 @@
     "_tags": [
       "Labs"
     ],
-    "categories": []
+    "categories": [],
+    "objectID": "https://play.instruqt.com/redpanda/invite/gcv31uccqxj2"
   },
   {
-    "objectID": "https://play.instruqt.com/redpanda/invite/jtzjofzgswaq",
     "id": "zscbql3tfckr",
     "title": "Observability for Redpanda in K8s",
     "image": "https://res.cloudinary.com/practicaldev/image/fetch/s--W2NpA-Jj--/c_fill,f_auto,fl_progressive,h_320,q_auto,w_320/https://dev-to-uploads.s3.amazonaws.com/uploads/organization/profile_image/5327/ea54f4c7-abf0-46fc-a971-766b484ab9bd.png",
@@ -567,10 +566,10 @@
     "categories": [
       "Management",
       "Monitoring"
-    ]
+    ],
+    "objectID": "https://play.instruqt.com/redpanda/invite/jtzjofzgswaq"
   },
   {
-    "objectID": "https://play.instruqt.com/redpanda/invite/ykvmalpqmbxh",
     "id": "iubirmptfjkv",
     "title": "Provision Redpanda in K8s (Operator)",
     "image": "https://res.cloudinary.com/practicaldev/image/fetch/s--W2NpA-Jj--/c_fill,f_auto,fl_progressive,h_320,q_auto,w_320/https://dev-to-uploads.s3.amazonaws.com/uploads/organization/profile_image/5327/ea54f4c7-abf0-46fc-a971-766b484ab9bd.png",
@@ -597,10 +596,10 @@
     "_tags": [
       "Labs"
     ],
-    "categories": []
+    "categories": [],
+    "objectID": "https://play.instruqt.com/redpanda/invite/ykvmalpqmbxh"
   },
   {
-    "objectID": "https://play.instruqt.com/redpanda/invite/0yi8r2njijhh",
     "id": "mfhgyqrw4dyc",
     "title": "Redpanda Connect and AI Workshop",
     "image": "",
@@ -618,10 +617,10 @@
     "_tags": [
       "Labs"
     ],
-    "categories": []
+    "categories": [],
+    "objectID": "https://play.instruqt.com/redpanda/invite/0yi8r2njijhh"
   },
   {
-    "objectID": "https://play.instruqt.com/redpanda/invite/lyb52rp1lzpp",
     "id": "o3ubpinwv2wr",
     "title": "Redpanda Connect GenAI demo",
     "image": "https://res.cloudinary.com/practicaldev/image/fetch/s--W2NpA-Jj--/c_fill,f_auto,fl_progressive,h_320,q_auto,w_320/https://dev-to-uploads.s3.amazonaws.com/uploads/organization/profile_image/5327/ea54f4c7-abf0-46fc-a971-766b484ab9bd.png",
@@ -648,10 +647,10 @@
     "_tags": [
       "Labs"
     ],
-    "categories": []
+    "categories": [],
+    "objectID": "https://play.instruqt.com/redpanda/invite/lyb52rp1lzpp"
   },
   {
-    "objectID": "https://play.instruqt.com/redpanda/invite/icy3rlqagkhy",
     "id": "pw95vxordilg",
     "title": "Redpanda Connect Masterclass",
     "image": "https://res.cloudinary.com/practicaldev/image/fetch/s--W2NpA-Jj--/c_fill,f_auto,fl_progressive,h_320,q_auto,w_320/https://dev-to-uploads.s3.amazonaws.com/uploads/organization/profile_image/5327/ea54f4c7-abf0-46fc-a971-766b484ab9bd.png",
@@ -678,10 +677,10 @@
     "_tags": [
       "Labs"
     ],
-    "categories": []
+    "categories": [],
+    "objectID": "https://play.instruqt.com/redpanda/invite/icy3rlqagkhy"
   },
   {
-    "objectID": "https://play.instruqt.com/redpanda/invite/yukdqsfy7c8r",
     "id": "c7jcmb1fqepe",
     "title": "Redpanda Ecosystem",
     "image": "https://play.instruqt.com/assets/tracks/c7jcmb1fqepe/a14ef7c8e2b15f26df995e91699c4428/assets/Red%20Leader%20Avatar%20Circle_Blue.png",
@@ -707,10 +706,10 @@
     ],
     "categories": [
       "Schema Registry"
-    ]
+    ],
+    "objectID": "https://play.instruqt.com/redpanda/invite/yukdqsfy7c8r"
   },
   {
-    "objectID": "https://play.instruqt.com/redpanda/invite/fu0uzjcttjqd",
     "id": "9rh8eqluaptp",
     "title": "Securing Redpanda in K8s",
     "image": "https://res.cloudinary.com/practicaldev/image/fetch/s--W2NpA-Jj--/c_fill,f_auto,fl_progressive,h_320,q_auto,w_320/https://dev-to-uploads.s3.amazonaws.com/uploads/organization/profile_image/5327/ea54f4c7-abf0-46fc-a971-766b484ab9bd.png",
@@ -734,10 +733,10 @@
     "categories": [
       "Management",
       "Security"
-    ]
+    ],
+    "objectID": "https://play.instruqt.com/redpanda/invite/fu0uzjcttjqd"
   },
   {
-    "objectID": "https://play.instruqt.com/redpanda/invite/yadusao6lbbq",
     "id": "vrcrunjpdyt8",
     "title": "Stream Processing with Redpanda",
     "image": "https://play.instruqt.com/assets/tracks/vrcrunjpdyt8/a14ef7c8e2b15f26df995e91699c4428/assets/Red%20Leader%20Avatar%20Circle_Blue.png",
@@ -767,10 +766,10 @@
     "_tags": [
       "Labs"
     ],
-    "categories": []
+    "categories": [],
+    "objectID": "https://play.instruqt.com/redpanda/invite/yadusao6lbbq"
   },
   {
-    "objectID": "https://play.instruqt.com/redpanda/invite/xlqgelnzaoxo",
     "id": "31skkipcjlvg",
     "title": "Streaming Camel K pipelines on K8s",
     "image": "https://res.cloudinary.com/practicaldev/image/fetch/s--W2NpA-Jj--/c_fill,f_auto,fl_progressive,h_320,q_auto,w_320/https://dev-to-uploads.s3.amazonaws.com/uploads/organization/profile_image/5327/ea54f4c7-abf0-46fc-a971-766b484ab9bd.png",
@@ -797,10 +796,10 @@
     "_tags": [
       "Labs"
     ],
-    "categories": []
+    "categories": [],
+    "objectID": "https://play.instruqt.com/redpanda/invite/xlqgelnzaoxo"
   },
   {
-    "objectID": "https://play.instruqt.com/redpanda/invite/a3izroxkggfl",
     "id": "znqfoe6tbsqd",
     "title": "Streaming Fundamentals",
     "image": "https://play.instruqt.com/assets/tracks/vrcrunjpdyt8/a14ef7c8e2b15f26df995e91699c4428/assets/Red%20Leader%20Avatar%20Circle_Blue.png",
@@ -821,6 +820,7 @@
     "_tags": [
       "Labs"
     ],
-    "categories": []
+    "categories": [],
+    "objectID": "https://play.instruqt.com/redpanda/invite/a3izroxkggfl"
   }
 ]
