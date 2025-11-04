@@ -360,65 +360,6 @@ async function scrapeAndIndex() {
     console.error('❌ Failed to index to Algolia:', err);
     process.exit(1);
   }
-
-  // Configure index for better recall + generic queries
-  await configureIndex(index, apiRootRecords);
-}
-
-/**
- * Configure Algolia index settings, synonyms, and query rules.
- * - Adds `api` as searchable + facetable
- * - Adds synonyms like "admin api" ↔ "Admin API"
- * - Adds rules to pin API root records when users search "<api> api"
- */
-async function configureIndex(index, apiRootRecords) {
-  console.log('\\n🛠  Updating index settings, synonyms, and rules...');
-
-  // Settings
-  await index.setSettings({
-    searchableAttributes: [
-      'unordered(title)',
-      'unordered(intro)',
-      'unordered(description)',
-      'unordered(api)',
-      'unordered(searchTitle)',
-      'unordered(path)',
-      'unordered(method)',
-      'unordered(product)',
-      'unordered(version)',
-    ],
-    attributesForFaceting: [
-      'searchable(_tags)',
-      'searchable(type)',
-      'searchable(product)',
-      'searchable(api)',
-      'searchable(version)',
-    ],
-    ignorePlurals: true,
-    removeWordsIfNoResults: 'allOptional',
-  });
-
-  // Synonyms ("admin api" ↔ "Admin API", etc.)
-  const synonyms = Object.entries(API_NAME_BY_PATH).map(([path, apiName]) => {
-    const slug = apiName.toLowerCase().replace(/\s+/g, '-').replace(/[^A-Za-z0-9_-]/g, '');
-    const variants = [
-      apiName,
-      apiName.replace(/ api$/i, ''), // "Admin"
-      `${apiName} docs`,
-      `${apiName} endpoints`,
-      `${apiName} reference`,
-      apiName.toLowerCase(),
-      apiName.toLowerCase().replace(/ api$/, ''),
-      `${apiName.toLowerCase()} docs`,
-      `${apiName.toLowerCase()} endpoints`,
-      `${apiName.toLowerCase()} reference`,
-      apiName.toLowerCase().replace(/\s+/g, '-'), // admin-api
-      `${apiName.toLowerCase().replace(/\s+/g, '-')} docs`,
-    ];
-    return { objectID: `syn_${slug}`, type: 'synonym', synonyms: Array.from(new Set(variants)) };
-  });
-  await index.saveSynonyms(synonyms, { replaceExistingSynonyms: false });
-  console.log('✅ Index configured.');
 }
 
 scrapeAndIndex().catch((err) => {
