@@ -5,9 +5,9 @@ site:
   robots: allow
   keys:
     announcement: true
-    announcement-text: 'New! Access Redpanda docs directly in your IDE with our MCP server.'
-    announcement-link-text: 'Get started'
-    announcement-link: 'https://docs.redpanda.com/home/mcp-setup/'
+    announcement-text: 'New! Redpanda Agentic Data Plane is here: a governed, high-performance foundation for AI agents.'
+    announcement-link-text: 'Learn more'
+    announcement-link: 'https://www.redpanda.com/blog/agentic-data-plane-adp'
     google_analytics: GTM-WB2CSV5
 urls:
   html_extension_style: indexify
