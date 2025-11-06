@@ -4,7 +4,7 @@ site:
   url: https://redpanda-antora-site.netlify.app
   keys:
     announcement: true
-    announcement-text: 'The Agentic Data Plane is here: a governed, high-performance foundation for AI agents.'
+    announcement-text: 'New! Redpanda Agentic Data Plane is here: a governed, high-performance foundation for AI agents.'
     announcement-link-text: 'Learn more'
     announcement-link: 'https://www.redpanda.com/blog/agentic-data-plane-adp'
   robots: disallow
