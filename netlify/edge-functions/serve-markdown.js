@@ -31,18 +31,14 @@ export default async (request, context) => {
   }
 
   try {
-    // Try to fetch the markdown file from the docs directory
+    // Try to fetch the markdown file directly
     const mdUrl = new URL(mdPath, url.origin);
-    const mdResponse = await context.next({
-      request: new Request(mdUrl.toString(), {
-        method: 'GET',
-        headers: request.headers
-      })
-    });
+    const mdResponse = await fetch(mdUrl.toString());
 
     if (mdResponse.ok) {
       // Serve the markdown with the correct content-type
-      return new Response(mdResponse.body, {
+      const mdContent = await mdResponse.text();
+      return new Response(mdContent, {
         status: 200,
         headers: {
           'Content-Type': 'text/markdown; charset=utf-8',
