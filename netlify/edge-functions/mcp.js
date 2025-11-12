@@ -66,7 +66,7 @@ const computeLimiterKey = (c) => {
   return `ua:${ua}|${accept}`
 }
 
-const SERVER_VERSION = '0.2.0';
+const SERVER_VERSION = '0.3.0';
 
 // Initialize MCP Server and register tools
 const server = new McpServer({
@@ -79,8 +79,11 @@ server.registerTool(
   'ask_redpanda_question',
   {
     title: 'Search Redpanda Sources',
-    description: 'Search the official Redpanda documentation and return the most relevant sections from it for a user query. Each returned section includes the url and its actual content in markdown. Use this tool to for all queries that require Redpanda knowledge.',
-    inputSchema: { question: z.string() },
+    description: 'Search the official Redpanda documentation and return the most relevant sections from it for a user query. Each returned section includes the url and its actual content in markdown. Use this tool to for all queries that require Redpanda knowledge. Results are ordered by relevance, with the most relevant result returned first. Returns up to 5 results by default to manage token usage. Use top_k parameter (1-15) to request more or fewer results.',
+    inputSchema: {
+      question: z.string(),
+      top_k: z.number().int().min(1).max(15).optional().describe('Number of results to return (1-15). Defaults to 5 for optimal token usage.')
+    },
   },
   async (args) => {
     const q = (args?.question ?? '').trim();
@@ -89,6 +92,9 @@ server.registerTool(
         content: [{ type: 'text', text: JSON.stringify({ error: 'missing_query', message: 'Provide a non-empty "question".' }) }]
       };
     }
+    // Extract top_k parameter with default of 5, clamped to valid range
+    const topK = Math.max(1, Math.min(15, args?.top_k ?? 5));
+
     try {
       const response = await fetch(
         `${API_BASE}/query/v1/projects/${KAPA_PROJECT_ID}/retrieval/`,
@@ -101,6 +107,7 @@ server.registerTool(
           body: JSON.stringify({
             integration_id: KAPA_INTEGRATION_ID,
             query: q,
+            top_k: topK,
           }),
         }
       );
