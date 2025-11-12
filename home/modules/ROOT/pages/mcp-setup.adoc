@@ -194,7 +194,7 @@ RateLimit-Reset: <timestamp>
 === Configuration issues
 
 * Ensure `"type": "http"` is specified in your configuration for HTTP-based MCP servers.
-* Some MCP clients may have issues with SSE streaming. If you experience connection problems, verify your client supports HTTP-based MCP servers with Server-Sent Events (SSE).
+* Some MCP clients may have issues with SSE streaming. If you experience connection problems, verify that your client supports HTTP-based MCP servers with Server-Sent Events (SSE).
 * Check that your client's Accept headers include both `application/json` and `text/event-stream`.
 
 === Rate limiting
