@@ -20,6 +20,7 @@ Add the following to your `.cursor/mcp.json` file:
 {
   "mcpServers": {
     "redpanda": {
+      "type": "http",
       "url": "https://docs.redpanda.com/mcp"
     }
   }
@@ -98,6 +99,7 @@ Add this configuration:
 {
   "mcpServers": {
     "redpanda": {
+      "type": "http",
       "url": "https://docs.redpanda.com/mcp"
     }
   }
@@ -109,6 +111,26 @@ Restart Claude Desktop for changes to take effect.
 For more details, see the https://support.anthropic.com/en/articles/9487310-desktop-app[Claude Desktop documentation^].
 --
 ====
+
+== Intended use
+
+This public MCP endpoint is designed for:
+
+* Evaluation and testing
+* IDE-based assistance and ad-hoc queries
+* Individual developer productivity
+
+*Not suitable for:*
+
+* High-volume automation or batch processing
+* Production services or runbooks
+* CI/CD pipelines or scheduled jobs
+
+=== Technical specifications
+
+* *Transport*: HTTP with Server-Sent Events (SSE) streaming support
+* *Rate limit*: 60 requests per 15-minute window per client
+* *Authentication*: None required for public endpoint
 
 == Other AI tools
 
@@ -134,14 +156,23 @@ Once connected, you can ask context-aware questions about Redpanda from within y
 
 == Usage limits
 
-To ensure fair use and performance, the server enforces a rate limit of **60 questions per 15-minute window**.
+To ensure fair use and performance for all users, the public MCP endpoint enforces a rate limit of **60 requests per 15-minute window** per client.
 
-If you exceed the limit, you receive an HTTP 429 response. Wait a few minutes before retrying.
+This limit is suitable for:
 
-.Expected response
+* Individual developer IDE usage
+* Ad-hoc documentation queries
+* Evaluation and testing
+
+If you exceed the limit, you receive an HTTP 429 response with rate limit headers. Wait until the reset time before retrying.
+
+.Rate limit exceeded response
 [source,text]
 ----
 HTTP 429 Too Many Requests
+RateLimit-Limit: 60
+RateLimit-Remaining: 0
+RateLimit-Reset: <timestamp>
 ----
 
 == Troubleshooting
@@ -159,6 +190,19 @@ HTTP 429 Too Many Requests
 * Verify GitHub Copilot is installed and enabled.
 * Try running **MCP: Reset Cached Tools** from the Command Palette.
 * Check the Output panel (*View* > *Output* > *MCP*) for error messages.
+
+=== Configuration issues
+
+* Ensure `"type": "http"` is specified in your configuration for HTTP-based MCP servers.
+* Some MCP clients may have issues with SSE streaming. If you experience connection problems, verify that your client supports HTTP-based MCP servers with Server-Sent Events (SSE).
+* Check that your client's Accept headers include both `application/json` and `text/event-stream`.
+
+=== Rate limiting
+
+If you're building automation or high-volume integrations and hitting rate limits frequently:
+
+* The public endpoint's rate limits (60 requests per 15 minutes) are intentionally restrictive for fair use.
+* Consider implementing caching on your side to reduce duplicate queries.
 
 === Other issues
 
