@@ -66,7 +66,7 @@ const computeLimiterKey = (c) => {
   return `ua:${ua}|${accept}`
 }
 
-const SERVER_VERSION = '0.3.0';
+const SERVER_VERSION = '1.0.0';
 
 // Initialize MCP Server and register tools
 const server = new McpServer({
