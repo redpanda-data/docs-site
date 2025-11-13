@@ -2,13 +2,12 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-07-09/server.schema.json",
   "name": "com.redpanda/docs-mcp",
   "description": "Get authoritative answers to questions about Redpanda.",
-  "status": "active",
   "repository": {
     "url": "https://github.com/redpanda-data/docs-site",
     "source": "github",
     "subfolder": "netlify"
   },
-  "version": "2025.11.13+pr145-a67e016",
+  "version": "2025.11.13+pr146-c424d76",
   "remotes": [
     {
       "type": "streamable-http",
