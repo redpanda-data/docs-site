@@ -3,13 +3,13 @@ name: Update MCP registry
 on:
   pull_request:
     paths:
-      - "netlify/mcp.js"
+      - "netlify/edge-functions/mcp.js"
       - "server.json"
   push:
     branches: [ main ]
     paths:
       - "server.json"
-      - "netlify/mcp.js"
+      - "netlify/edge-functions/mcp.js"
   workflow_dispatch:
 
 permissions:
