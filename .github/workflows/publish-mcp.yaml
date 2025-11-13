@@ -3,12 +3,13 @@ name: Update MCP registry
 on:
   pull_request:
     paths:
-      - "netlify/mcp.js"
+      - "netlify/edge-functions/mcp.js"
+      - "server.json"
   push:
     branches: [ main ]
     paths:
       - "server.json"
-      - "netlify/mcp.js"
+      - "netlify/edge-functions/mcp.js"
   workflow_dispatch:
 
 permissions:
@@ -16,7 +17,7 @@ permissions:
   id-token: write
 
 jobs:
-  bump_version_on_pr:
+  validate_and_bump_version_on_pr:
     if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     steps:
@@ -32,13 +33,46 @@ jobs:
         with:
           node-version: "lts/*"
 
+      - name: Validate server.json
+        run: |
+          echo "Validating server.json..."
+          if [ ! -f server.json ]; then
+            echo "Error: server.json not found!"
+            exit 1
+          fi
+
+          if ! jq empty server.json 2>/dev/null; then
+            echo "Error: server.json is not valid JSON!"
+            exit 1
+          fi
+
+          echo "server.json is valid"
+
       - name: Compute new version and update server.json
         run: |
           VERSION="$(date -u +%Y.%m.%d)+pr${{ github.event.number }}-${GITHUB_SHA::7}"
           echo "New version: $VERSION"
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
           jq --arg v "$VERSION" '.version = $v' server.json > server.tmp.json
           mv server.tmp.json server.json
           git diff -- server.json || true
+
+      - name: Install MCP Publisher for validation
+        run: |
+          echo "Downloading MCP Publisher..."
+          ARCH="$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/')"
+          DOWNLOAD_URL="https://github.com/modelcontextprotocol/registry/releases/download/v1.0.0/mcp-publisher_1.0.0_${ARCH}.tar.gz"
+
+          if ! curl -fsSL "$DOWNLOAD_URL" | tar xz mcp-publisher; then
+            echo "Error: Failed to download or extract mcp-publisher"
+            echo "Attempted URL: $DOWNLOAD_URL"
+            exit 1
+          fi
+
+          chmod +x mcp-publisher
+          ./mcp-publisher --version
+          echo "MCP Publisher installed successfully"
 
       - name: Commit and push version bump (if changed)
         run: |
@@ -48,6 +82,7 @@ jobs:
             git add server.json
             git commit -m "chore: bump server.json version to ${VERSION} (PR #${{ github.event.number }})"
             git push
+            echo "Version bumped and committed"
           else
             echo "No changes to server.json; skipping commit."
           fi
@@ -59,19 +94,82 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Node (for jq availability)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+
+      - name: Validate server.json
+        run: |
+          echo "Validating server.json..."
+          if [ ! -f server.json ]; then
+            echo "Error: server.json not found!"
+            exit 1
+          fi
+
+          if ! jq empty server.json 2>/dev/null; then
+            echo "Error: server.json is not valid JSON!"
+            exit 1
+          fi
+
+          # Validate required fields
+          if ! jq -e '.name and .version and .remotes' server.json > /dev/null; then
+            echo "Error: server.json missing required fields"
+            exit 1
+          fi
+
+          VERSION=$(jq -r '.version' server.json)
+          echo "Current version: $VERSION"
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "server.json is valid"
+
       - name: Install MCP Publisher
         run: |
-          curl -L "https://github.com/modelcontextprotocol/registry/releases/download/v1.0.0/mcp-publisher_1.0.0_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/').tar.gz" \
-            | tar xz mcp-publisher
+          echo "Downloading MCP Publisher..."
+          ARCH="$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/')"
+          DOWNLOAD_URL="https://github.com/modelcontextprotocol/registry/releases/download/v1.0.0/mcp-publisher_1.0.0_${ARCH}.tar.gz"
+
+          if ! curl -fsSL "$DOWNLOAD_URL" | tar xz mcp-publisher; then
+            echo "Error: Failed to download or extract mcp-publisher"
+            echo "Attempted URL: $DOWNLOAD_URL"
+            exit 1
+          fi
+
           chmod +x mcp-publisher
           ./mcp-publisher --version
+          echo "MCP Publisher installed successfully"
 
-      # DNS login using your Ed25519 private key (hex)
       - name: Log in to MCP Registry (DNS)
-        run: ./mcp-publisher login dns --domain redpanda.com --private-key "${{ secrets.MCP_REGISTRY_PRIVATE_KEY }}"
+        run: |
+          echo "Logging in to MCP Registry..."
+          if [ -z "${{ secrets.MCP_REGISTRY_PRIVATE_KEY }}" ]; then
+            echo "Error: MCP_REGISTRY_PRIVATE_KEY secret is not set"
+            exit 1
+          fi
+
+          ./mcp-publisher login dns --domain redpanda.com --private-key "${{ secrets.MCP_REGISTRY_PRIVATE_KEY }}"
+          echo "Successfully logged in"
 
       - name: Publish to MCP Registry
-        run: ./mcp-publisher publish
+        run: |
+          echo "Publishing to MCP Registry..."
+          echo "Version: $VERSION"
+
+          if ./mcp-publisher publish; then
+            echo "Successfully published to MCP Registry"
+          else
+            echo "Error: Failed to publish to MCP Registry"
+            exit 1
+          fi
+
+      - name: Verify publication
+        run: |
+          echo "Publication Summary:"
+          echo "  Server Name: $(jq -r '.name' server.json)"
+          echo "  Version: $VERSION"
+          echo "  Remote URL: $(jq -r '.remotes[0].url' server.json)"
+          echo ""
+          echo "MCP server successfully published!"
 
     concurrency:
       group: mcp-publish-${{ github.ref }}
