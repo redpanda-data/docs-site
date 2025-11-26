@@ -1,7 +1,7 @@
-// Redpanda Docs MCP Server on Netlify Edge Functions
-// ---------------------------------------------------
-// This Edge Function implements an authless MCP (Model Context Protocol) server
-// that proxies requests to Kapa AI’s chat and search APIs for Redpanda documentation.
+// Redpanda Docs MCP Server on Netlify Functions
+// -----------------------------------------------
+// This serverless function implements an authless MCP (Model Context Protocol) server
+// that proxies requests to Kapa AI's chat and search APIs for Redpanda documentation.
 // It uses the official MCP SDK plus the Netlify adapter (modelfetch) to support
 // JSON-RPC over HTTP and SSE streaming.
 //
@@ -10,27 +10,19 @@
 //   https://www.kapa.ai/blog/build-an-mcp-server-with-kapa-ai
 // - Netlify guide: Writing MCPs on Netlify
 //   https://developers.netlify.com/guides/write-mcps-on-netlify/
-//
-// Key challenges on Netlify Edge:
-// 1. ESM-only runtime: import via https://esm.sh for all modules (no local npm installs).
-// 2. Edge transport: leverage the `streamingHttp` protocol via the `@modelfetch/netlify` adapter, which under the hood uses `StreamableHTTPServerTransport` to handle SSE streams in Edge environments. Adapter docs:
-//    - Modelfetch npm: https://www.npmjs.com/package/@modelfetch/netlify
-//    - Modelfetch GitHub: https://github.com/modelcontextprotocol/modelfetch
-// 3. Header requirements: MCP expects both application/json and text/event-stream in Accept,
-//    and requires Content-Type: application/json on incoming JSON-RPC messages.
 
-import { McpServer } from 'https://esm.sh/v135/@modelcontextprotocol/sdk@1.17.0/server/mcp.js'
-import { z } from 'https://esm.sh/v135/zod@3.22.4'
-import handle from 'https://esm.sh/v135/@modelfetch/netlify@0.15.2'
-// NOTE: some esm.sh builds of hono-rate-limiter export differently; this shim ensures compatibility.
-import rateLimiterModule from 'https://esm.sh/v135/hono-rate-limiter@0.1.0'
-const makeRateLimiter = rateLimiterModule.rateLimiter || rateLimiterModule
+import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
+import { z } from 'zod'
+import handle from '@modelfetch/netlify'
+// NOTE: some npm builds of hono-rate-limiter export differently; this shim ensures compatibility.
+import rateLimiterModule from 'hono-rate-limiter'
+const makeRateLimiter = rateLimiterModule.rateLimiter || rateLimiterModule.default || rateLimiterModule
 
 const API_BASE = 'https://api.kapa.ai'
 // Fetch Netlify env vars
-const KAPA_API_KEY = Netlify.env.get('KAPA_API_KEY')
-const KAPA_PROJECT_ID = Netlify.env.get('KAPA_PROJECT_ID')
-const KAPA_INTEGRATION_ID = Netlify.env.get('KAPA_INTEGRATION_ID')
+const KAPA_API_KEY = process.env.KAPA_API_KEY
+const KAPA_PROJECT_ID = process.env.KAPA_PROJECT_ID
+const KAPA_INTEGRATION_ID = process.env.KAPA_INTEGRATION_ID
 
 // Helper to compute a stable limiter key (shared IPs, proxy headers, or fallback)
 const computeLimiterKey = (c) => {
@@ -40,7 +32,7 @@ const computeLimiterKey = (c) => {
   const clientKey = h('x-client-key')
   if (clientKey) return `ck:${clientKey}`
 
-  // Try Netlify’s client IP first
+  // Try Netlify's client IP first
   // Prefer context.ip / c.ip if present
   if (c.ip) return `ip:${c.ip}`
 
@@ -113,12 +105,12 @@ server.registerTool(
       );
 
       const raw = await response.text();
-      let data; 
-      try { 
-        data = raw ? JSON.parse(raw) : []; 
-      } catch (error) { 
+      let data;
+      try {
+        data = raw ? JSON.parse(raw) : [];
+      } catch (error) {
         console.error('JSON parse error from upstream response:', error.message, 'Raw response:', raw);
-        data = []; 
+        data = [];
       }
 
       if (!response.ok) {
@@ -145,17 +137,17 @@ server.registerTool(
   }
 );
 
-// Wrap the server with the Netlify Edge handler
-// ---------------------------------------------
+// Wrap the server with the Netlify handler
+// -----------------------------------------
 // The `handle` function from `@modelfetch/netlify` does several things:
-// 1. Adapts the Edge `fetch` Request/Response to the Node-style HTTP transport
+// 1. Adapts the serverless function Request/Response to the Node-style HTTP transport
 //    that the MCP SDK expects (using streamingHttp under the hood).
 // 2. Parses incoming JSON-RPC payloads from the request body.
 // 3. Routes `initialize`, `tool:discover`, and `tool:invoke` JSON-RPC methods
 //    to the registered tools on our `server` instance.
 // 4. Manages Server-Sent Events (SSE) streaming: it takes ReadableStreams
 //    returned by streaming tools and writes them as
-//    text/event-stream chunks back through the Edge Function response.
+//    text/event-stream chunks back through the serverless function response.
 // 5. Handles error formatting according to JSON-RPC (wrapping exceptions in
 //    appropriate error objects).
 const baseHandler = handle({
@@ -183,7 +175,7 @@ export default async (request, context) => {
   const url = new URL(request.url)
 
   // Simple health check for POP/routing tests (no SSE)
-  if (request.method === 'GET' && url.pathname === '/mcp/health') {
+  if (request.method === 'GET' && url.pathname.endsWith('/health')) {
     return new Response('ok', { status: 200, headers: { 'cache-control': 'no-store' } })
   }
 
@@ -214,17 +206,22 @@ export default async (request, context) => {
   }
 
   // Enforce POST for /mcp (some tools accidentally send GET)
-  if (url.pathname === '/mcp' && request.method !== 'POST') {
-    return new Response('Method not allowed', { status: 405, headers: { 'Allow': 'POST' } })
+  if (request.method !== 'POST' && request.method !== 'GET') {
+    return new Response('Method not allowed', { status: 405, headers: { 'Allow': 'POST, GET' } })
   }
 
   // Otherwise, handle as MCP client request
   const patchedHeaders = new Headers(request.headers)
   patchedHeaders.set('accept', 'application/json, text/event-stream')
-  patchedHeaders.set('content-type', 'application/json')
+  if (request.method === 'POST') {
+    patchedHeaders.set('content-type', 'application/json')
+  }
 
   const patchedRequest = new Request(request, { headers: patchedHeaders })
   return baseHandler(patchedRequest, context)
 }
 
-export const config = { path: '/mcp' }
+export const config = {
+  path: '/mcp',
+  preferStatic: false
+}
