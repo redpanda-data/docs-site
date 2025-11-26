@@ -19,11 +19,11 @@
 // 3. Header requirements: MCP expects both application/json and text/event-stream in Accept,
 //    and requires Content-Type: application/json on incoming JSON-RPC messages.
 
-import { McpServer } from 'https://esm.sh/@modelcontextprotocol/sdk@1.17.0/server/mcp.js'
-import { z } from 'https://esm.sh/zod@3.22.4'
-import handle from 'https://esm.sh/@modelfetch/netlify@0.15.2'
+import { McpServer } from 'https://esm.sh/v135/@modelcontextprotocol/sdk@1.17.0/server/mcp.js'
+import { z } from 'https://esm.sh/v135/zod@3.22.4'
+import handle from 'https://esm.sh/v135/@modelfetch/netlify@0.15.2'
 // NOTE: some esm.sh builds of hono-rate-limiter export differently; this shim ensures compatibility.
-import rateLimiterModule from 'https://esm.sh/hono-rate-limiter@0.1.0'
+import rateLimiterModule from 'https://esm.sh/v135/hono-rate-limiter@0.1.0'
 const makeRateLimiter = rateLimiterModule.rateLimiter || rateLimiterModule
 
 const API_BASE = 'https://api.kapa.ai'
