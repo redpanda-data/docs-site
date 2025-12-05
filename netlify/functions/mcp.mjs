@@ -198,8 +198,14 @@ const baseHandler = handle({
       }),
     )
     app.use('/mcp', async (c, next) => {
+      // Log deprecation notice for monitoring
+      console.warn('DEPRECATION: Request to legacy MCP endpoint. Endpoint will be shut down in Feb 2026. New endpoint: https://redpanda.mcp.kapa.ai');
+
       await next();
       c.res.headers.set('X-MCP-Server', `Redpanda Docs MCP/${SERVER_VERSION}`);
+      c.res.headers.set('Deprecation', 'true');
+      c.res.headers.set('Sunset', 'Feb 2026');
+      c.res.headers.set('Link', '<https://docs.redpanda.com/home/mcp-setup>; rel="alternate"; title="Migration Guide"');
     });
   },
 })
