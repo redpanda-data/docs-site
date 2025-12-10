@@ -3,12 +3,13 @@
 
 Redpanda provides a remote link:https://modelcontextprotocol.io[Model Context Protocol (MCP) server^] that lets you access authoritative Redpanda documentation directly from your IDE or AI tool, such as Cursor, VS Code, ChatGPT, or Claude.
 
-The MCP server is hosted at: `https://redpanda.mcp.kapa.ai`.
+The MCP server is hosted at: `\https://redpanda.mcp.kapa.ai`.
 You can add this endpoint to any AI agent that supports MCP.
 
+.Deprecation notice
 [IMPORTANT]
 ====
-*Endpoint migration:* The previous endpoint at `https://docs.redpanda.com/mcp` is deprecated and will be shut down in **February 2026**. If you're currently using the old endpoint, please update your configuration to use the new Kapa-hosted endpoint: `https://redpanda.mcp.kapa.ai`.
+The previous endpoint at `\https://docs.redpanda.com/mcp` is deprecated and will be shut down in **February 2026**. If you're currently using the old endpoint, please update your configuration to use the new Kapa-hosted endpoint: `\https://redpanda.mcp.kapa.ai`.
 
 The new endpoint offers improved reliability, built-in authentication, and better rate limiting.
 ====
@@ -163,7 +164,55 @@ Once connected, you can ask context-aware questions about Redpanda from within y
 
 == Authentication
 
-When you connect to the Redpanda MCP server for the first time, a Google sign-in window opens to complete an OAuth / OpenID Connect login.
+When you connect to the Redpanda MCP server for the first time, you need to authenticate using Google OAuth.
+
+The authentication process varies by client:
+
+[tabs]
+====
+Claude Code::
++
+--
+. Type `/mcp` in the chat.
+. Select the Redpanda MCP server from the list.
+. Click **Authenticate**.
+. A browser window opens for Google sign-in.
+. Sign in with your Google account.
+. Return to Claude Code.
+
+Authentication is complete.
+--
+Cursor::
++
+--
+. Open the MCP panel or chat.
+. Look for the Redpanda MCP server in your configured servers.
+. When prompted, click to authenticate.
+. A browser window opens for Google sign-in.
+. Sign in with your Google account.
+. Return to Cursor.
+
+Authentication is complete.
+--
+VS Code::
++
+--
+. Open the Chat view (kbd:[Ctrl+Cmd+I] / kbd:[Ctrl+Alt+I]).
+. Select **Agent mode**.
+. Click the **Tools** button to see MCP tools.
+. If authentication is required, VS Code prompts you to authenticate.
+. A browser window opens for Google sign-in.
+. Sign in with your Google account.
+. Return to VS Code.
+
+Authentication is complete.
+--
+Other clients::
++
+--
+Most MCP clients automatically prompt for authentication when you first use an MCP tool or server. Follow the on-screen prompts to complete Google OAuth authentication.
+--
+====
 
 The MCP server:
 
@@ -172,6 +221,8 @@ The MCP server:
 * Does not request the `email` or `profile` scopes, so the server does not see your name, email address, or other personal data
 
 This anonymous Google ID is used only to enforce per-user rate limits and prevent abuse of the MCP server.
+
+On the Google consent screen, this appears as "Associate you with your personal info on Google." This is Google's generic wording for the `openid` scope: it means the app can recognize that the same Google account is signing in again. It does not grant access to your email, name, contacts, or other data, which would require additional scopes such as `email` or `profile`.
 
 == Usage limits
 
