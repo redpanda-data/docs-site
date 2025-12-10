@@ -81,7 +81,10 @@ server.registerTool(
     const q = (args?.question ?? '').trim();
     if (!q) {
       return {
-        content: [{ type: 'text', text: JSON.stringify({ error: 'missing_query', message: 'Provide a non-empty "question".' }) }]
+        content: [
+          { type: 'text', text: 'DEPRECATION NOTICE: This MCP server endpoint will be shut down in February 2026. Please migrate to the new endpoint at https://redpanda.mcp.kapa.ai - See migration guide at https://docs.redpanda.com/home/mcp-setup' },
+          { type: 'text', text: JSON.stringify({ error: 'missing_query', message: 'Provide a non-empty "question".' }) }
+        ]
       };
     }
     // Extract top_k parameter with default of 5, clamped to valid range
@@ -130,21 +133,29 @@ server.registerTool(
       if (!response.ok) {
         console.error(`Kapa AI API error: ${response.status} ${response.statusText} (${fetchDuration}ms)`);
         return {
-          content: [{
-            type: 'text',
-            text: JSON.stringify({
-              error: 'upstream_error',
-              status: response.status,
-              statusText: response.statusText,
-              body: raw || null,
-            })
-          }]
+          content: [
+            { type: 'text', text: 'DEPRECATION NOTICE: This MCP server endpoint will be shut down in February 2026. Please migrate to the new endpoint at https://redpanda.mcp.kapa.ai - See migration guide at https://docs.redpanda.com/home/mcp-setup' },
+            {
+              type: 'text',
+              text: JSON.stringify({
+                error: 'upstream_error',
+                status: response.status,
+                statusText: response.statusText,
+                body: raw || null,
+              })
+            }
+          ]
         };
       }
 
       const arr = Array.isArray(data) ? data : [];
       console.log(`Kapa AI request successful: ${fetchDuration}ms, returned ${arr.length} results`);
-      return { content: [{ type: 'text', text: JSON.stringify(arr) }] };
+      return {
+        content: [
+          { type: 'text', text: 'DEPRECATION NOTICE: This MCP server endpoint will be shut down in February 2026. Please migrate to the new endpoint at https://redpanda.mcp.kapa.ai - See migration guide at https://docs.redpanda.com/home/mcp-setup' },
+          { type: 'text', text: JSON.stringify(arr) }
+        ]
+      };
 
     } catch (error) {
       const duration = Date.now() - startTime;
@@ -154,19 +165,27 @@ server.registerTool(
       if (error.name === 'AbortError') {
         console.error(`Kapa AI API timeout after ${duration}ms for query: "${q.substring(0, 50)}..."`);
         return {
-          content: [{
-            type: 'text',
-            text: JSON.stringify({
-              error: 'timeout',
-              message: 'Request to Kapa AI API timed out after 25 seconds. Please try again or simplify your query.',
-              duration_ms: duration
-            })
-          }]
+          content: [
+            { type: 'text', text: 'DEPRECATION NOTICE: This MCP server endpoint will be shut down in February 2026. Please migrate to the new endpoint at https://redpanda.mcp.kapa.ai - See migration guide at https://docs.redpanda.com/home/mcp-setup' },
+            {
+              type: 'text',
+              text: JSON.stringify({
+                error: 'timeout',
+                message: 'Request to Kapa AI API timed out after 25 seconds. Please try again or simplify your query.',
+                duration_ms: duration
+              })
+            }
+          ]
         };
       }
 
       console.error(`Kapa AI API exception after ${duration}ms:`, msg);
-      return { content: [{ type: 'text', text: JSON.stringify({ error: 'exception', message: msg, duration_ms: duration }) }] };
+      return {
+        content: [
+          { type: 'text', text: 'DEPRECATION NOTICE: This MCP server endpoint will be shut down in February 2026. Please migrate to the new endpoint at https://redpanda.mcp.kapa.ai - See migration guide at https://docs.redpanda.com/home/mcp-setup' },
+          { type: 'text', text: JSON.stringify({ error: 'exception', message: msg, duration_ms: duration }) }
+        ]
+      };
     }
   }
 );
@@ -203,9 +222,6 @@ const baseHandler = handle({
 
       await next();
       c.res.headers.set('X-MCP-Server', `Redpanda Docs MCP/${SERVER_VERSION}`);
-      c.res.headers.set('Deprecation', 'true');
-      c.res.headers.set('Sunset', 'Feb 2026');
-      c.res.headers.set('Link', '<https://docs.redpanda.com/home/mcp-setup>; rel="alternate"; title="Migration Guide"');
     });
   },
 })
