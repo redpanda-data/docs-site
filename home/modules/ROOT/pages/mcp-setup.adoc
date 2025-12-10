@@ -3,8 +3,16 @@
 
 Redpanda provides a remote link:https://modelcontextprotocol.io[Model Context Protocol (MCP) server^] that lets you access authoritative Redpanda documentation directly from your IDE or AI tool, such as Cursor, VS Code, ChatGPT, or Claude.
 
-The MCP server is hosted at: `https://docs.redpanda.com/mcp`.
+The MCP server is hosted at: `\https://redpanda.mcp.kapa.ai`.
 You can add this endpoint to any AI agent that supports MCP.
+
+.Deprecation notice
+[IMPORTANT]
+====
+The previous endpoint at `\https://docs.redpanda.com/mcp` is deprecated and will be shut down in **February 2026**. If you're currently using the old endpoint, please update your configuration to use the new Kapa-hosted endpoint: `\https://redpanda.mcp.kapa.ai`.
+
+The new endpoint offers improved reliability, built-in authentication, and better rate limiting.
+====
 
 == Set up
 
@@ -21,7 +29,7 @@ Add the following to your `.cursor/mcp.json` file:
   "mcpServers": {
     "redpanda": {
       "type": "http",
-      "url": "https://docs.redpanda.com/mcp"
+      "url": "https://redpanda.mcp.kapa.ai"
     }
   }
 }
@@ -43,7 +51,7 @@ Create an `mcp.json` file in your workspace `.vscode` folder:
   "servers": {
     "redpanda": {
       "type": "http",
-      "url": "https://docs.redpanda.com/mcp"
+      "url": "https://redpanda.mcp.kapa.ai"
     }
   }
 }
@@ -76,7 +84,7 @@ ChatGPT Desktop supports MCP servers in developer mode. To enable:
 . Click **Add Server** and enter:
 +
 - **Name**: `redpanda`
-- **URL**: `https://docs.redpanda.com/mcp`
+- **URL**: `https://redpanda.mcp.kapa.ai`
 
 
 For more information, see the https://platform.openai.com/docs/guides/developer-mode[ChatGPT Desktop MCP documentation^].
@@ -100,7 +108,7 @@ Add this configuration:
   "mcpServers": {
     "redpanda": {
       "type": "http",
-      "url": "https://docs.redpanda.com/mcp"
+      "url": "https://redpanda.mcp.kapa.ai"
     }
   }
 }
@@ -129,8 +137,8 @@ This public MCP endpoint is designed for:
 === Technical specifications
 
 * *Transport*: HTTP with Server-Sent Events (SSE) streaming support
-* *Rate limit*: 60 requests per 15-minute window per client
-* *Authentication*: None required for public endpoint
+* *Rate limits*: 40 requests per hour and 200 requests per day per user
+* *Authentication*: Google OAuth sign-in (first-time connection only)
 
 == Other AI tools
 
@@ -138,7 +146,7 @@ Any tool that supports MCP servers can connect using the following URL:
 
 [source,text]
 ----
-https://docs.redpanda.com/mcp
+https://redpanda.mcp.kapa.ai
 ----
 
 NOTE: MCP support varies by tool and version. Check the specific tool's documentation for MCP setup instructions.
@@ -154,11 +162,76 @@ Once connected, you can ask context-aware questions about Redpanda from within y
 * "How do I monitor Redpanda cluster performance?"
 * "What's the difference between Redpanda Cloud and self-hosted deployment?"
 
+== Authentication
+
+When you connect to the Redpanda MCP server for the first time, you need to authenticate using Google OAuth.
+
+The authentication process varies by client:
+
+[tabs]
+====
+Claude Code::
++
+--
+. Type `/mcp` in the chat.
+. Select the Redpanda MCP server from the list.
+. Click **Authenticate**.
+. A browser window opens for Google sign-in.
+. Sign in with your Google account.
+. Return to Claude Code.
+
+Authentication is complete.
+--
+Cursor::
++
+--
+. Open the MCP panel or chat.
+. Look for the Redpanda MCP server in your configured servers.
+. When prompted, click to authenticate.
+. A browser window opens for Google sign-in.
+. Sign in with your Google account.
+. Return to Cursor.
+
+Authentication is complete.
+--
+VS Code::
++
+--
+. Open the Chat view (kbd:[Ctrl+Cmd+I] / kbd:[Ctrl+Alt+I]).
+. Select **Agent mode**.
+. Click the **Tools** button to see MCP tools.
+. If authentication is required, VS Code prompts you to authenticate.
+. A browser window opens for Google sign-in.
+. Sign in with your Google account.
+. Return to VS Code.
+
+Authentication is complete.
+--
+Other clients::
++
+--
+Most MCP clients automatically prompt for authentication when you first use an MCP tool or server. Follow the on-screen prompts to complete Google OAuth authentication.
+--
+====
+
+The MCP server:
+
+* Requests only the `openid` scope from Google
+* Receives an ID token (a JWT) that contains a stable, opaque user ID (`sub`)
+* Does not request the `email` or `profile` scopes, so the server does not see your name, email address, or other personal data
+
+This anonymous Google ID is used only to enforce per-user rate limits and prevent abuse of the MCP server.
+
+On the Google consent screen, this appears as "Associate you with your personal info on Google." This is Google's generic wording for the `openid` scope: it means the app can recognize that the same Google account is signing in again. It does not grant access to your email, name, contacts, or other data, which would require additional scopes such as `email` or `profile`.
+
 == Usage limits
 
-To ensure fair use and performance for all users, the public MCP endpoint enforces a rate limit of **60 requests per 15-minute window** per client.
+To ensure fair use and performance for all users, the public MCP endpoint enforces the following rate limits per user:
 
-This limit is suitable for:
+* **40 requests per hour**
+* **200 requests per day**
+
+These limits are suitable for:
 
 * Individual developer IDE usage
 * Ad-hoc documentation queries
@@ -170,7 +243,7 @@ If you exceed the limit, you receive an HTTP 429 response with rate limit header
 [source,text]
 ----
 HTTP 429 Too Many Requests
-RateLimit-Limit: 60
+RateLimit-Limit: 40
 RateLimit-Remaining: 0
 RateLimit-Reset: <timestamp>
 ----
@@ -179,7 +252,7 @@ RateLimit-Reset: <timestamp>
 
 === Server not connecting
 
-* Verify the URL is exactly: `https://docs.redpanda.com/mcp`.
+* Verify the URL is exactly: `https://redpanda.mcp.kapa.ai`.
 * Check your internet connection.
 * Ensure your AI tool supports HTTP-based MCP servers.
 * Restart your AI tool after adding the configuration.
@@ -201,7 +274,7 @@ RateLimit-Reset: <timestamp>
 
 If you're building automation or high-volume integrations and hitting rate limits frequently:
 
-* The public endpoint's rate limits (60 requests per 15 minutes) are intentionally restrictive for fair use.
+* The public endpoint's rate limits (40 requests per hour, 200 requests per day) are intentionally restrictive for fair use.
 * Consider implementing caching on your side to reduce duplicate queries.
 
 === Other issues

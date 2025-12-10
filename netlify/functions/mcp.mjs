@@ -87,7 +87,12 @@ server.registerTool(
     // Extract top_k parameter with default of 5, clamped to valid range
     const topK = Math.max(1, Math.min(15, args?.top_k ?? 5));
 
+    const startTime = Date.now();
     try {
+      // Add timeout to prevent function from hanging indefinitely
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 25000); // 25 second timeout
+
       const response = await fetch(
         `${API_BASE}/query/v1/projects/${KAPA_PROJECT_ID}/retrieval/`,
         {
@@ -101,8 +106,17 @@ server.registerTool(
             query: q,
             top_k: topK,
           }),
+          signal: controller.signal,
         }
       );
+
+      clearTimeout(timeoutId);
+      const fetchDuration = Date.now() - startTime;
+
+      // Log slow requests to help diagnose issues
+      if (fetchDuration > 1000) {
+        console.warn(`Slow Kapa AI API request: ${fetchDuration}ms for query: "${q.substring(0, 50)}..."`);
+      }
 
       const raw = await response.text();
       let data;
@@ -114,6 +128,7 @@ server.registerTool(
       }
 
       if (!response.ok) {
+        console.error(`Kapa AI API error: ${response.status} ${response.statusText} (${fetchDuration}ms)`);
         return {
           content: [{
             type: 'text',
@@ -128,11 +143,30 @@ server.registerTool(
       }
 
       const arr = Array.isArray(data) ? data : [];
+      console.log(`Kapa AI request successful: ${fetchDuration}ms, returned ${arr.length} results`);
       return { content: [{ type: 'text', text: JSON.stringify(arr) }] };
 
     } catch (error) {
+      const duration = Date.now() - startTime;
       const msg = error instanceof Error ? error.message : String(error);
-      return { content: [{ type: 'text', text: JSON.stringify({ error: 'exception', message: msg }) }] };
+
+      // Distinguish between timeout and other errors
+      if (error.name === 'AbortError') {
+        console.error(`Kapa AI API timeout after ${duration}ms for query: "${q.substring(0, 50)}..."`);
+        return {
+          content: [{
+            type: 'text',
+            text: JSON.stringify({
+              error: 'timeout',
+              message: 'Request to Kapa AI API timed out after 25 seconds. Please try again or simplify your query.',
+              duration_ms: duration
+            })
+          }]
+        };
+      }
+
+      console.error(`Kapa AI API exception after ${duration}ms:`, msg);
+      return { content: [{ type: 'text', text: JSON.stringify({ error: 'exception', message: msg, duration_ms: duration }) }] };
     }
   }
 );
@@ -164,8 +198,14 @@ const baseHandler = handle({
       }),
     )
     app.use('/mcp', async (c, next) => {
+      // Log deprecation notice for monitoring
+      console.warn('DEPRECATION: Request to legacy MCP endpoint. Endpoint will be shut down in Feb 2026. New endpoint: https://redpanda.mcp.kapa.ai');
+
       await next();
       c.res.headers.set('X-MCP-Server', `Redpanda Docs MCP/${SERVER_VERSION}`);
+      c.res.headers.set('Deprecation', 'true');
+      c.res.headers.set('Sunset', 'Feb 2026');
+      c.res.headers.set('Link', '<https://docs.redpanda.com/home/mcp-setup>; rel="alternate"; title="Migration Guide"');
     });
   },
 })
