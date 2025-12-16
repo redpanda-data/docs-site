@@ -263,16 +263,29 @@ server.registerTool(
 const baseHandler = handle({
   server,
   pre: (app) => {
-    app.use(
-      '/mcp',
-      makeRateLimiter({
-        windowMs: 15 * 60 * 1000,
-        limit: 60,
-        keyGenerator: computeLimiterKey,
-        standardHeaders: true,
-        legacyHeaders: true,
-      })
-    )
+    // IMPORTANT:
+    // Streamable HTTP opens a long-lived SSE stream via GET requests.
+    // Some rate limiter middleware can interfere with SSE and cause 500s on reconnect/idle.
+    // We therefore apply rate limiting ONLY to POST/DELETE (expensive operations),
+    // and allow GET (SSE stream) through un-limited.
+
+    const limiter = makeRateLimiter({
+      windowMs: 15 * 60 * 1000, // 15 minutes
+      limit: 60,                // limit each key to 60 requests per windowMs (tune as needed)
+      keyGenerator: computeLimiterKey, // use our custom key generator
+      standardHeaders: true,    // send RateLimit-* headers if supported
+      legacyHeaders: true,      // also send X-RateLimit-* headers
+    })
+
+    app.use('/mcp', async (c, next) => {
+      const method = c.req.method
+      if (method === 'GET') {
+        // Let SSE stream open/reconnect without limiter interference
+        return next()
+      }
+      // Apply limiter to POST + DELETE (and anything else, if ever present)
+      return limiter(c, next)
+    })
 
     app.use('/mcp', async (c, next) => {
       await next()
