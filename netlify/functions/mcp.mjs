@@ -12,256 +12,364 @@
 //   https://developers.netlify.com/guides/write-mcps-on-netlify/
 
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
+import { Client } from '@modelcontextprotocol/sdk/client/index.js'
+import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js'
 import { z } from 'zod'
 import handle from '@modelfetch/netlify'
-// NOTE: some npm builds of hono-rate-limiter export differently; this shim ensures compatibility.
+
 import rateLimiterModule from 'hono-rate-limiter'
-const makeRateLimiter = rateLimiterModule.rateLimiter || rateLimiterModule.default || rateLimiterModule
+const makeRateLimiter =
+  rateLimiterModule.rateLimiter ||
+  rateLimiterModule.default ||
+  rateLimiterModule
 
-const API_BASE = 'https://api.kapa.ai'
-// Fetch Netlify env vars
+// -------------------- Config --------------------
+
+const SERVER_VERSION = '1.1.2'
+
+// Hardcoded upstream
+const KAPA_MCP_SERVER_URL = 'https://redpanda.mcp.kapa.ai'
+const KAPA_TOOL_NAME = 'search_redpanda_knowledge_sources'
+
+// Secret
 const KAPA_API_KEY = process.env.KAPA_API_KEY
-const KAPA_PROJECT_ID = process.env.KAPA_PROJECT_ID
-const KAPA_INTEGRATION_ID = process.env.KAPA_INTEGRATION_ID
 
-// Helper to compute a stable limiter key (shared IPs, proxy headers, or fallback)
+// Limits and timeouts
+const CONNECT_TIMEOUT_MS = 8_000
+const CALL_TIMEOUT_MS = 22_000
+const MAX_QUERY_CHARS = 2_000
+
+// -------------------- Helpers --------------------
+
+function withTimeout(promise, ms, label) {
+  let timeoutId
+  const timeoutPromise = new Promise((_, reject) => {
+    timeoutId = setTimeout(() => reject(new Error(`${label}_timeout`)), ms)
+  })
+  return Promise.race([promise, timeoutPromise]).finally(() =>
+    clearTimeout(timeoutId)
+  )
+}
+
+// -------------------- Rate limiting --------------------
+
 const computeLimiterKey = (c) => {
   const h = (name) => c.req.header(name) || ''
 
-  // Allow clients to provide their own stable identifier
   const clientKey = h('x-client-key')
   if (clientKey) return `ck:${clientKey}`
 
-  // Try Netlify's client IP first
-  // Prefer context.ip / c.ip if present
   if (c.ip) return `ip:${c.ip}`
 
-  // Fall back to headers (for older runtimes)
   const nfIp = h('x-nf-client-connection-ip')
   if (nfIp) return `ip:${nfIp}`
 
-  // Then Cloudflare
   const cfIp = h('cf-connecting-ip')
   if (cfIp) return `ip:${cfIp}`
 
-  // Then generic proxy chain
   const xff = h('x-forwarded-for').split(',')[0]?.trim()
   if (xff) return `ip:${xff}`
 
-  // Then Real-IP
   const realIp = h('x-real-ip')
   if (realIp) return `ip:${realIp}`
 
-  // Fallback: use user-agent + accept header
-  const ua = h('user-agent')
-  const accept = h('accept')
-  return `ua:${ua}|${accept}`
+  return `ua:${h('user-agent')}|${h('accept')}`
 }
 
-const SERVER_VERSION = '1.0.0';
+// -------------------- Upstream MCP client --------------------
+//
+// Global state reused across warm Netlify invocations.
+// Reset + retry-once handles stale connections safely.
 
-// Initialize MCP Server and register tools
-const server = new McpServer({
-  name: 'Redpanda Docs MCP', // Display name visible for inspectors
+const kapaClient = new Client({
+  name: 'redpanda-netlify-proxy',
   version: SERVER_VERSION,
 })
 
+let kapaConnectPromise = null
+let kapaTransport = null
+
+function resetKapaConnection() {
+  kapaConnectPromise = null
+  kapaTransport = null
+}
+
+function isTransientError(msg) {
+  return (
+    msg.includes('timeout') ||
+    msg.includes('429') ||
+    msg.includes('503') ||
+    msg.includes('ECONNRESET') ||
+    msg.includes('socket') ||
+    msg.includes('fetch') ||
+    msg.includes('stream') ||
+    msg.includes('EPIPE') ||
+    msg.includes('ENOTFOUND')
+  )
+}
+
+function ensureKapaConnected() {
+  if (kapaConnectPromise) return kapaConnectPromise
+
+  if (!KAPA_API_KEY) {
+    // Throwing here is fine. Tool handler will capture and return a clean error.
+    throw new Error('Missing env var: KAPA_API_KEY')
+  }
+
+  kapaTransport = new StreamableHTTPClientTransport(
+    new URL(KAPA_MCP_SERVER_URL),
+    {
+      requestInit: {
+        headers: {
+          Authorization: `Bearer ${KAPA_API_KEY}`,
+        },
+      },
+    }
+  )
+
+  kapaConnectPromise = kapaClient.connect(kapaTransport)
+  return kapaConnectPromise
+}
+
+// Kapa Hosted MCP search tool only accepts `query`
+function callKapaSearch(query) {
+  return kapaClient.callTool({
+    name: KAPA_TOOL_NAME,
+    arguments: { query },
+  })
+}
+
+// -------------------- MCP Server --------------------
+
+const server = new McpServer({
+  name: 'Redpanda Docs MCP',
+  version: SERVER_VERSION,
+})
 
 server.registerTool(
   'ask_redpanda_question',
   {
     title: 'Search Redpanda Sources',
-    description: 'Search the official Redpanda documentation and return the most relevant sections from it for a user query. Each returned section includes the url and its actual content in markdown. Use this tool for all queries that require Redpanda knowledge. Results are ordered by relevance, with the most relevant result returned first. Returns up to 5 results by default to manage token usage. Use top_k parameter (1-15) to request more or fewer results.',
+    description:
+      'Search the official Redpanda documentation and return the most relevant sections from it for a user query. Each returned section includes the url and its actual content in markdown. Use this tool for all queries that require Redpanda knowledge. Results are ordered by relevance, with the most relevant result returned first.',
     inputSchema: {
       question: z.string(),
-      top_k: z.number().int().min(1).max(15).optional().describe('Number of results to return (1-15). Defaults to 5 for optimal token usage.')
+
+      // Accepted for compatibility, but ignored.
+      top_k: z.number().optional(),
     },
   },
   async (args) => {
-    const q = (args?.question ?? '').trim();
+    const start = Date.now()
+
+    const q = String(args?.question || '').trim()
     if (!q) {
       return {
-        content: [{ type: 'text', text: JSON.stringify({ error: 'missing_query', message: 'Provide a non-empty "question".' }) }]
-      };
-    }
-    // Extract top_k parameter with default of 5, clamped to valid range
-    const topK = Math.max(1, Math.min(15, args?.top_k ?? 5));
-
-    const startTime = Date.now();
-    try {
-      // Add timeout to prevent function from hanging indefinitely
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 25000); // 25 second timeout
-
-      const response = await fetch(
-        `${API_BASE}/query/v1/projects/${KAPA_PROJECT_ID}/retrieval/`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-API-KEY': KAPA_API_KEY,
+        content: [
+          {
+            type: 'text',
+            text: JSON.stringify({
+              error: 'missing_query',
+              message: 'Provide a non-empty "question".',
+            }),
           },
-          body: JSON.stringify({
-            integration_id: KAPA_INTEGRATION_ID,
-            query: q,
-            top_k: topK,
-          }),
-          signal: controller.signal,
+        ],
+      }
+    }
+
+    if (q.length > MAX_QUERY_CHARS) {
+      return {
+        content: [
+          {
+            type: 'text',
+            text: JSON.stringify({
+              error: 'query_too_long',
+              message: `Question exceeds ${MAX_QUERY_CHARS} characters.`,
+            }),
+          },
+        ],
+      }
+    }
+
+    try {
+      await withTimeout(
+        ensureKapaConnected(),
+        CONNECT_TIMEOUT_MS,
+        'kapa_connect'
+      )
+
+      return await withTimeout(
+        callKapaSearch(q),
+        CALL_TIMEOUT_MS,
+        'kapa_callTool'
+      )
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err)
+      console.warn('Kapa MCP call failed, retrying', {
+        error: msg,
+        phase: 'initial',
+        upstream: 'kapa-mcp',
+      })
+
+
+      if (isTransientError(msg)) {
+        // retry once
+        try {
+          resetKapaConnection()
+          await withTimeout(
+            ensureKapaConnected(),
+            CONNECT_TIMEOUT_MS,
+            'kapa_reconnect'
+          )
+          return await withTimeout(
+            callKapaSearch(q),
+            CALL_TIMEOUT_MS,
+            'kapa_callTool_retry'
+          )
+        } catch (retryErr) {
+          const retryMsg =
+            retryErr instanceof Error ? retryErr.message : String(retryErr)
+            console.error('Kapa MCP retry failed', {
+              error: retryMsg,
+              phase: 'retry',
+              upstream: 'kapa-mcp',
+              duration_ms: Date.now() - start,
+            })
+
+          return {
+            content: [
+              {
+                type: 'text',
+                text: JSON.stringify({
+                  error: retryMsg.includes('timeout')
+                    ? 'timeout'
+                    : 'upstream_error',
+                  message: 'Upstream Kapa MCP request failed after retry.',
+                  detail: retryMsg, // include detail for debugging (no query logged)
+                  duration_ms: Date.now() - start,
+                }),
+              },
+            ],
+          }
         }
-      );
-
-      clearTimeout(timeoutId);
-      const fetchDuration = Date.now() - startTime;
-
-      // Log slow requests to help diagnose issues
-      if (fetchDuration > 1000) {
-        console.warn(`Slow Kapa AI API request: ${fetchDuration}ms for query: "${q.substring(0, 50)}..."`);
       }
 
-      const raw = await response.text();
-      let data;
-      try {
-        data = raw ? JSON.parse(raw) : [];
-      } catch (error) {
-        console.error('JSON parse error from upstream response:', error.message, 'Raw response:', raw);
-        data = [];
-      }
-
-      if (!response.ok) {
-        console.error(`Kapa AI API error: ${response.status} ${response.statusText} (${fetchDuration}ms)`);
-        return {
-          content: [{
+      return {
+        content: [
+          {
             type: 'text',
             text: JSON.stringify({
-              error: 'upstream_error',
-              status: response.status,
-              statusText: response.statusText,
-              body: raw || null,
-            })
-          }]
-        };
+              error: msg.includes('timeout') ? 'timeout' : 'upstream_error',
+              message: 'Upstream Kapa MCP request failed.',
+              detail: msg, // include detail for debugging (no query logged)
+              duration_ms: Date.now() - start,
+            }),
+          },
+        ],
       }
-
-      const arr = Array.isArray(data) ? data : [];
-      console.log(`Kapa AI request successful: ${fetchDuration}ms, returned ${arr.length} results`);
-      return { content: [{ type: 'text', text: JSON.stringify(arr) }] };
-
-    } catch (error) {
-      const duration = Date.now() - startTime;
-      const msg = error instanceof Error ? error.message : String(error);
-
-      // Distinguish between timeout and other errors
-      if (error.name === 'AbortError') {
-        console.error(`Kapa AI API timeout after ${duration}ms for query: "${q.substring(0, 50)}..."`);
-        return {
-          content: [{
-            type: 'text',
-            text: JSON.stringify({
-              error: 'timeout',
-              message: 'Request to Kapa AI API timed out after 25 seconds. Please try again or simplify your query.',
-              duration_ms: duration
-            })
-          }]
-        };
-      }
-
-      console.error(`Kapa AI API exception after ${duration}ms:`, msg);
-      return { content: [{ type: 'text', text: JSON.stringify({ error: 'exception', message: msg, duration_ms: duration }) }] };
     }
   }
-);
+)
 
-// Wrap the server with the Netlify handler
-// -----------------------------------------
-// The `handle` function from `@modelfetch/netlify` does several things:
-// 1. Adapts the serverless function Request/Response to the Node-style HTTP transport
-//    that the MCP SDK expects (using streamingHttp under the hood).
-// 2. Parses incoming JSON-RPC payloads from the request body.
-// 3. Routes `initialize`, `tool:discover`, and `tool:invoke` JSON-RPC methods
-//    to the registered tools on our `server` instance.
-// 4. Manages Server-Sent Events (SSE) streaming: it takes ReadableStreams
-//    returned by streaming tools and writes them as
-//    text/event-stream chunks back through the serverless function response.
-// 5. Handles error formatting according to JSON-RPC (wrapping exceptions in
-//    appropriate error objects).
+// -------------------- Netlify handler --------------------
+
 const baseHandler = handle({
-  server: server,
+  server,
   pre: (app) => {
-    app.use(
-      '/mcp',
-      makeRateLimiter({
-        windowMs: 15 * 60 * 1000, // 15 minutes
-        limit: 60,                // limit each key to 60 requests per windowMs (tune as needed)
-        keyGenerator: computeLimiterKey, // use our custom key generator
-        standardHeaders: true,    // send RateLimit-* headers if supported
-        legacyHeaders: true,      // also send X-RateLimit-* headers
-      }),
-    )
-    app.use('/mcp', async (c, next) => {
-      // Log deprecation notice for monitoring
-      console.warn('DEPRECATION: Request to legacy MCP endpoint. Endpoint will be shut down in Feb 2026. New endpoint: https://redpanda.mcp.kapa.ai');
+    // IMPORTANT:
+    // Streamable HTTP opens a long-lived SSE stream via GET requests.
+    // Some rate limiter middleware can interfere with SSE and cause 500s on reconnect/idle.
+    // We therefore apply rate limiting ONLY to POST/DELETE (expensive operations),
+    // and allow GET (SSE stream) through un-limited.
 
-      await next();
-      c.res.headers.set('X-MCP-Server', `Redpanda Docs MCP/${SERVER_VERSION}`);
-      c.res.headers.set('Deprecation', 'true');
-      c.res.headers.set('Sunset', 'Feb 2026');
-      c.res.headers.set('Link', '<https://docs.redpanda.com/home/mcp-setup>; rel="alternate"; title="Migration Guide"');
-    });
+    const limiter = makeRateLimiter({
+      windowMs: 15 * 60 * 1000, // 15 minutes
+      limit: 60,                // limit each key to 60 requests per windowMs (tune as needed)
+      keyGenerator: computeLimiterKey, // use our custom key generator
+      standardHeaders: true,    // send RateLimit-* headers if supported
+      legacyHeaders: true,      // also send X-RateLimit-* headers
+    })
+
+    app.use('/mcp', async (c, next) => {
+      const method = c.req.method
+      if (method === 'GET') {
+        // Let SSE stream open/reconnect without limiter interference
+        return next()
+      }
+      // Apply limiter to POST + DELETE (and anything else, if ever present)
+      return limiter(c, next)
+    })
+
+    app.use('/mcp', async (c, next) => {
+      await next()
+      c.res.headers.set('X-MCP-Server', `Redpanda Docs MCP/${SERVER_VERSION}`)
+      c.res.headers.set('Cache-Control', 'no-store')
+    })
   },
 })
 
-// Wrapper to handle both browser requests (show docs) and MCP client requests
+// -------------------- Request wrapper --------------------
+
 export default async (request, context) => {
   const url = new URL(request.url)
 
-  // Simple health check for POP/routing tests (no SSE)
+  // Health check
   if (request.method === 'GET' && url.pathname.endsWith('/health')) {
-    return new Response('ok', { status: 200, headers: { 'cache-control': 'no-store' } })
-  }
-
-  // Check if this is a browser request (not an MCP client)
-  const userAgent = request.headers.get('user-agent') || ''
-  const accept = request.headers.get('accept') || ''
-  const contentType = request.headers.get('content-type') || ''
-
-  // Detect browser requests:
-  // - User-Agent contains browser identifiers
-  // - Accept header includes text/html
-  // - NOT a JSON-RPC POST request
-  const isBrowserRequest = (
-    request.method === 'GET' &&
-    (userAgent.includes('Mozilla') || userAgent.includes('Chrome') || userAgent.includes('Safari') || userAgent.includes('Edge')) &&
-    accept.includes('text/html') &&
-    !contentType.includes('application/json')
-  )
-
-  // If it's a browser request, redirect to the documentation page
-  if (isBrowserRequest) {
-    return new Response(null, {
-      status: 302,
-      headers: {
-        'Location': '/home/mcp-setup', // Redirect to the built docs page
-      },
+    return new Response('ok', {
+      status: 200,
+      headers: { 'cache-control': 'no-store' },
     })
   }
 
-  // Enforce POST for /mcp (some tools accidentally send GET)
-  if (request.method !== 'POST' && request.method !== 'GET') {
-    return new Response('Method not allowed', { status: 405, headers: { 'Allow': 'POST, GET' } })
+  // Browser redirect
+  const ua = request.headers.get('user-agent') || ''
+  const accept = request.headers.get('accept') || ''
+  const contentType = request.headers.get('content-type') || ''
+
+  const isBrowserRequest =
+    request.method === 'GET' &&
+    accept.includes('text/html') &&
+    !contentType.includes('application/json') &&
+    /(Mozilla|Chrome|Safari|Edge)/.test(ua)
+
+  if (isBrowserRequest) {
+    return new Response(null, {
+      status: 302,
+      headers: { Location: '/home/mcp-setup' },
+    })
   }
 
-  // Otherwise, handle as MCP client request
+  // Streamable HTTP requires POST + GET (SSE) + DELETE
+  if (
+    request.method !== 'POST' &&
+    request.method !== 'GET' &&
+    request.method !== 'DELETE'
+  ) {
+    return new Response('Method not allowed', {
+      status: 405,
+      headers: { Allow: 'POST, GET, DELETE' },
+    })
+  }
+
   const patchedHeaders = new Headers(request.headers)
-  patchedHeaders.set('accept', 'application/json, text/event-stream')
-  if (request.method === 'POST') {
+
+  // Only set Accept if the client didn't send one.
+  if (!patchedHeaders.get('accept')) {
+    patchedHeaders.set('accept', 'application/json, text/event-stream')
+  }
+
+  // Only set content-type if missing on POST
+  if (request.method === 'POST' && !patchedHeaders.get('content-type')) {
     patchedHeaders.set('content-type', 'application/json')
   }
 
-  const patchedRequest = new Request(request, { headers: patchedHeaders })
-  return baseHandler(patchedRequest, context)
+  return baseHandler(
+    new Request(request, { headers: patchedHeaders }),
+    context
+  )
 }
 
 export const config = {
   path: '/mcp',
-  preferStatic: false
+  preferStatic: false,
 }
