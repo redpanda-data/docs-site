@@ -25,7 +25,7 @@ const makeRateLimiter =
 
 // -------------------- Config --------------------
 
-const SERVER_VERSION = '1.1.0'
+const SERVER_VERSION = '1.1.2'
 
 // Hardcoded upstream
 const KAPA_MCP_SERVER_URL = 'https://redpanda.mcp.kapa.ai'
@@ -38,9 +38,6 @@ const KAPA_API_KEY = process.env.KAPA_API_KEY
 const CONNECT_TIMEOUT_MS = 8_000
 const CALL_TIMEOUT_MS = 22_000
 const MAX_QUERY_CHARS = 2_000
-const DEFAULT_TOP_K = 5
-const MIN_TOP_K = 1
-const MAX_TOP_K = 15
 
 // -------------------- Helpers --------------------
 
@@ -80,6 +77,7 @@ const computeLimiterKey = (c) => {
 }
 
 // -------------------- Upstream MCP client --------------------
+//
 // Global state reused across warm Netlify invocations.
 // Reset + retry-once handles stale connections safely.
 
@@ -114,7 +112,7 @@ function ensureKapaConnected() {
   if (kapaConnectPromise) return kapaConnectPromise
 
   if (!KAPA_API_KEY) {
-    // Throwing here is fine. Tool handler will capture and return a clean error
+    // Throwing here is fine. Tool handler will capture and return a clean error.
     throw new Error('Missing env var: KAPA_API_KEY')
   }
 
@@ -133,10 +131,11 @@ function ensureKapaConnected() {
   return kapaConnectPromise
 }
 
-function callKapaSearch(query, top_k) {
+// Kapa Hosted MCP search tool only accepts `query`
+function callKapaSearch(query) {
   return kapaClient.callTool({
     name: KAPA_TOOL_NAME,
-    arguments: { query, top_k },
+    arguments: { query },
   })
 }
 
@@ -155,13 +154,9 @@ server.registerTool(
       'Search the official Redpanda documentation and return the most relevant sections from it for a user query. Each returned section includes the url and its actual content in markdown. Use this tool for all queries that require Redpanda knowledge. Results are ordered by relevance, with the most relevant result returned first.',
     inputSchema: {
       question: z.string(),
-      top_k: z
-        .number()
-        .int()
-        .min(MIN_TOP_K)
-        .max(MAX_TOP_K)
-        .optional()
-        .describe('Number of results to return (1-15). Defaults to 5 for optimal token usage.'),
+
+      // Accepted for compatibility, but ignored.
+      top_k: z.number().optional(),
     },
   },
   async (args) => {
@@ -196,11 +191,6 @@ server.registerTool(
       }
     }
 
-    const topK = Math.max(
-      MIN_TOP_K,
-      Math.min(MAX_TOP_K, args?.top_k ?? DEFAULT_TOP_K)
-    )
-
     try {
       await withTimeout(
         ensureKapaConnected(),
@@ -209,7 +199,7 @@ server.registerTool(
       )
 
       return await withTimeout(
-        callKapaSearch(q, topK),
+        callKapaSearch(q),
         CALL_TIMEOUT_MS,
         'kapa_callTool'
       )
@@ -226,7 +216,7 @@ server.registerTool(
             'kapa_reconnect'
           )
           return await withTimeout(
-            callKapaSearch(q, topK),
+            callKapaSearch(q),
             CALL_TIMEOUT_MS,
             'kapa_callTool_retry'
           )
@@ -323,7 +313,7 @@ export default async (request, context) => {
     })
   }
 
-  // IMPORTANT: Streamable HTTP uses POST + GET (SSE) + DELETE (close session)
+  // Streamable HTTP requires POST + GET (SSE) + DELETE
   if (
     request.method !== 'POST' &&
     request.method !== 'GET' &&
