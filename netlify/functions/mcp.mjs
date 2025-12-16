@@ -44,12 +44,6 @@ const MAX_TOP_K = 15
 
 // -------------------- Helpers --------------------
 
-function requireEnv() {
-  if (!KAPA_API_KEY) {
-    throw new Error('Missing env var: KAPA_API_KEY')
-  }
-}
-
 function withTimeout(promise, ms, label) {
   let timeoutId
   const timeoutPromise = new Promise((_, reject) => {
@@ -65,11 +59,9 @@ function withTimeout(promise, ms, label) {
 const computeLimiterKey = (c) => {
   const h = (name) => c.req.header(name) || ''
 
-  // Allow clients to provide their own stable identifier
   const clientKey = h('x-client-key')
   if (clientKey) return `ck:${clientKey}`
 
-  // Try Netlify's client IP first
   if (c.ip) return `ip:${c.ip}`
 
   const nfIp = h('x-nf-client-connection-ip')
@@ -88,6 +80,8 @@ const computeLimiterKey = (c) => {
 }
 
 // -------------------- Upstream MCP client --------------------
+// Global state reused across warm Netlify invocations.
+// Reset + retry-once handles stale connections safely.
 
 const kapaClient = new Client({
   name: 'redpanda-netlify-proxy',
@@ -119,7 +113,10 @@ function isTransientError(msg) {
 function ensureKapaConnected() {
   if (kapaConnectPromise) return kapaConnectPromise
 
-  requireEnv()
+  if (!KAPA_API_KEY) {
+    // Throwing here is fine. Tool handler will capture and return a clean error
+    throw new Error('Missing env var: KAPA_API_KEY')
+  }
 
   kapaTransport = new StreamableHTTPClientTransport(
     new URL(KAPA_MCP_SERVER_URL),
@@ -169,21 +166,6 @@ server.registerTool(
   },
   async (args) => {
     const start = Date.now()
-
-    // Fail closed with a clean tool error (better than throwing up-stack)
-    if (!KAPA_API_KEY) {
-      return {
-        content: [
-          {
-            type: 'text',
-            text: JSON.stringify({
-              error: 'misconfigured_server',
-              message: 'Server is missing KAPA_API_KEY.',
-            }),
-          },
-        ],
-      }
-    }
 
     const q = String(args?.question || '').trim()
     if (!q) {
@@ -260,6 +242,7 @@ server.registerTool(
                     ? 'timeout'
                     : 'upstream_error',
                   message: 'Upstream Kapa MCP request failed after retry.',
+                  detail: retryMsg, // include detail for debugging (no query logged)
                   duration_ms: Date.now() - start,
                 }),
               },
@@ -273,10 +256,9 @@ server.registerTool(
           {
             type: 'text',
             text: JSON.stringify({
-              error: msg.includes('timeout')
-                ? 'timeout'
-                : 'upstream_error',
+              error: msg.includes('timeout') ? 'timeout' : 'upstream_error',
               message: 'Upstream Kapa MCP request failed.',
+              detail: msg, // include detail for debugging (no query logged)
               duration_ms: Date.now() - start,
             }),
           },
