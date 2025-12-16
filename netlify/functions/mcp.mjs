@@ -70,22 +70,17 @@ const computeLimiterKey = (c) => {
   if (clientKey) return `ck:${clientKey}`
 
   // Try Netlify's client IP first
-  // Prefer context.ip / c.ip if present
   if (c.ip) return `ip:${c.ip}`
 
-  // Fall back to headers (for older runtimes)
   const nfIp = h('x-nf-client-connection-ip')
   if (nfIp) return `ip:${nfIp}`
 
-  // Then Cloudflare
   const cfIp = h('cf-connecting-ip')
   if (cfIp) return `ip:${cfIp}`
 
-  // Then generic proxy chain
   const xff = h('x-forwarded-for').split(',')[0]?.trim()
   if (xff) return `ip:${xff}`
 
-  // Then Real-IP
   const realIp = h('x-real-ip')
   if (realIp) return `ip:${realIp}`
 
@@ -93,9 +88,6 @@ const computeLimiterKey = (c) => {
 }
 
 // -------------------- Upstream MCP client --------------------
-//
-// Global state reused across warm Netlify invocations.
-// Reset + retry-once handles stale connections safely.
 
 const kapaClient = new Client({
   name: 'redpanda-netlify-proxy',
@@ -113,6 +105,8 @@ function resetKapaConnection() {
 function isTransientError(msg) {
   return (
     msg.includes('timeout') ||
+    msg.includes('429') ||
+    msg.includes('503') ||
     msg.includes('ECONNRESET') ||
     msg.includes('socket') ||
     msg.includes('fetch') ||
@@ -160,14 +154,36 @@ server.registerTool(
   'ask_redpanda_question',
   {
     title: 'Search Redpanda Sources',
-    description: 'Search the official Redpanda documentation and return the most relevant sections from it for a user query. Each returned section includes the url and its actual content in markdown. Use this tool for all queries that require Redpanda knowledge. Results are ordered by relevance, with the most relevant result returned first.',
+    description:
+      'Search the official Redpanda documentation and return the most relevant sections from it for a user query. Each returned section includes the url and its actual content in markdown. Use this tool for all queries that require Redpanda knowledge. Results are ordered by relevance, with the most relevant result returned first.',
     inputSchema: {
       question: z.string(),
-      top_k: z.number().int().min(MIN_TOP_K).max(MAX_TOP_K).optional().describe('Number of results to return (1-15). Defaults to 5 for optimal token usage.'),
+      top_k: z
+        .number()
+        .int()
+        .min(MIN_TOP_K)
+        .max(MAX_TOP_K)
+        .optional()
+        .describe('Number of results to return (1-15). Defaults to 5 for optimal token usage.'),
     },
   },
   async (args) => {
     const start = Date.now()
+
+    // Fail closed with a clean tool error (better than throwing up-stack)
+    if (!KAPA_API_KEY) {
+      return {
+        content: [
+          {
+            type: 'text',
+            text: JSON.stringify({
+              error: 'misconfigured_server',
+              message: 'Server is missing KAPA_API_KEY.',
+            }),
+          },
+        ],
+      }
+    }
 
     const q = String(args?.question || '').trim()
     if (!q) {
@@ -243,8 +259,7 @@ server.registerTool(
                   error: retryMsg.includes('timeout')
                     ? 'timeout'
                     : 'upstream_error',
-                  message:
-                    'Upstream Kapa MCP request failed after retry.',
+                  message: 'Upstream Kapa MCP request failed after retry.',
                   duration_ms: Date.now() - start,
                 }),
               },
@@ -269,41 +284,27 @@ server.registerTool(
       }
     }
   }
-);
+)
 
-// Wrap the server with the Netlify handler
-// -----------------------------------------
-// The `handle` function from `@modelfetch/netlify` does several things:
-// 1. Adapts the serverless function Request/Response to the Node-style HTTP transport
-//    that the MCP SDK expects (using streamingHttp under the hood).
-// 2. Parses incoming JSON-RPC payloads from the request body.
-// 3. Routes `initialize`, `tool:discover`, and `tool:invoke` JSON-RPC methods
-//    to the registered tools on our `server` instance.
-// 4. Manages Server-Sent Events (SSE) streaming: it takes ReadableStreams
-//    returned by streaming tools and writes them as
-//    text/event-stream chunks back through the serverless function response.
-// 5. Handles error formatting according to JSON-RPC (wrapping exceptions in
-//    appropriate error objects).
+// -------------------- Netlify handler --------------------
+
 const baseHandler = handle({
   server,
   pre: (app) => {
     app.use(
       '/mcp',
       makeRateLimiter({
-        windowMs: 15 * 60 * 1000, // 15 minutes
-        limit: 60,                // limit each key to 60 requests per windowMs (tune as needed)
-        keyGenerator: computeLimiterKey, // use our custom key generator
-        standardHeaders: true,    // send RateLimit-* headers if supported
-        legacyHeaders: true,      // also send X-RateLimit-* headers
-      }),
+        windowMs: 15 * 60 * 1000,
+        limit: 60,
+        keyGenerator: computeLimiterKey,
+        standardHeaders: true,
+        legacyHeaders: true,
+      })
     )
 
     app.use('/mcp', async (c, next) => {
       await next()
-      c.res.headers.set(
-        'X-MCP-Server',
-        `Redpanda Docs MCP/${SERVER_VERSION}`
-      )
+      c.res.headers.set('X-MCP-Server', `Redpanda Docs MCP/${SERVER_VERSION}`)
       c.res.headers.set('Cache-Control', 'no-store')
     })
   },
@@ -322,7 +323,7 @@ export default async (request, context) => {
     })
   }
 
-  // Check if this is a browser request (not an MCP client)
+  // Browser redirect
   const ua = request.headers.get('user-agent') || ''
   const accept = request.headers.get('accept') || ''
   const contentType = request.headers.get('content-type') || ''
@@ -340,16 +341,27 @@ export default async (request, context) => {
     })
   }
 
-  if (request.method !== 'POST' && request.method !== 'GET') {
+  // IMPORTANT: Streamable HTTP uses POST + GET (SSE) + DELETE (close session)
+  if (
+    request.method !== 'POST' &&
+    request.method !== 'GET' &&
+    request.method !== 'DELETE'
+  ) {
     return new Response('Method not allowed', {
       status: 405,
-      headers: { Allow: 'POST, GET' },
+      headers: { Allow: 'POST, GET, DELETE' },
     })
   }
 
   const patchedHeaders = new Headers(request.headers)
-  patchedHeaders.set('accept', 'application/json, text/event-stream')
-  if (request.method === 'POST') {
+
+  // Only set Accept if the client didn't send one.
+  if (!patchedHeaders.get('accept')) {
+    patchedHeaders.set('accept', 'application/json, text/event-stream')
+  }
+
+  // Only set content-type if missing on POST
+  if (request.method === 'POST' && !patchedHeaders.get('content-type')) {
     patchedHeaders.set('content-type', 'application/json')
   }
 
