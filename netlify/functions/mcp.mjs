@@ -205,6 +205,12 @@ server.registerTool(
       )
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err)
+      console.warn('Kapa MCP call failed, retrying', {
+        error: msg,
+        phase: 'initial',
+        upstream: 'kapa-mcp',
+      })
+
 
       if (isTransientError(msg)) {
         // retry once
@@ -223,6 +229,13 @@ server.registerTool(
         } catch (retryErr) {
           const retryMsg =
             retryErr instanceof Error ? retryErr.message : String(retryErr)
+            console.error('Kapa MCP retry failed', {
+              error: retryMsg,
+              phase: 'retry',
+              upstream: 'kapa-mcp',
+              duration_ms: Date.now() - start,
+            })
+
           return {
             content: [
               {
