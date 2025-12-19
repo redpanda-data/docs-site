@@ -321,6 +321,72 @@ export default async (request, context) => {
     })
   }
 
+  // HTTP endpoint for tools such as Redleader that can't use the MCP protocol directly.
+  // POST /mcp/api/ask  { "question": "..." }
+  // Optional header: x-client-id (for analytics filtering, such as "redleader")
+  if (request.method === 'POST' && url.pathname.endsWith('/api/ask')) {
+    const clientId = request.headers.get('x-client-id') || 'unknown'
+    const start = Date.now()
+
+    try {
+      const body = await request.json()
+      const question = String(body?.question || '').trim()
+
+      if (!question) {
+        return new Response(
+          JSON.stringify({ error: 'missing_query', message: 'Provide a non-empty "question".' }),
+          { status: 400, headers: { 'content-type': 'application/json', 'cache-control': 'no-store' } }
+        )
+      }
+
+      console.log('REST API request', { client_id: clientId, question_length: question.length })
+
+      // Connect to Kapa
+      await withTimeout(ensureKapaConnected(), CONNECT_TIMEOUT_MS, 'kapa_connect')
+
+      // Call the tool
+      let result
+      try {
+        result = await withTimeout(callKapaSearch(question), CALL_TIMEOUT_MS, 'kapa_callTool')
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : String(err)
+        if (isTransientError(msg)) {
+          resetKapaConnection()
+          await withTimeout(ensureKapaConnected(), CONNECT_TIMEOUT_MS, 'kapa_reconnect')
+          result = await withTimeout(callKapaSearch(question), CALL_TIMEOUT_MS, 'kapa_callTool_retry')
+        } else {
+          throw err
+        }
+      }
+
+      // Extract text content from MCP response (Kapa returns markdown, not JSON)
+      const textContent = result?.content?.find((c) => c.type === 'text')?.text
+      const responseData = textContent || result
+
+      console.log('REST API success', { client_id: clientId, duration_ms: Date.now() - start })
+
+      return new Response(
+        JSON.stringify({ success: true, data: responseData, client_id: clientId, duration_ms: Date.now() - start }),
+        { status: 200, headers: { 'content-type': 'application/json', 'cache-control': 'no-store' } }
+      )
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err)
+      console.error('REST API error', { client_id: clientId, error: msg, duration_ms: Date.now() - start })
+
+      const isTimeout = msg.includes('timeout')
+      return new Response(
+        JSON.stringify({
+          error: isTimeout ? 'timeout' : 'upstream_error',
+          message: 'Request failed.',
+          detail: msg,
+          client_id: clientId,
+          duration_ms: Date.now() - start,
+        }),
+        { status: isTimeout ? 504 : 502, headers: { 'content-type': 'application/json', 'cache-control': 'no-store' } }
+      )
+    }
+  }
+
   // Browser redirect
   const ua = request.headers.get('user-agent') || ''
   const accept = request.headers.get('accept') || ''
@@ -370,6 +436,6 @@ export default async (request, context) => {
 }
 
 export const config = {
-  path: '/mcp',
+  path: ['/mcp', '/mcp/*'],
   preferStatic: false,
 }
