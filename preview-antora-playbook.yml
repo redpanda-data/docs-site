@@ -16,6 +16,9 @@ urls:
   latest_version_segment_strategy: redirect:to
 output:
   clean: true
+runtime:
+  log:
+    failure_level: error
 content:
   sources:
   - url: .
