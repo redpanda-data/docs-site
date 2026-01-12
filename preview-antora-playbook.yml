@@ -16,6 +16,9 @@ urls:
   latest_version_segment_strategy: redirect:to
 output:
   clean: true
+runtime:
+  log:
+    failure_level: error
 content:
   sources:
   - url: .
@@ -46,9 +49,9 @@ asciidoc:
   - '@redpanda-data/docs-extensions-and-macros/asciidoc-extensions/add-line-numbers-highlights'
 antora:
   extensions:
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/generate-rp-connect-info'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/generate-rp-connect-categories'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/collect-bloblang-samples'
-  - require: '@redpanda-data/docs-extensions-and-macros/extensions/generate-rp-connect-info'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/process-context-switcher'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/convert-to-markdown'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/generate-index-data'
