@@ -504,9 +504,49 @@ To update the nav tree, edit the `nav.adoc` file.
 
 For more information about navigation files, see the {url-antora-docs}/antora/latest/navigation/include-lists/[Antora docs].
 
-=== beta features
+=== Feature status badges
 
-In `cloud-docs`, and occasionally in other repos, individual features can exist in beta status. If that's the case, add the attribute `page-beta:true` to your page header. 
+Documentation pages can display status badges to communicate the maturity and availability of features to users. The badges appear in three locations: the main content area, the table of contents (TOC), and the left navigation tree.
+
+==== Beta features
+
+In `cloud-docs`, and occasionally in other repos, individual features can exist in beta status. Beta features are available for testing and feedback but are not supported by Redpanda and should not be used in production environments.
+
+To mark a page as beta, add the `page-beta` attribute to your page header:
+
+[source,asciidoc]
+----
+= Your Page Title
+:page-beta: true
+----
+
+This displays a blue "beta" badge on the page with the tooltip text: "{page-beta-text}"
+
+==== Limited availability features
+
+Some features have limited availability and require contacting Redpanda for access. These features are typically in early access programs or require special licensing.
+
+To mark a page as limited availability, add the `page-limited-availability` attribute to your page header:
+
+[source,asciidoc]
+----
+= Your Page Title
+:page-limited-availability: true
+----
+
+This displays an orange "Limited Availability" pill-shaped badge on the page with the tooltip text: "{page-limited-availability-text}"
+
+==== Badge appearance
+
+Both badges appear in:
+
+* **Main content area**: Below the page title
+* **TOC**: In the sticky navigation that appears when scrolling
+* **Left navigation**: Next to the page title in the navigation tree
+  - Beta: Displays as `(beta)` text
+  - Limited Availability: Displays as an orange pill badge
+
+NOTE: You should only use one status badge per page. Do not combine `page-beta` and `page-limited-availability` on the same page.
 
 == Feature flag
 
