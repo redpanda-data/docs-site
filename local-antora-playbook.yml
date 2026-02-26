@@ -54,8 +54,6 @@ antora:
           filter: docker-compose
           env_type: Docker
           attribute_name: docker-labs-index
-  - require: '@redpanda-data/docs-extensions-and-macros/extensions/add-pages-to-root'
-    files: ['home:ROOT:attachment$llms.txt']
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/archive-attachments'
     data:
       archives:
@@ -95,6 +93,7 @@ antora:
           file_patterns:
             - '**/docker-compose.yaml'
             - '**/docker-compose.yml'
+  - require: '../docs-extensions-and-macros/extensions/convert-llms-to-txt.js'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/validate-attributes'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/find-related-docs'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/find-related-labs'
