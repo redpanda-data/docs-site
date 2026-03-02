@@ -27,8 +27,11 @@ jobs:
         with:
           site_name: redpanda-documentation
           max_timeout: 600
+          commit_ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Run afdocs checks
+        id: afdocs
+        continue-on-error: true
         env:
           DEPLOY_URL: ${{ steps.wait-for-netlify.outputs.url }}
         run: npm run afdocs
@@ -53,16 +56,21 @@ jobs:
               'auth-gate-detection'
             ];
 
+            const outcome = '${{ steps.afdocs.outcome }}';
+            const status = outcome === 'success' ? '✅ All checks passed!' : '⚠️ Some checks failed';
+
             const body = `## 🤖 Agent-Friendly Documentation Checks
 
-            Deploy URL: ${deployUrl}
+            ${status}
 
-            Ran the following checks:
+            **Deploy URL:** ${deployUrl}
+
+            **Commit SHA:** \`${{ github.event.pull_request.head.sha }}\`
+
+            **Checks run:**
             ${checks.map(c => `- \`${c}\``).join('\n')}
 
-            ${context.payload.pull_request ?
-              `View full results in the [GitHub Actions run](${context.payload.repository.html_url}/actions/runs/${context.runId})` :
-              'Check the GitHub Actions logs for details'}
+            View full results in the [GitHub Actions run](${context.payload.repository.html_url}/actions/runs/${context.runId})
             `;
 
             github.rest.issues.createComment({
