@@ -18,66 +18,66 @@ Common markdown URLs:
 
 Redpanda docs serves both new and experienced users, offering detailed technical resources across Redpanda's product suite.
 
-- **{site-url}/current/[Redpanda Self-Managed]:** Deploy and manage Redpanda in your environment for ultimate control, high performance, and fault tolerance with Kafka compatibility and advanced enterprise features like Tiered Storage.
-- **{site-url}/redpanda-cloud/[Redpanda Cloud]:** Simplify streaming with a fully-managed service: Serverless, Bring Your Own Cloud (BYOC), or Dedicated. Serverless is the fastest and easiest way to start data streaming. Choose BYOC for full data sovereignty.
-- **{site-url}/redpanda-connect/[Redpanda Connect]:** Effortlessly integrate data across systems with hundreds of prebuilt connectors, change data capture (CDC) capabilities, and YAML-configurable workflows. Available as a standalone solution or as part of Redpanda Self-Managed, Redpanda Connect empowers organizations to build scalable, high-performance data pipelines with minimal complexity.
-- **{site-url}/redpanda-cloud/ai-agents/[Redpanda Agentic Data Plane]:** Enterprise-grade infrastructure for building, deploying, and governing AI agents at scale. Provides Model Context Protocol (MCP) integration, declarative agent configuration, and compliance-grade audit trails for AI agents that need direct access to databases, queues, and business systems.
-- **{site-url}/current/console/[Redpanda Console]:** Streamline operations with an intuitive Kafka UI for managing topics, partitions, and consumer groups, providing visibility and control over your data pipeline.
+- **{site-url}/current.md[Redpanda Self-Managed]:** Deploy and manage Redpanda in your environment for ultimate control, high performance, and fault tolerance with Kafka compatibility and advanced enterprise features like Tiered Storage.
+- **{site-url}/redpanda-cloud.md[Redpanda Cloud]:** Simplify streaming with a fully-managed service: Serverless, Bring Your Own Cloud (BYOC), or Dedicated. Serverless is the fastest and easiest way to start data streaming. Choose BYOC for full data sovereignty.
+- **{site-url}/redpanda-connect.md[Redpanda Connect]:** Effortlessly integrate data across systems with hundreds of prebuilt connectors, change data capture (CDC) capabilities, and YAML-configurable workflows. Available as a standalone solution or as part of Redpanda Self-Managed, Redpanda Connect empowers organizations to build scalable, high-performance data pipelines with minimal complexity.
+- **{site-url}/redpanda-cloud/ai-agents/index.md[Redpanda Agentic Data Plane]:** Enterprise-grade infrastructure for building, deploying, and governing AI agents at scale. Provides Model Context Protocol (MCP) integration, declarative agent configuration, and compliance-grade audit trails for AI agents that need direct access to databases, queues, and business systems.
+- **{site-url}/current/console/index.md[Redpanda Console]:** Streamline operations with an intuitive Kafka UI for managing topics, partitions, and consumer groups, providing visibility and control over your data pipeline.
 
 ## Core documentation
 
-- {site-url}/current/get-started/quickstarts[Get started]: Fast-track your journey with Redpanda Self-Managed.
-- {site-url}/current/get-started/architecture[Redpanda concepts]: Deep-dive into key concepts like Tiered Storage, partitions, replication, and data streaming architecture.
+- {site-url}/current/get-started/quickstarts/index.md[Get started]: Fast-track your journey with Redpanda Self-Managed.
+- {site-url}/current/get-started/architecture/index.md[Redpanda concepts]: Deep-dive into key concepts like Tiered Storage, partitions, replication, and data streaming architecture.
 
 ## Deployment guides
 
-- {site-url}/current/deploy/[Redpanda Self-Managed]: Install and configure Redpanda and Redpanda Console in self-hosted environments, including production best practices. Choose from Linux (bare-metal) or Kubernetes deployment instructions.
-- {site-url}/redpanda-cloud/get-started/cluster-types[Redpanda Cloud]: Guides for using Redpanda Cloud across Serverless, BYOC, and Dedicated options.
-- {site-url}/redpanda-connect[Redpanda Connect]: Standalone documentation for deploying and managing Redpanda Connect, with or without Redpanda.
+- {site-url}/current/deploy/index.md[Redpanda Self-Managed]: Install and configure Redpanda and Redpanda Console in self-hosted environments, including production best practices. Choose from Linux (bare-metal) or Kubernetes deployment instructions.
+- {site-url}/redpanda-cloud/get-started/cluster-types/index.md[Redpanda Cloud]: Guides for using Redpanda Cloud across Serverless, BYOC, and Dedicated options.
+- {site-url}/redpanda-connect.md[Redpanda Connect]: Standalone documentation for deploying and managing Redpanda Connect, with or without Redpanda.
 
 ## rpk CLI
 
 Learn about `rpk`, the comprehensive command-line interface tool for managing Redpanda clusters.
 
-- {site-url}/current/reference/rpk/rpk-commands[rpk documentation for Redpanda Self-Managed]
-- {site-url}/redpanda-cloud/reference/rpk/rpk-commands[rpk documentation for Redpanda Cloud]
+- {site-url}/current/reference/rpk/rpk-commands/index.md[rpk documentation for Redpanda Self-Managed]
+- {site-url}/redpanda-cloud/reference/rpk/rpk-commands/index.md[rpk documentation for Redpanda Cloud]
 
 ## Redpanda Console
 
-- {site-url}/current/console[About Redpanda Console]: Learn about Redpanda's Kafka UI for managing topics, partitions, and consumer groups.
-- {site-url}/current/console/config/[Configure Redpanda Console]: Learn how to configure Redpanda Console for your needs.
+- {site-url}/current/console/index.md[About Redpanda Console]: Learn about Redpanda's Kafka UI for managing topics, partitions, and consumer groups.
+- {site-url}/current/console/config/index.md[Configure Redpanda Console]: Learn how to configure Redpanda Console for your needs.
 
 ## AI agents and Agentic Data Plane
 
 Build and deploy production-ready AI agents with enterprise governance and compliance.
 
-- {site-url}/redpanda-cloud/ai-agents/adp-overview/[Agentic Data Plane Overview]: Enterprise infrastructure for AI agents with built-in governance, observability, and compliance.
-- {site-url}/redpanda-cloud/ai-agents/mcp/[Model Context Protocol (MCP)]: Give AI agents direct access to databases, queues, CRMs, and business systems without custom integration code.
-- {site-url}/redpanda-cloud/ai-agents/ai-gateway/[AI Gateway]: Centralized gateway for AI agent interactions with intelligent routing, caching, and cost controls.
-- {site-url}/redpanda-cloud/ai-agents/agents/[Building AI Agents]: Declarative agent configuration using Redpanda Connect connectors - no custom agent code required.
-- {site-url}/redpanda-cloud/ai-agents/observability/[Agent Observability]: Track agent decisions, costs, and compliance with comprehensive audit trails.
+- {site-url}/redpanda-cloud/ai-agents/adp-overview/index.md[Agentic Data Plane Overview]: Enterprise infrastructure for AI agents with built-in governance, observability, and compliance.
+- {site-url}/redpanda-cloud/ai-agents/mcp/index.md[Model Context Protocol (MCP)]: Give AI agents direct access to databases, queues, CRMs, and business systems without custom integration code.
+- {site-url}/redpanda-cloud/ai-agents/ai-gateway/index.md[AI Gateway]: Centralized gateway for AI agent interactions with intelligent routing, caching, and cost controls.
+- {site-url}/redpanda-cloud/ai-agents/agents/index.md[Building AI Agents]: Declarative agent configuration using Redpanda Connect connectors - no custom agent code required.
+- {site-url}/redpanda-cloud/ai-agents/observability/index.md[Agent Observability]: Track agent decisions, costs, and compliance with comprehensive audit trails.
 
 ## API references
 
-- {site-url}/api/doc/admin/[Admin API]: Manage and monitor Redpanda clusters using this REST API, including operations for configuration, partitions, and node health.
-- {site-url}/api/doc/schema-registry/[Schema Registry API]: Use Redpanda's Kafka-compatible schema registry for managing and evolving schemas in your data streams.
-- {site-url}/api/doc/http-proxy/[HTTP Proxy API]: Simplify interactions with Kafka topics and partitions with Redpanda's HTTP Proxy API, enabling easier data production and consumption over HTTP.
-- {site-url}/api/doc/cloud-controlplane/[Cloud API]: Access and manage Redpanda Cloud resources programmatically, including provisioning clusters, monitoring usage, and configuring deployments.
+- {site-url}/api/doc/admin/index.md[Admin API]: Manage and monitor Redpanda clusters using this REST API, including operations for configuration, partitions, and node health.
+- {site-url}/api/doc/schema-registry/index.md[Schema Registry API]: Use Redpanda's Kafka-compatible schema registry for managing and evolving schemas in your data streams.
+- {site-url}/api/doc/http-proxy/index.md[HTTP Proxy API]: Simplify interactions with Kafka topics and partitions with Redpanda's HTTP Proxy API, enabling easier data production and consumption over HTTP.
+- {site-url}/api/doc/cloud-controlplane/index.md[Cloud API]: Access and manage Redpanda Cloud resources programmatically, including provisioning clusters, monitoring usage, and configuring deployments.
 
 ## Tutorials & use cases
 
-- {site-url}/redpanda-labs[Redpanda labs]: Step-by-step guides, best practices, and innovative projects demonstrating how to use Redpanda for real-world applications.
+- {site-url}/redpanda-labs.md[Redpanda labs]: Step-by-step guides, best practices, and innovative projects demonstrating how to use Redpanda for real-world applications.
 
 ## Troubleshooting
 
-- {site-url}/current/troubleshoot[Troubleshooting guide]: Resolve common issues with installation, configuration, and performance.
-- {site-url}/current/troubleshoot/debug-bundle[Debug bundles]: Generate and analyze debug bundles for diagnosing cluster issues.
+- {site-url}/current/troubleshoot/index.md[Troubleshooting guide]: Resolve common issues with installation, configuration, and performance.
+- {site-url}/current/troubleshoot/debug-bundle/index.md[Debug bundles]: Generate and analyze debug bundles for diagnosing cluster issues.
 
 ## Self-Managed versioning
 
 The site includes versioned documentation for **Redpanda Self-Managed**:
-- **Latest version**: The most up-to-date documentation is available at {site-url}/current[{site-url}/current].
-- **Previous versions**: Previous versions can be accessed at `/{version_number}` (for example `{site-url}/24.1`).
+- **Latest version**: The most up-to-date documentation is available at {site-url}/current.md[{site-url}/current.md].
+- **Previous versions**: Previous versions can be accessed at `/{version_number}.md` (for example `{site-url}/24.1.md`).
 
 ## Related resources
 
