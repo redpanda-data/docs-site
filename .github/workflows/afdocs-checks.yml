@@ -1,0 +1,73 @@
+---
+name: Agent-Friendly Docs Checks
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  afdocs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Wait for Netlify Deploy
+        uses: jakepartusch/wait-for-netlify-action@v1.4
+        id: wait-for-netlify
+        with:
+          site_name: redpanda-documentation
+          max_timeout: 600
+
+      - name: Run afdocs checks
+        env:
+          DEPLOY_URL: ${{ steps.wait-for-netlify.outputs.url }}
+        run: npm run afdocs
+
+      - name: Comment PR with results
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const deployUrl = '${{ steps.wait-for-netlify.outputs.url }}';
+            const checks = [
+              'llms-txt-exists',
+              'llms-txt-valid',
+              'llms-txt-size',
+              'llms-txt-links-resolve',
+              'llms-txt-links-markdown',
+              'markdown-url-support',
+              'content-negotiation',
+              'page-size-markdown',
+              'http-status-codes',
+              'cache-header-hygiene',
+              'auth-gate-detection'
+            ];
+
+            const body = `## 🤖 Agent-Friendly Documentation Checks
+
+            Deploy URL: ${deployUrl}
+
+            Ran the following checks:
+            ${checks.map(c => `- \`${c}\``).join('\n')}
+
+            ${context.payload.pull_request ?
+              `View full results in the [GitHub Actions run](${context.payload.repository.html_url}/actions/runs/${context.runId})` :
+              'Check the GitHub Actions logs for details'}
+            `;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            });
