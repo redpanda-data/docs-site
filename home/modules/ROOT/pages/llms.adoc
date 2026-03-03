@@ -45,7 +45,7 @@ Learn about `rpk`, the comprehensive command-line interface tool for managing Re
 ## Redpanda Console
 
 - {site-url}/current/console/index.md[About Redpanda Console]: Learn about Redpanda's Kafka UI for managing topics, partitions, and consumer groups.
-- {site-url}/current/console/config/index.md[Configure Redpanda Console]: Learn how to configure Redpanda Console for your needs.
+- {site-url}/current/console/config.md[Configure Redpanda Console]: Learn how to configure Redpanda Console for your needs.
 
 ## AI agents and Agentic Data Plane
 
@@ -59,14 +59,14 @@ Build and deploy production-ready AI agents with enterprise governance and compl
 
 ## API references
 
-- {site-url}/api/doc/admin/index.md[Admin API]: Manage and monitor Redpanda clusters using this REST API, including operations for configuration, partitions, and node health.
-- {site-url}/api/doc/schema-registry/index.md[Schema Registry API]: Use Redpanda's Kafka-compatible schema registry for managing and evolving schemas in your data streams.
-- {site-url}/api/doc/http-proxy/index.md[HTTP Proxy API]: Simplify interactions with Kafka topics and partitions with Redpanda's HTTP Proxy API, enabling easier data production and consumption over HTTP.
-- {site-url}/api/doc/cloud-controlplane/index.md[Cloud API]: Access and manage Redpanda Cloud resources programmatically, including provisioning clusters, monitoring usage, and configuring deployments.
+- {site-url}/api/doc/admin/[Admin API]: Manage and monitor Redpanda clusters using this REST API, including operations for configuration, partitions, and node health.
+- {site-url}/api/doc/schema-registry/[Schema Registry API]: Use Redpanda's Kafka-compatible schema registry for managing and evolving schemas in your data streams.
+- {site-url}/api/doc/http-proxy/[HTTP Proxy API]: Simplify interactions with Kafka topics and partitions with Redpanda's HTTP Proxy API, enabling easier data production and consumption over HTTP.
+- {site-url}/api/doc/cloud-controlplane/[Cloud API]: Access and manage Redpanda Cloud resources programmatically, including provisioning clusters, monitoring usage, and configuring deployments.
 
 ## Tutorials & use cases
 
-- {site-url}/redpanda-labs.md[Redpanda labs]: Step-by-step guides, best practices, and innovative projects demonstrating how to use Redpanda for real-world applications.
+- {site-url}/redpanda-labs/home/index.md[Redpanda labs]: Step-by-step guides, best practices, and innovative projects demonstrating how to use Redpanda for real-world applications.
 
 ## Troubleshooting
 
@@ -77,7 +77,7 @@ Build and deploy production-ready AI agents with enterprise governance and compl
 
 The site includes versioned documentation for **Redpanda Self-Managed**:
 - **Latest version**: The most up-to-date documentation is available at {site-url}/current.md[{site-url}/current.md].
-- **Previous versions**: Previous versions can be accessed at `/{version_number}.md` (for example `{site-url}/24.1.md`).
+- **Previous versions**: Previous versions can be accessed at `/{version_number}/home/index.md` (for example `{site-url}/24.1/home/index.md`).
 
 ## Related resources
 
