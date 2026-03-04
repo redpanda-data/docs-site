@@ -16,7 +16,7 @@ Common markdown URLs:
 
 ## Overview
 
-Redpanda docs serves both new and experienced users, offering detailed technical resources across Redpanda's product suite.
+Redpanda docs serve both new and experienced users, offering detailed technical resources across Redpanda's product suite.
 
 - **{site-url}/current.md[Redpanda Self-Managed]:** Deploy and manage Redpanda in your environment for ultimate control, high performance, and fault tolerance with Kafka compatibility and advanced enterprise features like Tiered Storage.
 - **{site-url}/redpanda-cloud.md[Redpanda Cloud]:** Simplify streaming with a fully-managed service: Serverless, Bring Your Own Cloud (BYOC), or Dedicated. Serverless is the fastest and easiest way to start data streaming. Choose BYOC for full data sovereignty.
