@@ -64,7 +64,6 @@ status = 301
 force = true
 
 # Generic catch-all for nested .md URLs
-# Handles patterns like /current/console.md -> /current/console/index.md
 # Using 301 redirect so it runs before edge functions
 [[redirects]]
 from = "/*/*.md"
