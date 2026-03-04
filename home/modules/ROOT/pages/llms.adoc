@@ -59,10 +59,10 @@ Build and deploy production-ready AI agents with enterprise governance and compl
 
 ## API references
 
-- {site-url}/api/doc/admin/[Admin API]: Manage and monitor Redpanda clusters using this REST API, including operations for configuration, partitions, and node health.
-- {site-url}/api/doc/schema-registry/[Schema Registry API]: Use Redpanda's Kafka-compatible schema registry for managing and evolving schemas in your data streams.
-- {site-url}/api/doc/http-proxy/[HTTP Proxy API]: Simplify interactions with Kafka topics and partitions with Redpanda's HTTP Proxy API, enabling easier data production and consumption over HTTP.
-- {site-url}/api/doc/cloud-controlplane/[Cloud API]: Access and manage Redpanda Cloud resources programmatically, including provisioning clusters, monitoring usage, and configuring deployments.
+- {site-url}/api/doc/admin.md[Admin API]: Manage and monitor Redpanda clusters using this REST API, including operations for configuration, partitions, and node health.
+- {site-url}/api/doc/schema-registry.md[Schema Registry API]: Use Redpanda's Kafka-compatible schema registry for managing and evolving schemas in your data streams.
+- {site-url}/api/doc/http-proxy.md[HTTP Proxy API]: Simplify interactions with Kafka topics and partitions with Redpanda's HTTP Proxy API, enabling easier data production and consumption over HTTP.
+- {site-url}/api/doc/cloud-controlplane.md[Cloud API]: Access and manage Redpanda Cloud resources programmatically, including provisioning clusters, monitoring usage, and configuring deployments.
 
 ## Troubleshooting
 
