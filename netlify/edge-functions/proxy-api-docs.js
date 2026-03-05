@@ -66,6 +66,17 @@ export default async (request, context) => {
     const contentType = bumpRes.headers.get("content-type") || "";
 
   if (!contentType.includes("text/html")) {
+    // If requesting .md file, ensure correct content-type for markdown
+    if (url.pathname.endsWith('.md')) {
+      const body = await bumpRes.text();
+      return new Response(body, {
+        status: bumpRes.status,
+        headers: {
+          "content-type": "text/markdown; charset=utf-8",
+          "cache-control": bumpRes.headers.get("cache-control") || "public, max-age=300",
+        },
+      });
+    }
     return bumpRes;
   }
 

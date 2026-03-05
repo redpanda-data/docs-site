@@ -100,6 +100,7 @@ antora:
           file_patterns:
             - '**/docker-compose.yaml'
             - '**/docker-compose.yml'
+  - '@redpanda-data/docs-extensions-and-macros/extensions/convert-llms-to-txt'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/validate-attributes'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/find-related-docs'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/find-related-labs'

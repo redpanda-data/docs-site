@@ -1,0 +1,37 @@
+---
+name: Agent-Friendly Docs Checks
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  afdocs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Wait for Netlify Deploy
+        uses: jakepartusch/wait-for-netlify-action@v1.4
+        id: wait-for-netlify
+        with:
+          site_name: redpanda-documentation
+          max_timeout: 600
+          commit_ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Run afdocs checks
+        id: afdocs
+        continue-on-error: true
+        env:
+          DEPLOY_URL: ${{ steps.wait-for-netlify.outputs.url }}
+        run: npm run afdocs
