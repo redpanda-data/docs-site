@@ -534,7 +534,7 @@ To mark a page as limited availability, add the `page-limited-availability` attr
 :page-limited-availability: true
 ----
 
-This displays an orange "Limited Availability" pill-shaped badge on the page with the tooltip text: "{page-limited-availability-text}"
+This displays a "Limited Availability" pill-shaped badge on the page with the tooltip text: "{page-limited-availability-text}"
 
 ==== Badge appearance
 
