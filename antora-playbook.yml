@@ -5,6 +5,7 @@ site:
   robots: |
     User-agent: *
     Allow: /
+    Crawl-delay: 1
 
     # OpenAI GPT
     User-agent: GPTBot
@@ -47,8 +48,6 @@ site:
 
     User-agent: FacebookBot
     Allow: /
-
-    Crawl-delay: 1
   keys:
     announcement: true
     announcement-text: 'New! Redpanda Agentic Data Plane is here: a governed, high-performance foundation for AI agents.'
