@@ -2,7 +2,53 @@ site:
   title: Redpanda Docs
   start_page: home:ROOT:index.adoc
   url: https://docs.redpanda.com
-  robots: allow
+  robots: |
+    User-agent: *
+    Allow: /
+
+    # OpenAI GPT
+    User-agent: GPTBot
+    Allow: /
+
+    User-agent: ChatGPT-User
+    Allow: /
+
+    # Anthropic Claude
+    User-agent: Claude-Web
+    Allow: /
+
+    User-agent: anthropic-ai
+    Allow: /
+
+    # Perplexity
+    User-agent: Perplexity
+    Allow: /
+
+    User-agent: PerplexityBot
+    Allow: /
+
+    # Google AI
+    User-agent: Google-Extended
+    Allow: /
+
+    User-agent: GoogleOther
+    Allow: /
+
+    # Common Crawl
+    User-agent: CCBot
+    Allow: /
+
+    # Additional AI platforms
+    User-agent: cohere-ai
+    Allow: /
+
+    User-agent: Omgilibot
+    Allow: /
+
+    User-agent: FacebookBot
+    Allow: /
+
+    Crawl-delay: 1
   keys:
     announcement: true
     announcement-text: 'New! Redpanda Agentic Data Plane is here: a governed, high-performance foundation for AI agents.'
