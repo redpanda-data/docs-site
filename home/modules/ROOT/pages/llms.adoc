@@ -4,15 +4,23 @@
 
 ## Access Markdown content
 
-This site uses the indexify convention. All documentation pages are stored as `index.md` files in their respective directories. You can access markdown content in two ways:
+All documentation pages are available in markdown format with proper filenames and YAML frontmatter. You can access markdown content in two ways:
 
 1. **Content negotiation**: Request any HTML URL with the `Accept: text/markdown` header to receive the markdown source.
-2. **Direct access**: Append `/index.md` to any directory URL (for example `/current/home/index.md`).
+2. **Direct access**: Replace `.html` with `.md` in any URL (for example `{site-url}/current/home.html` → `{site-url}/current/home.md`).
 
-Common markdown URLs:
-- Redpanda Self-Managed: {site-url}/current/home/index.md[{site-url}/current/home/index.md]
-- Redpanda Cloud: {site-url}/redpanda-cloud/home/index.md[{site-url}/redpanda-cloud/home/index.md]
-- Redpanda Connect: {site-url}/redpanda-connect/home/index.md[{site-url}/redpanda-connect/home/index.md]
+### AI-Optimized Formats
+
+For AI agents and tools, we provide multiple optimized formats:
+
+- **{site-url}/llms.txt[{site-url}/llms.txt]**: Curated overview following the llms.txt standard - start here for a quick introduction
+- **{site-url}/llms-full.txt[{site-url}/llms-full.txt]**: Complete documentation export with all components (~20MB)
+- **Component-specific exports**: Focused documentation for individual products:
+  * {site-url}/ROOT-full.txt[{site-url}/ROOT-full.txt]: Redpanda Self-Managed documentation
+  * {site-url}/redpanda-cloud-full.txt[{site-url}/redpanda-cloud-full.txt]: Redpanda Cloud documentation
+  * {site-url}/redpanda-connect-full.txt[{site-url}/redpanda-connect-full.txt]: Redpanda Connect documentation
+  * {site-url}/redpanda-labs-full.txt[{site-url}/redpanda-labs-full.txt]: Labs and tutorials
+- **Individual markdown pages**: Each HTML page has a corresponding `.md` file with YAML frontmatter containing page metadata (title, description, categories, etc.)
 
 ## Overview
 
@@ -73,7 +81,7 @@ Build and deploy production-ready AI agents with enterprise governance and compl
 
 The site includes versioned documentation for **Redpanda Self-Managed**:
 - **Latest version**: The most up-to-date documentation is available at {site-url}/current.md[{site-url}/current.md].
-- **Previous versions**: Previous versions can be accessed at `/{version_number}/home/index.md` (for example `{site-url}/24.1/home/index.md`).
+- **Previous versions**: Previous versions can be accessed by replacing `current` with the version number in any URL (for example `{site-url}/24.1/home.md`, `{site-url}/25.1/deploy.md`).
 
 ## Related resources
 
