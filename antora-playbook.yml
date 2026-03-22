@@ -7,24 +7,24 @@ site:
     Allow: /
     Crawl-delay: 1
 
-    # OpenAI GPT
+    # OpenAI
     User-agent: GPTBot
     Allow: /
 
     User-agent: ChatGPT-User
     Allow: /
 
-    # Anthropic Claude
-    User-agent: Claude-Web
+    # Anthropic Claude (updated 2026)
+    User-agent: ClaudeBot
     Allow: /
 
-    User-agent: anthropic-ai
+    User-agent: Claude-User
+    Allow: /
+
+    User-agent: Claude-SearchBot
     Allow: /
 
     # Perplexity
-    User-agent: Perplexity
-    Allow: /
-
     User-agent: PerplexityBot
     Allow: /
 
@@ -39,13 +39,7 @@ site:
     User-agent: CCBot
     Allow: /
 
-    # Additional AI platforms
-    User-agent: cohere-ai
-    Allow: /
-
-    User-agent: Omgilibot
-    Allow: /
-
+    # Meta
     User-agent: FacebookBot
     Allow: /
   keys:
