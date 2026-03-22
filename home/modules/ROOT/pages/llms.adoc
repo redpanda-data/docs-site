@@ -4,23 +4,15 @@
 
 ## Access Markdown content
 
-All documentation pages are available in markdown format with proper filenames and YAML frontmatter. You can access markdown content in two ways:
-
-1. **Content negotiation**: Request any HTML URL with the `Accept: text/markdown` header to receive the markdown source.
-2. **Direct access**: Replace `.html` with `.md` in any URL (for example `{site-url}/current/home.html` → `{site-url}/current/home.md`).
+All documentation pages are available in markdown format with proper filenames and YAML frontmatter. You can access markdown content through content negotiation by requesting any HTML URL with the `Accept: text/markdown` header to receive the markdown source, or through direct access by replacing `.html` with `.md` in any URL (for example `{site-url}/current/home.html` becomes `{site-url}/current/home.md`).
 
 ### AI-Optimized Formats
 
-For AI agents and tools, we provide multiple optimized formats:
+For AI agents and tools, we provide multiple optimized formats. Start with **{site-url}/llms.txt[{site-url}/llms.txt]**, a curated overview following the llms.txt standard that provides a quick introduction to our documentation structure. For comprehensive access, **{site-url}/llms-full.txt[{site-url}/llms-full.txt]** contains a complete documentation export with all components.
 
-- **{site-url}/llms.txt[{site-url}/llms.txt]**: Curated overview following the llms.txt standard - start here for a quick introduction
-- **{site-url}/llms-full.txt[{site-url}/llms-full.txt]**: Complete documentation export with all components (~20MB)
-- **Component-specific exports**: Focused documentation for individual products:
-  * {site-url}/ROOT-full.txt[{site-url}/ROOT-full.txt]: Redpanda Self-Managed documentation
-  * {site-url}/redpanda-cloud-full.txt[{site-url}/redpanda-cloud-full.txt]: Redpanda Cloud documentation
-  * {site-url}/redpanda-connect-full.txt[{site-url}/redpanda-connect-full.txt]: Redpanda Connect documentation
-  * {site-url}/redpanda-labs-full.txt[{site-url}/redpanda-labs-full.txt]: Labs and tutorials
-- **Individual markdown pages**: Each HTML page has a corresponding `.md` file with YAML frontmatter containing page metadata (title, description, categories, etc.)
+We also offer component-specific exports for focused documentation access. **{site-url}/ROOT-full.txt[{site-url}/ROOT-full.txt]** contains Redpanda Self-Managed documentation, **{site-url}/redpanda-cloud-full.txt[{site-url}/redpanda-cloud-full.txt]** covers Redpanda Cloud, **{site-url}/redpanda-connect-full.txt[{site-url}/redpanda-connect-full.txt]** provides Redpanda Connect documentation, and **{site-url}/redpanda-labs-full.txt[{site-url}/redpanda-labs-full.txt]** includes labs and tutorials.
+
+Each HTML page has a corresponding `.md` file with YAML frontmatter containing page metadata including title, description, and categories.
 
 ## Overview
 
