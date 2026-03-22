@@ -56,6 +56,12 @@ from = "/redpanda-labs.md"
 to = "/redpanda-labs/home.md"
 status = 200
 
+# Redirect old index.md URLs to new .md structure
+[[redirects]]
+from = "/*/index.md"
+to = "/:splat.md"
+status = 301
+
 [[redirects]]
 from = "https://docs.vectorized.io/*"
 to = "https://docs.redpanda.com/:splat"
