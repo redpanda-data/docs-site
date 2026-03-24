@@ -146,6 +146,24 @@ const server = new McpServer({
   version: SERVER_VERSION,
 })
 
+// -------------------- MCPcat Analytics --------------------
+// Initialize MCPcat tracking (if MCPCAT_PROJECT is set)
+// MCPcat is an open-source analytics platform for MCP usage tracking.
+// See https://www.mcpcat.com/ for details.
+
+const MCPCAT_PROJECT = process.env.MCPCAT_PROJECT
+
+if (MCPCAT_PROJECT) {
+  try {
+    // Dynamic import to avoid bundler issues
+    const { track } = await import('mcpcat')
+    track(server, MCPCAT_PROJECT)
+  } catch (e) {
+    // Don't crash the MCP server if analytics fail to load.
+    console.warn('[mcpcat] disabled due to import error:', e)
+  }
+}
+
 server.registerTool(
   'ask_redpanda_question',
   {
