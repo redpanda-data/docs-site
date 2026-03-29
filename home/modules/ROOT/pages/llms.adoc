@@ -11,7 +11,39 @@ All documentation pages are available in Markdown format with proper filenames a
 
 ### AI-Optimized Formats
 
-For AI agents and tools, we provide multiple optimized formats:
+#### Interactive MCP Server
+
+**{site-url}/mcp[{site-url}/mcp]** - Model Context Protocol server for Claude Code
+
+The Redpanda Documentation MCP server provides AI agents with tools to:
+
+- **Generate reference documentation**: Property docs, metrics, CLI commands, connectors
+- **Access versioned content**: Redpanda versions, Console versions, API specifications
+- **Query documentation structure**: Navigate components, modules, and pages
+- **Validate configurations**: Check compatibility and best practices
+
+**Setup for Claude Code:**
+```bash
+npx doc-tools setup-mcp
+```
+
+After setup, restart Claude Code to load the server. You can then ask Claude to generate docs, check versions, or access any part of the documentation.
+
+**Available MCP tools:**
+- `generate_property_docs`: Generate Redpanda configuration property documentation
+- `generate_metrics_docs`: Generate metrics reference documentation
+- `generate_rpk_docs`: Generate rpk CLI reference documentation
+- `generate_rpcn_connector_docs`: Generate Redpanda Connect connector documentation
+- `generate_helm_docs`: Generate Helm chart documentation
+- `generate_crd_docs`: Generate Kubernetes CRD documentation
+- `generate_bundle_openapi`: Bundle OpenAPI specifications
+- `get_redpanda_version`: Get latest Redpanda version information
+- `get_console_version`: Get latest Console version information
+- `get_antora_structure`: Get documentation component structure
+
+#### Static Exports
+
+For AI agents and tools, we provide multiple optimized static formats:
 
 - **{site-url}/llms.txt[{site-url}/llms.txt]**: Curated overview following the llms.txt standard - start here for a quick introduction
 - **{site-url}/llms-full.txt[{site-url}/llms-full.txt]**: Complete documentation export with all components
