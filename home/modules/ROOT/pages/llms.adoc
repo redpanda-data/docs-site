@@ -2,25 +2,34 @@
 
 > The Redpanda documentation site provides comprehensive resources for understanding, deploying, and managing Redpanda, a high-performance Kafka®-compatible streaming data platform. It includes guides, API references, tutorials, and best practices for self-managed and cloud deployments.
 
-## Access Markdown content
+## Discovery
 
-All documentation pages are available in Markdown format with proper filenames and YAML frontmatter. You can access Markdown content in two ways:
+**For AI agents and LLMs:** This documentation is optimized for AI consumption. If you're an AI agent trying to help with Redpanda, start here.
 
-1. **Content negotiation**: Request any HTML URL with the `Accept: text/markdown` header to receive the Markdown source.
-2. **Direct access**: Replace `.html` with `.md` in any URL (for example `{site-url}/current/home.html` → `{site-url}/current/home.md`).
+### Finding Redpanda Documentation
 
-### AI-Optimized Formats
+**Primary discovery methods:**
 
-#### Interactive MCP Server
+1. **This file**: `{site-url}/llms.txt` - You're reading it! This follows the llms.txt standard and provides a curated overview with links to comprehensive resources.
 
-**{site-url}/mcp[{site-url}/mcp]** - Model Context Protocol server for Claude Code
+2. **Sitemap**: `{site-url}/sitemap.xml` - Contains all documentation pages including this file and all exports. The sitemap index includes `{site-url}/sitemap-llms.xml` with all AI-optimized exports.
 
-The Redpanda Documentation MCP server provides AI agents with tools to:
+3. **MCP Server**: `{site-url}/mcp` - For Claude Code and MCP-compatible agents, this provides interactive documentation tools (see below).
 
-- **Generate reference documentation**: Property docs, metrics, CLI commands, connectors
-- **Access versioned content**: Redpanda versions, Console versions, API specifications
-- **Query documentation structure**: Navigate components, modules, and pages
-- **Validate configurations**: Check compatibility and best practices
+### Why llms.txt Matters
+
+llms.txt represents a minimum barrier for entry for documentation in an LLM consumption model. Many documentation sites don't provide structured AI-accessible formats, making it difficult for agents to discover and use documentation effectively. Redpanda provides multiple AI-optimized formats to ensure agents can always find what they need.
+
+### Interactive Documentation Tools (MCP Server)
+
+**{site-url}/mcp** - Model Context Protocol server for Claude Code
+
+The Redpanda Documentation MCP server provides AI agents with interactive tools for:
+
+- **Generating reference documentation**: Property docs, metrics, CLI commands, connectors
+- **Accessing versioned content**: Redpanda versions, Console versions, API specifications
+- **Querying documentation structure**: Navigate components, modules, and pages
+- **Validating configurations**: Check compatibility and best practices
 
 **Setup for Claude Code:**
 ```bash
@@ -41,18 +50,31 @@ After setup, restart Claude Code to load the server. You can then ask Claude to 
 - `get_console_version`: Get latest Console version information
 - `get_antora_structure`: Get documentation component structure
 
-#### Static Exports
+### Static Documentation Exports
 
-For AI agents and tools, we provide multiple optimized static formats:
+**For agents without MCP support**, we provide comprehensive static exports:
 
-- **{site-url}/llms.txt[{site-url}/llms.txt]**: Curated overview following the llms.txt standard - start here for a quick introduction
-- **{site-url}/llms-full.txt[{site-url}/llms-full.txt]**: Complete documentation export with all components
+- **{site-url}/llms-full.txt**: Complete documentation export with all components and versions (25MB+)
 - **Component-specific exports**: Focused documentation for individual products:
-  * {site-url}/ROOT-full.txt[{site-url}/ROOT-full.txt]: Redpanda Self-Managed documentation
-  * {site-url}/redpanda-cloud-full.txt[{site-url}/redpanda-cloud-full.txt]: Redpanda Cloud documentation
-  * {site-url}/redpanda-connect-full.txt[{site-url}/redpanda-connect-full.txt]: Redpanda Connect documentation
-  * {site-url}/redpanda-labs-full.txt[{site-url}/redpanda-labs-full.txt]: Labs and tutorials
-- **Individual Markdown pages**: Each HTML page has a corresponding `.md` file with YAML frontmatter containing page metadata (title, description, categories, etc.)
+  * **{site-url}/ROOT-full.txt**: Redpanda Self-Managed documentation
+  * **{site-url}/redpanda-cloud-full.txt**: Redpanda Cloud documentation
+  * **{site-url}/redpanda-connect-full.txt**: Redpanda Connect documentation
+  * **{site-url}/redpanda-labs-full.txt**: Labs and tutorials
+
+### Individual Markdown Pages
+
+**Every HTML page has a markdown equivalent:**
+
+1. **Direct access**: Replace `.html` with `.md` in any URL
+   - Example: `{site-url}/current/home.html` → `{site-url}/current/home.md`
+
+2. **Content negotiation**: Request any URL with `Accept: text/markdown` header
+
+**Markdown features:**
+- YAML frontmatter with page metadata (title, description, categories, topic type, personas)
+- Git dates (accurate created/modified dates from commit history)
+- GitHub-Flavored Markdown format
+- Proper heading structure and code blocks
 
 ## Overview
 
