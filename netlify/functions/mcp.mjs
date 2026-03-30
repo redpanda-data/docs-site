@@ -344,6 +344,18 @@ export default async (request, context) => {
   const accept = request.headers.get('accept') || ''
   const contentType = request.headers.get('content-type') || ''
 
+  // Markdown content negotiation
+  const wantsMarkdown =
+    request.method === 'GET' &&
+    (accept.includes('text/markdown') || accept.includes('text/plain'))
+
+  if (wantsMarkdown) {
+    return new Response(null, {
+      status: 302,
+      headers: { Location: '/home/mcp-setup.md' },
+    })
+  }
+
   const isBrowserRequest =
     request.method === 'GET' &&
     accept.includes('text/html') &&
