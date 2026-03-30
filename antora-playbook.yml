@@ -2,7 +2,46 @@ site:
   title: Redpanda Docs
   start_page: home:ROOT:index.adoc
   url: https://docs.redpanda.com
-  robots: allow
+  robots: |
+    User-agent: *
+    Allow: /
+    Crawl-delay: 1
+
+    # OpenAI
+    User-agent: GPTBot
+    Allow: /
+
+    User-agent: ChatGPT-User
+    Allow: /
+
+    # Anthropic Claude (updated 2026)
+    User-agent: ClaudeBot
+    Allow: /
+
+    User-agent: Claude-User
+    Allow: /
+
+    User-agent: Claude-SearchBot
+    Allow: /
+
+    # Perplexity
+    User-agent: PerplexityBot
+    Allow: /
+
+    # Google AI
+    User-agent: Google-Extended
+    Allow: /
+
+    User-agent: GoogleOther
+    Allow: /
+
+    # Common Crawl
+    User-agent: CCBot
+    Allow: /
+
+    # Meta
+    User-agent: FacebookBot
+    Allow: /
   keys:
     announcement: true
     announcement-text: 'New! Redpanda Agentic Data Plane is here: a governed, high-performance foundation for AI agents.'
@@ -19,7 +58,8 @@ output:
   clean: true
 runtime:
   log:
-    level: info
+    level: warn
+  fetch: true
 content:
   sources:
   - url: .
@@ -50,8 +90,14 @@ asciidoc:
   - '@redpanda-data/docs-extensions-and-macros/asciidoc-extensions/add-line-numbers-highlights'
 antora:
   extensions:
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/git-full-clone'
+    # Configuration:
+    # unshallowTimeout: 120000  # Timeout in ms (default: 60000). Increase for very large repos
+    # skipUnshallow: false      # Set true for air-gapped environments
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/generate-rp-connect-info'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/collect-bloblang-samples'
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/add-git-dates'
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/add-faq-structured-data'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/convert-to-markdown'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/generate-index-data'
     data:
@@ -104,6 +150,7 @@ antora:
             - '**/docker-compose.yaml'
             - '**/docker-compose.yml'
   - '@redpanda-data/docs-extensions-and-macros/extensions/convert-llms-to-txt'
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/convert-sitemap-to-markdown'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/validate-attributes'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/find-related-docs'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/find-related-labs'

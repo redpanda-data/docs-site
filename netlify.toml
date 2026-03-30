@@ -31,45 +31,36 @@ NODE_VERSION = "20"
 
 # NOTE the following redirects get appended to the redirects defined in the _redirects file
 
-# ========== Markdown URL support for indexify convention ==========
-# Rewrite .md requests to the actual index.md locations
-# These allow simplified URLs for AI tools and direct markdown access
+# ========== Markdown URL support ==========
+# Direct access to markdown files with proper naming (no index.md)
+# Markdown files are generated at the same path as HTML files, just with .md extension
 
 # Top-level component directories (redirect to home pages)
 [[redirects]]
 from = "/current.md"
-to = "/current/home/index.md"
+to = "/current/home.md"
 status = 200
 
 [[redirects]]
 from = "/redpanda-cloud.md"
-to = "/redpanda-cloud/home/index.md"
+to = "/redpanda-cloud/home.md"
 status = 200
 
 [[redirects]]
 from = "/redpanda-connect.md"
-to = "/redpanda-connect/home/index.md"
+to = "/redpanda-connect/home.md"
 status = 200
 
 [[redirects]]
 from = "/redpanda-labs.md"
-to = "/redpanda-labs/home/index.md"
+to = "/redpanda-labs/home.md"
 status = 200
 
-# Specific test redirect
+# Redirect old index.md URLs to new .md structure
 [[redirects]]
-from = "/current/console.md"
-to = "/current/console/index.md"
+from = "/*/index.md"
+to = "/:splat.md"
 status = 301
-force = true
-
-# Generic catch-all for nested .md URLs
-# Using 301 redirect so it runs before edge functions
-[[redirects]]
-from = "/*/*.md"
-to = "/:splat/index.md"
-status = 301
-force = true
 
 [[redirects]]
 from = "https://docs.vectorized.io/*"
