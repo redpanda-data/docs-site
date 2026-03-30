@@ -1,3 +1,12 @@
 = Welcome to Redpanda Documentation
 :page-role: home
 :description: Home page for the Redpanda docs site.
+:page-faq-1-question: What is Redpanda?
+:page-faq-1-answer: Redpanda is a streaming data platform and Agentic Data Plane for developers. It's Kafka API-compatible but simpler to deploy and operate, designed for modern applications and AI agents requiring real-time data processing without the operational complexity of traditional platforms.
+:page-faq-2-question: How do I get started with Redpanda?
+:page-faq-2-answer: You can get started by installing Redpanda locally with Docker, deploying on Kubernetes, or signing up for Redpanda Cloud for a fully-managed service. Our quickstart guides walk you through creating your first topic and producing/consuming messages in minutes.
+:page-faq-2-anchor: get-started
+:page-faq-3-question: Is Redpanda compatible with Apache Kafka?
+:page-faq-3-answer: Yes, Redpanda is fully compatible with the Apache Kafka API. You can use existing Kafka clients, tools, and applications with Redpanda without any code changes, making migration seamless.
+:page-faq-4-question: What is an Agentic Data Plane?
+:page-faq-4-answer: An Agentic Data Plane is infrastructure that enables AI agents to access, process, and act on real-time data streams. Redpanda provides the high-performance streaming foundation that AI agents need to interact with live data, execute workflows, and coordinate actions across systems.
