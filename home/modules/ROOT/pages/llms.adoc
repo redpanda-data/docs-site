@@ -6,51 +6,27 @@
 
 **For AI agents and LLMs:** This documentation is optimized for AI consumption. If you're an AI agent trying to help with Redpanda, start here.
 
-### Finding Redpanda Documentation
+### Find Redpanda documentation
 
 **Primary discovery methods:**
 
 1. **This file**: `{site-url}/llms.txt` - You're reading it! This follows the llms.txt standard and provides a curated overview with links to comprehensive resources.
 
-2. **Sitemap**: `{site-url}/sitemap.xml` - Contains all documentation pages including this file and all exports. The sitemap index includes `{site-url}/sitemap-llms.xml` with all AI-optimized exports.
+2. **Sitemap**: `{site-url}/sitemap.md` - Contains all documentation pages including this file and all exports. The sitemap index includes `{site-url}/sitemap-llms.md` with all AI-optimized exports.
 
-3. **MCP Server**: `{site-url}/mcp` - For Claude Code and MCP-compatible agents, this provides interactive documentation tools (see below).
+3. **MCP server**: `https://docs.redpanda.com/mcp` - For Claude Code and MCP-compatible agents, this provides interactive documentation tools.
 
-### Why llms.txt Matters
+### Interactive documentation tools (MCP Server)
 
-llms.txt represents a minimum barrier for entry for documentation in an LLM consumption model. Many documentation sites don't provide structured AI-accessible formats, making it difficult for agents to discover and use documentation effectively. Redpanda provides multiple AI-optimized formats to ensure agents can always find what they need.
+**https://docs.redpanda.com/mcp** - Model Context Protocol server
 
-### Interactive Documentation Tools (MCP Server)
+Redpanda provides a remote Model Context Protocol (MCP) server that lets you access authoritative Redpanda documentation directly from your IDE or AI tool, such as Cursor, VS Code, ChatGPT, or Claude.
 
-**{site-url}/mcp** - Model Context Protocol server for Claude Code
+The MCP server is hosted at: https://docs.redpanda.com/mcp. You can add this endpoint to any AI agent that supports MCP.
 
-The Redpanda Documentation MCP server provides AI agents with interactive tools for:
+For more details, see {site-url}/home/mcp-setup.md
 
-- **Generating reference documentation**: Property docs, metrics, CLI commands, connectors
-- **Accessing versioned content**: Redpanda versions, Console versions, API specifications
-- **Querying documentation structure**: Navigate components, modules, and pages
-- **Validating configurations**: Check compatibility and best practices
-
-**Setup for Claude Code:**
-```bash
-npx doc-tools setup-mcp
-```
-
-After setup, restart Claude Code to load the server. You can then ask Claude to generate docs, check versions, or access any part of the documentation.
-
-**Available MCP tools:**
-- `generate_property_docs`: Generate Redpanda configuration property documentation
-- `generate_metrics_docs`: Generate metrics reference documentation
-- `generate_rpk_docs`: Generate rpk CLI reference documentation
-- `generate_rpcn_connector_docs`: Generate Redpanda Connect connector documentation
-- `generate_helm_docs`: Generate Helm chart documentation
-- `generate_crd_docs`: Generate Kubernetes CRD documentation
-- `generate_bundle_openapi`: Bundle OpenAPI specifications
-- `get_redpanda_version`: Get latest Redpanda version information
-- `get_console_version`: Get latest Console version information
-- `get_antora_structure`: Get documentation component structure
-
-### Static Documentation Exports
+### Static documentation exports
 
 **For agents without MCP support**, we provide comprehensive static exports:
 
@@ -61,7 +37,7 @@ After setup, restart Claude Code to load the server. You can then ask Claude to 
   * **{site-url}/redpanda-connect-full.txt**: Redpanda Connect documentation
   * **{site-url}/redpanda-labs-full.txt**: Labs and tutorials
 
-### Individual Markdown Pages
+### Individual Markdown pages
 
 **Every HTML page has a markdown equivalent:**
 
@@ -71,10 +47,10 @@ After setup, restart Claude Code to load the server. You can then ask Claude to 
 2. **Content negotiation**: Request any URL with `Accept: text/markdown` header
 
 **Markdown features:**
+
 - YAML frontmatter with page metadata (title, description, categories, topic type, personas)
 - Git dates (accurate created/modified dates from commit history)
 - GitHub-Flavored Markdown format
-- Proper heading structure and code blocks
 
 ## Overview
 
@@ -88,7 +64,7 @@ Redpanda docs serve both new and experienced users, offering detailed technical 
 
 ## Core documentation
 
-- {site-url}/current/get-started/quickstarts.md[Get started]: Fast-track your journey with Redpanda Self-Managed.
+- {site-url}/current/get-started/quickstarts.md[Get started]: Fast-track your journey with Redpanda Self-Managed by deploying a complete example in Docker.
 - {site-url}/current/get-started/architecture.md[Redpanda concepts]: Deep-dive into key concepts like Tiered Storage, partitions, replication, and data streaming architecture.
 
 ## Deployment guides
@@ -97,7 +73,7 @@ Redpanda docs serve both new and experienced users, offering detailed technical 
 - {site-url}/redpanda-cloud/get-started/cluster-types.md[Redpanda Cloud]: Guides for using Redpanda Cloud across Serverless, BYOC, and Dedicated options.
 - {site-url}/redpanda-connect.md[Redpanda Connect]: Standalone documentation for deploying and managing Redpanda Connect, with or without Redpanda.
 
-## rpk CLI
+## Redpanda CLI
 
 Learn about `rpk`, the comprehensive command-line interface tool for managing Redpanda clusters.
 
@@ -135,10 +111,5 @@ Build and deploy production-ready AI agents with enterprise governance and compl
 
 The site includes versioned documentation for **Redpanda Self-Managed**:
 - **Latest version**: The most up-to-date documentation is available at {site-url}/current.md[{site-url}/current.md].
-- **Previous versions**: Previous versions can be accessed by replacing `current` with the version number in any URL (for example `{site-url}/24.1/home.md`, `{site-url}/25.1/deploy.md`).
-
-## Related resources
-
-- https://www.redpanda.com[Redpanda website]: Overview of Redpanda's platform and products.
-- {site-url}/sitemap.xml[Documentation sitemap]: Complete sitemap index for all documentation.
+- **Previous versions**: Previous versions can be accessed by replacing `current` with the version number in any URL (for example `{site-url}/<version>/home.md`).
 
