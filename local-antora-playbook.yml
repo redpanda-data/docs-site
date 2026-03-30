@@ -12,8 +12,6 @@ urls:
   latest_version_segment: 'current'
 output:
   clean: true
-runtime:
-  fetch: true
 content:
   sources:
   - url: .
@@ -30,7 +28,7 @@ content:
     branches: main
 ui:
   bundle:
-    url: ../docs-ui/build/ui-bundle.zip
+    url: https://github.com/redpanda-data/docs-ui/releases/latest/download/ui-bundle.zip
     snapshot: true
 asciidoc:
   attributes:
@@ -44,16 +42,9 @@ asciidoc:
   - '@redpanda-data/docs-extensions-and-macros/asciidoc-extensions/add-line-numbers-highlights'
 antora:
   extensions:
-  - require: '../docs-extensions-and-macros/extensions/git-full-clone'
-    # Configuration:
-    # unshallowTimeout: 120000  # Timeout in ms (default: 60000). Increase for very large repos
-    # skipUnshallow: false      # Set true for air-gapped environments
-  - require: '@redpanda-data/docs-extensions-and-macros/extensions/generate-rp-connect-info'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/generate-rp-connect-categories'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/collect-bloblang-samples'
-  - require: '../docs-extensions-and-macros/extensions/add-git-dates'
-  - require: '../docs-extensions-and-macros/extensions/add-faq-structured-data'
-  - require: '../docs-extensions-and-macros/extensions/convert-to-markdown'
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/convert-to-markdown'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/process-context-switcher'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/generate-index-data'
     data:
@@ -87,6 +78,7 @@ antora:
       theme_variables:
         line_color: '#e2401b'
         font_family: Inter, sans-serif
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/generate-rp-connect-info'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/modify-redirects'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/unpublish-pages'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/unlisted-pages'
@@ -101,8 +93,7 @@ antora:
           file_patterns:
             - '**/docker-compose.yaml'
             - '**/docker-compose.yml'
-  - require: '../docs-extensions-and-macros/extensions/convert-llms-to-txt'
-  - require: '../docs-extensions-and-macros/extensions/convert-sitemap-to-markdown'
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/convert-llms-to-txt.js'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/validate-attributes'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/find-related-docs'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/find-related-labs'

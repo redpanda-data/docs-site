@@ -1,0 +1,34 @@
+# Playbook Extensions Patch for Release
+
+This patch file contains the changes needed to enable the new extensions in preview and local playbooks once the extensions are published to npm.
+
+## What's included
+
+- `git-full-clone` extension with configuration options
+- `add-git-dates` extension
+- `add-faq-structured-data` extension
+- `convert-sitemap-to-markdown` extension
+- Configuration comments for git-full-clone
+
+## When to apply
+
+Apply this patch AFTER publishing the new version of `@redpanda-data/docs-extensions-and-macros` to npm.
+
+## How to apply
+
+```bash
+cd /path/to/docs-site
+git apply playbook-extensions-for-release.patch
+git add local-antora-playbook.yml preview-antora-playbook.yml
+git commit -m "Enable new extensions after npm release"
+git push
+```
+
+## What was reverted
+
+These changes were reverted from remote to prevent build failures before npm publication:
+
+- **preview-antora-playbook.yml**: Removed unpublished extension references
+- **local-antora-playbook.yml**: Removed local references (will use npm after release)
+
+The production playbook (antora-playbook.yml) already has the extensions enabled and ready for the next release.
