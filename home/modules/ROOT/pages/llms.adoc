@@ -18,8 +18,6 @@
 
 ### Interactive documentation tools (MCP Server)
 
-**https://docs.redpanda.com/mcp** - Model Context Protocol server
-
 Redpanda provides a remote Model Context Protocol (MCP) server that lets you access authoritative Redpanda documentation directly from your IDE or AI tool, such as Cursor, VS Code, ChatGPT, or Claude.
 
 The MCP server is hosted at: https://docs.redpanda.com/mcp. You can add this endpoint to any AI agent that supports MCP.
@@ -97,10 +95,10 @@ Build and deploy production-ready AI agents with enterprise governance and compl
 
 ## API references
 
-- {site-url}/api/admin.md[Admin API]: Manage and monitor Redpanda clusters using this REST API, including operations for configuration, partitions, and node health.
-- {site-url}/api/schema-registry.md[Schema Registry API]: Use Redpanda's Kafka-compatible schema registry for managing and evolving schemas in your data streams.
-- {site-url}/api/http-proxy.md[HTTP Proxy API]: Simplify interactions with Kafka topics and partitions with Redpanda's HTTP Proxy API, enabling easier data production and consumption over HTTP.
-- {site-url}/api/cloud-controlplane.md[Cloud API]: Access and manage Redpanda Cloud resources programmatically, including provisioning clusters, monitoring usage, and configuring deployments.
+- {site-url}/api/doc/admin.md[Admin API]: Manage and monitor Redpanda clusters using this REST API, including operations for configuration, partitions, and node health.
+- {site-url}/api/doc/schema-registry.md[Schema Registry API]: Use Redpanda's Kafka-compatible schema registry for managing and evolving schemas in your data streams.
+- {site-url}/api/doc/http-proxy.md[HTTP Proxy API]: Simplify interactions with Kafka topics and partitions with Redpanda's HTTP Proxy API, enabling easier data production and consumption over HTTP.
+- {site-url}/api/doc/cloud-controlplane.md[Cloud API]: Access and manage Redpanda Cloud resources programmatically, including provisioning clusters, monitoring usage, and configuring deployments.
 
 ## Troubleshooting
 
@@ -111,5 +109,5 @@ Build and deploy production-ready AI agents with enterprise governance and compl
 
 The site includes versioned documentation for **Redpanda Self-Managed**:
 - **Latest version**: The most up-to-date documentation is available at {site-url}/current.md[{site-url}/current.md].
-- **Previous versions**: Previous versions can be accessed by replacing `current` with the version number in any URL (for example `{site-url}/<version>/home.md`).
+- **Previous versions**: Previous versions can be accessed by replacing `current` with the version number in any URL.
 
