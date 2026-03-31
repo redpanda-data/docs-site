@@ -14,15 +14,7 @@
 
 2. **Sitemap**: `{site-url}/sitemap.md` - Contains all documentation pages including this file and all exports. The sitemap index includes `{site-url}/sitemap-llms.md` with all AI-optimized exports.
 
-3. **MCP server**: `https://docs.redpanda.com/mcp` - For Claude Code and MCP-compatible agents, this provides interactive documentation tools.
-
-### Interactive documentation tools (MCP Server)
-
-Redpanda provides a remote Model Context Protocol (MCP) server that lets you access authoritative Redpanda documentation directly from your IDE or AI tool, such as Cursor, VS Code, ChatGPT, or Claude.
-
-The MCP server is hosted at: https://docs.redpanda.com/mcp. You can add this endpoint to any AI agent that supports MCP.
-
-For more details, see {site-url}/home/mcp-setup.md
+3. **MCP server**: {site-url}/home/mcp-setup.md - For Claude Code and MCP-compatible agents, this provides interactive documentation tools.
 
 ### Static documentation exports
 
