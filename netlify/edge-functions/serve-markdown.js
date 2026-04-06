@@ -11,6 +11,11 @@ export default async (request, context) => {
     return context.next();
   }
 
+  // If already requesting .md file, let it through
+  if (url.pathname.endsWith('.md')) {
+    return context.next();
+  }
+
   // Map the URL path to the markdown file path
   let mdPath = url.pathname;
 
@@ -32,7 +37,9 @@ export default async (request, context) => {
 
   try {
     // Try to fetch the markdown file directly
+    // Preserve query string parameters (note: fragments/anchors are client-side only)
     const mdUrl = new URL(mdPath, url.origin);
+    mdUrl.search = url.search; // Preserve query string
     const mdResponse = await fetch(mdUrl.toString());
 
     if (mdResponse.ok) {

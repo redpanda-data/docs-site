@@ -23,6 +23,17 @@ export default async (request, context) => {
     return Response.redirect(`${url.origin}${redirects[normalizedPath]}`, 301);
   }
 
+  // Content negotiation: redirect to .md URL if markdown is requested via Accept header
+  const acceptHeader = request.headers.get('accept') || '';
+  const wantsMarkdown = acceptHeader.includes('text/markdown') ||
+                        acceptHeader.includes('text/plain');
+
+  if (wantsMarkdown && !url.pathname.endsWith('.md')) {
+    // Construct markdown URL - append .md to the path
+    const mdPath = normalizedPath + '.md';
+    return Response.redirect(`${url.origin}${mdPath}`, 302);
+  }
+
   // Map paths to header background colors
   const headerColors = {
     "/api/doc/admin": "#107569",

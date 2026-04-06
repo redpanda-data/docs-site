@@ -33,4 +33,19 @@ jobs:
         continue-on-error: true
         env:
           DEPLOY_URL: ${{ steps.wait-for-netlify.outputs.url }}
-        run: npm run afdocs
+        run: npm run afdocs:verbose
+
+      - name: Post results summary
+        if: always()
+        run: |
+          echo "## Agent-Friendly Docs Check Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Deploy URL:** ${{ steps.wait-for-netlify.outputs.url }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.afdocs.outcome }}" == "success" ]; then
+            echo "✅ All checks passed!" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "⚠️ Some checks failed or had warnings. See job logs for details." >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Run locally with: \`DEPLOY_URL=${{ steps.wait-for-netlify.outputs.url }} npm run afdocs:verbose\`" >> $GITHUB_STEP_SUMMARY
+          fi

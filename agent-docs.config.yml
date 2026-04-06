@@ -1,0 +1,48 @@
+# Agent-Friendly Docs Configuration
+# See: https://agentdocsspec.com/spec/
+
+# URL to check - use DEPLOY_URL env var in CI for preview deployments
+url: ${DEPLOY_URL:-https://docs.redpanda.com}
+
+# Checks to run (excluding page-size-html and llms-txt-freshness due to known issues)
+# - page-size-html: Large glossary/reference pages exceed limits (content architecture fix needed)
+# - llms-txt-freshness: Using curated approach with llms-full.txt for comprehensive coverage
+checks:
+  # Content Discoverability
+  - llms-txt-exists
+  - llms-txt-valid
+  - llms-txt-size
+  - llms-txt-links-resolve
+  - llms-txt-links-markdown
+  - llms-txt-directive
+
+  # Markdown Availability
+  - markdown-url-support
+  - content-negotiation
+
+  # Page Size
+  - rendering-strategy
+  - page-size-markdown
+  - content-start-position
+
+  # Content Structure
+  - tabbed-content-serialization
+  - section-header-quality
+  - markdown-code-fence-validity
+
+  # URL Stability
+  - http-status-codes
+  - redirect-behavior
+
+  # Observability
+  - markdown-content-parity
+  - cache-header-hygiene
+
+  # Authentication
+  - auth-gate-detection
+
+options:
+  # Use deterministic sampling for consistent CI results
+  samplingStrategy: deterministic
+  # Limit links to test for faster CI runs
+  maxLinksToTest: 50
