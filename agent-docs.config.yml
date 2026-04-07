@@ -8,6 +8,7 @@ url: https://docs.redpanda.com
 # - page-size-html: Large glossary/reference pages exceed limits (content architecture fix needed)
 # - llms-txt-freshness: Using curated approach with llms-full.txt for comprehensive coverage
 # - markdown-content-parity: Navigation pages have visual cards that don't translate to markdown (by design)
+# - cache-header-hygiene: External Bump.sh proxy can return 503 errors without cache headers
 checks:
   # Content Discoverability
   - llms-txt-exists
@@ -36,7 +37,7 @@ checks:
   - redirect-behavior
 
   # Observability
-  - cache-header-hygiene
+  # cache-header-hygiene excluded - see above
 
   # Authentication
   - auth-gate-detection
