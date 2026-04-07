@@ -4,9 +4,10 @@
 # URL to check - override with DEPLOY_URL env var in CI for preview deployments
 url: https://docs.redpanda.com
 
-# Checks to run (excluding page-size-html and llms-txt-freshness due to known issues)
+# Checks to run (excluding some checks due to known issues)
 # - page-size-html: Large glossary/reference pages exceed limits (content architecture fix needed)
 # - llms-txt-freshness: Using curated approach with llms-full.txt for comprehensive coverage
+# - markdown-content-parity: Navigation pages have visual cards that don't translate to markdown (by design)
 checks:
   # Content Discoverability
   - llms-txt-exists
@@ -35,7 +36,6 @@ checks:
   - redirect-behavior
 
   # Observability
-  - markdown-content-parity
   - cache-header-hygiene
 
   # Authentication

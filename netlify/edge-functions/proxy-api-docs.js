@@ -56,7 +56,13 @@ export default async (request, context) => {
   // Validate secret exists
   if (!secret) {
     console.error("❌ BUMP_PROXY_SECRET environment variable not set");
-    return new Response("Service temporarily unavailable", { status: 503 });
+    return new Response("Service temporarily unavailable", {
+      status: 503,
+      headers: {
+        "content-type": "text/plain; charset=utf-8",
+        "cache-control": "public, max-age=60",
+      }
+    });
   }
 
   try {
@@ -159,12 +165,15 @@ export default async (request, context) => {
   } catch (error) {
     console.error("❌ Failed to fetch from Bump.sh after retries:", error);
 
-    // Return a graceful fallback response
+    // Return a graceful fallback response with short cache to avoid hammering
     return new Response(
       `<html><head><title>API Documentation Temporarily Unavailable</title></head><body><h1>API Documentation Temporarily Unavailable</h1><p>Please try again later.</p></body></html>`,
       {
         status: 503,
-        headers: { "content-type": "text/html; charset=utf-8" }
+        headers: {
+          "content-type": "text/html; charset=utf-8",
+          "cache-control": "public, max-age=60", // Cache errors briefly to reduce load
+        }
       }
     );
   }
