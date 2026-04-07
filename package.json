@@ -7,8 +7,8 @@
     "build-local": "antora --to-dir docs --fetch local-antora-playbook.yml",
     "start": "cross-env-shell LIVERELOAD=true npx gulp",
     "serve": "wds --node-resolve --open / --watch --root-dir docs",
-    "afdocs": "afdocs check \"${DEPLOY_URL:-https://docs.redpanda.com}\" --config agent-docs.config.yml",
-    "afdocs:verbose": "afdocs check \"${DEPLOY_URL:-https://docs.redpanda.com}\" --config agent-docs.config.yml -v"
+    "afdocs": "vitest run agent-docs.test.ts",
+    "afdocs:cli": "afdocs check \"${DEPLOY_URL:-https://docs.redpanda.com}\" -v"
   },
   "dependencies": {
     "@antora/cli": "3.1.2",
@@ -30,6 +30,7 @@
     "cross-env": "^7.0.3",
     "gulp": "^4.0.2",
     "gulp-connect": "^5.7.0",
-    "open": "^9.1.0"
+    "open": "^9.1.0",
+    "vitest": "^4.1.2"
   }
 }
