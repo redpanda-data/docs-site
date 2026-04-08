@@ -23,10 +23,10 @@ export default async (request, context) => {
     return Response.redirect(`${url.origin}${redirects[normalizedPath]}`, 301);
   }
 
-  // Content negotiation: redirect to .md URL if markdown is requested via Accept header
+  // Content negotiation: redirect to .md URL if markdown is explicitly requested
+  // Only match text/markdown per agent-friendly docs spec (text/plain is too broad)
   const acceptHeader = request.headers.get('accept') || '';
-  const wantsMarkdown = acceptHeader.includes('text/markdown') ||
-                        acceptHeader.includes('text/plain');
+  const wantsMarkdown = acceptHeader.includes('text/markdown');
 
   if (wantsMarkdown && !url.pathname.endsWith('.md')) {
     // Construct markdown URL - append .md to the path
