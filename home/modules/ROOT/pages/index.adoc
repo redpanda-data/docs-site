@@ -1,6 +1,6 @@
 = Welcome to Redpanda Documentation
 :page-role: home
-:description: Home page for the Redpanda docs site.
+:description: Redpanda is a high-performance streaming data platform and Agentic Data Plane. Kafka API-compatible, it enables real-time data streaming, event-driven architectures, and AI agent governance and observability.
 :page-faq-1-question: What is Redpanda?
 :page-faq-1-answer: Redpanda is a streaming data platform and Agentic Data Plane for developers. It's Kafka API-compatible but simpler to deploy and operate, designed for modern applications and AI agents requiring real-time data processing without the operational complexity of traditional platforms.
 :page-faq-2-question: How do I get started with Redpanda?
