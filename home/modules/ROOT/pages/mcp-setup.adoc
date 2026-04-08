@@ -84,31 +84,30 @@ For more information, see the https://platform.openai.com/docs/guides/developer-
 Claude Desktop::
 +
 --
-There are two methods to connect Claude Desktop to Redpanda's MCP server:
+Connect Claude Desktop to Redpanda's MCP server using one of two methods:
 
-**Method 1: Using Connectors**
+*Method 1: Using Connectors*
 
-This method is available for Pro, Max, Team, and Enterprise plans. It works across all platforms (macOS, Windows, Linux):
+This method is available for Pro, Max, Team, or Enterprise plans and works across all platforms (macOS, Windows, Linux):
 
-. Open Claude Desktop
-. Navigate to **Settings** > **Connectors**
-. Click **Add custom connector**
+. Open Claude Desktop.
+. Navigate to Settings > Connectors.
+. Click **Add custom connector**.
 . Enter the URL: `https://docs.redpanda.com/mcp`
-. Follow any authentication prompts if required
+. Follow any authentication prompts if required.
 
 NOTE: When using Connectors, Claude connects to your remote MCP server from Anthropic's cloud infrastructure.
 
-**Method 2: Using Configuration File (Free Tier and All Plans)**
+*Method 2: Using Configuration File*
 
-Edit the Claude Desktop configuration file:
+This method works for all plans, including free tier.
 
-**On macOS:**
-`~/Library/Application Support/Claude/claude_desktop_config.json`
+Edit the Claude Desktop configuration file for your platform:
 
-**On Windows:**
-`%APPDATA%\Claude\claude_desktop_config.json`
+* *macOS*: `~/Library/Application Support/Claude/claude_desktop_config.json`
+* *Windows*: `%APPDATA%\Claude\claude_desktop_config.json`
 
-Add this configuration:
+Add the following configuration to your `claude_desktop_config.json` file:
 
 [source,json]
 ----
@@ -122,11 +121,11 @@ Add this configuration:
 }
 ----
 
-This uses the `mcp-remote` bridge to connect to Redpanda's remote MCP server. Claude Desktop currently only supports `stdio` and `sse` transports in the config file, so `mcp-remote` converts the HTTP endpoint to a format Claude Desktop can use.
+This configuration uses the `mcp-remote` bridge to connect to Redpanda's remote MCP server. Claude Desktop supports only `stdio` and `sse` transports, so `mcp-remote` converts the HTTP endpoint to a compatible format.
 
 Restart Claude Desktop for changes to take effect.
 
-IMPORTANT: Claude Desktop does not connect to remote servers configured directly via `claude_desktop_config.json` on some platforms. If this method doesn't work for you, use the Connectors interface instead (requires Pro/Max/Team/Enterprise plan).
+IMPORTANT: On some platforms, Claude Desktop cannot connect to remote servers configured via `claude_desktop_config.json`. If this method doesn't work, use the Connectors interface instead (available with Pro, Max, Team, or Enterprise plans).
 
 For more details, see the https://support.anthropic.com/en/articles/9487310-desktop-app[Claude Desktop documentation^].
 --
