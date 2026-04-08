@@ -86,9 +86,9 @@ Claude Desktop::
 --
 There are two methods to connect Claude Desktop to Redpanda's MCP server:
 
-**Method 1: Using Connectors (Recommended for Linux)**
+**Method 1: Using Connectors**
 
-This method works across all platforms and is required for Linux users:
+This method is available for Pro, Max, Team, and Enterprise plans. It works across all platforms (macOS, Windows, Linux):
 
 . Open Claude Desktop
 . Navigate to **Settings** > **Connectors**
@@ -96,7 +96,9 @@ This method works across all platforms and is required for Linux users:
 . Enter the URL: `https://docs.redpanda.com/mcp`
 . Follow any authentication prompts if required
 
-**Method 2: Using Configuration File (macOS and Windows)**
+NOTE: When using Connectors, Claude connects to your remote MCP server from Anthropic's cloud infrastructure.
+
+**Method 2: Using Configuration File (Free Tier and All Plans)**
 
 Edit the Claude Desktop configuration file:
 
@@ -120,11 +122,11 @@ Add this configuration:
 }
 ----
 
-This uses the `mcp-remote` bridge to connect to Redpanda's remote MCP server. Claude Desktop currently only supports `stdio` and `sse` transports, so `mcp-remote` converts the HTTP endpoint to a format Claude Desktop can use.
+This uses the `mcp-remote` bridge to connect to Redpanda's remote MCP server. Claude Desktop currently only supports `stdio` and `sse` transports in the config file, so `mcp-remote` converts the HTTP endpoint to a format Claude Desktop can use.
 
 Restart Claude Desktop for changes to take effect.
 
-NOTE: On Linux, remote MCP servers through the configuration file may not be supported. Use the Connectors interface instead.
+IMPORTANT: Claude Desktop does not connect to remote servers configured directly via `claude_desktop_config.json` on some platforms. If this method doesn't work for you, use the Connectors interface instead (requires Pro/Max/Team/Enterprise plan).
 
 For more details, see the https://support.anthropic.com/en/articles/9487310-desktop-app[Claude Desktop documentation^].
 --
