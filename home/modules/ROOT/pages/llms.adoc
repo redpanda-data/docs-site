@@ -1,6 +1,6 @@
 # Redpanda Documentation
 
-> **Redpanda** is a high-performance streaming data platform that is fully compatible with the Apache Kafka® API. It enables real-time data streaming, event-driven architectures, and data pipelines without the complexity of managing ZooKeeper or the JVM. Redpanda is designed for mission-critical workloads with features like single-binary deployment, sub-millisecond latency, and built-in Schema Registry. Available as self-managed software or as a fully-managed cloud service.
+> **Redpanda** is a high-performance streaming data platform and Agentic Data Plane that is fully compatible with the Apache Kafka® API. It enables real-time data streaming, event-driven architectures, data pipelines, and AI agent infrastructure without the complexity of managing ZooKeeper or the JVM. Designed for mission-critical workloads and AI agents, Redpanda features single-binary deployment, sub-millisecond latency, built-in Schema Registry, and enterprise-grade infrastructure for building and governing AI agents at scale. Available as self-managed software or as a fully-managed cloud service.
 
 ## Discovery
 
