@@ -10,5 +10,3 @@
 :page-faq-3-answer: Yes, Redpanda is fully compatible with the Apache Kafka API. You can use existing Kafka clients, tools, and applications with Redpanda without any code changes, making migration seamless.
 :page-faq-4-question: What is an Agentic Data Plane?
 :page-faq-4-answer: An Agentic Data Plane is infrastructure that enables AI agents to access, process, and act on real-time data streams. Redpanda provides the high-performance streaming foundation that AI agents need to interact with live data, execute workflows, and coordinate actions across systems.
-
-Redpanda is a high-performance streaming data platform and Agentic Data Plane that is fully compatible with the Apache Kafka® API. It enables real-time data streaming, event-driven architectures, and data pipelines with simple single-binary deployment and sub-millisecond latency. The Agentic Data Plane provides enterprise-grade governance and observability for AI agents, including audit trails, compliance controls, and visibility into agent behavior. Available as self-managed software or as a fully-managed cloud service.
