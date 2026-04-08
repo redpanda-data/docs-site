@@ -1,8 +1,8 @@
 = Welcome to Redpanda Documentation
 :page-role: home
-:description: Redpanda is a high-performance streaming data platform and Agentic Data Plane. Kafka API-compatible, it enables real-time data streaming, event-driven architectures, and AI agent infrastructure without ZooKeeper or JVM complexity.
+:description: Redpanda is a high-performance streaming data platform and Agentic Data Plane. Kafka API-compatible, it enables real-time data streaming, event-driven architectures, and AI agent governance and observability.
 
-Redpanda is a high-performance streaming data platform and Agentic Data Plane that is fully compatible with the Apache Kafka® API. It enables real-time data streaming, event-driven architectures, and data pipelines without the complexity of managing ZooKeeper or the JVM. Designed for mission-critical workloads and AI agents, Redpanda features single-binary deployment, sub-millisecond latency, built-in Schema Registry, and enterprise-grade infrastructure for building and governing AI agents at scale. Available as self-managed software or as a fully-managed cloud service.
+Redpanda is a high-performance streaming data platform and Agentic Data Plane that is fully compatible with the Apache Kafka® API. It enables real-time data streaming, event-driven architectures, and data pipelines with simple single-binary deployment and sub-millisecond latency. The Agentic Data Plane provides enterprise-grade governance and observability for AI agents, including audit trails, compliance controls, and visibility into agent behavior. Available as self-managed software or as a fully-managed cloud service.
 :page-faq-1-question: What is Redpanda?
 :page-faq-1-answer: Redpanda is a streaming data platform and Agentic Data Plane for developers. It's Kafka API-compatible but simpler to deploy and operate, designed for modern applications and AI agents requiring real-time data processing without the operational complexity of traditional platforms.
 :page-faq-2-question: How do I get started with Redpanda?
