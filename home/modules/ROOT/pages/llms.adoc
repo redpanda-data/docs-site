@@ -1,6 +1,6 @@
 # Redpanda Documentation
 
-> The Redpanda documentation site provides comprehensive resources for understanding, deploying, and managing Redpanda, a high-performance Kafka®-compatible streaming data platform. It includes guides, API references, tutorials, and best practices for self-managed and cloud deployments.
+> **Redpanda** is a high-performance streaming data platform that is fully compatible with the Apache Kafka® API. It enables real-time data streaming, event-driven architectures, and data pipelines without the complexity of managing ZooKeeper or the JVM. Redpanda is designed for mission-critical workloads with features like single-binary deployment, sub-millisecond latency, and built-in Schema Registry. Available as self-managed software or as a fully-managed cloud service.
 
 ## Discovery
 
