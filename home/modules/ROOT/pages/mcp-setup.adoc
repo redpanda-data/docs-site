@@ -125,7 +125,7 @@ This configuration uses the `mcp-remote` bridge to connect to Redpanda's remote 
 
 Restart Claude Desktop for changes to take effect.
 
-IMPORTANT: On some platforms, Claude Desktop cannot connect to remote servers configured via `claude_desktop_config.json`. If this method doesn't work, use the Connectors interface instead (available with Pro, Max, Team, or Enterprise plans).
+IMPORTANT: On some platforms, Claude Desktop cannot connect to remote servers configured using `claude_desktop_config.json`. If this method doesn't work, use the Connectors interface instead (available with Pro, Max, Team, or Enterprise plans).
 
 For more details, see the https://support.anthropic.com/en/articles/9487310-desktop-app[Claude Desktop documentation^].
 --
