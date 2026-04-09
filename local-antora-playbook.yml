@@ -49,6 +49,7 @@ antora:
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/add-git-dates'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/add-faq-structured-data'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/convert-to-markdown'
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/add-llms-directive'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/process-context-switcher'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/generate-index-data'
     data:
@@ -97,6 +98,7 @@ antora:
             - '**/docker-compose.yaml'
             - '**/docker-compose.yml'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/convert-llms-to-txt'
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/add-markdown-urls-to-sitemap'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/convert-sitemap-to-markdown'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/validate-attributes'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/find-related-docs'
