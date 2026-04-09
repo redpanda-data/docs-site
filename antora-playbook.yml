@@ -150,6 +150,7 @@ antora:
           file_patterns:
             - '**/docker-compose.yaml'
             - '**/docker-compose.yml'
+  - '@redpanda-data/docs-extensions-and-macros/extensions/resolve-xrefs-in-attachments'
   - '@redpanda-data/docs-extensions-and-macros/extensions/convert-llms-to-txt'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/add-markdown-urls-to-sitemap'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/convert-sitemap-to-markdown'
