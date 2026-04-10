@@ -17,7 +17,7 @@
     "@asciidoctor/tabs": "^1.0.0-beta.5",
     "@modelcontextprotocol/sdk": "1.17.0",
     "@modelfetch/netlify": "0.15.2",
-    "@redpanda-data/docs-extensions-and-macros": "^4.15.2",
+    "@redpanda-data/docs-extensions-and-macros": "^4.16.4",
     "@sntke/antora-mermaid-extension": "^0.0.6",
     "algoliasearch": "^5.35.0",
     "hono-rate-limiter": "0.1.0",
@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "@web/dev-server": "^0.2.1",
-    "afdocs": "^0.9.0",
+    "afdocs": "^0.9.1",
     "cross-env": "^7.0.3",
     "gulp": "^4.0.2",
     "gulp-connect": "^5.7.0",

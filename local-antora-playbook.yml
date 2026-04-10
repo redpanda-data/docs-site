@@ -32,6 +32,233 @@ ui:
     snapshot: true
 asciidoc:
   attributes:
+    # ===========================================================================
+    # GLOBAL ASCIIDOC ATTRIBUTES
+    # ===========================================================================
+    # This section documents all custom attributes used by docs-extensions-and-macros
+    # and docs-ui. Most attributes are set programmatically by extensions or in
+    # component antora.yml files. This section serves as documentation.
+    #
+    # Attribute Prefixes:
+    # - page-*: Page-level metadata (extensions set these on individual pages)
+    # - env-*: Environment/deployment conditional flags
+    # - latest-*: Version information (set by version-fetcher extension)
+    # - No prefix: Legacy or special-purpose attributes
+    # ===========================================================================
+
+    # ---------------------------------------------------------------------------
+    # VERSION INFORMATION (set by version-fetcher/set-latest-version.js)
+    # ---------------------------------------------------------------------------
+    # These attributes are automatically fetched from GitHub releases and set
+    # globally for use in all documentation pages.
+    #
+    # latest-redpanda-version: Latest stable Redpanda version (without "v" prefix, e.g., "25.3.1")
+    # latest-redpanda-tag: Latest stable Redpanda Docker tag (with "v" prefix, e.g., "v25.3.1")
+    # redpanda-beta-version: Latest RC/beta Redpanda version
+    # redpanda-beta-tag: Latest RC/beta Redpanda Docker tag
+    # redpanda-beta-commit: Git commit hash of beta version
+    # latest-release-commit: Git commit hash of latest stable release
+    # full-version: Full version for backwards compatibility
+    #
+    # latest-console-version: Latest stable Console version
+    # latest-console-tag: Latest stable Console Docker tag
+    # console-beta-version: Latest beta Console version
+    # console-beta-tag: Latest beta Console Docker tag
+    #
+    # latest-operator-version: Latest stable Operator version
+    # latest-operator-tag: Latest stable Operator Docker tag
+    # operator-beta-version: Latest beta Operator version
+    # operator-beta-tag: Latest beta Operator Docker tag
+    #
+    # latest-redpanda-helm-chart-version: Latest Helm chart version
+    # helm-beta-version: Latest beta Helm chart version
+    # helm-beta-tag: Latest beta Helm chart Docker tag
+    #
+    # latest-connect-version: Latest Connect version
+    # latest-connect-tag: Latest Connect Docker tag
+
+    # ---------------------------------------------------------------------------
+    # PAGE METADATA ATTRIBUTES (set by various extensions)
+    # ---------------------------------------------------------------------------
+    # Note: In templates, page-* prefix is stripped and accessed via page.attributes.*
+    #
+    # Component & Version:
+    # - page-component-name: Component name (e.g., "redpanda", "connect")
+    # - page-component-title: Human-readable component title (e.g., "Redpanda Cloud")
+    # - page-component-version: Version of the component
+    # - page-component-version-is-prerelease: Boolean flag for prerelease versions
+    # - page-version: Page's version
+    # - page-relative-src-path: Relative source file path
+    #
+    # Git & Publishing (set by add-git-dates.js):
+    # - page-git-created-date: ISO date (YYYY-MM-DD) of first git commit
+    # - page-git-modified-date: ISO date (YYYY-MM-DD) of last git commit
+    # - page-release-date: Set in component antora.yml for EOL calculations
+    #
+    # End-of-Life Status (set by compute-end-of-life.js):
+    # - page-is-nearing-eol: Boolean string ("true"/"false") for approaching EOL
+    # - page-is-past-eol: Boolean string ("true"/"false") for past EOL
+    # - page-eol-date: ISO date string when EOL occurs
+    # - page-eol-doc: URL to EOL documentation
+    # - page-upgrade-doc: URL to upgrade documentation
+    #
+    # Release & Feature Status (set in page frontmatter):
+    # - page-beta: Boolean flag indicating beta/prerelease feature
+    # - page-beta-text: Custom text describing beta status (e.g., "Limited support")
+    # - publish-only-during-beta: Page only published during beta (unpublished after)
+    # - page-unpublish: Boolean flag to unpublish a page
+    #
+    # FAQ Structured Data (set by add-faq-structured-data.js):
+    # - page-faq-{N}-question: FAQ question text (numbered 1, 2, 3...)
+    # - page-faq-{N}-answer: FAQ answer text with xrefs resolved to URLs
+    # - page-faq-{N}-anchor: Optional anchor link to section (e.g., "#installation")
+    # - page-has-faqs: Boolean flag indicating page has FAQ content
+    # - page-faqs: JSON-stringified array of FAQ objects for schema.org
+    #
+    # Content Categorization:
+    # - page-categories: Comma-separated list of categories for filtering/searching
+    # - page-valid-categories: Global list of valid category values
+    # - page-commercial-names: Alternative commercial names for components
+    # - page-topic-type: Type of topic (how-to, tutorial, concepts, etc.)
+    #
+    # Related Content:
+    # - page-related-labs: JSON-stringified array of related lab objects
+    # - page-related-docs: JSON-stringified array of related docs objects
+    # - page-has-markdown: Boolean flag indicating markdown equivalent exists
+    #
+    # Navigation & Display:
+    # - page-context-switcher: JSON array of version switcher configurations
+    # - page-edit-url: URL to edit page in source repository
+    #
+    # Learning Objectives (set in page frontmatter):
+    # - learning-objective-{N}: Learning objectives using Bloom's Taxonomy (numbered)
+
+    # ---------------------------------------------------------------------------
+    # ENVIRONMENT/DEPLOYMENT ATTRIBUTES (conditional content display)
+    # ---------------------------------------------------------------------------
+    # These flags control which content is shown for specific deployment environments.
+    # Set in page frontmatter or component antora.yml to enable conditional content.
+    #
+    # env-kubernetes: Present when documenting Kubernetes deployment
+    # env-linux: Present when documenting Linux/bare-metal deployment
+    # env-docker: Present when documenting Docker deployment
+    # env-cloud: Present when documenting Redpanda Cloud
+    # page-cloud: Alias for cloud environment
+    #
+    # Mapped to page attributes (set by validate-attributes.js):
+    # - page-env-kubernetes: Replicated from env-kubernetes for UI access
+    # - page-env-linux: Replicated from env-linux for UI access
+    # - page-env-docker: Replicated from env-docker for UI access
+
+    # ---------------------------------------------------------------------------
+    # GLOSSARY ATTRIBUTES (used by glossary.js macro)
+    # ---------------------------------------------------------------------------
+    # Term Definition (in glossary term pages):
+    # - term-name: Name of the glossary term (required)
+    # - hover-text: Definition text shown on hover (required)
+    # - category: Category for organizing terms
+    # - link: External URL to link from term
+    #
+    # Document-Level Configuration (in pages using glossary):
+    # - glossary-tooltip: How to display tooltips: "true", "title", or custom data-* name
+    # - glossary-log-terms: Boolean to log glossary term references to console
+    # - glossary-links: Boolean (default "true") to enable/disable linking to glossary page
+    # - glossary-page: Path to glossary page (resolves AsciiDoc xrefs)
+    # - glossary-term-role: CSS role/class for styling glossary terms (default "glossary-term")
+
+    # ---------------------------------------------------------------------------
+    # REDPANDA CONNECT COMPONENT ATTRIBUTES (set by generate-rp-connect-info.js)
+    # ---------------------------------------------------------------------------
+    # These are set programmatically and used by rp-connect-components.js macro:
+    #
+    # - csvData: Parsed CSV data with connector metadata (type, support, cloud, licensing)
+    # - commercialNamesMap: Enriched commercial names from CSV and AsciiDoc sources
+    # - connectCategoriesData: Categories data for component organization
+
+    # ---------------------------------------------------------------------------
+    # UI TEMPLATE ATTRIBUTES (consumed by docs-ui Handlebars templates)
+    # ---------------------------------------------------------------------------
+    # Page Layout Control:
+    # - role: Controls page layout ("home", "bloblang-playground", "component-home-v2", etc.)
+    # - no-toc: Hides table of contents sidebar
+    # - pagination: Controls pagination display (undefined = hidden)
+    # - toctitle: Custom title for table of contents
+    # - toclevels: Controls TOC depth (default: 2)
+    #
+    # Beta & Availability Badges:
+    # - beta: Marks page as beta feature (shows badge)
+    # - beta-text: Tooltip text for beta badge
+    # - limited-availability: Marks page as limited availability feature
+    # - limited-availability-text: Tooltip text for limited availability badge
+    #
+    # Announcement Banners (page/component/site-level):
+    # - announcement: Shows per-page announcement banner (boolean)
+    # - announcement-text: Text content for announcement
+    # - announcement-link: URL for announcement CTA link
+    # - announcement-link-text: Text for announcement link button
+    #
+    # Version & EOL Banners:
+    # - cloud: Suppresses "view latest version" banner
+    # - hide-view-latest: Suppresses latest version banner
+    # - is-nearing-eol: Shows "reaching end of life" message (value: "true")
+    # - is-past-eol: Shows "end of life" message (value: "true")
+    # - eol: Legacy EOL flag
+    # - eol-date: End of life date string
+    # - eol-doc: Link to EOL documentation
+    # - upgrade-doc: Link to upgrade documentation
+    #
+    # TOC Additional Resources & Tools:
+    # - additional-resources: Array of resource links for TOC footer
+    # - toc-tools-title: Title for component tools section
+    # - toc-tools-links: Array of quick-access links with text/url/icon/external
+    # - context-switcher: Object defining context switching dropdown (name/to)
+    #
+    # Special Features:
+    # - console-config-migrator: Shows console config migration tool (boolean)
+    # - disable-property-tooltips: Disables property documentation tooltips (boolean)
+    # - bloblang-samples: Sample transformations for Bloblang playground
+    #
+    # Structured Data & SEO:
+    # - navtitle: Alternative navigation title (Schema.org alternativeHeadline)
+    # - release-date: Publication date (fallback for git-created-date)
+    # - prerequisites: Required knowledge/setup (Schema.org dependencies)
+    # - categories: Content categories/keywords (meta keywords, Schema.org)
+    # - personas: Audience personas (Schema.org audience type)
+    #
+    # Component Home Page (component-home-v2 layout):
+    # - home-overview-title: Title for overview section
+    # - home-intro: Introduction paragraph HTML content
+    # - home-intro-learn-more: "Learn more" link URL
+    # - home-ai-summary: AI-generated summary text
+    # - home-image: Hero image filename (from _images/)
+    # - home-image-alt: Alt text for hero image
+    # - home-primary-row-title: Title for primary feature row
+    # - home-primary-row: Array of primary features (url/title/description/link-text)
+    # - home-secondary-row-title: Title for secondary feature row
+    # - home-secondary-row: Array of secondary features
+    # - home-tertiary-row-title: Title for tertiary link row
+    # - home-tertiary-row: Array of tertiary links (url/title)
+    # - row: Home page feature rows (legacy format, JSON array)
+    # - ai-suggestions: AI search suggestions object for Kapa AI chat
+
+    # ---------------------------------------------------------------------------
+    # COMPONENT-LEVEL ATTRIBUTES (set in component antora.yml)
+    # ---------------------------------------------------------------------------
+    # These apply to all pages in a component version:
+    #
+    # - page-header-data: Header customization object with color field
+    # - (All announcement-*, toc-tools-* attributes also work at component level)
+
+    # ---------------------------------------------------------------------------
+    # STANDARD ASCIIDOC ATTRIBUTES
+    # ---------------------------------------------------------------------------
+    # Uncomment and set standard AsciiDoc attributes here as needed:
+    # experimental: ''  # Enable experimental UI macros (kbd, btn, menu)
+    # icons: font       # Use font-based icons
+    # sectanchors: ''   # Add section anchor links
+    # idprefix: ''      # ID prefix for auto-generated IDs
+    # idseparator: '-'  # Separator for auto-generated IDs
+
   extensions:
   - '@asciidoctor/tabs'
   - '@redpanda-data/docs-extensions-and-macros/macros/rp-connect-components'
@@ -49,6 +276,7 @@ antora:
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/add-git-dates'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/add-faq-structured-data'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/convert-to-markdown'
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/add-llms-directive'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/process-context-switcher'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/generate-index-data'
     data:
@@ -97,6 +325,7 @@ antora:
             - '**/docker-compose.yaml'
             - '**/docker-compose.yml'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/convert-llms-to-txt'
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/add-markdown-urls-to-sitemap'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/convert-sitemap-to-markdown'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/validate-attributes'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/find-related-docs'

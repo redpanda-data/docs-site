@@ -154,6 +154,28 @@ export default async (request, context) => {
     }
   }
 
+  // Inject llms.txt directive for AI agent discovery
+  const body = document.querySelector("body");
+  if (body) {
+    // Create llms directive HTML - using same approach as header/footer injection
+    const directiveHtml = `<blockquote class="llms-directive" tabindex="-1" aria-hidden="true"><p>For the complete documentation index, see <a href="/llms.txt" tabindex="-1" aria-hidden="true">llms.txt</a>. Component-specific: <a href="/api-full.txt" tabindex="-1" aria-hidden="true">api-full.txt</a></p></blockquote>`;
+
+    // Insert directive at the beginning of body - same pattern as footer injection
+    const wrapper = document.createElement("div");
+    wrapper.innerHTML = directiveHtml;
+
+    // Insert all child nodes from wrapper at start of body
+    const firstChild = body.firstChild;
+    while (wrapper.firstChild) {
+      body.insertBefore(wrapper.firstChild, firstChild);
+    }
+
+    // Add CSS to visually hide the directive
+    const style = document.createElement("style");
+    style.textContent = ".llms-directive{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden}";
+    head.appendChild(style);
+  }
+
   return new Response(document.documentElement.outerHTML, {
     status: 200,
     headers: {
