@@ -10,31 +10,26 @@ Access comprehensive API documentation for Redpanda's REST APIs including Admin,
 ### Admin API
 Management and monitoring of Redpanda clusters
 - URL: https://docs.redpanda.com/api/doc/admin/
-- OpenAPI: Available via Bump.sh
 - Purpose: Cluster administration, broker management, partition operations
 
 ### Cloud Control Plane API
 Manage Redpanda Cloud resources
 - URL: https://docs.redpanda.com/api/doc/cloud-controlplane/
-- OpenAPI: Available via Bump.sh
 - Purpose: Cloud cluster management, user management, resource provisioning
 
 ### Cloud Data Plane API
 Direct access to Redpanda Cloud clusters
 - URL: https://docs.redpanda.com/api/doc/cloud-dataplane/
-- OpenAPI: Available via Bump.sh
 - Purpose: Topic management, consumer groups, data operations
 
 ### HTTP Proxy API
 Kafka protocol over HTTP
 - URL: https://docs.redpanda.com/api/doc/http-proxy/
-- OpenAPI: Available via Bump.sh
 - Purpose: Produce and consume messages via HTTP, topic metadata
 
 ### Schema Registry API
 Schema management for data validation
 - URL: https://docs.redpanda.com/api/doc/schema-registry/
-- OpenAPI: Available via Bump.sh
 - Purpose: Register schemas, compatibility checking, schema versions
 
 ## API Catalog
