@@ -47,7 +47,7 @@ export default async (request: Request) => {
     // Submit to Netlify Forms
     // This mimics a form submission so it appears in your Netlify Forms dashboard
     const formParams = new URLSearchParams();
-    formParams.append('form-name', 'documentation-feedback');
+    formParams.append('form-name', 'feedbackForm');
     formParams.append('page-path', path);
     formParams.append('feedback', feedback);
     formParams.append('referer', referer);
