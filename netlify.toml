@@ -18,8 +18,19 @@ NODE_VERSION = "20"
     preset = "desktop"
 
 # Agent discovery: Link headers for homepage and root paths
+# Note: "/" redirects to "/home/" so we need headers on both
 [[headers]]
   for = "/"
+  [headers.values]
+    Link = '''</.well-known/api-catalog>; rel="api-catalog", </.well-known/mcp/server-card.json>; rel="mcp-server", </api/>; rel="service-doc"; title="API Documentation", </llms.txt>; rel="llms-txt"; title="LLM-friendly documentation", </.well-known/agent-skills/index.json>; rel="agent-skills"'''
+
+[[headers]]
+  for = "/home/"
+  [headers.values]
+    Link = '''</.well-known/api-catalog>; rel="api-catalog", </.well-known/mcp/server-card.json>; rel="mcp-server", </api/>; rel="service-doc"; title="API Documentation", </llms.txt>; rel="llms-txt"; title="LLM-friendly documentation", </.well-known/agent-skills/index.json>; rel="agent-skills"'''
+
+[[headers]]
+  for = "/home/index.html"
   [headers.values]
     Link = '''</.well-known/api-catalog>; rel="api-catalog", </.well-known/mcp/server-card.json>; rel="mcp-server", </api/>; rel="service-doc"; title="API Documentation", </llms.txt>; rel="llms-txt"; title="LLM-friendly documentation", </.well-known/agent-skills/index.json>; rel="agent-skills"'''
 
