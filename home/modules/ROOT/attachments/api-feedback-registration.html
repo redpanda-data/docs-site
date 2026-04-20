@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>API Feedback Registration</title>
+  <meta name="robots" content="noindex">
+</head>
+<body>
+  <!-- Hidden form to register API feedback endpoint with Netlify Forms -->
+  <!-- This form is never displayed but allows API submissions to be stored -->
+  <form name="api-feedback" netlify netlify-honeypot="bot-field" hidden>
+    <input type="text" name="page-path" />
+    <input type="text" name="feedback" />
+    <input type="text" name="referer" />
+    <input type="text" name="user-agent" />
+    <input type="text" name="timestamp" />
+    <input type="text" name="bot-field" />
+  </form>
+  <p>This page registers the API feedback form with Netlify. It should not be visible to users.</p>
+</body>
+</html>

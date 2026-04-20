@@ -46,8 +46,9 @@ export default async (request: Request) => {
 
     // Submit to Netlify Forms
     // This mimics a form submission so it appears in your Netlify Forms dashboard
+    // Uses 'api-feedback' form which doesn't require reCAPTCHA (registered in docs/_/api-feedback-registration.html)
     const formParams = new URLSearchParams();
-    formParams.append('form-name', 'feedbackForm');
+    formParams.append('form-name', 'api-feedback');
     formParams.append('page-path', path);
     formParams.append('feedback', feedback);
     formParams.append('referer', referer);
