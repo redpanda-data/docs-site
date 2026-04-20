@@ -17,6 +17,17 @@ NODE_VERSION = "20"
   [plugins.inputs.settings]
     preset = "desktop"
 
+# Agent discovery: Link headers for homepage and root paths
+[[headers]]
+  for = "/"
+  [headers.values]
+    Link = '''</.well-known/api-catalog>; rel="api-catalog", </.well-known/mcp/server-card.json>; rel="mcp-server", </api/>; rel="service-doc"; title="API Documentation", </llms.txt>; rel="llms-txt"; title="LLM-friendly documentation", </.well-known/agent-skills/index.json>; rel="agent-skills"'''
+
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Link = '''</.well-known/api-catalog>; rel="api-catalog", </.well-known/mcp/server-card.json>; rel="mcp-server", </api/>; rel="service-doc"; title="API Documentation", </llms.txt>; rel="llms-txt"; title="LLM-friendly documentation", </.well-known/agent-skills/index.json>; rel="agent-skills"'''
+
 # Allows us to fetch the API specs in local builds.
 [[headers]]
   for = "/api/_attachments/*"
