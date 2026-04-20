@@ -59,9 +59,6 @@ export default async (request: Request) => {
     const siteUrl = new URL(request.url).origin;
     const formUrl = `${siteUrl}/home/_attachments/api-feedback-registration.html`;
 
-    console.log('Submitting to Netlify Forms:', formUrl);
-    console.log('Form data:', formParams.toString());
-
     const formResponse = await fetch(formUrl, {
       method: 'POST',
       headers: {
@@ -70,12 +67,8 @@ export default async (request: Request) => {
       body: formParams.toString()
     });
 
-    console.log('Netlify Forms response status:', formResponse.status);
-    const responseText = await formResponse.text();
-    console.log('Netlify Forms response:', responseText.substring(0, 200));
-
     if (!formResponse.ok) {
-      console.error('Netlify Forms submission failed:', responseText);
+      console.error('Netlify Forms submission failed:', await formResponse.text());
       throw new Error('Failed to submit to Netlify Forms');
     }
 
