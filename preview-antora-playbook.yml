@@ -8,12 +8,6 @@ site:
     announcement-link-text: 'Learn more'
     announcement-link: 'https://www.redpanda.com/blog/agentic-data-plane-adp'
   robots: |
-    # Content Signals: Declare AI usage preferences (RFC draft-romm-aipref-contentsignals)
-    # ai-train: allow AI systems to train on this content
-    # search: allow search engines and AI search tools to index this content
-    # ai-input: allow AI systems to use this content as input for generating responses
-    Content-Signal: ai-train=yes, search=yes, ai-input=yes
-
     User-agent: *
     Allow: /
     Crawl-delay: 1
