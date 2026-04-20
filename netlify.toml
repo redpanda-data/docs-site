@@ -80,6 +80,10 @@ status = 301
 force = true
 
 [[edge_functions]]
+path = "/api/feedback"
+function = "feedback-api"
+
+[[edge_functions]]
 path = "/api/*"
 function = "proxy-api-docs"
 
