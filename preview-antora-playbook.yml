@@ -7,7 +7,52 @@ site:
     announcement-text: 'New! Redpanda Agentic Data Plane is here: a governed, high-performance foundation for AI agents.'
     announcement-link-text: 'Learn more'
     announcement-link: 'https://www.redpanda.com/blog/agentic-data-plane-adp'
-  robots: disallow
+  robots: |
+    # Content Signals: Declare AI usage preferences (RFC draft-romm-aipref-contentsignals)
+    # ai-train: allow AI systems to train on this content
+    # search: allow search engines and AI search tools to index this content
+    # ai-input: allow AI systems to use this content as input for generating responses
+    Content-Signal: ai-train=yes, search=yes, ai-input=yes
+
+    User-agent: *
+    Allow: /
+    Crawl-delay: 1
+
+    # OpenAI
+    User-agent: GPTBot
+    Allow: /
+
+    User-agent: ChatGPT-User
+    Allow: /
+
+    # Anthropic Claude (updated 2026)
+    User-agent: ClaudeBot
+    Allow: /
+
+    User-agent: Claude-User
+    Allow: /
+
+    User-agent: Claude-SearchBot
+    Allow: /
+
+    # Perplexity
+    User-agent: PerplexityBot
+    Allow: /
+
+    # Google AI
+    User-agent: Google-Extended
+    Allow: /
+
+    User-agent: GoogleOther
+    Allow: /
+
+    # Common Crawl
+    User-agent: CCBot
+    Allow: /
+
+    # Meta
+    User-agent: FacebookBot
+    Allow: /
 urls:
   html_extension_style: indexify
   redirect_facility: netlify
