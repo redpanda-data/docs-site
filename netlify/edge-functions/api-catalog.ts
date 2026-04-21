@@ -16,7 +16,7 @@ export default async (request: Request) => {
           type: "text/html"
         },
         "service-meta": {
-          href: `${siteUrl}/current/api/admin-api/`,
+          href: `${siteUrl}/api/admin-api/`,
           type: "text/html"
         },
         status: {
@@ -35,7 +35,7 @@ export default async (request: Request) => {
           type: "text/html"
         },
         "service-meta": {
-          href: `${siteUrl}/redpanda-cloud/api/cloud-controlplane-api/`,
+          href: `${siteUrl}/api/cloud-controlplane-api/`,
           type: "text/html"
         },
         status: {
@@ -54,7 +54,7 @@ export default async (request: Request) => {
           type: "text/html"
         },
         "service-meta": {
-          href: `${siteUrl}/redpanda-cloud/api/cloud-dataplane-api/`,
+          href: `${siteUrl}/api/cloud-dataplane-api/`,
           type: "text/html"
         },
         status: {
@@ -73,7 +73,7 @@ export default async (request: Request) => {
           type: "text/html"
         },
         "service-meta": {
-          href: `${siteUrl}/current/develop/http-proxy/`,
+          href: `${siteUrl}/api/http-proxy/`,
           type: "text/html"
         },
         status: {
@@ -92,7 +92,7 @@ export default async (request: Request) => {
           type: "text/html"
         },
         "service-meta": {
-          href: `${siteUrl}/current/develop/schema-registry/`,
+          href: `${siteUrl}/api/schema-registry/`,
           type: "text/html"
         },
         status: {

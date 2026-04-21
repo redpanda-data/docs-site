@@ -1,4 +1,16 @@
 export default async (request: Request) => {
+  // Handle CORS preflight
+  if (request.method === 'OPTIONS') {
+    return new Response(null, {
+      status: 204,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type'
+      }
+    });
+  }
+
   // Only allow POST requests
   if (request.method !== 'POST') {
     return new Response(JSON.stringify({ error: 'Method not allowed' }), {
@@ -89,7 +101,7 @@ export default async (request: Request) => {
     console.error('Feedback API error:', error);
     return new Response(JSON.stringify({
       error: 'Internal server error',
-      message: error.message
+      message: error instanceof Error ? error.message : String(error)
     }), {
       status: 500,
       headers: {
@@ -98,18 +110,6 @@ export default async (request: Request) => {
       }
     });
   }
-};
-
-// Handle CORS preflight
-export const onRequestOptions = async () => {
-  return new Response(null, {
-    status: 204,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type'
-    }
-  });
 };
 
 export const config = {
