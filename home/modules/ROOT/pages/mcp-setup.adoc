@@ -17,16 +17,16 @@ Run the following command to add the Redpanda MCP server to Claude Code:
 
 [source,bash]
 ----
-claude mcp add --transport stdio --scope user redpanda -- \
+claude mcp add --scope user redpanda -- \
   npx -y mcp-remote https://docs.redpanda.com/mcp
 ----
 
 This command:
 
-* Adds the MCP server with the name `redpanda`
-* Uses the `mcp-remote` bridge to connect to the HTTP endpoint
-* Configures it for your user account (stores in `~/.claude.json`)
-* Works on all platforms (macOS, Linux, Windows)
+* Adds the MCP server with the name `redpanda`.
+* Uses the `mcp-remote` bridge to connect to the HTTP endpoint.
+* Configures it for your user account (stores in `~/.claude.json`).
+* Works on all platforms (macOS, Linux, Windows).
 
 To verify the installation:
 
@@ -35,7 +35,7 @@ To verify the installation:
 claude mcp list
 ----
 
-For more information about Claude Code, see the https://docs.anthropic.com/en/docs/agents-and-tool-use/model-context-protocol[Claude Code documentation^].
+For more information about Claude Code, see the https://code.claude.com/docs/en/mcp[Claude Code documentation^].
 --
 Cursor::
 +
@@ -127,7 +127,7 @@ NOTE: When using Connectors, Claude connects to your remote MCP server from Anth
 
 *Method 2: Using Configuration File*
 
-This method works for all plans, including free tier.
+This method works for all plans, including Free plan.
 
 Edit the Claude Desktop configuration file for your platform:
 
@@ -152,7 +152,7 @@ This configuration uses the `mcp-remote` bridge to connect to Redpanda's remote 
 
 Restart Claude Desktop for changes to take effect.
 
-IMPORTANT: On some platforms, Claude Desktop cannot connect to remote servers configured using `claude_desktop_config.json`. If this method doesn't work, use the Connectors interface instead (available with Pro, Max, Team, or Enterprise plans).
+IMPORTANT: On Linux, Claude Desktop cannot connect to remote servers configured using `claude_desktop_config.json`. If this method doesn't work, use the Connectors interface instead (available with Pro, Max, Team, or Enterprise plans).
 
 For more details, see the https://support.anthropic.com/en/articles/9487310-desktop-app[Claude Desktop documentation^].
 --
@@ -237,7 +237,7 @@ RateLimit-Reset: <timestamp>
 
 === Configuration issues
 
-* Ensure `"type": "http"` is specified in your configuration for HTTP-based MCP servers.
+* For Cursor and VS Code, ensure `"type": "http"` is specified in your configuration. For Claude Desktop, use the `mcp-remote` bridge shown in the Set up section -- Claude Desktop does not support `"type": "http"`.
 * Some MCP clients may have issues with SSE streaming. If you experience connection problems, verify that your client supports HTTP-based MCP servers with Server-Sent Events (SSE).
 * Check that your client's Accept headers include both `application/json` and `text/event-stream`.
 
