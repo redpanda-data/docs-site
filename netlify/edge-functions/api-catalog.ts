@@ -73,7 +73,7 @@ export default async (request: Request) => {
           type: "text/html"
         },
         "service-meta": {
-          href: `${siteUrl}/api/http-proxy/`,
+          href: `${siteUrl}/current/develop/http-proxy/`,
           type: "text/html"
         },
         status: {
@@ -92,7 +92,7 @@ export default async (request: Request) => {
           type: "text/html"
         },
         "service-meta": {
-          href: `${siteUrl}/api/schema-registry/`,
+          href: `${siteUrl}/current/manage/schema-registry/`,
           type: "text/html"
         },
         status: {
