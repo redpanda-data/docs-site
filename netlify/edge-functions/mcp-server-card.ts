@@ -22,7 +22,7 @@ export default async (request: Request) => {
     metadata: {
       homepage: `${siteUrl}`,
       documentation: `${siteUrl}/current/home/`,
-      repository: "https://github.com/redpanda-data/docs-extensions-and-macros",
+      repository: "https://github.com/redpanda-data/docs-site",
       support: "https://support.redpanda.com",
       tags: ["documentation", "redpanda", "kafka", "streaming", "agentic data plane"]
     }
