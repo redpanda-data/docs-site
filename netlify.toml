@@ -68,6 +68,11 @@ to = "https://docs.redpanda.com/:splat"
 status = 301
 force = true
 
+# do11y analytics proxy (must be before generic /api/* rule)
+[[edge_functions]]
+path = "/api/do11y"
+function = "do11y-proxy"
+
 [[edge_functions]]
 path = "/api/*"
 function = "proxy-api-docs"
