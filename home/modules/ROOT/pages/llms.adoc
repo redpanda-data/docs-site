@@ -49,7 +49,7 @@ Redpanda docs serve both new and experienced users, offering detailed technical 
 - **{site-url}/current.md[Redpanda Self-Managed]:** Deploy and manage Redpanda in your environment for ultimate control, high performance, and fault tolerance with Kafka compatibility and advanced enterprise features like Tiered Storage.
 - **{site-url}/redpanda-cloud.md[Redpanda Cloud]:** Simplify streaming with a fully-managed service: Serverless, Bring Your Own Cloud (BYOC), or Dedicated. Serverless is the fastest and easiest way to start data streaming. Choose BYOC for full data sovereignty.
 - **{site-url}/redpanda-connect.md[Redpanda Connect]:** Effortlessly integrate data across systems with hundreds of prebuilt connectors, change data capture (CDC) capabilities, and YAML-configurable workflows. Available as a standalone solution or as part of Redpanda Self-Managed, Redpanda Connect empowers organizations to build scalable, high-performance data pipelines with minimal complexity.
-- **{site-url}/redpanda-cloud/ai-agents.md[Redpanda Agentic Data Plane]:** Enterprise-grade infrastructure for building, deploying, and governing AI agents at scale. Provides Model Context Protocol (MCP) integration, declarative agent configuration, and compliance-grade audit trails for AI agents that need direct access to databases, queues, and business systems.
+- **{site-url}/redpanda-adp.md[Redpanda Agentic Data Plane]:** Enterprise-grade infrastructure for building, deploying, and governing AI agents at scale. Provides Model Context Protocol (MCP) integration, declarative agent configuration, and compliance-grade audit trails for AI agents that need direct access to databases, queues, and business systems.
 - **{site-url}/current/console.md[Redpanda Console]:** Streamline operations with an intuitive Kafka UI for managing topics, partitions, and consumer groups, providing visibility and control over your data pipeline.
 
 ## Core documentation
@@ -79,11 +79,11 @@ Learn about `rpk`, the comprehensive command-line interface tool for managing Re
 
 Build and deploy production-ready AI agents with enterprise governance and compliance.
 
-- {site-url}/redpanda-cloud/ai-agents/adp-overview.md[Agentic Data Plane Overview]: Enterprise infrastructure for AI agents with built-in governance, observability, and compliance.
-- {site-url}/redpanda-cloud/ai-agents/mcp.md[Model Context Protocol (MCP)]: Give AI agents direct access to databases, queues, CRMs, and business systems without custom integration code.
-- {site-url}/redpanda-cloud/ai-agents/ai-gateway.md[AI Gateway]: Centralized gateway for AI agent interactions with intelligent routing, caching, and cost controls.
-- {site-url}/redpanda-cloud/ai-agents/agents.md[Building AI Agents]: Declarative agent configuration using Redpanda Connect connectors - no custom agent code required.
-- {site-url}/redpanda-cloud/ai-agents/observability.md[Agent Observability]: Track agent decisions, costs, and compliance with comprehensive audit trails.
+- {site-url}/redpanda-adp/adp-overview.md[Agentic Data Plane Overview]: Enterprise infrastructure for AI agents with built-in governance, observability, and compliance.
+- {site-url}/redpanda-adp/mcp.md[Model Context Protocol (MCP)]: Give AI agents direct access to databases, queues, CRMs, and business systems without custom integration code.
+- {site-url}/redpanda-adp/ai-gateway.md[AI Gateway]: Centralized gateway for AI agent interactions with intelligent routing, caching, and cost controls.
+- {site-url}/redpanda-adp/agents.md[Building AI Agents]: Declarative agent configuration using Redpanda Connect connectors - no custom agent code required.
+- {site-url}/redpanda-adp/observability.md[Agent Observability]: Track agent decisions, costs, and compliance with comprehensive audit trails.
 
 ## API references
 
