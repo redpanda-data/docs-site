@@ -77,7 +77,7 @@ content:
     branches: main
     start_paths: [docs,'*/docs']
   - url: https://github.com/redpanda-data/cloud-docs
-    branches: feature/remove-remote-mcp
+    branches: feature/remove-ai-agents
   - url: https://github.com/redpanda-data/rp-connect-docs
     branches: main
 ui:
