@@ -238,7 +238,8 @@ RateLimit-Reset: <timestamp>
 
 === Configuration issues
 
-* For Claude Code, Cursor, and VS Code, use the HTTP transport (`--transport http` or `"type": "http"`). For Claude Desktop, use the `mcp-remote` bridge shown in the Set up section -- Claude Desktop does not support direct HTTP transport.
+* For Claude Code, Cursor, and VS Code, use the HTTP transport (`--transport http` or `"type": "http"`).
+* For Claude Desktop, use the `mcp-remote` bridge shown in the Set up section -- Claude Desktop does not support direct HTTP transport.
 * If you previously configured Claude Code using `mcp-remote` and experience connection issues, remove the old configuration and use the HTTP transport method shown above.
 * Some MCP clients may have issues with SSE streaming. If you experience connection problems, verify that your client supports HTTP-based MCP servers with Server-Sent Events (SSE).
 * Check that your client's Accept headers include both `application/json` and `text/event-stream`.
