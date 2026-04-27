@@ -6,6 +6,7 @@ Redpanda provides a remote link:https://modelcontextprotocol.io[Model Context Pr
 The MCP server is hosted at: `\https://docs.redpanda.com/mcp`.
 You can add this endpoint to any AI agent that supports MCP.
 
+[[setup]]
 == Set up
 
 [tabs]
@@ -17,14 +18,13 @@ Run the following command to add the Redpanda MCP server to Claude Code:
 
 [source,bash]
 ----
-claude mcp add --scope user redpanda -- \
-  npx -y mcp-remote https://docs.redpanda.com/mcp
+claude mcp add --scope user --transport http redpanda https://docs.redpanda.com/mcp
 ----
 
 This command:
 
 * Adds the MCP server with the name `redpanda`.
-* Uses the `mcp-remote` bridge to connect to the HTTP endpoint.
+* Uses the native HTTP transport to connect directly to the endpoint.
 * Configures it for your user account (stores in `~/.claude.json`).
 * Works on all platforms (macOS, Linux, Windows).
 
@@ -34,6 +34,8 @@ To verify the installation:
 ----
 claude mcp list
 ----
+
+You should see `redpanda: https://docs.redpanda.com/mcp (HTTP) - ✓ Connected` in the output.
 
 For more information about Claude Code, see the https://code.claude.com/docs/en/mcp[Claude Code documentation^].
 --
@@ -237,7 +239,9 @@ RateLimit-Reset: <timestamp>
 
 === Configuration issues
 
-* For Cursor and VS Code, ensure `"type": "http"` is specified in your configuration. For Claude Desktop, use the `mcp-remote` bridge shown in the Set up section -- Claude Desktop does not support `"type": "http"`.
+* For Claude Code, Cursor, and VS Code, use the HTTP transport (`--transport http` or `"type": "http"`).
+* For Claude Desktop, use the `mcp-remote` bridge shown in the <<setup, Set up>> section. Claude Desktop does not support direct HTTP transport.
+* If you previously configured Claude Code using `mcp-remote` and experience connection issues, remove the old configuration and use the HTTP transport method shown above.
 * Some MCP clients may have issues with SSE streaming. If you experience connection problems, verify that your client supports HTTP-based MCP servers with Server-Sent Events (SSE).
 * Check that your client's Accept headers include both `application/json` and `text/event-stream`.
 
