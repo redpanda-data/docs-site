@@ -55,6 +55,10 @@ antora:
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/convert-to-markdown'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/add-llms-directive'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/process-context-switcher'
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/generate-fields-only-pages'
+    enabled: true
+    format: nested
+    headingLevel: 2
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/generate-index-data'
     data:
       sets:
