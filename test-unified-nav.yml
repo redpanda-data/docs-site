@@ -1,0 +1,107 @@
+site:
+  title: Redpanda Docs (Unified Nav Test)
+  start_page: data-platform::index.adoc
+  url: http://localhost:8000
+
+urls:
+  html_extension_style: indexify
+  latest_version_segment: 'current'
+
+output:
+  clean: true
+
+content:
+  sources:
+  # docs-site components (local - umbrella components)
+  - url: .
+    branches: HEAD
+    start_paths: [home, data-platform]
+
+  # docs repository (remote feature branches for testing)
+  - url: https://github.com/redpanda-data/docs
+    branches: [feature/page-header-data]
+  - url: https://github.com/redpanda-data/docs
+    branches: [
+      feature/rename-streaming-23.3,
+      feature/rename-streaming-24.1,
+      feature/rename-streaming-24.2,
+      feature/rename-streaming-24.3,
+      feature/rename-streaming-25.1,
+      feature/rename-streaming-25.2,
+      feature/rename-streaming-25.3
+    ]
+
+  # cloud-docs (remote feature branch)
+  - url: https://github.com/redpanda-data/cloud-docs
+    branches: [feature/component-home-v3]
+
+  # rp-connect-docs (remote feature branch)
+  - url: https://github.com/redpanda-data/rp-connect-docs
+    branches: [feature/unified-navigation]
+
+  # redpanda-labs (local)
+  - url: /Users/jakecahill/Documents/redpanda-labs
+    branches: HEAD
+    start_paths: [docs,'*/docs']
+
+  # adp-docs (local)
+  - url: /Users/jakecahill/Documents/adp-docs
+    branches: HEAD
+
+ui:
+  bundle:
+    url: /Users/jakecahill/Documents/docs-ui/build/ui-bundle.zip
+    snapshot: true
+
+asciidoc:
+  attributes:
+    experimental: ''
+  extensions:
+  - '@asciidoctor/tabs'
+  - '@redpanda-data/docs-extensions-and-macros/macros/rp-connect-components'
+  - '@redpanda-data/docs-extensions-and-macros/macros/glossary'
+  - '@redpanda-data/docs-extensions-and-macros/macros/badge'
+  - '@redpanda-data/docs-extensions-and-macros/macros/config-ref'
+  - '@redpanda-data/docs-extensions-and-macros/macros/helm-ref'
+  - '@redpanda-data/docs-extensions-and-macros/asciidoc-extensions/add-line-numbers-highlights'
+
+antora:
+  extensions:
+  # Unified navigation extension (local - for testing)
+  - require: /Users/jakecahill/Documents/docs-extensions-and-macros/extensions/unified-navigation.js
+    umbrellaSection: 'Data Platform'
+    umbrellaComponent: 'data-platform'
+
+  # Essential extensions
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/generate-rp-connect-info'
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/generate-rp-connect-categories'
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/collect-bloblang-samples'
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/add-git-dates'
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/add-faq-structured-data'
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/process-context-switcher'
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/compute-end-of-life'
+    data:
+      eol_settings:
+        - component: 'streaming'
+          supported_months: 12
+          warning_weeks: 13
+          eol_doc: https://support.redpanda.com/hc/en-us/articles/20617574366743-Redpanda-Supported-Versions
+          upgrade_doc: streaming:upgrade:index.adoc
+  - require: '@sntke/antora-mermaid-extension'
+    mermaid_library_url: https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs
+    script_stem: mermaid-scripts
+    mermaid_initialize_options:
+      start_on_load: true
+      theme: base
+      theme_variables:
+        line_color: '#e2401b'
+        font_family: Inter, sans-serif
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/modify-redirects'
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/unpublish-pages'
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/unlisted-pages'
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/add-global-attributes'
+  - '@redpanda-data/docs-extensions-and-macros/extensions/version-fetcher/set-latest-version'
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/validate-attributes'
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/find-related-docs'
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/find-related-labs'
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/aggregate-terms'

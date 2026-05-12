@@ -1,0 +1,13 @@
+name: data-platform
+title: Data Platform
+version: ~
+start_page: ROOT:index.adoc
+nav:
+  - modules/ROOT/nav.adoc
+asciidoc:
+  attributes:
+    page-header-data:
+      title: "Data Platform"
+      section: "Data Platform"
+      description: "The streaming foundation for everything you build"
+      color: "#4338ca"

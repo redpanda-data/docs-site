@@ -1,0 +1,18 @@
+= Data Platform
+:page-layout: data-platform
+:!showtitle:
+// Self-Managed links
+:self-managed-home: streaming:home:index.adoc
+:self-managed-quickstart: streaming:get-started:quick-start.adoc
+:self-managed-tiered-storage: streaming:manage:tiered-storage.adoc
+:self-managed-migrate: streaming:upgrade:migrate:index.adoc
+:self-managed-producers: streaming:develop:produce-data:configure-producers.adoc
+:self-managed-consumers: streaming:develop:consume-data:consumer-offsets.adoc
+:self-managed-schema-registry: streaming:manage:schema-reg.adoc
+// Cloud links
+:cloud-home: cloud-data-platform:home:index.adoc
+:cloud-byoc: cloud-data-platform:get-started:cluster-types:byoc:index.adoc
+// Connect links
+:connect-quickstart: connect:get-started:quickstarts:index.adoc
+
+This page uses the data-platform layout.
