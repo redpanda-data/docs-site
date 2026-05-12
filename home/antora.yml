@@ -6,7 +6,7 @@ asciidoc:
   attributes:
     # Data for the home page
     page-ai-suggestions:
-      - "How do I write from Redpanda Self-Managed to Snowflake?"
+      - "How do I write from Redpanda Streaming to Snowflake?"
       - "What's the difference between Redpanda and Kafka?"
       - "Which Iceberg catalogs does Redpanda Cloud support?"
       - "How do I create a CDC pipeline from MongoDB to Redpanda Cloud?"
