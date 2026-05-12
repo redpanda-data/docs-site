@@ -17,10 +17,22 @@ content:
     branches: HEAD
     start_paths: [home, data-platform, self-managed]
 
-  # docs repository (local - currently on feature/rename-streaming-main)
+  # docs repository - main branch (local for active work)
   - url: /Users/jakecahill/Documents/docs
     branches: HEAD
     exclude: ['**/node_modules/**']
+
+  # docs repository - version branches (remote for multi-version nav)
+  - url: https://github.com/redpanda-data/docs
+    branches: [
+      feature/rename-streaming-23.3,
+      feature/rename-streaming-24.1,
+      feature/rename-streaming-24.2,
+      feature/rename-streaming-24.3,
+      feature/rename-streaming-25.1,
+      feature/rename-streaming-25.2,
+      feature/rename-streaming-25.3
+    ]
 
   # cloud-docs (local - currently on feature/component-home-v3)
   - url: /Users/jakecahill/Documents/cloud-docs
