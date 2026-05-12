@@ -15,39 +15,30 @@ content:
   # docs-site components (local - umbrella components)
   - url: .
     branches: HEAD
-    start_paths: [home, data-platform]
+    start_paths: [home, data-platform, self-managed]
 
-  # docs repository (remote feature branches for testing)
-  - url: https://github.com/redpanda-data/docs
-    branches: [feature/page-header-data]
-  - url: https://github.com/redpanda-data/docs
-    branches: [
-      feature/rename-streaming-23.3,
-      feature/rename-streaming-24.1,
-      feature/rename-streaming-24.2,
-      feature/rename-streaming-24.3,
-      feature/rename-streaming-25.1,
-      feature/rename-streaming-25.2,
-      feature/rename-streaming-25.3
-    ]
+  # docs repository (local - currently on feature/rename-streaming-main)
+  - url: /Users/jakecahill/Documents/docs
+    branches: HEAD
+    exclude: ['**/node_modules/**']
 
-  # cloud-docs (local feature branch)
+  # cloud-docs (local - currently on feature/component-home-v3)
   - url: /Users/jakecahill/Documents/cloud-docs
     branches: HEAD
     exclude: ['**/node_modules/**']
 
-  # rp-connect-docs (local feature branch)
+  # rp-connect-docs (local - currently on feature/unified-navigation)
   - url: /Users/jakecahill/Documents/rp-connect-docs
     branches: HEAD
     exclude: ['**/node_modules/**']
 
-  # redpanda-labs (local - with node_modules excluded)
+  # redpanda-labs (local)
   - url: /Users/jakecahill/Documents/redpanda-labs
     branches: HEAD
     start_paths: [docs,'*/docs']
     exclude: ['**/node_modules/**']
 
-  # adp-docs (local - with node_modules excluded)
+  # adp-docs (local)
   - url: /Users/jakecahill/Documents/adp-docs
     branches: HEAD
     exclude: ['**/node_modules/**']
