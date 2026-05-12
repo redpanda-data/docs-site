@@ -31,22 +31,26 @@ content:
       feature/rename-streaming-25.3
     ]
 
-  # cloud-docs (remote feature branch)
-  - url: https://github.com/redpanda-data/cloud-docs
-    branches: [feature/component-home-v3]
+  # cloud-docs (local feature branch)
+  - url: /Users/jakecahill/Documents/cloud-docs
+    branches: HEAD
+    exclude: ['**/node_modules/**']
 
-  # rp-connect-docs (remote feature branch)
-  - url: https://github.com/redpanda-data/rp-connect-docs
-    branches: [feature/unified-navigation]
+  # rp-connect-docs (local feature branch)
+  - url: /Users/jakecahill/Documents/rp-connect-docs
+    branches: HEAD
+    exclude: ['**/node_modules/**']
 
-  # redpanda-labs (remote - using main to avoid node_modules glob issues)
-  - url: https://github.com/redpanda-data/redpanda-labs
-    branches: main
+  # redpanda-labs (local - with node_modules excluded)
+  - url: /Users/jakecahill/Documents/redpanda-labs
+    branches: HEAD
     start_paths: [docs,'*/docs']
+    exclude: ['**/node_modules/**']
 
-  # adp-docs (remote - using main to avoid node_modules glob issues)
-  - url: https://github.com/redpanda-data/adp-docs
-    branches: main
+  # adp-docs (local - with node_modules excluded)
+  - url: /Users/jakecahill/Documents/adp-docs
+    branches: HEAD
+    exclude: ['**/node_modules/**']
 
 ui:
   bundle:

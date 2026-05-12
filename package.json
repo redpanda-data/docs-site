@@ -12,8 +12,8 @@
     "afdocs:cli": "afdocs check \"${DEPLOY_URL:-https://docs.redpanda.com}\" -v"
   },
   "dependencies": {
-    "@antora/cli": "3.1.2",
-    "@antora/site-generator": "3.1.2",
+    "@antora/cli": "^3.1.14",
+    "@antora/site-generator": "^3.1.14",
     "@asciidoctor/tabs": "^1.0.0-beta.5",
     "@modelcontextprotocol/sdk": "1.17.0",
     "@modelfetch/netlify": "0.15.2",
