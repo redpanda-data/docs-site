@@ -67,8 +67,8 @@ asciidoc:
 
 antora:
   extensions:
-  # Unified navigation extension (local - for testing)
-  - require: /Users/jakecahill/Documents/docs-extensions-and-macros/extensions/unified-navigation.js
+  # Unified navigation extension (from feature branch)
+  - require: 'git+https://github.com/redpanda-data/docs-extensions-and-macros.git#feature/unified-navigation:extensions/unified-navigation.js'
     umbrellaSection: 'Data Platform'
     umbrellaComponent: 'data-platform'
 
