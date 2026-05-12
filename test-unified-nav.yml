@@ -20,7 +20,6 @@ content:
   # docs repository - main branch (local for active work)
   - url: /Users/jakecahill/Documents/docs
     branches: HEAD
-    exclude: ['**/node_modules/**']
 
   # docs repository - version branches (remote for multi-version nav)
   - url: https://github.com/redpanda-data/docs
@@ -37,23 +36,19 @@ content:
   # cloud-docs (local - currently on feature/component-home-v3)
   - url: /Users/jakecahill/Documents/cloud-docs
     branches: HEAD
-    exclude: ['**/node_modules/**']
 
   # rp-connect-docs (local - currently on feature/unified-navigation)
   - url: /Users/jakecahill/Documents/rp-connect-docs
     branches: HEAD
-    exclude: ['**/node_modules/**']
 
   # redpanda-labs (local)
   - url: /Users/jakecahill/Documents/redpanda-labs
     branches: HEAD
     start_paths: [docs,'*/docs']
-    exclude: ['**/node_modules/**']
 
   # adp-docs (local)
   - url: /Users/jakecahill/Documents/adp-docs
     branches: HEAD
-    exclude: ['**/node_modules/**']
 
 ui:
   bundle:
@@ -112,3 +107,4 @@ antora:
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/find-related-docs'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/find-related-labs'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/aggregate-terms'
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/convert-to-markdown'

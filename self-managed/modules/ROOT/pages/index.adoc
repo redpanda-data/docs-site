@@ -5,7 +5,7 @@
 :page-toclevels: -1
 :page-hero-description: Deploy and manage Redpanda on your own infrastructure—whether on bare metal, virtual machines, Kubernetes, or Docker. Self-Managed Redpanda gives you full control over your streaming platform with the flexibility to customize every aspect of your deployment.
 // Deploy section - Choose Your Component
-:page-deploy-title: Choose Your Component
+:page-deploy-title: Choose your component
 :page-deploy-1-title: Streaming
 :page-deploy-1-desc: Redpanda broker and rpk CLI for high-performance event streaming. Kafka-compatible API with 10x lower latency and no JVM dependencies.
 :page-deploy-1-link: streaming:get-started:quick-start.adoc
@@ -13,13 +13,13 @@
 :page-deploy-2-title: Connect
 :page-deploy-2-desc: Build data pipelines with 200+ pre-built connectors. Bloblang transformations, CDC support, and AI integrations.
 :page-deploy-2-link: connect:get-started:quickstarts/rpk.adoc
-:page-deploy-2-icon: plug
+:page-deploy-2-icon: plug-connected
 // Popular section - Deployment Options
-:page-popular-title: Deployment Options
+:page-popular-title: Deployment options
 :page-popular-1-title: Kubernetes
 :page-popular-1-desc: Deploy with the Redpanda Operator for full lifecycle management.
 :page-popular-1-link: streaming:deploy:deployment-option/self-hosted/kubernetes/index.adoc
-:page-popular-1-icon: package
+:page-popular-1-icon: kubernetes
 :page-popular-2-title: Linux
 :page-popular-2-desc: Install directly on bare metal or VMs for maximum performance.
 :page-popular-2-link: streaming:deploy:deployment-option/self-hosted/manual/index.adoc
@@ -27,4 +27,4 @@
 :page-popular-3-title: Docker
 :page-popular-3-desc: Quick local development and testing with Docker Compose.
 :page-popular-3-link: streaming:get-started:quick-start.adoc
-:page-popular-3-icon: package
+:page-popular-3-icon: docker
