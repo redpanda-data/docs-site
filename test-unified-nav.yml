@@ -39,14 +39,14 @@ content:
   - url: https://github.com/redpanda-data/rp-connect-docs
     branches: [feature/unified-navigation]
 
-  # redpanda-labs (local)
-  - url: /Users/jakecahill/Documents/redpanda-labs
-    branches: HEAD
+  # redpanda-labs (remote - using main to avoid node_modules glob issues)
+  - url: https://github.com/redpanda-data/redpanda-labs
+    branches: main
     start_paths: [docs,'*/docs']
 
-  # adp-docs (local)
-  - url: /Users/jakecahill/Documents/adp-docs
-    branches: HEAD
+  # adp-docs (remote - using main to avoid node_modules glob issues)
+  - url: https://github.com/redpanda-data/adp-docs
+    branches: main
 
 ui:
   bundle:
@@ -67,8 +67,8 @@ asciidoc:
 
 antora:
   extensions:
-  # Unified navigation extension (from feature branch)
-  - require: 'git+https://github.com/redpanda-data/docs-extensions-and-macros.git#feature/unified-navigation:extensions/unified-navigation.js'
+  # Unified navigation extension (from feature branch via package.json)
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/unified-navigation'
     umbrellaSection: 'Data Platform'
     umbrellaComponent: 'data-platform'
 
