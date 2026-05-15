@@ -1,6 +1,6 @@
 site:
   title: Redpanda Docs (Unified Nav Test)
-  start_page: data-platform::index.adoc
+  start_page: home::index.adoc
   url: http://localhost:8000
 
 urls:
@@ -20,6 +20,10 @@ content:
   # docs repository - main branch (local for active work)
   - url: /Users/jakecahill/Documents/docs
     branches: HEAD
+
+  # Shared branch for global attributes
+  - url: https://github.com/redpanda-data/docs
+    branches: [shared]
 
   # docs repository - version branches (remote for multi-version nav)
   - url: https://github.com/redpanda-data/docs
@@ -70,9 +74,9 @@ asciidoc:
 antora:
   extensions:
   # Unified navigation extension (from feature branch via package.json)
+  # Config-driven navigation: Components with page-navigation attribute use that config
+  # Components without page-navigation use standard Antora navigation
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/unified-navigation'
-    umbrellaSection: 'Data Platform'
-    umbrellaComponent: 'data-platform'
 
   # Essential extensions
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/generate-rp-connect-info'
