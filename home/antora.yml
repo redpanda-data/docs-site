@@ -4,6 +4,16 @@ version: ~
 start_page: ROOT:index.adoc
 asciidoc:
   attributes:
+    # Components to show in the home page navigation sidebar
+    page-nav-components: 'agentic-data-plane,data-platform'
+    # Navigation hierarchy configuration (config-driven navigation)
+    page-navigation:
+      - agentic-data-plane
+      - data-platform:
+          - cloud-data-platform
+          - self-managed:
+              - streaming
+              - connect
     # Data for the home page
     page-ai-suggestions:
       - "How do I write from Redpanda Streaming to Snowflake?"

@@ -6,8 +6,14 @@ nav:
   - modules/ROOT/nav.adoc
 asciidoc:
   attributes:
-    page-header-data:
+    component-metadata:
       title: "Data Platform"
-      section: "Data Platform"
       description: "The streaming foundation for everything you build"
       color: "#4338ca"
+      icon: "stack-2"
+    # Navigation hierarchy configuration (config-driven navigation)
+    page-navigation:
+      - cloud-data-platform
+      - self-managed:
+          - streaming
+          - connect

@@ -6,12 +6,16 @@ nav:
 - modules/ROOT/nav.adoc
 asciidoc:
   attributes:
-    page-header-data:
+    component-metadata:
       title: "Self-Managed"
-      section: "Data Platform"
       description: "Run Redpanda on your own infrastructure with Streaming and Connect."
-      color: "#107569"
+      color: "#059669"
       order: 1
       icon: "server"
       heroGradient: "linear-gradient(180deg, #0B2A23 0%, #134638 100%)"
       eyebrow: "SELF-MANAGED"
+    # Navigation hierarchy configuration (config-driven navigation)
+    page-navigation:
+      - self-managed:
+          - streaming
+          - connect
