@@ -14,21 +14,45 @@ output:
   clean: true
 content:
   sources:
+  # docs-site components (local - umbrella components with WIP content)
   - url: .
     branches: HEAD
-    start_paths: [home]
+    start_paths: [home, data-platform, self-managed]
+
+  # docs repository - WIP feature branches for testing
   - url: https://github.com/redpanda-data/docs
-    branches: [main, v/*, shared, 'site-search', '!v-end-of-life/*']
+    branches: [feature/rename-streaming-main, shared]
+
+  # docs repository - version branches for multi-version nav
+  - url: https://github.com/redpanda-data/docs
+    branches: [
+      feature/rename-streaming-23.3,
+      feature/rename-streaming-24.1,
+      feature/rename-streaming-24.2,
+      feature/rename-streaming-24.3,
+      feature/rename-streaming-25.1,
+      feature/rename-streaming-25.2,
+      feature/rename-streaming-25.3
+    ]
+
   - url: https://github.com/redpanda-data/redpanda-labs
     branches: main
     start_paths: [docs,'*/docs']
+
+  # cloud-docs - WIP feature branch
   - url: https://github.com/redpanda-data/cloud-docs
-    branches: main
+    branches: feature/component-home-v3
+
+  # rp-connect-docs - WIP feature branch
   - url: https://github.com/redpanda-data/rp-connect-docs
-    branches: main
+    branches: feature/unified-navigation
+
+  # adp-docs - WIP feature branch
+  - url: https://github.com/redpanda-data/adp-docs
+    branches: feature/platform-badges
 ui:
   bundle:
-    url: https://github.com/redpanda-data/docs-ui/releases/latest/download/ui-bundle.zip
+    url: https://github.com/redpanda-data/docs-ui/releases/download/v3.0.0-beta1/ui-bundle.zip
     snapshot: true
 asciidoc:
   attributes:
@@ -269,6 +293,11 @@ asciidoc:
   - '@redpanda-data/docs-extensions-and-macros/asciidoc-extensions/add-line-numbers-highlights'
 antora:
   extensions:
+  # Unified navigation extension (config-driven)
+  # Components with page-navigation attribute use that config
+  # Components without page-navigation use standard Antora navigation
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/unified-navigation'
+
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/git-full-clone'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/generate-rp-connect-info'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/generate-rp-connect-categories'
