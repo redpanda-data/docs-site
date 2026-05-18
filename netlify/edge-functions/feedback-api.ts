@@ -32,6 +32,16 @@ export default async (request: Request) => {
       });
     }
 
+    // Validate input types
+    if (typeof path !== 'string' || typeof feedback !== 'string') {
+      return new Response(JSON.stringify({
+        error: 'Invalid input types: path and feedback must be strings'
+      }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
     // Validate feedback length
     if (feedback.length < 10) {
       return new Response(JSON.stringify({
