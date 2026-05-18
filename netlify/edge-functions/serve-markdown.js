@@ -2,6 +2,12 @@ export default async (request, context) => {
   const url = new URL(request.url);
   const acceptHeader = request.headers.get('accept') || '';
 
+  // Skip static assets - let them through immediately
+  const staticAssetExtensions = ['.js', '.css', '.woff', '.woff2', '.ttf', '.otf', '.eot', '.svg', '.png', '.jpg', '.jpeg', '.gif', '.ico', '.webp', '.json', '.xml'];
+  if (staticAssetExtensions.some(ext => url.pathname.endsWith(ext))) {
+    return context.next();
+  }
+
   // Check if the request is asking for markdown or plain text
   const wantsMarkdown = acceptHeader.includes('text/markdown') ||
                         acceptHeader.includes('text/plain');
