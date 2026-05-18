@@ -171,12 +171,15 @@ export default async (request, context) => {
     }
 
     // Add CSS to visually hide the directive
-    const style = document.createElement("style");
-    style.textContent = ".llms-directive{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden}";
-    head.appendChild(style);
+    if (head) {
+      const style = document.createElement("style");
+      style.textContent = ".llms-directive{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden}";
+      head.appendChild(style);
+    }
   }
 
-  return new Response(document.documentElement.outerHTML, {
+  const htmlOutput = document.documentElement?.outerHTML || originalHtml;
+  return new Response(htmlOutput, {
     status: 200,
     headers: {
       "content-type": "text/html; charset=utf-8",
@@ -211,7 +214,8 @@ async function fetchWithRetry(url, options, maxRetries = 3) {
       });
       return response;
     } catch (error) {
-      console.warn(`Attempt ${attempt} failed for ${url}:`, error.message);
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      console.warn(`Attempt ${attempt} failed for ${url}:`, errorMsg);
 
       if (attempt === maxRetries) {
         throw error;
