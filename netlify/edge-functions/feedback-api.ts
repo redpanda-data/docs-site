@@ -86,11 +86,13 @@ export default async (request: Request) => {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: formParams.toString()
+      body: formParams.toString(),
+      signal: AbortSignal.timeout(5000) // 5 second timeout
     });
 
     if (!formResponse.ok) {
-      console.error('Netlify Forms submission failed:', await formResponse.text());
+      const errorText = await formResponse.text().catch(() => 'Unable to read error response');
+      console.error('Netlify Forms submission failed:', errorText);
       throw new Error('Failed to submit to Netlify Forms');
     }
 
