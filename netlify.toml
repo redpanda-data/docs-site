@@ -95,9 +95,10 @@ path = "/api/*"
 function = "proxy-api-docs"
 
 # Serve markdown content when Accept: text/markdown header is present
-[[edge_functions]]
-path = "/*"
-function = "serve-markdown"
+# TEMPORARILY DISABLED for debugging
+# [[edge_functions]]
+# path = "/*"
+# function = "serve-markdown"
 
 # ========Beta redirects==========
 [[redirects]]
