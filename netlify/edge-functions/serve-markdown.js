@@ -70,10 +70,4 @@ export default async (request, context) => {
     return context.next();
   }
 };
-
-// Configure the edge function to run on all documentation paths
-export const config = {
-  path: [
-    "/*"
-  ]
-};
+// Note: Path configuration is in netlify.toml
