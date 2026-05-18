@@ -30,21 +30,21 @@ https://docs.redpanda.com/current/home/
 - Admin and management operations
 
 ### Redpanda Cloud
-https://docs.redpanda.com/redpanda-cloud/
+https://docs.redpanda.com/cloud-data-platform/
 - Serverless, BYOC (Bring Your Own Cloud), and Dedicated clusters
 - Cloud-specific features and management
 - Networking and VPC peering
 - Cloud API usage and automation
 
 ### Redpanda Connect
-https://docs.redpanda.com/redpanda-connect/
+https://docs.redpanda.com/connect/
 - Stream processing and data integration
 - 200+ connectors for sources and destinations
 - Bloblang transformation language
 - Pipeline configuration and patterns
 
 ### Redpanda Labs
-https://docs.redpanda.com/redpanda-labs/
+https://docs.redpanda.com/labs/
 - Example applications and tutorials
 - Docker Compose templates
 - Integration guides and cookbooks
@@ -52,10 +52,10 @@ https://docs.redpanda.com/redpanda-labs/
 ## LLM-Friendly Formats
 For machine-readable full-text documentation:
 - https://docs.redpanda.com/llms.txt - Complete documentation index
-- https://docs.redpanda.com/ROOT-full.txt - Full Redpanda core docs
-- https://docs.redpanda.com/redpanda-cloud-full.txt - Full Cloud docs
-- https://docs.redpanda.com/redpanda-connect-full.txt - Full Connect docs
-- https://docs.redpanda.com/redpanda-labs-full.txt - Full Labs docs
+- https://docs.redpanda.com/streaming-full.txt - Full Redpanda core docs
+- https://docs.redpanda.com/cloud-data-platform-full.txt - Full Cloud docs
+- https://docs.redpanda.com/connect-full.txt - Full Connect docs
+- https://docs.redpanda.com/labs-full.txt - Full Labs docs
 
 ## Common Topics
 - **Kafka Compatibility**: Redpanda is API-compatible with Apache Kafka

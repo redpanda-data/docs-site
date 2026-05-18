@@ -420,7 +420,7 @@ To single-source pages across repos:
 . In the source repository, wrap the single-sourced page, after the title and aliases, with `// tag::single-source[]`. 
 . In the other repository, add the content with an `include` directive and the `single-source` tag. For example:
 +
-`include::ROOT:get-started:partner-integration.adoc[tag=single-source]`
+`include::streaming:get-started:partner-integration.adoc[tag=single-source]`
 +
 For more information about the include directive, see the https://docs.asciidoctor.org/asciidoc/latest/directives/include/[Asciidoc docs].
 
@@ -449,7 +449,7 @@ The shared version of this page in the `cloud-docs` repo looks like this:
 [,asciidoc]
 ----
 = Partner Integrations
-\include::ROOT:get-started:partner-integration.adoc[tag=single-source]
+\include::streaming:get-started:partner-integration.adoc[tag=single-source]
 ----
 
 Single-sourcing pages across repos usually requires two PRs (one for each repo) as well as conditionals. For example:
@@ -494,7 +494,7 @@ List of user principals to exclude from auditing.
 
 In the `cloud-docs` file where you want to add this shared content, add an include directive:
 
-`include::ROOT:reference:properties/cluster-properties.adoc[tags=audit_excluded_principals]`
+`include::streaming:reference:properties/cluster-properties.adoc[tags=audit_excluded_principals]`
 
 == Update the nav tree
 
