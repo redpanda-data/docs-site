@@ -2,18 +2,25 @@ name: home
 title: Home
 version: ~
 start_page: index.adoc
+nav:
+- modules/ROOT/nav.adoc
 asciidoc:
   attributes:
+    component-metadata:
+      title: "Home"
+      color: "#6366f1"
+      order: 0
     # Components to show in the home page navigation sidebar
     page-nav-components: 'agentic-data-plane,data-platform'
     # Navigation hierarchy configuration (config-driven navigation)
     page-navigation:
-      - agentic-data-plane
-      - data-platform:
-          - cloud-data-platform
-          - self-managed:
-              - streaming
-              - connect
+      - home:
+          - agentic-data-plane
+          - data-platform:
+              - cloud-data-platform
+              - self-managed:
+                  - streaming
+                  - connect
     # Data for the home page
     page-ai-suggestions:
       - "How do I write from Redpanda Streaming to Snowflake?"
