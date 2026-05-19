@@ -110,7 +110,18 @@ export default async (request, context) => {
     fetchWidget(`${originalOrigin}/assets/widgets/footer.html`, "footer"),
   ]);
 
-  const document = new DOMParser().parseFromString(originalHtml, "text/html");
+  let document;
+  try {
+    document = new DOMParser().parseFromString(originalHtml, "text/html");
+  } catch (error) {
+    console.error("❌ Failed to initialize DOMParser (WASM issue):", error);
+    // Return unmodified HTML if DOM parsing fails
+    return new Response(originalHtml, {
+      status: 200,
+      headers: { "content-type": "text/html; charset=utf-8" },
+    });
+  }
+
   if (!document) {
     console.error("❌ Failed to parse Bump.sh HTML.");
     return new Response(originalHtml, {
