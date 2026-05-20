@@ -1,7 +1,6 @@
 = Self-Managed Redpanda
 :description: Run Redpanda on your own infrastructure with full control over deployment, configuration, and operations.
 :page-layout: component-home-v3
-:page-role: component-home-v3
 :page-toclevels: -1
 :page-hero-description: Deploy and manage Redpanda on your own infrastructure—whether on bare metal, virtual machines, Kubernetes, or Docker. Self-Managed Redpanda gives you full control over your streaming platform with the flexibility to customize every aspect of your deployment.
 // Deploy section - Choose Your Component

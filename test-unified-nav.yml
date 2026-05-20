@@ -1,6 +1,6 @@
 site:
   title: Redpanda Docs (Unified Nav Test)
-  start_page: home::index.adoc
+  start_page: data-platform::index.adoc
   url: http://localhost:8000
 
 urls:
@@ -13,9 +13,10 @@ output:
 content:
   sources:
   # docs-site components (local - umbrella components)
+  # Note: home component temporarily excluded - data-platform is the home page
   - url: .
     branches: HEAD
-    start_paths: [home, data-platform, self-managed]
+    start_paths: [data-platform, self-managed]
 
   # docs repository - main branch (local for active work)
   - url: /Users/jakecahill/Documents/docs

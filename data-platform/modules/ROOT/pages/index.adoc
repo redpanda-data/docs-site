@@ -9,6 +9,12 @@
 :page-hero-stat1-text: faster than Kafka, same wire
 :page-hero-stat2-number: 200+
 :page-hero-stat2-text: connectors
+// === ASK AI SECTION ===
+:hero-ask-placeholder: Ask AI about Redpanda...
+:hero-suggestions-label: Try asking:
+:hero-suggestion-1: How do I write from Redpanda Streaming to Snowflake?
+:hero-suggestion-2: What's the difference between Redpanda and Kafka?
+:hero-suggestion-3: How do I create a CDC pipeline from Postgres to Redpanda Cloud?
 // === CHOOSE SECTION (heading) ===
 :page-choose-heading: Choose how you'll run Redpanda
 :page-choose-subtitle: Self-Managed or Cloud: same Kafka-compatible engine, different operations model. Both include Redpanda Connect for building data pipelines.
@@ -34,17 +40,10 @@
 :page-cloud-stat2-label: BYOC
 :page-cloud-stat2-text: Run in your VPC
 :page-cloud-cta: Open Cloud docs
-// === DECISION MATRIX ===
-:page-decision-heading: Not sure which to pick?
-:page-decision-subtitle: A quick decision matrix: most teams start with one of these two options.
-:page-decision-if1: need full control over networking, storage, and security posture
-:page-decision-then1: Start with Self-Managed
-:page-decision-if2: want streaming as a service with an SLA and zero ops
-:page-decision-then2: Start with Cloud
 // === POPULAR GUIDES ===
 :page-popular-heading: Popular across Data Platform
 :page-popular-subtitle: The guides teams open most when they're getting started.
-:page-popular-1-title: Deploy a Kafka-compatible cluster
+:page-popular-1-title: Deploy a Redpanda cluster
 :page-popular-1-tag: Self-Managed
 :page-popular-2-title: Tiered storage on S3
 :page-popular-2-tag: Self-Managed
@@ -52,13 +51,8 @@
 :page-popular-3-tag: Cloud
 :page-popular-4-title: Connect Postgres CDC to Snowflake
 :page-popular-4-tag: Connect
-:page-popular-5-title: Migrate from Apache Kafka
-:page-popular-5-tag: All
-:page-popular-6-title: Schema Registry & validation
-:page-popular-6-tag: All
 // === CORE CONCEPTS ===
 :page-concepts-heading: Core concepts
-:page-concepts-subtitle: The mental model that applies everywhere: Self-Managed, Cloud, and Connect.
 :page-concept-1-title: Topics & partitions
 :page-concept-1-description: How Redpanda lays out data on disk and parallelizes reads.
 :page-concept-2-title: Tiered storage
@@ -67,6 +61,11 @@
 :page-concept-3-description: Coordinated, fault-tolerant consumption across many workers.
 :page-concept-4-title: Schemas & contracts
 :page-concept-4-description: Validate every message at the broker with Avro, Protobuf, or JSON Schema.
+// === WHAT'S NEW SECTION ===
+:page-whats-new-1-title: Redpanda SQL
+:page-whats-new-1-desc: Query your streaming data in real-time with SQL. Run analytical queries directly on topics without ETL (BYOC clusters only).
+:page-whats-new-1-link: cloud-data-platform:sql:index.adoc
+:page-whats-new-1-tag: Cloud BYOC
 // === HELP FOOTER ===
 :page-help-heading: Need help choosing?
 :page-help-subtitle: Our team can walk you through the options and help you get started.
@@ -78,12 +77,11 @@
 :page-self-managed-home: streaming:home:index.adoc
 :page-self-managed-quickstart: streaming:get-started:quick-start.adoc
 :page-self-managed-tiered-storage: streaming:manage:tiered-storage.adoc
-:page-self-managed-migrate: streaming:migrate:index.adoc
 :page-self-managed-producers: streaming:develop:produce-data/configure-producers.adoc
 :page-self-managed-consumers: streaming:develop:consume-data/consumer-offsets.adoc
-:page-self-managed-schema-registry: streaming:manage:schema-reg/index.adoc
 // Cloud links
 :page-cloud-home: cloud-data-platform:home:index.adoc
 :page-cloud-byoc: cloud-data-platform:get-started:cluster-types/byoc/index.adoc
+:page-cloud-sql-docs: cloud-data-platform:sql:index.adoc
 // Connect links
 :page-connect-quickstart: connect:get-started:quickstarts/index.adoc

@@ -110,7 +110,7 @@ status = 307
 # ===========Docusaurus to Antora migration redirects============
 [[redirects]]
 from = "/home"
-to = "/current/home"
+to = "/data-platform/"
 status = 301
 
 [[redirects]]
