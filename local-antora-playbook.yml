@@ -43,16 +43,16 @@ content:
   - url: https://github.com/redpanda-data/cloud-docs
     branches: feature/component-home-v3
 
-  # rp-connect-docs - local clone
-  - url: /Users/jakecahill/Documents/rp-connect-docs
-    branches: HEAD
+  # rp-connect-docs - WIP feature branch
+  - url: https://github.com/redpanda-data/rp-connect-docs
+    branches: feature/unified-navigation
 
   # adp-docs - WIP feature branch
   - url: https://github.com/redpanda-data/adp-docs
     branches: feature/platform-badges
 ui:
   bundle:
-    url: /Users/jakecahill/Documents/docs-ui/build/ui-bundle.zip
+    url: https://github.com/redpanda-data/docs-ui/releases/download/v3.0.0-beta.9/ui-bundle.zip
     snapshot: true
 asciidoc:
   attributes:
