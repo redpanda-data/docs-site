@@ -6,9 +6,12 @@ nav:
 - modules/ROOT/nav.adoc
 asciidoc:
   attributes:
+    # Component metadata for navigation system
     component-metadata:
       title: "Home"
+      description: "Redpanda Documentation"
       color: "#6366f1"
+      icon: "home"
       order: 0
     # Components to show in the home page navigation sidebar
     page-nav-components: 'agentic-data-plane,data-platform'
