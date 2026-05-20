@@ -107,7 +107,7 @@ antora:
           warning_weeks: 13
           eol_doc: https://support.redpanda.com/hc/en-us/articles/20617574366743-Redpanda-Supported-Versions
           upgrade_doc: streaming:upgrade:index.adoc
-          whats_new_doc: streaming@current:get-started:release-notes/redpanda.adoc
+          whats_new_doc: get-started:release-notes/redpanda.adoc
   - require: '@sntke/antora-mermaid-extension'
     mermaid_library_url: https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs
     script_stem: mermaid-scripts
