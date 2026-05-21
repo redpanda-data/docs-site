@@ -36,7 +36,7 @@
 :page-cloud-bullet2: AWS, GCP, Azure
 :page-cloud-bullet3: 24/7 SRE on call
 :page-cloud-stat1-number: 99.99%
-:page-cloud-stat1-text: SLA on Dedicated
+:page-cloud-stat1-text: SLA on BYOC & Dedicated
 :page-cloud-stat2-label: BYOC
 :page-cloud-stat2-text: Run in your VPC
 :page-cloud-cta: Open Cloud docs
