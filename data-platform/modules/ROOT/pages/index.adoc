@@ -7,7 +7,7 @@
 :page-hero-subtitle: Run Redpanda on your infrastructure or let us manage it in the cloud. Then connect it to everything else with declarative pipelines.
 :page-hero-stat1-number: 10x
 :page-hero-stat1-text: faster than Kafka, same wire
-:page-hero-stat2-number: 200+
+:page-hero-stat2-number: 300+
 :page-hero-stat2-text: connectors
 // === ASK AI SECTION ===
 :hero-ask-placeholder: Ask AI about Redpanda...
