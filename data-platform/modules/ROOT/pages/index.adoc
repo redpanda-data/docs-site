@@ -31,7 +31,7 @@
 // === CLOUD CARD ===
 :page-cloud-title: Cloud
 :page-cloud-tagline: Streaming, fully managed.
-:page-cloud-description: Spin up a cluster in minutes. We handle upgrades, scaling, and failover: you bring the data. Available as Dedicated, Serverless, or Bring Your Own Cloud.
+:page-cloud-description: Spin up a cluster in seconds. We handle upgrades, scaling, and failover: you bring the data. Available as Serverless, Dedicated, or Bring Your Own Cloud (BYOC).
 :page-cloud-bullet1: Provisioned in 90 seconds
 :page-cloud-bullet2: AWS, GCP, Azure
 :page-cloud-bullet3: 24/7 SRE on call
