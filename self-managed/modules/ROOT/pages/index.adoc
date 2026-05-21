@@ -10,7 +10,7 @@
 :page-deploy-1-link: streaming:get-started:quick-start.adoc
 :page-deploy-1-icon: lightning
 :page-deploy-2-title: Connect
-:page-deploy-2-desc: Build data pipelines with 200+ pre-built connectors. Bloblang transformations, CDC support, and AI integrations.
+:page-deploy-2-desc: Build data pipelines with 300+ pre-built connectors. Bloblang transformations, CDC support, and AI integrations.
 :page-deploy-2-link: connect:get-started:quickstarts/rpk.adoc
 :page-deploy-2-icon: plug-connected
 // Popular section - Deployment Options
