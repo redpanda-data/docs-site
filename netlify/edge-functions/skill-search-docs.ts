@@ -39,7 +39,7 @@ https://docs.redpanda.com/cloud-data-platform/
 ### Redpanda Connect
 https://docs.redpanda.com/connect/
 - Stream processing and data integration
-- 200+ connectors for sources and destinations
+- 300+ connectors for sources and destinations
 - Bloblang transformation language
 - Pipeline configuration and patterns
 
