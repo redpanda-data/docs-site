@@ -13,7 +13,7 @@ NODE_OPTIONS = "--max-old-space-size=6144"
     fail_deploy_on_score_thresholds = "true"
 
   [[plugins.inputs.audits]]
-    path = "streaming/home/index.html"
+    path = "streaming/current/home/index.html"
 
   [plugins.inputs.settings]
     preset = "desktop"
@@ -61,7 +61,7 @@ NODE_OPTIONS = "--max-old-space-size=6144"
 # Top-level component directories (redirect to home pages)
 [[redirects]]
 from = "/current.md"
-to = "/current/home.md"
+to = "/streaming/current/home.md"
 status = 200
 
 # New component names (post-rename)
@@ -126,86 +126,79 @@ function = "proxy-api-docs"
 # ========Beta redirects==========
 [[redirects]]
 from = "/beta/*"
-to = "/current/:splat"
+to = "/streaming/current/:splat"
 status = 307
 
 # ===========Docusaurus to Antora migration redirects============
-# NOTE: /home redirect is now handled by conditional-home-redirect.js extension
-# When ADP exists: home shows full content
-# When ADP doesn't exist: home redirects to data-platform
-# [[redirects]]
-# from = "/home"
-# to = "/data-platform/"
-# status = 301
 
 [[redirects]]
 from = "/docs/23.2/*"
-to = "/23.2/:splat"
+to = "/streaming/23.2/:splat"
 status = 301
 
 [[redirects]]
 from = "/docs/23.1/platform/*"
-to = "/23.1/:splat"
+to = "/streaming/23.1/:splat"
 status = 301
 
 [[redirects]]
 from = "/docs/23.1/*"
-to = "/23.1/:splat"
+to = "/streaming/23.1/:splat"
 status = 301
 
 [[redirects]]
 from = "/docs/22.3/platform/*"
-to = "/current/:splat"
+to = "/streaming/current/:splat"
 status = 301
 
 [[redirects]]
 from = "/docs/22.3/*"
-to = "/current/:splat"
+to = "/streaming/current/:splat"
 status = 301
 
 [[redirects]]
 from = "/docs/22.2/platform/*"
-to = "/current/:splat"
+to = "/streaming/current/:splat"
 status = 301
 
 [[redirects]]
 from = "/docs/22.2/*"
-to = "/current/:splat"
+to = "/streaming/current/:splat"
 status = 301
 
 [[redirects]]
 from = "/docs/22.1/platform/*"
-to = "/current/:splat"
+to = "/streaming/current/:splat"
 status = 301
 
 [[redirects]]
 from = "/docs/22.1/*"
-to = "/current/:splat"
+to = "/streaming/current/:splat"
 status = 301
 
 [[redirects]]
 from = "/docs/21.11/platform/*"
-to = "/current/:splat"
+to = "/streaming/current/:splat"
 status = 301
 
 [[redirects]]
 from = "/docs/21.11/*"
-to = "/current/:splat"
+to = "/streaming/current/:splat"
 status = 301
 
 [[redirects]]
 from = "/docs/21.1/*"
-to = "/current/:splat"
+to = "/streaming/current/:splat"
 status = 301
 
 [[redirects]]
 from = "/docs/home/*"
-to = "/current/home"
+to = "/streaming/current/home"
 status = 301
 
 [[redirects]]
 from = "/docs/reference/faq"
-to = "/current/home"
+to = "/streaming/current/home"
 status = 301
 
 [[redirects]]
@@ -231,147 +224,147 @@ status = 301
 
 [[redirects]]
 from = "/docs/platform/*"
-to = "/current/:splat"
+to = "/streaming/current/:splat"
 status = 301
 
 [[redirects]]
 from = "/docs/*"
-to = "/current/:splat"
+to = "/streaming/current/:splat"
 status = 301
 
 # ================End of life versions===================
 
 [[redirects]]
 from = "/23.2/*"
-to = "/current/:splat"
+to = "/streaming/current/:splat"
 status = 301
 
 [[redirects]]
 from = "/23.1/*"
-to = "/current/:splat"
+to = "/streaming/current/:splat"
 status = 301
 
 [[redirects]]
 from = "/22.2/*"
-to = "/current/:splat"
+to = "/streaming/current/:splat"
 status = 301
 
 [[redirects]]
 from = "/22.3/*"
-to = "/current/:splat"
+to = "/streaming/current/:splat"
 status = 301
 
 [[redirects]]
 from = "/22.1/*"
-to = "/current/:splat"
+to = "/streaming/current/:splat"
 status = 301
 
 [[redirects]]
 from = "/21.11/*"
-to = "/current/:splat"
+to = "/streaming/current/:splat"
 status = 301
 
 # ========= Docker example redirects =====================
 
 [[redirects]]
-from = "/current/reference/docker-compose/"
-to = "/current/get-started/docker-compose-labs/"
+from = "/streaming/current/reference/docker-compose/"
+to = "/streaming/current/get-started/docker-compose-labs/"
 status = 301
 
 [[redirects]]
-from = "/current/console/reference/docker-compose/"
-to = "/current/get-started/docker-compose-labs/"
+from = "/streaming/current/console/reference/docker-compose/"
+to = "/streaming/current/get-started/docker-compose-labs/"
 status = 301
 
 [[redirects]]
-from = "/current/reference/console/docker-compose/"
-to = "/current/get-started/docker-compose-labs/"
+from = "/streaming/current/reference/console/docker-compose/"
+to = "/streaming/current/get-started/docker-compose-labs/"
 status = 301
 
 [[redirects]]
 from = "/23.2/reference/docker-compose/"
-to = "/current/get-started/docker-compose-labs/"
+to = "/streaming/current/get-started/docker-compose-labs/"
 status = 301
 
 [[redirects]]
-from = "/current/get-started/_attachments/single-broker/docker-compose.yml"
+from = "/streaming/current/get-started/_attachments/single-broker/docker-compose.yml"
 to = "/labs/docker-compose/_attachments/single-broker/docker-compose.yml"
 status = 301
 
 [[redirects]]
-from = "/current/get-started/_attachments/three-brokers/docker-compose.yml"
+from = "/streaming/current/get-started/_attachments/three-brokers/docker-compose.yml"
 to = "/labs/docker-compose/_attachments/three-brokers/docker-compose.yml"
 status = 301
 
 # =========Bulk redirects from different components========
 
 [[redirects]]
-from = "/current/develop/chat-room/"
+from = "/streaming/current/develop/chat-room/"
 to = "/labs/"
 status = 301
 
 [[redirects]]
-from = "/current/develop/chat-room-docker/"
+from = "/streaming/current/develop/chat-room-docker/"
 to = "/labs/"
 status = 301
 
 [[redirects]]
-from = "/current/get-started/code-samples/"
+from = "/streaming/current/get-started/code-samples/"
 to = "/labs/"
 status = 301
 
 [[redirects]]
-from = "/current/development/code-samples/"
+from = "/streaming/current/development/code-samples/"
 to = "/labs/"
 status = 301
 
 [[redirects]]
-from = "/current/introduction/code-samples/"
+from = "/streaming/current/introduction/code-samples/"
 to = "/labs/"
 status = 301
 
 [[redirects]]
-from = "/current/develop/code-samples/"
+from = "/streaming/current/develop/code-samples/"
 to = "/labs/"
 status = 301
 
 [[redirects]]
-from = "/current/develop/guide-go-cloud/"
+from = "/streaming/current/develop/guide-go-cloud/"
 to = "/labs/"
 status = 301
 
 [[redirects]]
-from = "/current/develop/guide-python-cloud/"
+from = "/streaming/current/develop/guide-python-cloud/"
 to = "/labs/"
 status = 301
 
 [[redirects]]
-from = "/current/develop/guide-java-cloud/"
+from = "/streaming/current/develop/guide-java-cloud/"
 to = "/labs/"
 status = 301
 
 [[redirects]]
-from = "/current/develop/guide-nodejs-cloud/"
+from = "/streaming/current/develop/guide-nodejs-cloud/"
 to = "/labs/"
 status = 301
 
 [[redirects]]
-from = "/current/develop/guide-go/"
+from = "/streaming/current/develop/guide-go/"
 to = "/labs/"
 status = 301
 
 [[redirects]]
-from = "/current/develop/guide-python/"
+from = "/streaming/current/develop/guide-python/"
 to = "/labs/"
 status = 301
 
 [[redirects]]
-from = "/current/develop/guide-java/"
+from = "/streaming/current/develop/guide-java/"
 to = "/labs/"
 status = 301
 
 [[redirects]]
-from = "/current/develop/guide-nodejs/"
+from = "/streaming/current/develop/guide-nodejs/"
 to = "/labs/"
 status = 301
 
@@ -407,12 +400,12 @@ status = 301
 force = true
 
 [[redirects]]
-from = "/current/reference/rpk/rpk-cloud/*"
+from = "/streaming/current/reference/rpk/rpk-cloud/*"
 to = "/cloud-data-platform/reference/rpk/rpk-cloud/:splat"
 status = 301
 
 [[redirects]]
-from = "/current/get-started/quick-start-cloud/"
+from = "/streaming/current/get-started/quick-start-cloud/"
 to = "/cloud-data-platform/get-started/cluster-types/dedicated/quick-start-cloud/"
 status = 301
 
@@ -428,12 +421,12 @@ status = 301
 
 # Old quickstart from beta release
 [[redirects]]
-from = "/current/deploy/deployment-option/cloud/api/cloud-api-quickstart"
+from = "/streaming/current/deploy/deployment-option/cloud/api/cloud-api-quickstart"
 to = "/api/doc/cloud-controlplane/topic/topic-quickstart/"
 status = 301
 
 [[redirects]]
-from = "/current/deploy/deployment-option/cloud/*"
+from = "/streaming/current/deploy/deployment-option/cloud/*"
 to = "/cloud-data-platform/deploy/deployment-option/cloud/:splat"
 status = 301
 
@@ -448,7 +441,7 @@ to = "/cloud-data-platform/deploy/deployment-option/cloud/:splat"
 status = 301
 
 [[redirects]]
-from = "/current/develop/http-proxy-cloud/"
+from = "/streaming/current/develop/http-proxy-cloud/"
 to = "/cloud-data-platform/develop/http-proxy/"
 status = 301
 
