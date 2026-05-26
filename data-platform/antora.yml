@@ -21,7 +21,6 @@ asciidoc:
     ai-suggestion-4: "Deploy a Kafka-compatible cluster"
     # Navigation hierarchy configuration (config-driven navigation)
     page-navigation:
-      - home:ROOT:mcp-setup  # MCP Server Setup doc (from home component)
       - cloud-data-platform
       - self-managed:
           - streaming

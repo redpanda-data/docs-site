@@ -12,7 +12,7 @@ asciidoc:
       color: "#9F1239"
       order: 1
       icon: "server"
-      heroGradient: "linear-gradient(180deg, #0B2A23 0%, #134638 100%)"
+      heroGradient: "linear-gradient(180deg, #2a0814 0%, #5c0f26 100%)"
       eyebrow: "SELF-MANAGED"
       contextNote: "Two products you install and operate separately."
     # AI suggestions for chat drawer (component-specific)

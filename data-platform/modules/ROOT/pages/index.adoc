@@ -25,7 +25,7 @@
 :page-selfmanaged-bullet1: Single binary, no JVM
 :page-selfmanaged-bullet2: Air-gapped & FedRAMP-ready
 :page-selfmanaged-bullet3: Tune every knob
-:page-selfmanaged-stat1-label: K8s
+:page-selfmanaged-stat1-label: Kubernetes
 :page-selfmanaged-stat1-value: Operator + Helm
 :page-selfmanaged-cta: Open Self-Managed docs
 // === CLOUD CARD ===
@@ -45,12 +45,16 @@
 :page-popular-subtitle: The guides teams open most when they're getting started.
 :page-popular-1-title: Deploy a Redpanda cluster
 :page-popular-1-tag: Self-Managed
+:page-popular-1-link: streaming:deploy:index.adoc
 :page-popular-2-title: Tiered storage on S3
 :page-popular-2-tag: Self-Managed
+:page-popular-2-link: streaming:data-management:tiered-storage.adoc
 :page-popular-3-title: Create your first BYOC cluster
 :page-popular-3-tag: Cloud
+:page-popular-3-link: cloud-data-platform:get-started:cluster-types/byoc/index.adoc
 :page-popular-4-title: Connect Postgres CDC to Snowflake
 :page-popular-4-tag: Connect
+:page-popular-4-link: connect:cookbooks:snowflake_ingestion.adoc
 // === HELP FOOTER ===
 :page-help-heading: Need help choosing?
 :page-help-subtitle: Our team can walk you through the options and help you get started.
@@ -61,7 +65,7 @@
 // Self-Managed links
 :page-self-managed-home: streaming:home:index.adoc
 :page-self-managed-quickstart: streaming:get-started:quick-start.adoc
-:page-self-managed-tiered-storage: streaming:manage:tiered-storage.adoc
+:page-self-managed-tiered-storage: streaming:data-management:tiered-storage.adoc
 :page-self-managed-producers: streaming:develop:produce-data/configure-producers.adoc
 :page-self-managed-consumers: streaming:develop:consume-data/consumer-offsets.adoc
 // Cloud links

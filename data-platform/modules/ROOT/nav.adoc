@@ -1,1 +1,2 @@
 * xref:index.adoc[Overview]
+* xref:home:ROOT:mcp-setup.adoc[Install Docs MCP Server]

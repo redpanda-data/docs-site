@@ -50,16 +50,16 @@ Redpanda docs serve both new and experienced users, offering detailed technical 
 - **{site-url}/cloud-data-platform.md[Redpanda Cloud]:** Simplify streaming with a fully-managed service: Serverless, Bring Your Own Cloud (BYOC), or Dedicated. Serverless is the fastest and easiest way to start data streaming. Choose BYOC for full data sovereignty.
 - **{site-url}/connect.md[Redpanda Connect]:** Effortlessly integrate data across systems with hundreds of prebuilt connectors, change data capture (CDC) capabilities, and YAML-configurable workflows. Available as a standalone solution or as part of Redpanda Streaming, Redpanda Connect empowers organizations to build scalable, high-performance data pipelines with minimal complexity.
 - **{site-url}/cloud-data-platform/ai-agents.md[Redpanda Agentic Data Plane]:** Enterprise-grade infrastructure for building, deploying, and governing AI agents at scale. Provides Model Context Protocol (MCP) integration, declarative agent configuration, and compliance-grade audit trails for AI agents that need direct access to databases, queues, and business systems.
-- **{site-url}/streaming/console.md[Redpanda Console]:** Streamline operations with an intuitive Kafka UI for managing topics, partitions, and consumer groups, providing visibility and control over your data pipeline.
+- **{site-url}/streaming/current/console.md[Redpanda Console]:** Streamline operations with an intuitive Kafka UI for managing topics, partitions, and consumer groups, providing visibility and control over your data pipeline.
 
 ## Core documentation
 
-- {site-url}/streaming/get-started/quickstarts.md[Get started]: Fast-track your journey with Redpanda Streaming by deploying a complete example in Docker.
-- {site-url}/streaming/get-started/architecture.md[Redpanda concepts]: Deep-dive into key concepts like Tiered Storage, partitions, replication, and data streaming architecture.
+- {site-url}/streaming/current/get-started/quickstarts.md[Get started]: Fast-track your journey with Redpanda Streaming by deploying a complete example in Docker.
+- {site-url}/streaming/current/get-started/architecture.md[Redpanda concepts]: Deep-dive into key concepts like Tiered Storage, partitions, replication, and data streaming architecture.
 
 ## Deployment guides
 
-- {site-url}/streaming/deploy.md[Redpanda Streaming]: Install and configure Redpanda and Redpanda Console in self-hosted environments, including production best practices. Choose from Linux (bare-metal) or Kubernetes deployment instructions.
+- {site-url}/streaming/current/deploy.md[Redpanda Streaming]: Install and configure Redpanda and Redpanda Console in self-hosted environments, including production best practices. Choose from Linux (bare-metal) or Kubernetes deployment instructions.
 - {site-url}/cloud-data-platform/get-started/cluster-types.md[Redpanda Cloud]: Guides for using Redpanda Cloud across Serverless, BYOC, and Dedicated options.
 - {site-url}/connect.md[Redpanda Connect]: Standalone documentation for deploying and managing Redpanda Connect, with or without Redpanda.
 
@@ -67,7 +67,7 @@ Redpanda docs serve both new and experienced users, offering detailed technical 
 
 Learn about `rpk`, the comprehensive command-line interface tool for managing Redpanda clusters.
 
-- {site-url}/streaming/reference/rpk/rpk-commands.md[rpk documentation for Redpanda Streaming]
+- {site-url}/streaming/current/reference/rpk/rpk-commands.md[rpk documentation for Redpanda Streaming]
 - {site-url}/cloud-data-platform/reference/rpk/rpk-commands.md[rpk documentation for Redpanda Cloud]
 
 ## Redpanda Console
@@ -94,12 +94,6 @@ Build and deploy production-ready AI agents with enterprise governance and compl
 
 ## Troubleshooting
 
-- {site-url}/streaming/troubleshoot.md[Troubleshooting guide]: Resolve common issues with installation, configuration, and performance.
-- {site-url}/streaming/troubleshoot/debug-bundle.md[Debug bundles]: Generate and analyze debug bundles for diagnosing cluster issues.
-
-## Self-Managed versioning
-
-The site includes versioned documentation for **Redpanda Streaming**:
-- **Latest version**: The most up-to-date documentation is available at {site-url}/streaming.md[{site-url}/streaming.md].
-- **Previous versions**: Previous versions can be accessed by replacing `streaming` with the version number in any URL.
+- {site-url}/streaming/current/troubleshoot.md[Troubleshooting guide]: Resolve common issues with installation, configuration, and performance.
+- {site-url}/streaming/current/troubleshoot/debug-bundle.md[Debug bundles]: Generate and analyze debug bundles for diagnosing cluster issues.
 
