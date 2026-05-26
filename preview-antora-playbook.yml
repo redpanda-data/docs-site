@@ -33,7 +33,7 @@ content:
     branches: main
 ui:
   bundle:
-    url: https://github.com/redpanda-data/docs-ui/releases/download/v3.0.0-beta.12/ui-bundle.zip
+    url: https://github.com/redpanda-data/docs-ui/releases/download/v3.0.0-beta.14/ui-bundle.zip
     snapshot: true
 asciidoc:
   attributes:
