@@ -34,17 +34,17 @@ export default async (request, context) => {
     return Response.redirect(`${url.origin}${mdPath}`, 302);
   }
 
-  // Map paths to header background colors (matching component-metadata colors)
+  // Map paths to header background colors (8% component color mixed with white)
   const headerColors = {
-    "/api/doc/admin": "#107569",           // streaming component color
-    "/api/doc/cloud-controlplane": "#0ea5e9", // cloud-data-platform component color
-    "/api/doc/cloud-dataplane": "#0ea5e9",    // cloud-data-platform component color
+    "/api/doc/admin": "color-mix(in srgb, #9F1239 8%, white)",              // self-managed (rose)
+    "/api/doc/cloud-controlplane": "color-mix(in srgb, #1D4ED8 8%, white)", // cloud (blue)
+    "/api/doc/cloud-dataplane": "color-mix(in srgb, #1D4ED8 8%, white)",    // cloud (blue)
   };
 
   const matchedPath = Object.keys(headerColors).find((path) =>
     normalizedPath.startsWith(path)
   );
-  const headerColor = headerColors[matchedPath] || "#4338ca"; // data-platform color as default
+  const headerColor = headerColors[matchedPath] || "color-mix(in srgb, #1D4ED8 8%, white)"; // default to cloud
 
   // Build the proxied Bump.sh URL
   const bumpUrl = new URL(request.url);
