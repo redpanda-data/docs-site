@@ -143,9 +143,10 @@ export default async (request, context) => {
   // Inject header with dynamic background color
   const topBody = document.querySelector("#embed-top-body");
   if (topBody && headerWidget) {
+    // Add background color to the navbar element
     const coloredHeader = headerWidget.replace(
-      /(<nav[^>]*style="[^"]*background-color:\s*)#[^";]+/,
-      `$1${headerColor}`
+      /<nav([^>]*class="[^"]*navbar[^"]*")/,
+      `<nav$1 style="background-color: ${headerColor};"`
     );
 
     const wrapper = document.createElement("div");
