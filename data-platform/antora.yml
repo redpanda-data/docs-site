@@ -21,7 +21,8 @@ asciidoc:
     ai-suggestion-4: "Deploy a Kafka-compatible cluster"
     # Navigation hierarchy configuration (config-driven navigation)
     page-navigation:
-      - cloud-data-platform
-      - self-managed:
-          - streaming
-          - connect
+      - data-platform:
+          - cloud-data-platform
+          - self-managed:
+              - streaming
+              - connect
