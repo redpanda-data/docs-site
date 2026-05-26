@@ -67,7 +67,7 @@ status = 200
 # New component names (post-rename)
 [[redirects]]
 from = "/streaming.md"
-to = "/streaming/home.md"
+to = "/streaming/current/home.md"
 status = 200
 
 [[redirects]]
