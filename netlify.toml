@@ -264,6 +264,30 @@ from = "/21.11/*"
 to = "/streaming/current/:splat"
 status = 301
 
+# ========= Component rename redirects =====================
+
+# Redirect /current/* to /streaming/current/*
+[[redirects]]
+from = "/current/*"
+to = "/streaming/current/:splat"
+status = 301
+
+# Redirect old component names to new ones (catch-all after specific redirects)
+[[redirects]]
+from = "/redpanda-connect/*"
+to = "/connect/:splat"
+status = 301
+
+[[redirects]]
+from = "/redpanda-cloud/*"
+to = "/cloud-data-platform/:splat"
+status = 301
+
+[[redirects]]
+from = "/redpanda-labs/*"
+to = "/labs/:splat"
+status = 301
+
 # ========= Docker example redirects =====================
 
 [[redirects]]
