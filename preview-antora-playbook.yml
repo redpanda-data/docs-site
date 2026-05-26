@@ -3,7 +3,7 @@ site:
   start_page: home:ROOT:index.adoc
   url: https://redpanda-antora-site.netlify.app
   keys:
-    announcement: true
+    announcement: false
     announcement-text: 'New! Redpanda SQL is here: query your event streams with familiar SQL syntax.'
     announcement-link-text: 'Learn more'
     announcement-link: 'https://www.redpanda.com/blog/redpanda-sql-ga'
