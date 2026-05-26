@@ -4,7 +4,7 @@ site:
   url: http://localhost:8000
   keys:
     announcement: true
-    announcement-text: 'New! Access Redpanda docs directly in your IDE with our MCP server.'
+    announcement-text: 'New! Redpanda SQL is here: query your event streams with familiar SQL syntax.'
     announcement-link-text: 'Get started.'
     announcement-link: 'https://docs.redpanda.com/home/mcp-setup/'
 urls:
@@ -43,16 +43,16 @@ content:
   - url: https://github.com/redpanda-data/cloud-docs
     branches: feature/component-home-v3
 
-  # rp-connect-docs - WIP feature branch (using local for testing)
-  - url: /Users/jakecahill/Documents/rp-connect-docs
-    branches: HEAD
+  # rp-connect-docs - WIP feature branch
+  - url: https://github.com/redpanda-data/rp-connect-docs
+    branches: feature/unified-navigation
 
   # adp-docs - WIP feature branch
-  - url: https://github.com/redpanda-data/adp-docs
-    branches: feature/platform-badges
+  #- url: https://github.com/redpanda-data/adp-docs
+    #branches: feature/platform-badges
 ui:
   bundle:
-    url: /Users/jakecahill/Documents/docs-ui/build/ui-bundle.zip
+    url: ../docs-ui/build/ui-bundle.zip
     snapshot: true
 asciidoc:
   attributes:
@@ -293,6 +293,8 @@ asciidoc:
   - '@redpanda-data/docs-extensions-and-macros/asciidoc-extensions/add-line-numbers-highlights'
 antora:
   extensions:
+  # Conditional home page redirect when agentic-data-plane component doesn't exist
+  - require: '../docs-extensions-and-macros/extensions/conditional-home-redirect.js'
   # Unified navigation extension (config-driven)
   # Components with page-navigation attribute use that config
   # Components without page-navigation use standard Antora navigation

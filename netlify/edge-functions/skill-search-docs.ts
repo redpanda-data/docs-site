@@ -20,7 +20,7 @@ GET https://docs.redpanda.com/search?q={query}
 ## Documentation Sections
 
 ### Redpanda Core (Self-Hosted)
-https://docs.redpanda.com/current/home/
+https://docs.redpanda.com/streaming/home/
 - Getting started guides and quickstarts
 - Deployment on Kubernetes, Docker, or Linux
 - Configuration and tuning

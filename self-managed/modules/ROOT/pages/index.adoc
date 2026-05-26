@@ -2,7 +2,7 @@
 :description: Run Redpanda on your own infrastructure with full control over deployment, configuration, and operations.
 :page-layout: component-home-v3
 :page-toclevels: -1
-:page-hero-description: Deploy and manage Redpanda on your own infrastructure—whether on bare metal, virtual machines, Kubernetes, or Docker. Self-Managed Redpanda gives you full control over your streaming platform with the flexibility to customize every aspect of your deployment.
+:page-hero-description: Deploy and manage Redpanda on your own infrastructure, whether on bare metal, virtual machines, Kubernetes, or Docker. Self-Managed Redpanda gives you full control over your streaming platform with the flexibility to customize every aspect of your deployment.
 // Deploy section - Choose Your Component
 :page-deploy-title: Choose your component
 :page-deploy-1-title: Streaming
@@ -17,11 +17,11 @@
 :page-popular-title: Deployment options
 :page-popular-1-title: Kubernetes
 :page-popular-1-desc: Deploy with the Redpanda Operator for full lifecycle management.
-:page-popular-1-link: streaming:deploy:deployment-option/self-hosted/kubernetes/index.adoc
+:page-popular-1-link: streaming:deploy:redpanda/kubernetes/index.adoc
 :page-popular-1-icon: kubernetes
 :page-popular-2-title: Linux
 :page-popular-2-desc: Install directly on bare metal or VMs for maximum performance.
-:page-popular-2-link: streaming:deploy:deployment-option/self-hosted/manual/index.adoc
+:page-popular-2-link: streaming:deploy:redpanda/manual/index.adoc
 :page-popular-2-icon: terminal
 :page-popular-3-title: Docker
 :page-popular-3-desc: Quick local development and testing with Docker Compose.

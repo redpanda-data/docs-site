@@ -39,7 +39,7 @@
 :page-product-link-docs: Docs
 // Product quick links
 :page-cloud-quickstart: cloud-data-platform:get-started:index.adoc
-:page-cloud-docs: cloud-data-platform:ROOT:index.adoc
+:page-cloud-docs: cloud-data-platform:home:index.adoc
 :page-self-managed-quickstart: streaming:get-started:quick-start.adoc
 :page-self-managed-docs: self-managed:ROOT:index.adoc
 :page-connect-quickstart: connect:get-started:quickstarts/rpk.adoc

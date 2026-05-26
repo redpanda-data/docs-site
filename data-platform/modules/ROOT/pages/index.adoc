@@ -51,21 +51,6 @@
 :page-popular-3-tag: Cloud
 :page-popular-4-title: Connect Postgres CDC to Snowflake
 :page-popular-4-tag: Connect
-// === CORE CONCEPTS ===
-:page-concepts-heading: Core concepts
-:page-concept-1-title: Topics & partitions
-:page-concept-1-description: How Redpanda lays out data on disk and parallelizes reads.
-:page-concept-2-title: Tiered storage
-:page-concept-2-description: Offload cold segments to S3-compatible storage automatically.
-:page-concept-3-title: Consumer groups
-:page-concept-3-description: Coordinated, fault-tolerant consumption across many workers.
-:page-concept-4-title: Schemas & contracts
-:page-concept-4-description: Validate every message at the broker with Avro, Protobuf, or JSON Schema.
-// === WHAT'S NEW SECTION ===
-:page-whats-new-1-title: Redpanda SQL
-:page-whats-new-1-desc: Query your streaming data in real-time with SQL. Run analytical queries directly on topics without ETL (BYOC clusters only).
-:page-whats-new-1-link: cloud-data-platform:sql:index.adoc
-:page-whats-new-1-tag: Cloud BYOC
 // === HELP FOOTER ===
 :page-help-heading: Need help choosing?
 :page-help-subtitle: Our team can walk you through the options and help you get started.

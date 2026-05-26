@@ -9,11 +9,12 @@ asciidoc:
     component-metadata:
       title: "Self-Managed"
       description: "Run Redpanda on your own infrastructure with Streaming and Connect."
-      color: "#059669"
+      color: "#9F1239"
       order: 1
       icon: "server"
       heroGradient: "linear-gradient(180deg, #0B2A23 0%, #134638 100%)"
       eyebrow: "SELF-MANAGED"
+      contextNote: "Two products you install and operate separately."
     # AI suggestions for chat drawer (component-specific)
     ai-suggestion-1: "How do I deploy Redpanda on Kubernetes?"
     ai-suggestion-2: "Set up Tiered Storage with S3"

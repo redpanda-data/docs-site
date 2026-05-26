@@ -9,7 +9,7 @@ asciidoc:
     component-metadata:
       title: "Data Platform"
       description: "The streaming foundation for everything you build"
-      color: "#4338ca"
+      color: "#5239CC"
       icon: "stack-2"
     # Component home links
     cloud-home: "cloud-data-platform:home:index.adoc"
@@ -21,6 +21,7 @@ asciidoc:
     ai-suggestion-4: "Deploy a Kafka-compatible cluster"
     # Navigation hierarchy configuration (config-driven navigation)
     page-navigation:
+      - home:ROOT:mcp-setup  # MCP Server Setup doc (from home component)
       - cloud-data-platform
       - self-managed:
           - streaming
