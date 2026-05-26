@@ -49,10 +49,10 @@ site:
     User-agent: FacebookBot
     Allow: /
   keys:
-    announcement: true
-    announcement-text: 'New! Redpanda Agentic Data Plane is here: a governed, high-performance foundation for AI agents.'
+    announcement: false
+    announcement-text: 'New! Redpanda SQL is here: query your event streams with familiar SQL syntax.'
     announcement-link-text: 'Learn more'
-    announcement-link: 'https://www.redpanda.com/blog/agentic-data-plane-adp'
+    announcement-link: 'https://www.redpanda.com/blog/redpanda-sql-ga'
     google_analytics: GTM-WB2CSV5
 urls:
   html_extension_style: indexify
@@ -68,9 +68,10 @@ runtime:
   fetch: true
 content:
   sources:
+  # docs-site components (local - umbrella components with WIP content)
   - url: .
     branches: HEAD
-    start_paths: [home]
+    start_paths: [home, data-platform, self-managed]
   - url: https://github.com/redpanda-data/docs
     branches: [main, v/*, shared, 'site-search', '!v-end-of-life/*']
   - url: https://github.com/redpanda-data/redpanda-labs
@@ -82,7 +83,7 @@ content:
     branches: main
 ui:
   bundle:
-    url: https://github.com/redpanda-data/docs-ui/releases/latest/download/ui-bundle.zip
+    url: https://github.com/redpanda-data/docs-ui/releases/download/v3.0.0-beta.23/ui-bundle.zip
     snapshot: true
 asciidoc:
   attributes:
@@ -300,7 +301,7 @@ asciidoc:
     # ---------------------------------------------------------------------------
     # These apply to all pages in a component version:
     #
-    # - page-header-data: Header customization object with color field
+    # - component-metadata: Header customization object with color field
     # - (All announcement-*, toc-tools-* attributes also work at component level)
 
     # ---------------------------------------------------------------------------
@@ -313,6 +314,15 @@ asciidoc:
     # idprefix: ''      # ID prefix for auto-generated IDs
     # idseparator: '-'  # Separator for auto-generated IDs
 
+    # ---------------------------------------------------------------------------
+    # CONDITIONAL CONTENT ATTRIBUTES
+    # ---------------------------------------------------------------------------
+    # site-adp-enabled: Controls whether ADP (Agentic Data Plane) content is shown
+    #   - When true: Home page shows full content with ADP options
+    #   - When false: Home page redirects to Data Platform landing
+    # Set this to false when building without adp-docs component
+    site-adp-enabled: 'false'
+
   extensions:
   - '@asciidoctor/tabs'
   - '@redpanda-data/docs-extensions-and-macros/macros/rp-connect-components'
@@ -323,6 +333,13 @@ asciidoc:
   - '@redpanda-data/docs-extensions-and-macros/asciidoc-extensions/add-line-numbers-highlights'
 antora:
   extensions:
+  # Conditional home page redirect when agentic-data-plane component doesn't exist
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/conditional-home-redirect'
+  # Unified navigation extension (config-driven)
+  # Components with page-navigation attribute use that config
+  # Components without page-navigation use standard Antora navigation
+  - require: '@redpanda-data/docs-extensions-and-macros/extensions/unified-navigation'
+
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/git-full-clone'
     # Configuration:
     # unshallowTimeout: 120000  # Timeout in ms (default: 60000). Increase for very large repos
@@ -337,7 +354,7 @@ antora:
     data:
       sets:
         docker_labs:
-          component: redpanda-labs
+          component: labs
           filter: docker-compose
           env_type: Docker
           attribute_name: docker-labs-index
@@ -349,18 +366,19 @@ antora:
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/archive-attachments'
     data:
       archives:
-        - component: 'ROOT'
+        - component: 'streaming'
           output_archive: 'redpanda-quickstart.tar.gz'
           file_patterns:
             - '**/test-resources/**/docker-compose/**'
   - require: '@redpanda-data/docs-extensions-and-macros/extensions/compute-end-of-life'
     data:
       eol_settings:
-        - component: 'ROOT'
+        - component: 'streaming'
           supported_months: 12
           warning_weeks: 13
           eol_doc: https://support.redpanda.com/hc/en-us/articles/20617574366743-Redpanda-Supported-Versions
-          upgrade_doc: ROOT:upgrade:index.adoc
+          upgrade_doc: streaming:upgrade:index.adoc
+          whats_new_doc: streaming:get-started:release-notes/redpanda.adoc
   - require: '@sntke/antora-mermaid-extension'
     mermaid_library_url: https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs
     script_stem: mermaid-scripts
@@ -378,8 +396,8 @@ antora:
     data:
       replacements:
         - components:
-            - 'ROOT'
-            - 'redpanda-labs'
+            - 'streaming'
+            - 'labs'
           file_patterns:
             - '**/docker-compose.yaml'
             - '**/docker-compose.yml'

@@ -1,0 +1,76 @@
+= Data Platform
+:page-layout: data-platform
+:!showtitle:
+// === HERO SECTION ===
+:page-hero-eyebrow: REDPANDA DATA PLATFORM
+:page-hero-title: pass:[The streaming foundation<br>for everything you build.]
+:page-hero-subtitle: Run Redpanda on your infrastructure or let us manage it in the cloud. Then connect it to everything else with declarative pipelines.
+:page-hero-stat1-number: 10x
+:page-hero-stat1-text: faster than Kafka, same wire
+:page-hero-stat2-number: 300+
+:page-hero-stat2-text: connectors
+// === ASK AI SECTION ===
+:hero-ask-placeholder: Ask AI about Redpanda...
+:hero-suggestions-label: Try asking:
+:hero-suggestion-1: How do I write from Redpanda Streaming to Snowflake?
+:hero-suggestion-2: What's the difference between Redpanda and Kafka?
+:hero-suggestion-3: How do I create a CDC pipeline from Postgres to Redpanda Cloud?
+// === CHOOSE SECTION (heading) ===
+:page-choose-heading: Choose how you'll run Redpanda
+:page-choose-subtitle: Self-Managed or Cloud: same Kafka-compatible engine, different operations model. Both include Redpanda Connect for building data pipelines.
+// === SELF-MANAGED CARD ===
+:page-selfmanaged-title: Self-Managed
+:page-selfmanaged-tagline: Run Redpanda on your own infrastructure.
+:page-selfmanaged-description: Bare metal, VMs, or Kubernetes. Full control over networking, storage, and upgrades: with the same single binary used in Cloud.
+:page-selfmanaged-bullet1: Single binary, no JVM
+:page-selfmanaged-bullet2: Air-gapped & FedRAMP-ready
+:page-selfmanaged-bullet3: Tune every knob
+:page-selfmanaged-stat1-label: Kubernetes
+:page-selfmanaged-stat1-value: Operator + Helm
+:page-selfmanaged-cta: Open Self-Managed docs
+// === CLOUD CARD ===
+:page-cloud-title: Cloud
+:page-cloud-tagline: Streaming, fully managed.
+:page-cloud-description: Spin up a cluster in seconds. We handle upgrades, scaling, and failover: you bring the data. Available as Serverless, Dedicated, or Bring Your Own Cloud (BYOC).
+:page-cloud-bullet1: Provisioned in 90 seconds
+:page-cloud-bullet2: AWS, GCP, Azure
+:page-cloud-bullet3: 24/7 SRE on call
+:page-cloud-stat1-number: 99.99%
+:page-cloud-stat1-text: SLA on BYOC & Dedicated
+:page-cloud-stat2-label: BYOC
+:page-cloud-stat2-text: Run in your VPC
+:page-cloud-cta: Open Cloud docs
+// === POPULAR GUIDES ===
+:page-popular-heading: Popular across Data Platform
+:page-popular-subtitle: The guides teams open most when they're getting started.
+:page-popular-1-title: Deploy a Redpanda cluster
+:page-popular-1-tag: Self-Managed
+:page-popular-1-link: streaming:deploy:index.adoc
+:page-popular-2-title: Tiered storage on S3
+:page-popular-2-tag: Self-Managed
+:page-popular-2-link: streaming:data-management:tiered-storage.adoc
+:page-popular-3-title: Create your first BYOC cluster
+:page-popular-3-tag: Cloud
+:page-popular-3-link: cloud-data-platform:get-started:cluster-types/byoc/index.adoc
+:page-popular-4-title: Connect Postgres CDC to Snowflake
+:page-popular-4-tag: Connect
+:page-popular-4-link: connect:cookbooks:snowflake_ingestion.adoc
+// === HELP FOOTER ===
+:page-help-heading: Need help choosing?
+:page-help-subtitle: Our team can walk you through the options and help you get started.
+:page-help-btn1-text: Talk to sales
+:page-help-btn1-url: https://redpanda.com/contact
+:page-help-btn2-text: Join Slack
+:page-help-btn2-url: https://redpanda.com/slack
+// Self-Managed links
+:page-self-managed-home: streaming:home:index.adoc
+:page-self-managed-quickstart: streaming:get-started:quick-start.adoc
+:page-self-managed-tiered-storage: streaming:data-management:tiered-storage.adoc
+:page-self-managed-producers: streaming:develop:produce-data/configure-producers.adoc
+:page-self-managed-consumers: streaming:develop:consume-data/consumer-offsets.adoc
+// Cloud links
+:page-cloud-home: cloud-data-platform:home:index.adoc
+:page-cloud-byoc: cloud-data-platform:get-started:cluster-types/byoc/index.adoc
+:page-cloud-sql-docs: cloud-data-platform:sql:index.adoc
+// Connect links
+:page-connect-quickstart: connect:get-started:quickstarts/index.adoc

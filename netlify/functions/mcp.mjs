@@ -352,7 +352,7 @@ export default async (request, context) => {
   if (wantsMarkdown) {
     return new Response(null, {
       status: 302,
-      headers: { Location: '/home/mcp-setup.md' },
+      headers: { Location: '/data-platform/how-to-use-these-docs.md' },
     })
   }
 
@@ -365,7 +365,7 @@ export default async (request, context) => {
   if (isBrowserRequest) {
     return new Response(null, {
       status: 302,
-      headers: { Location: '/home/mcp-setup' },
+      headers: { Location: '/data-platform/how-to-use-these-docs' },
     })
   }
 

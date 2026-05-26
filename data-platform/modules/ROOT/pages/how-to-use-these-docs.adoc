@@ -1,0 +1,366 @@
+= How to Use These Docs
+:description: Navigate Redpanda's documentation structure and leverage AI-powered features including MCP server integration, markdown exports, and interactive documentation tools.
+:page-aliases: mcp-setup.adoc, home:ROOT:mcp-setup.adoc
+
+Redpanda's documentation helps you stream data, build pipelines, and deploy AI agents whether you manage infrastructure yourself or run in the cloud. This page explains how our docs are organized, clarifies the relationship between deployment models and products, and shows you how to access documentation through AI-powered tools and programmatic interfaces.
+
+== Understand the documentation structure
+
+Redpanda's documentation is organized around the Data Platform, the streaming foundation for everything you build. You can deploy the Data Platform in two ways: as a fully managed Cloud service or as a Self-Managed installation where you control the infrastructure. Regardless of deployment model, you have access to multiple products including Streaming (the broker and Redpanda CLI) and Connect (data pipelines).
+
+.Documentation hierarchy
+----
+Redpanda Documentation
+└── Data Platform
+    ├── Cloud (managed by Redpanda)
+    │   ├── Serverless
+    │   ├── BYOC
+    │   └── Dedicated
+    └── Self-Managed (managed by you)
+        ├── Streaming (broker, Redpanda CLI)
+        └── Connect (data pipelines)
+----
+
+[NOTE]
+====
+*What changed:* Previously, the software that deployed a Redpanda broker was called "Redpanda Self-Managed". In the new structure, "Self-Managed" refers to the deployment model (you manage the infrastructure), while "Streaming" is the product name for the broker itself.
+
+* *Old:* "Redpanda Self-Managed" is the broker product
+* *New:* "Self-Managed" is deployment model that includes Streaming and Connect products
+====
+
+*Key components:*
+
+* xref:index.adoc[Data Platform overview]: The streaming foundation
+* xref:self-managed:ROOT:index.adoc[Self-Managed documentation]: Deploy and manage yourself
+** xref:streaming:home:index.adoc[Streaming documentation]: Broker and Redpanda CLI
+** xref:connect:home:index.adoc[Connect documentation]: Data pipelines and integration
+* xref:cloud-data-platform:home:index.adoc[Cloud documentation]: Fully managed services
+
+== Choose your path
+
+Find the documentation that matches your use case:
+
+*I want to deploy Redpanda myself* → Self-Managed docs
+
+* Install and manage Redpanda Streaming and Connect on your own infrastructure
+* xref:streaming:get-started:quick-start.adoc[Streaming quickstart]
+* xref:connect:get-started:quickstarts/rpk.adoc[Connect quickstart]
+
+*I want Redpanda managed for me* → Cloud docs
+
+* Fully managed service with Serverless, BYOC, and Dedicated options
+* xref:cloud-data-platform:home:index.adoc[Get started with Cloud]
+
+*I want to integrate data sources/sinks* → Connect docs
+
+* Available in both Cloud and Self-Managed deployments
+* Hundreds of prebuilt connectors including AI and change data capture (CDC)
+* xref:connect:home:index.adoc[Connect documentation]
+
+== AI agent access
+
+Redpanda's documentation is optimized for AI agents and LLM consumption. Whether you're building AI agents, IDE plugins, or automation tools, you can access documentation through interactive page features, a Model Context Protocol (MCP) server for real-time queries, and static markdown exports for offline processing.
+
+=== Discovery files
+
+Redpanda follows the link:https://llmstxt.org/[llms.txt standard^] for AI agent discovery:
+
+* `https://docs.redpanda.com/llms.txt`: AI agent discovery file with curated overview and links to comprehensive resources
+* `https://docs.redpanda.com/llms-full.txt`: Complete documentation export with all components and versions (25MB+)
+
+=== Page options
+
+Every documentation page includes interactive features:
+
+*View as plain text:* Click *View as plain text* in the page options dropdown to render the current page in GitHub-Flavored Markdown format. This option is useful for reading in markdown-aware editors, accessing content offline, or sharing documentation snippets.
+
+*Copy as Markdown:* Click *Copy as Markdown* in the page options dropdown to copy the page markdown to your clipboard with YAML frontmatter preserved (includes title, description, git dates, categories, and more). This option is useful for pasting into notes, documentation systems, or issue trackers.
+
+*Ask AI:* Click *Ask AI* in the page options dropdown or top-nav section to open an AI chat drawer with full access to Redpanda documentation. The AI can explain configurations in simpler terms, show examples, or highlight common pitfalls.
+
+=== Install the MCP server
+
+Redpanda provides a remote link:https://modelcontextprotocol.io[Model Context Protocol (MCP) server^] that lets you access authoritative Redpanda documentation directly from your IDE or AI tool, such as Claude Code, Cursor, VS Code, ChatGPT, or Claude Desktop.
+
+The MCP server is hosted at: `https://docs.redpanda.com/mcp`.
+You can add this endpoint to any AI agent that supports MCP.
+
+[tabs]
+====
+Claude Code::
++
+--
+Run the following command to add the Redpanda MCP server to Claude Code:
+
+[source,bash]
+----
+claude mcp add --scope user --transport http redpanda https://docs.redpanda.com/mcp
+----
+
+This command:
+
+* Adds the MCP server with the name `redpanda`.
+* Uses the native HTTP transport to connect directly to the endpoint.
+* Configures it for your user account (stores in `~/.claude.json`).
+* Works on all platforms (macOS, Linux, Windows).
+
+To verify the installation:
+
+[source,bash]
+----
+claude mcp list
+----
+
+You should see `redpanda: https://docs.redpanda.com/mcp (HTTP): ✓ Connected` in the output.
+
+For more information about Claude Code, see the https://code.claude.com/docs/en/mcp[Claude Code documentation^].
+--
+Cursor::
++
+--
+Add the following to your `.cursor/mcp.json` file:
+
+[source,json]
+----
+{
+  "mcpServers": {
+    "redpanda": {
+      "type": "http",
+      "url": "https://docs.redpanda.com/mcp"
+    }
+  }
+}
+----
+
+For more information about MCP in Cursor, see the https://docs.cursor.com/context/model-context-protocol[Cursor documentation^].
+--
+VS Code::
++
+--
+*Prerequisites:* VS Code 1.102+ with GitHub Copilot enabled.
+
+Create an `mcp.json` file in your workspace `.vscode` folder:
+
+.`.vscode/mcp.json`
+[source,json]
+----
+{
+  "servers": {
+    "redpanda": {
+      "type": "http",
+      "url": "https://docs.redpanda.com/mcp"
+    }
+  }
+}
+----
+
+To configure globally for all workspaces:
+
+. Open Command Palette (kbd:[Cmd+Shift+P] / kbd:[Ctrl+Shift+P])
+. Run *MCP: Open User Configuration*
+. Add the same JSON configuration
+
+*Using MCP in VS Code:*
+
+. Open the Chat view (kbd:[Ctrl+Cmd+I] / kbd:[Ctrl+Alt+I]).
+. Select *Agent mode* from the dropdown.
+. Click the *Tools* button to see available MCP tools.
+. Ask questions about Redpanda and the AI automatically uses the documentation.
+
+For more details, see the https://code.visualstudio.com/docs/copilot/customization/mcp-servers[VS Code MCP documentation^].
+--
+ChatGPT Desktop::
++
+--
+ChatGPT Desktop supports MCP servers in developer mode. To enable:
+
+. Open ChatGPT Desktop.
+. Go to *Settings* > *Features*.
+. Enable *Developer mode*.
+. Navigate to *Settings* > *MCP Servers*.
+. Click *Add Server* and enter:
++
+- *Name*: `redpanda`
+- *URL*: `https://docs.redpanda.com/mcp`
+
+
+For more information, see the https://platform.openai.com/docs/guides/developer-mode[ChatGPT Desktop MCP documentation^].
+--
+Claude Desktop::
++
+--
+Connect Claude Desktop to Redpanda's MCP server using one of two methods:
+
+*Method 1: Using Connectors*
+
+This method is available for Pro, Max, Team, or Enterprise plans and works across all platforms (macOS, Windows, Linux):
+
+. Open Claude Desktop.
+. Navigate to Settings > Connectors.
+. Click *Add custom connector*.
+. Enter the URL: `https://docs.redpanda.com/mcp`
+. Follow any authentication prompts if required.
+
+NOTE: When using Connectors, Claude connects to your remote MCP server from Anthropic's cloud infrastructure.
+
+*Method 2: Using Configuration File*
+
+This method works for all plans, including Free plan.
+
+Edit the Claude Desktop configuration file for your platform:
+
+* *macOS*: `~/Library/Application Support/Claude/claude_desktop_config.json`
+* *Windows*: `%APPDATA%\Claude\claude_desktop_config.json`
+
+Add the following configuration to your `claude_desktop_config.json` file:
+
+[source,json]
+----
+{
+  "mcpServers": {
+    "redpanda": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://docs.redpanda.com/mcp"]
+    }
+  }
+}
+----
+
+This configuration uses the `mcp-remote` bridge to connect to Redpanda's remote MCP server. Claude Desktop supports only `stdio` and `sse` transports, so `mcp-remote` converts the HTTP endpoint to a compatible format.
+
+Restart Claude Desktop for changes to take effect.
+
+IMPORTANT: On Linux, Claude Desktop cannot connect to remote servers configured using `claude_desktop_config.json`. If this method doesn't work, use the Connectors interface instead (available with Pro, Max, Team, or Enterprise plans).
+
+For more details, see the https://support.anthropic.com/en/articles/9487310-desktop-app[Claude Desktop documentation^].
+--
+====
+
+==== Other AI tools
+
+Any tool that supports MCP servers can connect using the following URL:
+
+[source,text]
+----
+https://docs.redpanda.com/mcp
+----
+
+NOTE: MCP support varies by tool and version. Check the specific tool's documentation for MCP setup instructions.
+
+==== What you can do
+
+Once connected, you can ask context-aware questions about Redpanda from within your editor:
+
+* "How do I configure Redpanda for production?"
+* "What are the instructions for running Redpanda in a local Kind cluster?"
+* "What are the best practices for topic partitioning in Redpanda?"
+* "What are Redpanda's security features and authentication methods?"
+* "How do I monitor Redpanda cluster performance?"
+* "What's the difference between Redpanda Cloud and self-hosted deployment?"
+
+==== Usage limits
+
+To ensure fair use and performance for all users, the public MCP endpoint enforces the following rate limits per user:
+
+* *60 requests per 15 minutes*
+
+As well as this global limit, the `ask_redpanda_question` tool proxies to an MCP server hosted by Kapa.ai, which enforces its own limits. See the link:https://docs.kapa.ai/integrations/mcp/overview#authentication[Kapa documentation^] for details.
+
+These limits are suitable for:
+
+* Individual developer IDE usage
+* Ad-hoc documentation queries
+* Evaluation and testing
+
+If you exceed the limit, you receive an HTTP 429 response with rate limit headers. Wait until the reset time before retrying.
+
+.Rate limit exceeded response
+[source,text]
+----
+HTTP 429 Too Many Requests
+RateLimit-Limit: 40
+RateLimit-Remaining: 0
+RateLimit-Reset: <timestamp>
+----
+
+==== Troubleshooting
+
+===== Server not connecting
+
+* Verify the URL is exactly: `https://docs.redpanda.com/mcp`.
+* Check your internet connection.
+* Ensure your AI tool supports HTTP-based MCP servers.
+* Restart your AI tool after adding the configuration.
+
+===== VS Code specific issues
+
+* Ensure you have VS Code 1.102 or later.
+* Verify GitHub Copilot is installed and enabled.
+* Try running *MCP: Reset Cached Tools* from the Command Palette.
+* Check the Output panel (*View* > *Output* > *MCP*) for error messages.
+
+===== Configuration issues
+
+* For Claude Code, Cursor, and VS Code, use the HTTP transport (`--transport http` or `"type": "http"`).
+* For Claude Desktop, use the `mcp-remote` bridge shown in the setup section. Claude Desktop does not support direct HTTP transport.
+* If you previously configured Claude Code using `mcp-remote` and experience connection issues, remove the old configuration and use the HTTP transport method shown above.
+* Some MCP clients may have issues with SSE streaming. If you experience connection problems, verify that your client supports HTTP-based MCP servers with Server-Sent Events (SSE).
+* Check that your client's Accept headers include both `application/json` and `text/event-stream`.
+
+===== Rate limiting
+
+If you're building automation or high-volume integrations and hitting rate limits frequently:
+
+* The public endpoint's rate limits are intentionally restrictive for fair use.
+* Consider implementing caching on your side to reduce duplicate queries.
+
+===== Other issues
+
+Check the https://github.com/modelcontextprotocol/servers[MCP GitHub repository^] for additional troubleshooting guidance or https://github.com/redpanda-data/docs-site/issues[report an issue^] with our documentation.
+
+=== Static markdown exports
+
+For agents without MCP support or for offline processing, use our static markdown exports:
+
+*Component-specific exports:*
+
+* `https://docs.redpanda.com/streaming-full.txt`: Redpanda Streaming documentation
+* `https://docs.redpanda.com/cloud-data-platform-full.txt`: Redpanda Cloud documentation
+* `https://docs.redpanda.com/connect-full.txt`: Redpanda Connect documentation
+* `https://docs.redpanda.com/labs-full.txt`: Labs and tutorials
+
+*Use cases:*
+
+* Offline AI training and model fine-tuning
+* Batch processing and analysis
+* Full-text search implementations
+* Custom documentation tools
+
+=== Fetch individual pages
+
+Every HTML page in our documentation has a markdown equivalent that you can access programmatically.
+
+. *Direct access:* Replace `.html` with `.md` in any URL
++
+Example: `https://docs.redpanda.com/streaming/home.html` → `https://docs.redpanda.com/streaming/home.md`
+
+. *Content negotiation:* Request any URL with `Accept: text/markdown` header
+
+*Markdown features:*
+
+* YAML frontmatter with page metadata (title, description, categories, topic type, personas)
+* Git dates (accurate created/modified dates from commit history)
+* GitHub-Flavored Markdown format
+
+*Use cases:*
+
+* API integrations
+* Automated documentation pipelines
+* Custom documentation workflows
+* Integration with internal knowledge bases
+
+*Contributing:*
+
+* Want to contribute to the documentation? See the link:https://github.com/redpanda-data/docs-site/blob/main/meta-docs/CONTRIBUTING.adoc[Contributing guide^]
+* Found a typo or have a suggestion? Open an issue or pull request on GitHub

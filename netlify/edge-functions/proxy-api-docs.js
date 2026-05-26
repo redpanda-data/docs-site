@@ -34,17 +34,17 @@ export default async (request, context) => {
     return Response.redirect(`${url.origin}${mdPath}`, 302);
   }
 
-  // Map paths to header background colors
+  // Map paths to header background colors (8% component color mixed with white)
   const headerColors = {
-    "/api/doc/admin": "#107569",
-    "/api/doc/cloud-controlplane": "#014F86",
-    "/api/doc/cloud-dataplane": "#014F86",
+    "/api/doc/admin": "color-mix(in srgb, #9F1239 8%, white)",              // self-managed (rose)
+    "/api/doc/cloud-controlplane": "color-mix(in srgb, #1D4ED8 8%, white)", // cloud (blue)
+    "/api/doc/cloud-dataplane": "color-mix(in srgb, #1D4ED8 8%, white)",    // cloud (blue)
   };
 
   const matchedPath = Object.keys(headerColors).find((path) =>
     normalizedPath.startsWith(path)
   );
-  const headerColor = headerColors[matchedPath] || "#d73d23";
+  const headerColor = headerColors[matchedPath] || "color-mix(in srgb, #1D4ED8 8%, white)"; // default to cloud
 
   // Build the proxied Bump.sh URL
   const bumpUrl = new URL(request.url);
@@ -110,7 +110,18 @@ export default async (request, context) => {
     fetchWidget(`${originalOrigin}/assets/widgets/footer.html`, "footer"),
   ]);
 
-  const document = new DOMParser().parseFromString(originalHtml, "text/html");
+  let document;
+  try {
+    document = new DOMParser().parseFromString(originalHtml, "text/html");
+  } catch (error) {
+    console.error("❌ Failed to initialize DOMParser (WASM issue):", error);
+    // Return unmodified HTML if DOM parsing fails
+    return new Response(originalHtml, {
+      status: 200,
+      headers: { "content-type": "text/html; charset=utf-8" },
+    });
+  }
+
   if (!document) {
     console.error("❌ Failed to parse Bump.sh HTML.");
     return new Response(originalHtml, {
@@ -132,9 +143,10 @@ export default async (request, context) => {
   // Inject header with dynamic background color
   const topBody = document.querySelector("#embed-top-body");
   if (topBody && headerWidget) {
+    // Add background color to the navbar element
     const coloredHeader = headerWidget.replace(
-      /(<nav[^>]*style="[^"]*background-color:\s*)#[^";]+/,
-      `$1${headerColor}`
+      /<nav([^>]*class="[^"]*navbar[^"]*")/,
+      `<nav$1 style="background-color: ${headerColor};"`
     );
 
     const wrapper = document.createElement("div");

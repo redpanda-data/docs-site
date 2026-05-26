@@ -1,6 +1,51 @@
 = Welcome to Redpanda Documentation
 :page-role: home
+:page-expand-buckets: agentic-data-plane
 :description: Redpanda is a high-performance streaming data platform and Agentic Data Plane. Kafka API-compatible, it enables real-time data streaming, event-driven architectures, and AI agent governance and observability.
+// Hero section content
+:page-hero-eyebrow: Redpanda Documentation
+:page-hero-title: pass:[Everything you need to move data<br>and put agents to work on&nbsp;it.]
+:page-hero-subtitle: pass:[Guides, concepts, and references for the two platforms that power Redpanda: streaming your data reliably and letting AI agents act on it safely.]
+:page-hero-ask-placeholder: pass:[Ask Redpanda AI a question"]
+:page-hero-suggestions-label: Try:
+:page-hero-suggestion-1: How do I connect Salesforce as an MCP source?
+:page-hero-suggestion-2: Set a monthly token budget
+:page-hero-suggestion-3: Deploy Redpanda on Kubernetes
+// Intent cards content
+:page-intent-heading: What are you here for
+:page-intent-dp-title: Stream and process data
+:page-intent-dp-desc: Run Redpanda clusters, move data reliably between systems, and keep storage lean with Tiered Storage and connectors.
+:page-intent-dp-tags: Cloud · Self-Managed
+:page-intent-dp-cta: Get started with Data Platform
+:page-intent-adp-title: Build agentic data flows
+:page-intent-adp-desc: Build, connect, and govern AI agents on top of your data. Create agents without code, plug in Salesforce or your database, and keep every action observable and in-policy.
+:page-intent-adp-tags: Agentic Data Plane
+:page-intent-adp-cta: Get started with ADP
+// Products section content
+:page-products-heading: Or jump straight to a product
+:page-products-dp-heading: Data Platform
+:page-products-adp-heading: Agentic Data Plane
+:page-product-cloud-title: Cloud
+:page-product-cloud-desc: Streaming, Connect, and SQL with Serverless or BYOC deployment
+:page-product-self-managed-title: Self-Managed
+:page-product-self-managed-desc: Deploy on your infrastructure
+:page-product-streaming-title: Streaming
+:page-product-streaming-desc: Redpanda broker and rpk CLI
+:page-product-connect-title: Connect
+:page-product-connect-desc: Data pipelines and transformations
+:page-product-adp-title: Agentic Data Plane
+:page-product-adp-desc: Multi-agent infrastructure
+:page-product-link-get-started: Get started
+:page-product-link-docs: Docs
+// Product quick links
+:page-cloud-quickstart: cloud-data-platform:get-started:index.adoc
+:page-cloud-docs: cloud-data-platform:home:index.adoc
+:page-self-managed-quickstart: streaming:get-started:quick-start.adoc
+:page-self-managed-docs: self-managed:ROOT:index.adoc
+:page-connect-quickstart: connect:get-started:quickstarts/rpk.adoc
+:page-connect-docs: connect:home:index.adoc
+:page-adp-quickstart: agentic-data-plane:get-started:byoc-quickstart.adoc
+:page-adp-docs: agentic-data-plane:ROOT:index.adoc
 :page-faq-1-question: What is Redpanda?
 :page-faq-1-answer: Redpanda is a streaming data platform and Agentic Data Plane for developers. It's Kafka API-compatible but simpler to deploy and operate, designed for modern applications and AI agents requiring real-time data processing without the operational complexity of traditional platforms.
 :page-faq-2-question: How do I get started with Redpanda?
