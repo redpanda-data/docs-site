@@ -52,7 +52,7 @@ site:
     announcement: true
     announcement-text: 'New! Redpanda SQL is here: query your event streams with familiar SQL syntax.'
     announcement-link-text: 'Learn more'
-    announcement-link: 'https://www.redpanda.com/blog/agentic-data-plane-adp'
+    announcement-link: 'https://www.redpanda.com/blog/redpanda-sql-ga'
     google_analytics: GTM-WB2CSV5
 urls:
   html_extension_style: indexify
@@ -72,41 +72,18 @@ content:
   - url: .
     branches: HEAD
     start_paths: [home, data-platform, self-managed]
-
-  # docs repository - WIP feature branches for testing
   - url: https://github.com/redpanda-data/docs
-    branches: [feature/rename-streaming-main, shared]
-
-  # docs repository - version branches for multi-version nav
-  - url: https://github.com/redpanda-data/docs
-    branches: [
-      feature/rename-streaming-23.3,
-      feature/rename-streaming-24.1,
-      feature/rename-streaming-24.2,
-      feature/rename-streaming-24.3,
-      feature/rename-streaming-25.1,
-      feature/rename-streaming-25.2,
-      feature/rename-streaming-25.3
-    ]
-
+    branches: [main, v/*, shared, 'site-search', '!v-end-of-life/*']
   - url: https://github.com/redpanda-data/redpanda-labs
-    branches: feature/page-header-data
+    branches: main
     start_paths: [docs,'*/docs']
-
-  # cloud-docs - WIP feature branch
   - url: https://github.com/redpanda-data/cloud-docs
-    branches: feature/component-home-v3
-
-  # rp-connect-docs - WIP feature branch
+    branches: main
   - url: https://github.com/redpanda-data/rp-connect-docs
-    branches: feature/unified-navigation
-
-  # adp-docs - WIP feature branch
-  - url: https://github.com/redpanda-data/adp-docs
-    branches: feature/platform-badges
+    branches: main
 ui:
   bundle:
-    url: https://github.com/redpanda-data/docs-ui/releases/download/v3.0.0-beta.10/ui-bundle.zip
+    url: https://github.com/redpanda-data/docs-ui/releases/download/v3.0.0-beta.12/ui-bundle.zip
     snapshot: true
 asciidoc:
   attributes:
