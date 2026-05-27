@@ -103,11 +103,13 @@ export default async (request, context) => {
     headScript,
     headerWidget,
     footerWidget,
+    chatPanelWidget,
   ] = await Promise.all([
     bumpRes.text(),
     fetchWidget(`${originalOrigin}/assets/widgets/head-bump.html`, "head-bump"),
     fetchWidget(`${originalOrigin}/assets/widgets/header.html`, "header"),
     fetchWidget(`${originalOrigin}/assets/widgets/footer.html`, "footer"),
+    fetchWidget(`${originalOrigin}/assets/widgets/chat-panel-bump.html`, "chat-panel"),
   ]);
 
   let document;
@@ -161,6 +163,15 @@ export default async (request, context) => {
   if (bottomBody && footerWidget) {
     const wrapper = document.createElement("div");
     wrapper.innerHTML = footerWidget;
+    while (wrapper.firstChild) {
+      bottomBody.appendChild(wrapper.firstChild);
+    }
+  }
+
+  // Inject chat panel (Ask AI drawer)
+  if (bottomBody && chatPanelWidget) {
+    const wrapper = document.createElement("div");
+    wrapper.innerHTML = chatPanelWidget;
     while (wrapper.firstChild) {
       bottomBody.appendChild(wrapper.firstChild);
     }
