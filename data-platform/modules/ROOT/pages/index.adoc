@@ -4,7 +4,7 @@
 // === HERO SECTION ===
 :page-hero-eyebrow: REDPANDA DATA PLATFORM
 :page-hero-title: pass:[The streaming foundation<br>for everything you build.]
-:page-hero-subtitle: Run Redpanda on your infrastructure or let us manage it in the cloud. Then connect it to everything else with declarative pipelines.
+:page-hero-subtitle: Let us manage Redpanda in the cloud or run it on your infrastructure. Then connect it to everything else with declarative pipelines.
 :page-hero-stat1-number: 10x
 :page-hero-stat1-text: faster than Kafka, same wire
 :page-hero-stat2-number: 300+
