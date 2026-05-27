@@ -233,6 +233,38 @@ status = 301
 
 # ================End of life versions===================
 
+# EOL version root redirects (redirect to current)
+[[redirects]]
+from = "/23.2"
+to = "/streaming/current/home/"
+status = 301
+
+[[redirects]]
+from = "/23.1"
+to = "/streaming/current/home/"
+status = 301
+
+[[redirects]]
+from = "/22.3"
+to = "/streaming/current/home/"
+status = 301
+
+[[redirects]]
+from = "/22.2"
+to = "/streaming/current/home/"
+status = 301
+
+[[redirects]]
+from = "/22.1"
+to = "/streaming/current/home/"
+status = 301
+
+[[redirects]]
+from = "/21.11"
+to = "/streaming/current/home/"
+status = 301
+
+# EOL version wildcard redirects
 [[redirects]]
 from = "/23.2/*"
 to = "/streaming/current/:splat"
