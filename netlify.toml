@@ -118,10 +118,9 @@ path = "/api/*"
 function = "proxy-api-docs"
 
 # Serve markdown content when Accept: text/markdown header is present
-# TEMPORARILY DISABLED for debugging
-# [[edge_functions]]
-# path = "/*"
-# function = "serve-markdown"
+[[edge_functions]]
+path = "/*"
+function = "serve-markdown"
 
 # ========Beta redirects==========
 [[redirects]]
@@ -234,6 +233,38 @@ status = 301
 
 # ================End of life versions===================
 
+# EOL version root redirects (redirect to current)
+[[redirects]]
+from = "/23.2"
+to = "/streaming/current/home/"
+status = 301
+
+[[redirects]]
+from = "/23.1"
+to = "/streaming/current/home/"
+status = 301
+
+[[redirects]]
+from = "/22.3"
+to = "/streaming/current/home/"
+status = 301
+
+[[redirects]]
+from = "/22.2"
+to = "/streaming/current/home/"
+status = 301
+
+[[redirects]]
+from = "/22.1"
+to = "/streaming/current/home/"
+status = 301
+
+[[redirects]]
+from = "/21.11"
+to = "/streaming/current/home/"
+status = 301
+
+# EOL version wildcard redirects
 [[redirects]]
 from = "/23.2/*"
 to = "/streaming/current/:splat"
@@ -264,6 +295,39 @@ from = "/21.11/*"
 to = "/streaming/current/:splat"
 status = 301
 
+# ================End of life versions (streaming paths)=================
+# Catch-all redirects for streaming-prefixed old version paths
+
+[[redirects]]
+from = "/streaming/23.2/*"
+to = "/streaming/current/:splat"
+status = 301
+
+[[redirects]]
+from = "/streaming/23.1/*"
+to = "/streaming/current/:splat"
+status = 301
+
+[[redirects]]
+from = "/streaming/22.3/*"
+to = "/streaming/current/:splat"
+status = 301
+
+[[redirects]]
+from = "/streaming/22.2/*"
+to = "/streaming/current/:splat"
+status = 301
+
+[[redirects]]
+from = "/streaming/22.1/*"
+to = "/streaming/current/:splat"
+status = 301
+
+[[redirects]]
+from = "/streaming/21.11/*"
+to = "/streaming/current/:splat"
+status = 301
+
 # ========= Component rename redirects =====================
 
 # Redirect /current/* to /streaming/current/*
@@ -286,6 +350,44 @@ status = 301
 [[redirects]]
 from = "/redpanda-labs/*"
 to = "/labs/:splat"
+status = 301
+
+# ========= Version root redirects =====================
+
+# Redirect version roots to their streaming component equivalents
+[[redirects]]
+from = "/25.3"
+to = "/streaming/25.3/home/"
+status = 301
+
+[[redirects]]
+from = "/25.2"
+to = "/streaming/25.2/home/"
+status = 301
+
+[[redirects]]
+from = "/25.1"
+to = "/streaming/25.1/home/"
+status = 301
+
+[[redirects]]
+from = "/24.3"
+to = "/streaming/24.3/home/"
+status = 301
+
+[[redirects]]
+from = "/24.2"
+to = "/streaming/24.2/home/"
+status = 301
+
+[[redirects]]
+from = "/24.1"
+to = "/streaming/24.1/home/"
+status = 301
+
+[[redirects]]
+from = "/23.3"
+to = "/streaming/23.3/home/"
 status = 301
 
 # ========= Docker example redirects =====================
@@ -400,7 +502,7 @@ status = 301
 
 [[redirects]]
 from = "/blog/*"
-to = "/connect/about/"
+to = "/connect/home/"
 status = 301
 
 # =========Cloud redirects========
