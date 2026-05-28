@@ -200,38 +200,6 @@ export default async (request, context) => {
       head.appendChild(style);
     }
 
-    // Inject CSS fixes for chat panel and dark mode on Bump.sh pages
-    if (head) {
-      const fixStyle = document.createElement("style");
-      fixStyle.textContent = `
-        /* Fix chat panel top offset - account for fixed navbar */
-        .chat-panel { top: var(--navbar-height, 70px) !important; height: calc(100vh - var(--navbar-height, 70px)) !important; }
-
-        /* Fix chat head icons - ensure SVGs are visible */
-        .chat-head-btn svg { stroke: currentColor !important; }
-        .chat-head-icon svg { fill: currentColor !important; }
-
-        /* Dark mode fixes using html[data-theme="dark"] selector (Bump pages use this, not .dark-theme) */
-        html[data-theme="dark"] .navbar { background: #0f172a !important; }
-        html[data-theme="dark"] .chat-panel { background: #1a2332 !important; color: #e8eef6 !important; border-left-color: rgba(255,255,255,0.08) !important; }
-        html[data-theme="dark"] .chat-head { border-bottom-color: rgba(255,255,255,0.08) !important; }
-        html[data-theme="dark"] .chat-head-name { color: #e8eef6 !important; }
-        html[data-theme="dark"] .chat-head-sub { color: #7c8ca8 !important; }
-        html[data-theme="dark"] .chat-head-btn { color: #7c8ca8 !important; }
-        html[data-theme="dark"] .chat-head-btn:hover { background: rgba(255,255,255,0.05) !important; color: #e8eef6 !important; }
-        html[data-theme="dark"] .chat-foot { color: #7c8ca8 !important; border-top-color: rgba(255,255,255,0.08) !important; }
-        html[data-theme="dark"] #chat-panel-kapa-root { color: #e8eef6 !important; }
-        html[data-theme="dark"] #chat-panel-kapa-root .welcome-icon { background: linear-gradient(135deg, #312e81 0%, #3730a3 100%) !important; color: #a5b4fc !important; }
-        html[data-theme="dark"] #chat-panel-kapa-root .welcome-title { color: #e8eef6 !important; }
-        html[data-theme="dark"] #chat-panel-kapa-root .welcome-description { color: #7c8ca8 !important; }
-        html[data-theme="dark"] #chat-panel-kapa-root .suggestion-card { background: #232f3e !important; border-color: rgba(255,255,255,0.1) !important; color: #aab8ca !important; }
-        html[data-theme="dark"] #chat-panel-kapa-root .suggestion-card:hover { background: #2a3a4d !important; border-color: rgba(255,255,255,0.15) !important; color: #e8eef6 !important; }
-        html[data-theme="dark"] #chat-panel-kapa-root .chat-input-wrapper { background: #232f3e !important; border-color: rgba(255,255,255,0.1) !important; }
-        html[data-theme="dark"] #chat-panel-kapa-root .chat-input-wrapper .chat-input { background: transparent !important; color: #e8eef6 !important; }
-        html[data-theme="dark"] #chat-panel-kapa-root .disclaimer { color: #7c8ca8 !important; background: #1a2332 !important; }
-      `.replace(/\s+/g, ' ').trim();
-      head.appendChild(fixStyle);
-    }
   }
 
   const htmlOutput = document.documentElement?.outerHTML || originalHtml;
