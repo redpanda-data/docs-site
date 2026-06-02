@@ -79,3 +79,11 @@ jobs:
           if [ "${{ steps.afdocs.outcome }}" == "success" ] && [ "${{ steps.redirects.outcome }}" == "success" ]; then
             echo "**All documentation checks passed!**" >> $GITHUB_STEP_SUMMARY
           fi
+
+      - name: Fail if tests failed
+        if: always()
+        run: |
+          if [ "${{ steps.afdocs.outcome }}" != "success" ] || [ "${{ steps.redirects.outcome }}" != "success" ]; then
+            echo "Documentation checks failed. See summary for details."
+            exit 1
+          fi

@@ -89,9 +89,15 @@ npm run test:redirects
 
 The redirect tests are integrated into the existing afdocs-checks workflow:
 
-1. **Trigger**: On pull request (opened, synchronize, reopened)
+1. **Trigger**: On pull request (opened, synchronize, reopened) when relevant files change:
+   - netlify.toml (redirect rules)
+   - .adoc or .md files (documentation content)
+   - antora-playbook.yml files (build configuration)
+   - workflow file itself
 2. **Wait for Netlify Deploy**: Uses `jakepartusch/wait-for-netlify-action`
 3. **Run Tests**: Executes both afdocs checks AND redirect tests
+   - Uses `continue-on-error: true` to run both test suites even if one fails
+   - Final step fails the job if either test suite failed
 4. **Post Results**: GitHub Actions summary shows status of both checks
 
 ### Example CI Output

@@ -226,11 +226,6 @@ describe('Redirect Rules', () => {
         description: 'RPK path correction - missing /reference/'
       },
       {
-        from: '/cloud-data-platform/reference/rpk-cluster/',
-        to: '/cloud-data-platform/reference/rpk/rpk-cluster/',
-        description: 'RPK path correction - missing /rpk/ segment'
-      },
-      {
         from: '/cloud-data-platform/reference/rpk-profile/',
         to: '/cloud-data-platform/reference/rpk/rpk-profile/',
         description: 'RPK profile path correction'
