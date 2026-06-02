@@ -35,17 +35,39 @@ jobs:
           DEPLOY_URL: ${{ steps.wait-for-netlify.outputs.url }}
         run: npm run afdocs:verbose
 
+      - name: Run redirect tests
+        id: redirects
+        continue-on-error: true
+        env:
+          DEPLOY_URL: ${{ steps.wait-for-netlify.outputs.url }}
+        run: npm run test:redirects:verbose
+
       - name: Post results summary
         if: always()
         run: |
-          echo "## Agent-Friendly Docs Check Results" >> $GITHUB_STEP_SUMMARY
+          echo "## Documentation Checks Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Deploy URL:** ${{ steps.wait-for-netlify.outputs.url }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "### Agent-Friendly Docs Checks" >> $GITHUB_STEP_SUMMARY
           if [ "${{ steps.afdocs.outcome }}" == "success" ]; then
-            echo "✅ All checks passed!" >> $GITHUB_STEP_SUMMARY
+            echo "PASS: All afdocs checks passed!" >> $GITHUB_STEP_SUMMARY
           else
-            echo "⚠️ Some checks failed or had warnings. See job logs for details." >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "FAIL: Some afdocs checks failed or had warnings." >> $GITHUB_STEP_SUMMARY
             echo "Run locally with: \`DEPLOY_URL=${{ steps.wait-for-netlify.outputs.url }} npm run afdocs:verbose\`" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "### Redirect Tests" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.redirects.outcome }}" == "success" ]; then
+            echo "PASS: All redirect tests passed!" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "FAIL: Some redirect tests failed." >> $GITHUB_STEP_SUMMARY
+            echo "Run locally with: \`DEPLOY_URL=${{ steps.wait-for-netlify.outputs.url }} npm run test:redirects:verbose\`" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ steps.afdocs.outcome }}" == "success" ] && [ "${{ steps.redirects.outcome }}" == "success" ]; then
+            echo "**All documentation checks passed!**" >> $GITHUB_STEP_SUMMARY
           fi
