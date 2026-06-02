@@ -1,5 +1,5 @@
 ---
-name: Agent-Friendly Docs Checks
+name: Documentation Checks
 
 on:
   pull_request:
@@ -15,6 +15,7 @@ on:
 
 jobs:
   afdocs:
+    name: Agent-Friendly Docs
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -37,15 +38,43 @@ jobs:
           max_timeout: 600
 
       - name: Run afdocs checks
-        id: afdocs
-        continue-on-error: true
         env:
           DEPLOY_URL: ${{ steps.wait-for-netlify.outputs.url }}
         run: npm run afdocs:verbose
 
+      - name: Post results summary
+        if: always()
+        run: |
+          echo "## Agent-Friendly Docs Checks" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Deploy URL:** ${{ steps.wait-for-netlify.outputs.url }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Run locally: \`DEPLOY_URL=${{ steps.wait-for-netlify.outputs.url }} npm run afdocs:verbose\`" >> $GITHUB_STEP_SUMMARY
+
+  redirect-tests:
+    name: Redirect Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Wait for Netlify Deploy
+        uses: jakepartusch/wait-for-netlify-action@v1.4
+        id: wait-for-netlify
+        with:
+          site_name: redpanda-documentation
+          max_timeout: 600
+
       - name: Run redirect tests
-        id: redirects
-        continue-on-error: true
         env:
           DEPLOY_URL: ${{ steps.wait-for-netlify.outputs.url }}
         run: npm run test:redirects:verbose
@@ -53,37 +82,10 @@ jobs:
       - name: Post results summary
         if: always()
         run: |
-          echo "## Documentation Checks Results" >> $GITHUB_STEP_SUMMARY
+          echo "## Redirect Tests" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Deploy URL:** ${{ steps.wait-for-netlify.outputs.url }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-
-          echo "### Agent-Friendly Docs Checks" >> $GITHUB_STEP_SUMMARY
-          if [ "${{ steps.afdocs.outcome }}" == "success" ]; then
-            echo "PASS: All afdocs checks passed!" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "FAIL: Some afdocs checks failed or had warnings." >> $GITHUB_STEP_SUMMARY
-            echo "Run locally with: \`DEPLOY_URL=${{ steps.wait-for-netlify.outputs.url }} npm run afdocs:verbose\`" >> $GITHUB_STEP_SUMMARY
-          fi
+          echo "Validates redirect rules in netlify.toml" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-
-          echo "### Redirect Tests" >> $GITHUB_STEP_SUMMARY
-          if [ "${{ steps.redirects.outcome }}" == "success" ]; then
-            echo "PASS: All redirect tests passed!" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "FAIL: Some redirect tests failed." >> $GITHUB_STEP_SUMMARY
-            echo "Run locally with: \`DEPLOY_URL=${{ steps.wait-for-netlify.outputs.url }} npm run test:redirects:verbose\`" >> $GITHUB_STEP_SUMMARY
-          fi
-          echo "" >> $GITHUB_STEP_SUMMARY
-
-          if [ "${{ steps.afdocs.outcome }}" == "success" ] && [ "${{ steps.redirects.outcome }}" == "success" ]; then
-            echo "**All documentation checks passed!**" >> $GITHUB_STEP_SUMMARY
-          fi
-
-      - name: Fail if tests failed
-        if: always()
-        run: |
-          if [ "${{ steps.afdocs.outcome }}" != "success" ] || [ "${{ steps.redirects.outcome }}" != "success" ]; then
-            echo "Documentation checks failed. See summary for details."
-            exit 1
-          fi
+          echo "Run locally: \`DEPLOY_URL=${{ steps.wait-for-netlify.outputs.url }} npm run test:redirects:verbose\`" >> $GITHUB_STEP_SUMMARY

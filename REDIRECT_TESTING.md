@@ -87,18 +87,28 @@ npm run test:redirects
 
 ### Workflow: `.github/workflows/afdocs-checks.yml`
 
-The redirect tests are integrated into the existing afdocs-checks workflow:
+The redirect tests run as a separate job for clear visibility in PR checks:
 
-1. **Trigger**: On pull request (opened, synchronize, reopened) when relevant files change:
-   - netlify.toml (redirect rules)
-   - .adoc or .md files (documentation content)
-   - antora-playbook.yml files (build configuration)
-   - workflow file itself
-2. **Wait for Netlify Deploy**: Uses `jakepartusch/wait-for-netlify-action`
-3. **Run Tests**: Executes both afdocs checks AND redirect tests
-   - Uses `continue-on-error: true` to run both test suites even if one fails
-   - Final step fails the job if either test suite failed
-4. **Post Results**: GitHub Actions summary shows status of both checks
+**Two separate jobs:**
+1. **Agent-Friendly Docs** - validates agent-friendly documentation standards
+2. **Redirect Tests** - validates redirect rules in netlify.toml
+
+**Trigger**: On pull request (opened, synchronize, reopened) when relevant files change:
+- netlify.toml (redirect rules)
+- .adoc or .md files (documentation content)
+- antora-playbook.yml files (build configuration)
+- workflow file itself
+
+**Each job:**
+1. Waits for Netlify deploy preview
+2. Runs its test suite
+3. Posts results to GitHub Actions summary
+4. Fails the check if tests fail (no `continue-on-error`)
+
+**Benefits:**
+- Redirect tests show as a separate PR check (clear visibility)
+- Failures are immediately obvious in PR status
+- Each test suite can be run/debugged independently
 
 ### Example CI Output
 
