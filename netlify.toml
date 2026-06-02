@@ -347,6 +347,12 @@ from = "/redpanda-cloud/*"
 to = "/cloud-data-platform/:splat"
 status = 301
 
+# Removed lab: old AI Gateway LangGraph lab (DOC-2205). Must precede the /redpanda-labs/* catch-all.
+[[redirects]]
+from = "/redpanda-labs/ai-agents/langchain-agent/"
+to = "/labs/"
+status = 301
+
 [[redirects]]
 from = "/redpanda-labs/*"
 to = "/labs/:splat"
@@ -491,6 +497,12 @@ status = 301
 
 [[redirects]]
 from = "/streaming/current/develop/guide-nodejs/"
+to = "/labs/"
+status = 301
+
+# Removed lab: old AI Gateway LangGraph lab (DOC-2205), canonical labs path.
+[[redirects]]
+from = "/labs/ai-agents/langchain-agent/"
 to = "/labs/"
 status = 301
 
