@@ -67,23 +67,23 @@ status = 200
 # New component names (post-rename)
 [[redirects]]
 from = "/streaming.md"
-to = "/streaming/current/home.md"
-status = 200
+to = "/streaming/current/home/"
+status = 301
 
 [[redirects]]
 from = "/cloud-data-platform.md"
-to = "/cloud-data-platform/home.md"
-status = 200
+to = "/cloud-data-platform/home/"
+status = 301
 
 [[redirects]]
 from = "/connect.md"
-to = "/connect/home.md"
-status = 200
+to = "/connect/home/"
+status = 301
 
 [[redirects]]
 from = "/labs.md"
-to = "/labs/home.md"
-status = 200
+to = "/labs/home/"
+status = 301
 
 # Legacy component names (keep for backwards compatibility)
 [[redirects]]
