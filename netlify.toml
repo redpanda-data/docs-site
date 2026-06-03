@@ -96,6 +96,8 @@ to = "/streaming/current/get-started.md"
 status = 200
 
 # Component home.md redirects (for llms.txt auto-generated navigation)
+# home/ and get-started are the same content (both serve index.adoc)
+# Redirect to get-started.md (.md must go to .md)
 [[redirects]]
 from = "/streaming/current/home.md"
 to = "/streaming/current/get-started.md"
@@ -112,6 +114,7 @@ to = "/connect/get-started.md"
 status = 200
 
 # Legacy component names (keep for backwards compatibility)
+# .md must redirect to .md (redirect to get-started.md since home/ serves index.adoc which is get-started)
 [[redirects]]
 from = "/redpanda-cloud.md"
 to = "/cloud-data-platform/get-started.md"
