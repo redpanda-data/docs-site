@@ -33,9 +33,9 @@ Redpanda Documentation
 
 * xref:index.adoc[Data Platform overview]: The streaming foundation
 * xref:self-managed:ROOT:index.adoc[Self-Managed documentation]: Deploy and manage yourself
-** xref:streaming:home:index.adoc[Streaming documentation]: Broker and Redpanda CLI
-** xref:connect:home:index.adoc[Connect documentation]: Data pipelines and integration
-* xref:cloud-data-platform:home:index.adoc[Cloud documentation]: Fully managed services
+** xref:streaming:get-started.adoc[Streaming documentation]: Broker and Redpanda CLI
+** xref:connect:get-started.adoc[Connect documentation]: Data pipelines and integration
+* xref:cloud-data-platform:get-started.adoc[Cloud documentation]: Fully managed services
 
 == Choose your path
 
@@ -50,13 +50,13 @@ Find the documentation that matches your use case:
 *I want Redpanda managed for me* → Cloud docs
 
 * Fully managed service with Serverless, BYOC, and Dedicated options
-* xref:cloud-data-platform:home:index.adoc[Get started with Cloud]
+* xref:cloud-data-platform:get-started.adoc[Get started with Cloud]
 
 *I want to integrate data sources/sinks* → Connect docs
 
 * Available in both Cloud and Self-Managed deployments
 * Hundreds of prebuilt connectors including AI and change data capture (CDC)
-* xref:connect:home:index.adoc[Connect documentation]
+* xref:connect:get-started.adoc[Connect documentation]
 
 == AI agent access
 
@@ -343,7 +343,7 @@ Every HTML page in our documentation has a markdown equivalent that you can acce
 
 . *Direct access:* Replace `.html` with `.md` in any URL
 +
-Example: `https://docs.redpanda.com/streaming/home.html` → `https://docs.redpanda.com/streaming/home.md`
+Example: `https://docs.redpanda.com/streaming/current/get-started.html` → `https://docs.redpanda.com/streaming/current/get-started.md`
 
 . *Content negotiation:* Request any URL with `Accept: text/markdown` header
 

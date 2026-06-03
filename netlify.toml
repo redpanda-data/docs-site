@@ -85,6 +85,16 @@ from = "/labs.md"
 to = "/labs/contribute.md"
 status = 200
 
+[[redirects]]
+from = "/data-platform.md"
+to = "/data-platform/how-to-use-these-docs.md"
+status = 200
+
+[[redirects]]
+from = "/self-managed.md"
+to = "/streaming/current/get-started.md"
+status = 200
+
 # Legacy component names (keep for backwards compatibility)
 [[redirects]]
 from = "/redpanda-cloud.md"

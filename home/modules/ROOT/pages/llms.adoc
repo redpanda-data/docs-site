@@ -14,7 +14,7 @@
 
 2. **Sitemap**: `{site-url}/sitemap.md` - Contains all documentation pages including this file and all exports. The sitemap index includes `{site-url}/sitemap-llms.md` with all AI-optimized exports.
 
-3. **MCP server**: {site-url}/home/mcp-setup.md - For Claude Code and MCP-compatible agents, this provides interactive documentation tools.
+3. **MCP server**: {site-url}/cloud-data-platform/ai-agents/mcp.md - For Claude Code and MCP-compatible agents, this provides interactive documentation tools.
 
 ### Static documentation exports
 
@@ -32,7 +32,7 @@
 **Every HTML page has a markdown equivalent:**
 
 1. **Direct access**: Replace `.html` with `.md` in any URL
-   - Example: `{site-url}/streaming/home.html` → `{site-url}/streaming/home.md`
+   - Example: `{site-url}/streaming/current/get-started.html` → `{site-url}/streaming/current/get-started.md`
 
 2. **Content negotiation**: Request any URL with `Accept: text/markdown` header
 
@@ -72,7 +72,7 @@ Learn about `rpk`, the comprehensive command-line interface tool for managing Re
 
 ## Redpanda Console
 
-- {site-url}/streaming/console.md[About Redpanda Console]: Learn about Redpanda's Kafka UI for managing topics, partitions, and consumer groups.
+- {site-url}/streaming/current/console.md[About Redpanda Console]: Learn about Redpanda's Kafka UI for managing topics, partitions, and consumer groups.
 - {site-url}/streaming/manage/console.md[Configure Redpanda Console]: Learn how to configure Redpanda Console for your needs.
 
 ## AI agents and Agentic Data Plane
@@ -82,7 +82,7 @@ Build and deploy production-ready AI agents with enterprise governance and compl
 - {site-url}/cloud-data-platform/ai-agents/adp-overview.md[Agentic Data Plane Overview]: Enterprise infrastructure for AI agents with built-in governance, observability, and compliance.
 - {site-url}/cloud-data-platform/ai-agents/mcp.md[Model Context Protocol (MCP)]: Give AI agents direct access to databases, queues, CRMs, and business systems without custom integration code.
 - {site-url}/cloud-data-platform/ai-agents/ai-gateway.md[AI Gateway]: Centralized gateway for AI agent interactions with intelligent routing, caching, and cost controls.
-- {site-url}/cloud-data-platform/ai-agents/agents.md[Building AI Agents]: Declarative agent configuration using Redpanda Connect connectors - no custom agent code required.
+- {site-url}/cloud-data-platform/ai-agents.md[Building AI Agents]: Declarative agent configuration using Redpanda Connect connectors - no custom agent code required.
 - {site-url}/cloud-data-platform/ai-agents/observability.md[Agent Observability]: Track agent decisions, costs, and compliance with comprehensive audit trails.
 
 ## API references
