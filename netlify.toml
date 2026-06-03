@@ -95,20 +95,36 @@ from = "/self-managed.md"
 to = "/streaming/current/get-started.md"
 status = 200
 
+# Component home.md redirects (for llms.txt auto-generated navigation)
+[[redirects]]
+from = "/streaming/current/home.md"
+to = "/streaming/current/get-started.md"
+status = 200
+
+[[redirects]]
+from = "/cloud-data-platform/home.md"
+to = "/cloud-data-platform/get-started.md"
+status = 200
+
+[[redirects]]
+from = "/connect/home.md"
+to = "/connect/get-started.md"
+status = 200
+
 # Legacy component names (keep for backwards compatibility)
 [[redirects]]
 from = "/redpanda-cloud.md"
-to = "/cloud-data-platform/home.md"
+to = "/cloud-data-platform/get-started.md"
 status = 301
 
 [[redirects]]
 from = "/redpanda-connect.md"
-to = "/connect/home.md"
+to = "/connect/get-started.md"
 status = 301
 
 [[redirects]]
 from = "/redpanda-labs.md"
-to = "/labs/home.md"
+to = "/labs/contribute.md"
 status = 301
 
 # Redirect old index.md URLs to new .md structure
