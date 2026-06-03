@@ -82,7 +82,7 @@ status = 301
 
 [[redirects]]
 from = "/labs.md"
-to = "/labs/home/"
+to = "/labs/"
 status = 301
 
 # Legacy component names (keep for backwards compatibility)
