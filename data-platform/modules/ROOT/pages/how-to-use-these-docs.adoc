@@ -50,13 +50,13 @@ Find the documentation that matches your use case:
 *I want Redpanda managed for me* → Cloud docs
 
 * Fully managed service with Serverless, BYOC, and Dedicated options
-* xref:cloud-data-platform:get-started.adoc[Get started with Cloud]
+* xref:cloud-data-platform:home:index.adoc[Get started with Cloud]
 
 *I want to integrate data sources/sinks* → Connect docs
 
 * Available in both Cloud and Self-Managed deployments
 * Hundreds of prebuilt connectors including AI and change data capture (CDC)
-* xref:connect:get-started.adoc[Connect documentation]
+* xref:connect:home:index.adoc[Connect documentation]
 
 == AI agent access
 
