@@ -73,7 +73,7 @@ Learn about `rpk`, the comprehensive command-line interface tool for managing Re
 ## Redpanda Console
 
 - {site-url}/streaming/current/console.md[About Redpanda Console]: Learn about Redpanda's Kafka UI for managing topics, partitions, and consumer groups.
-- {site-url}/streaming/manage/console.md[Configure Redpanda Console]: Learn how to configure Redpanda Console for your needs.
+- {site-url}/streaming/current/manage/console.md[Configure Redpanda Console]: Learn how to configure Redpanda Console for your needs.
 
 ## AI agents and Agentic Data Plane
 
