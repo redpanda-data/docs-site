@@ -36,6 +36,7 @@ jobs:
         with:
           site_name: redpanda-documentation
           max_timeout: 600
+          commit_ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Run afdocs checks
         env:
@@ -73,6 +74,7 @@ jobs:
         with:
           site_name: redpanda-documentation
           max_timeout: 600
+          commit_ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Run redirect tests
         env:
