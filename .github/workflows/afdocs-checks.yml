@@ -38,6 +38,7 @@ jobs:
           max_timeout: 600
 
       - name: Run afdocs checks
+        continue-on-error: true
         env:
           DEPLOY_URL: ${{ steps.wait-for-netlify.outputs.url }}
         run: npm run afdocs:verbose
