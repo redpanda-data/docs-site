@@ -46,32 +46,6 @@ export default async (request, context) => {
   );
   const headerColor = headerColors[matchedPath] || "color-mix(in srgb, #1D4ED8 8%, white)"; // default to cloud
 
-  // Validate path - only proxy known API doc paths
-  const validApiPaths = [
-    "/api/doc/admin",
-    "/api/doc/schema-registry",
-    "/api/doc/http-proxy",
-    "/api/doc/cloud-controlplane",
-    "/api/doc/cloud-dataplane",
-  ];
-
-  // Remove .md extension for validation
-  const pathForValidation = normalizedPath.replace(/\.md$/, "");
-  const isValidPath = validApiPaths.some(path =>
-    pathForValidation === path || pathForValidation.startsWith(path + "/")
-  );
-
-  // Return 404 for invalid API paths (prevents soft 404s in afdocs tests)
-  if (!isValidPath) {
-    return new Response("Not Found", {
-      status: 404,
-      headers: {
-        "content-type": "text/plain; charset=utf-8",
-        "cache-control": "public, max-age=60",
-      }
-    });
-  }
-
   // Build the proxied Bump.sh URL
   const bumpUrl = new URL(request.url);
   bumpUrl.host = "bump.sh";
