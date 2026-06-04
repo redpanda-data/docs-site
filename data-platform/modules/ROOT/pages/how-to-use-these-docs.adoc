@@ -343,7 +343,7 @@ Every HTML page in our documentation has a markdown equivalent that you can acce
 
 . *Direct access:* Replace `.html` with `.md` in any URL
 +
-Example: `https://docs.redpanda.com/streaming/home.html` → `https://docs.redpanda.com/streaming/home.md`
+Example: `https://docs.redpanda.com/streaming/current/get-started.html` → `https://docs.redpanda.com/streaming/current/get-started.md`
 
 . *Content negotiation:* Request any URL with `Accept: text/markdown` header
 
