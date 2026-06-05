@@ -1,12 +1,21 @@
 ---
-name: Agent-Friendly Docs Checks
+name: Documentation Checks
 
 on:
   pull_request:
     types: [opened, synchronize, reopened]
+    paths:
+      - '**.adoc'
+      - '**.md'
+      - 'netlify.toml'
+      - 'antora-playbook.yml'
+      - 'preview-antora-playbook.yml'
+      - 'local-antora-playbook.yml'
+      - '.github/workflows/afdocs-checks.yml'
 
 jobs:
   afdocs:
+    name: Agent-Friendly Docs
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -29,7 +38,6 @@ jobs:
           max_timeout: 600
 
       - name: Run afdocs checks
-        id: afdocs
         continue-on-error: true
         env:
           DEPLOY_URL: ${{ steps.wait-for-netlify.outputs.url }}
@@ -38,14 +46,47 @@ jobs:
       - name: Post results summary
         if: always()
         run: |
-          echo "## Agent-Friendly Docs Check Results" >> $GITHUB_STEP_SUMMARY
+          echo "## Agent-Friendly Docs Checks" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Deploy URL:** ${{ steps.wait-for-netlify.outputs.url }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          if [ "${{ steps.afdocs.outcome }}" == "success" ]; then
-            echo "✅ All checks passed!" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "⚠️ Some checks failed or had warnings. See job logs for details." >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "Run locally with: \`DEPLOY_URL=${{ steps.wait-for-netlify.outputs.url }} npm run afdocs:verbose\`" >> $GITHUB_STEP_SUMMARY
-          fi
+          echo "Run locally: \`DEPLOY_URL=${{ steps.wait-for-netlify.outputs.url }} npm run afdocs:verbose\`" >> $GITHUB_STEP_SUMMARY
+
+  redirect-tests:
+    name: Redirect Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Wait for Netlify Deploy
+        uses: jakepartusch/wait-for-netlify-action@v1.4
+        id: wait-for-netlify
+        with:
+          site_name: redpanda-documentation
+          max_timeout: 600
+
+      - name: Run redirect tests
+        env:
+          DEPLOY_URL: ${{ steps.wait-for-netlify.outputs.url }}
+        run: npm run test:redirects:verbose
+
+      - name: Post results summary
+        if: always()
+        run: |
+          echo "## Redirect Tests" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Deploy URL:** ${{ steps.wait-for-netlify.outputs.url }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Validates redirect rules in netlify.toml" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Run locally: \`DEPLOY_URL=${{ steps.wait-for-netlify.outputs.url }} npm run test:redirects:verbose\`" >> $GITHUB_STEP_SUMMARY

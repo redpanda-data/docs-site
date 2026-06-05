@@ -34,17 +34,17 @@ export default async (request, context) => {
     return Response.redirect(`${url.origin}${mdPath}`, 302);
   }
 
-  // Map paths to header background colors
+  // Map paths to header background colors (8% component color mixed with white)
   const headerColors = {
-    "/api/doc/admin": "#107569",
-    "/api/doc/cloud-controlplane": "#014F86",
-    "/api/doc/cloud-dataplane": "#014F86",
+    "/api/doc/admin": "color-mix(in srgb, #9F1239 8%, white)",              // self-managed (rose)
+    "/api/doc/cloud-controlplane": "color-mix(in srgb, #1D4ED8 8%, white)", // cloud (blue)
+    "/api/doc/cloud-dataplane": "color-mix(in srgb, #1D4ED8 8%, white)",    // cloud (blue)
   };
 
   const matchedPath = Object.keys(headerColors).find((path) =>
     normalizedPath.startsWith(path)
   );
-  const headerColor = headerColors[matchedPath] || "#d73d23";
+  const headerColor = headerColors[matchedPath] || "color-mix(in srgb, #1D4ED8 8%, white)"; // default to cloud
 
   // Build the proxied Bump.sh URL
   const bumpUrl = new URL(request.url);
@@ -103,14 +103,27 @@ export default async (request, context) => {
     headScript,
     headerWidget,
     footerWidget,
+    chatPanelWidget,
   ] = await Promise.all([
     bumpRes.text(),
     fetchWidget(`${originalOrigin}/assets/widgets/head-bump.html`, "head-bump"),
     fetchWidget(`${originalOrigin}/assets/widgets/header.html`, "header"),
     fetchWidget(`${originalOrigin}/assets/widgets/footer.html`, "footer"),
+    fetchWidget(`${originalOrigin}/assets/widgets/chat-panel-bump.html`, "chat-panel"),
   ]);
 
-  const document = new DOMParser().parseFromString(originalHtml, "text/html");
+  let document;
+  try {
+    document = new DOMParser().parseFromString(originalHtml, "text/html");
+  } catch (error) {
+    console.error("❌ Failed to initialize DOMParser (WASM issue):", error);
+    // Return unmodified HTML if DOM parsing fails
+    return new Response(originalHtml, {
+      status: 200,
+      headers: { "content-type": "text/html; charset=utf-8" },
+    });
+  }
+
   if (!document) {
     console.error("❌ Failed to parse Bump.sh HTML.");
     return new Response(originalHtml, {
@@ -132,9 +145,10 @@ export default async (request, context) => {
   // Inject header with dynamic background color
   const topBody = document.querySelector("#embed-top-body");
   if (topBody && headerWidget) {
+    // Add background color to the navbar element
     const coloredHeader = headerWidget.replace(
-      /(<nav[^>]*style="[^"]*background-color:\s*)#[^";]+/,
-      `$1${headerColor}`
+      /<nav([^>]*class="[^"]*navbar[^"]*")/,
+      `<nav$1 style="background-color: ${headerColor};"`
     );
 
     const wrapper = document.createElement("div");
@@ -149,6 +163,15 @@ export default async (request, context) => {
   if (bottomBody && footerWidget) {
     const wrapper = document.createElement("div");
     wrapper.innerHTML = footerWidget;
+    while (wrapper.firstChild) {
+      bottomBody.appendChild(wrapper.firstChild);
+    }
+  }
+
+  // Inject chat panel (Ask AI drawer)
+  if (bottomBody && chatPanelWidget) {
+    const wrapper = document.createElement("div");
+    wrapper.innerHTML = chatPanelWidget;
     while (wrapper.firstChild) {
       bottomBody.appendChild(wrapper.firstChild);
     }
@@ -171,12 +194,48 @@ export default async (request, context) => {
     }
 
     // Add CSS to visually hide the directive
-    const style = document.createElement("style");
-    style.textContent = ".llms-directive{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden}";
-    head.appendChild(style);
+    if (head) {
+      const style = document.createElement("style");
+      style.textContent = ".llms-directive{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden}";
+      head.appendChild(style);
+    }
+
+    // Inject CSS fixes for chat panel and dark mode on Bump.sh pages
+    if (head) {
+      const fixStyle = document.createElement("style");
+      fixStyle.textContent = `
+        /* Fix chat panel top offset - account for fixed navbar */
+        .chat-panel { top: var(--navbar-height, 70px) !important; height: calc(100vh - var(--navbar-height, 70px)) !important; }
+
+        /* Fix chat head icons - ensure SVGs are visible */
+        .chat-head-btn svg { stroke: currentColor !important; }
+        .chat-head-icon svg { fill: currentColor !important; }
+
+        /* Dark mode fixes using html[data-theme="dark"] selector (Bump pages use this, not .dark-theme) */
+        html[data-theme="dark"] .navbar { background: #0f172a !important; }
+        html[data-theme="dark"] .chat-panel { background: #1a2332 !important; color: #e8eef6 !important; border-left-color: rgba(255,255,255,0.08) !important; }
+        html[data-theme="dark"] .chat-head { border-bottom-color: rgba(255,255,255,0.08) !important; }
+        html[data-theme="dark"] .chat-head-name { color: #e8eef6 !important; }
+        html[data-theme="dark"] .chat-head-sub { color: #7c8ca8 !important; }
+        html[data-theme="dark"] .chat-head-btn { color: #7c8ca8 !important; }
+        html[data-theme="dark"] .chat-head-btn:hover { background: rgba(255,255,255,0.05) !important; color: #e8eef6 !important; }
+        html[data-theme="dark"] .chat-foot { color: #7c8ca8 !important; border-top-color: rgba(255,255,255,0.08) !important; }
+        html[data-theme="dark"] #chat-panel-kapa-root { color: #e8eef6 !important; }
+        html[data-theme="dark"] #chat-panel-kapa-root .welcome-icon { background: linear-gradient(135deg, #312e81 0%, #3730a3 100%) !important; color: #a5b4fc !important; }
+        html[data-theme="dark"] #chat-panel-kapa-root .welcome-title { color: #e8eef6 !important; }
+        html[data-theme="dark"] #chat-panel-kapa-root .welcome-description { color: #7c8ca8 !important; }
+        html[data-theme="dark"] #chat-panel-kapa-root .suggestion-card { background: #232f3e !important; border-color: rgba(255,255,255,0.1) !important; color: #aab8ca !important; }
+        html[data-theme="dark"] #chat-panel-kapa-root .suggestion-card:hover { background: #2a3a4d !important; border-color: rgba(255,255,255,0.15) !important; color: #e8eef6 !important; }
+        html[data-theme="dark"] #chat-panel-kapa-root .chat-input-wrapper { background: #232f3e !important; border-color: rgba(255,255,255,0.1) !important; }
+        html[data-theme="dark"] #chat-panel-kapa-root .chat-input-wrapper .chat-input { background: transparent !important; color: #e8eef6 !important; }
+        html[data-theme="dark"] #chat-panel-kapa-root .disclaimer { color: #7c8ca8 !important; background: #1a2332 !important; }
+      `.replace(/\s+/g, ' ').trim();
+      head.appendChild(fixStyle);
+    }
   }
 
-  return new Response(document.documentElement.outerHTML, {
+  const htmlOutput = document.documentElement?.outerHTML || originalHtml;
+  return new Response(htmlOutput, {
     status: 200,
     headers: {
       "content-type": "text/html; charset=utf-8",
@@ -211,7 +270,8 @@ async function fetchWithRetry(url, options, maxRetries = 3) {
       });
       return response;
     } catch (error) {
-      console.warn(`Attempt ${attempt} failed for ${url}:`, error.message);
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      console.warn(`Attempt ${attempt} failed for ${url}:`, errorMsg);
 
       if (attempt === maxRetries) {
         throw error;

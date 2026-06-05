@@ -1,0 +1,27 @@
+name: self-managed
+title: Self-Managed
+version: ~
+start_page: index.adoc
+nav:
+- modules/ROOT/nav.adoc
+asciidoc:
+  attributes:
+    component-metadata:
+      title: "Self-Managed"
+      description: "Run Redpanda on your own infrastructure with Streaming and Connect."
+      color: "#9F1239"
+      order: 1
+      icon: "server"
+      heroGradient: "linear-gradient(180deg, #2a0814 0%, #5c0f26 100%)"
+      eyebrow: "SELF-MANAGED"
+      contextNote: "Two products you install and operate separately."
+    # AI suggestions for chat drawer (component-specific)
+    ai-suggestion-1: "How do I deploy Redpanda on Kubernetes?"
+    ai-suggestion-2: "Set up Tiered Storage with S3"
+    ai-suggestion-3: "Configure producers and consumers"
+    ai-suggestion-4: "Migrate from Apache Kafka to Redpanda"
+    # Navigation hierarchy configuration (config-driven navigation)
+    page-navigation:
+      - self-managed:
+          - streaming
+          - connect

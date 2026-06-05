@@ -1,0 +1,28 @@
+name: data-platform
+title: Data Platform
+version: ~
+start_page: index.adoc
+nav:
+  - modules/ROOT/nav.adoc
+asciidoc:
+  attributes:
+    component-metadata:
+      title: "Data Platform"
+      description: "The streaming foundation for everything you build"
+      color: "#5239CC"
+      icon: "stack-2"
+    # Component home links
+    cloud-home: "cloud-data-platform:home:index.adoc"
+    self-managed-home: "streaming:home:index.adoc"
+    # AI suggestions for chat drawer (component-specific)
+    ai-suggestion-1: "How do I write from Redpanda Streaming to Snowflake?"
+    ai-suggestion-2: "What's the difference between Redpanda and Kafka?"
+    ai-suggestion-3: "How do I create a CDC pipeline from Postgres to Redpanda Cloud?"
+    ai-suggestion-4: "Deploy a Kafka-compatible cluster"
+    # Navigation hierarchy configuration (config-driven navigation)
+    page-navigation:
+      - data-platform:
+          - cloud-data-platform
+          - self-managed:
+              - streaming
+              - connect

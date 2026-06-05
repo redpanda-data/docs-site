@@ -1,5 +1,6 @@
 [build.environment]
-NODE_VERSION = "20"
+NODE_VERSION = "22"
+NODE_OPTIONS = "--max-old-space-size=6144"
 
 [dev]
   publish = "docs/"
@@ -12,7 +13,7 @@ NODE_VERSION = "20"
     fail_deploy_on_score_thresholds = "true"
 
   [[plugins.inputs.audits]]
-    path = "current/home/index.html"
+    path = "streaming/current/home/index.html"
 
   [plugins.inputs.settings]
     preset = "desktop"
@@ -60,23 +61,74 @@ NODE_VERSION = "20"
 # Top-level component directories (redirect to home pages)
 [[redirects]]
 from = "/current.md"
-to = "/current/home.md"
+to = "/streaming/current/home.md"
+status = 200
+
+# New component names (post-rename)
+[[redirects]]
+from = "/streaming.md"
+to = "/streaming/current/get-started.md"
 status = 200
 
 [[redirects]]
-from = "/redpanda-cloud.md"
-to = "/redpanda-cloud/home.md"
+from = "/cloud-data-platform.md"
+to = "/cloud-data-platform/get-started.md"
 status = 200
+
+[[redirects]]
+from = "/connect.md"
+to = "/connect/get-started.md"
+status = 200
+
+[[redirects]]
+from = "/labs.md"
+to = "/labs/contribute.md"
+status = 200
+
+[[redirects]]
+from = "/data-platform.md"
+to = "/data-platform/how-to-use-these-docs.md"
+status = 200
+
+[[redirects]]
+from = "/self-managed.md"
+to = "/streaming/current/get-started.md"
+status = 200
+
+# Component home.md redirects (for llms.txt auto-generated navigation)
+# home/ and get-started are the same content (both serve index.adoc)
+# Redirect to get-started.md (.md must go to .md)
+[[redirects]]
+from = "/streaming/current/home.md"
+to = "/streaming/current/get-started.md"
+status = 200
+
+[[redirects]]
+from = "/cloud-data-platform/home.md"
+to = "/cloud-data-platform/get-started.md"
+status = 200
+
+[[redirects]]
+from = "/connect/home.md"
+to = "/connect/get-started.md"
+status = 200
+
+# Legacy component names (keep for backwards compatibility)
+# .md must redirect to .md (redirect to get-started.md since home/ serves index.adoc which is get-started)
+[[redirects]]
+from = "/redpanda-cloud.md"
+to = "/cloud-data-platform/get-started.md"
+status = 301
 
 [[redirects]]
 from = "/redpanda-connect.md"
-to = "/redpanda-connect/home.md"
-status = 200
+to = "/connect/get-started.md"
+status = 301
 
 [[redirects]]
 from = "/redpanda-labs.md"
-to = "/redpanda-labs/home.md"
-status = 200
+to = "/labs/contribute.md"
+status = 301
 
 # Redirect old index.md URLs to new .md structure
 [[redirects]]
@@ -91,10 +143,6 @@ status = 301
 force = true
 
 [[edge_functions]]
-path = "/api/feedback"
-function = "feedback-api"
-
-[[edge_functions]]
 path = "/api/*"
 function = "proxy-api-docs"
 
@@ -106,83 +154,79 @@ function = "serve-markdown"
 # ========Beta redirects==========
 [[redirects]]
 from = "/beta/*"
-to = "/current/:splat"
+to = "/streaming/current/:splat"
 status = 307
 
 # ===========Docusaurus to Antora migration redirects============
-[[redirects]]
-from = "/home"
-to = "/current/home"
-status = 301
 
 [[redirects]]
 from = "/docs/23.2/*"
-to = "/23.2/:splat"
+to = "/streaming/23.2/:splat"
 status = 301
 
 [[redirects]]
 from = "/docs/23.1/platform/*"
-to = "/23.1/:splat"
+to = "/streaming/23.1/:splat"
 status = 301
 
 [[redirects]]
 from = "/docs/23.1/*"
-to = "/23.1/:splat"
+to = "/streaming/23.1/:splat"
 status = 301
 
 [[redirects]]
 from = "/docs/22.3/platform/*"
-to = "/current/:splat"
+to = "/streaming/current/:splat"
 status = 301
 
 [[redirects]]
 from = "/docs/22.3/*"
-to = "/current/:splat"
+to = "/streaming/current/:splat"
 status = 301
 
 [[redirects]]
 from = "/docs/22.2/platform/*"
-to = "/current/:splat"
+to = "/streaming/current/:splat"
 status = 301
 
 [[redirects]]
 from = "/docs/22.2/*"
-to = "/current/:splat"
+to = "/streaming/current/:splat"
 status = 301
 
 [[redirects]]
 from = "/docs/22.1/platform/*"
-to = "/current/:splat"
+to = "/streaming/current/:splat"
 status = 301
 
 [[redirects]]
 from = "/docs/22.1/*"
-to = "/current/:splat"
+to = "/streaming/current/:splat"
 status = 301
 
 [[redirects]]
 from = "/docs/21.11/platform/*"
-to = "/current/:splat"
+to = "/streaming/current/:splat"
 status = 301
 
 [[redirects]]
 from = "/docs/21.11/*"
-to = "/current/:splat"
+to = "/streaming/current/:splat"
 status = 301
 
 [[redirects]]
 from = "/docs/21.1/*"
-to = "/current/:splat"
+to = "/streaming/current/:splat"
 status = 301
 
 [[redirects]]
 from = "/docs/home/*"
-to = "/current/home"
+to = "/streaming/current/home"
 status = 301
 
 [[redirects]]
 from = "/docs/reference/faq"
-to = "/current/home"
+to = "/streaming/current/home"
 status = 301
 
 [[redirects]]
@@ -208,159 +252,436 @@ status = 301
 
 [[redirects]]
 from = "/docs/platform/*"
-to = "/current/:splat"
+to = "/streaming/current/:splat"
 status = 301
 
 [[redirects]]
 from = "/docs/*"
-to = "/current/:splat"
+to = "/streaming/current/:splat"
 status = 301
 
 # ================End of life versions===================
 
+# EOL version root redirects (redirect to current)
+[[redirects]]
+from = "/23.2"
+to = "/streaming/current/home/"
+status = 301
+
+[[redirects]]
+from = "/23.1"
+to = "/streaming/current/home/"
+status = 301
+
+[[redirects]]
+from = "/22.3"
+to = "/streaming/current/home/"
+status = 301
+
+[[redirects]]
+from = "/22.2"
+to = "/streaming/current/home/"
+status = 301
+
+[[redirects]]
+from = "/22.1"
+to = "/streaming/current/home/"
+status = 301
+
+[[redirects]]
+from = "/21.11"
+to = "/streaming/current/home/"
+status = 301
+
+# EOL version wildcard redirects
 [[redirects]]
 from = "/23.2/*"
-to = "/current/:splat"
+to = "/streaming/current/:splat"
 status = 301
 
 [[redirects]]
 from = "/23.1/*"
-to = "/current/:splat"
+to = "/streaming/current/:splat"
 status = 301
 
 [[redirects]]
 from = "/22.2/*"
-to = "/current/:splat"
+to = "/streaming/current/:splat"
 status = 301
 
 [[redirects]]
 from = "/22.3/*"
-to = "/current/:splat"
+to = "/streaming/current/:splat"
 status = 301
 
 [[redirects]]
 from = "/22.1/*"
-to = "/current/:splat"
+to = "/streaming/current/:splat"
 status = 301
 
 [[redirects]]
 from = "/21.11/*"
-to = "/current/:splat"
+to = "/streaming/current/:splat"
+status = 301
+
+# ================End of life versions (streaming paths)=================
+# Catch-all redirects for streaming-prefixed old version paths
+
+[[redirects]]
+from = "/streaming/23.2/*"
+to = "/streaming/current/:splat"
+status = 301
+
+[[redirects]]
+from = "/streaming/23.1/*"
+to = "/streaming/current/:splat"
+status = 301
+
+[[redirects]]
+from = "/streaming/22.3/*"
+to = "/streaming/current/:splat"
+status = 301
+
+[[redirects]]
+from = "/streaming/22.2/*"
+to = "/streaming/current/:splat"
+status = 301
+
+[[redirects]]
+from = "/streaming/22.1/*"
+to = "/streaming/current/:splat"
+status = 301
+
+[[redirects]]
+from = "/streaming/21.11/*"
+to = "/streaming/current/:splat"
+status = 301
+
+# ========= Component rename redirects =====================
+
+# Redirect /current/* to /streaming/current/*
+[[redirects]]
+from = "/current/*"
+to = "/streaming/current/:splat"
+status = 301
+
+# Redirect old component names to new ones (catch-all after specific redirects)
+[[redirects]]
+from = "/redpanda-connect/*"
+to = "/connect/:splat"
+status = 301
+
+[[redirects]]
+from = "/redpanda-cloud/*"
+to = "/cloud-data-platform/:splat"
+status = 301
+
+# Removed lab: old AI Gateway LangGraph lab (DOC-2205). Must precede the /redpanda-labs/* catch-all.
+[[redirects]]
+from = "/redpanda-labs/ai-agents/langchain-agent/"
+to = "/labs/"
+status = 301
+
+[[redirects]]
+from = "/redpanda-labs/*"
+to = "/labs/:splat"
+status = 301
+
+# ========= Streaming paths without version =====================
+# Redirect /streaming/section/... to /streaming/current/section/...
+
+[[redirects]]
+from = "/streaming/reference/*"
+to = "/streaming/current/reference/:splat"
+status = 301
+
+[[redirects]]
+from = "/streaming/deploy/*"
+to = "/streaming/current/deploy/:splat"
+status = 301
+
+[[redirects]]
+from = "/streaming/develop/*"
+to = "/streaming/current/develop/:splat"
+status = 301
+
+# Explicit two-hop rules (must come before /streaming/manage/* wildcard)
+[[redirects]]
+from = "/streaming/manage/cluster-balancing"
+to = "/streaming/current/manage/cluster-maintenance/cluster-balancing/"
+status = 301
+
+[[redirects]]
+from = "/streaming/manage/fips-compliance"
+to = "/streaming/current/manage/security/fips-compliance/"
+status = 301
+
+[[redirects]]
+from = "/streaming/manage/*"
+to = "/streaming/current/manage/:splat"
+status = 301
+
+[[redirects]]
+from = "/streaming/upgrade/*"
+to = "/streaming/current/upgrade/:splat"
+status = 301
+
+[[redirects]]
+from = "/streaming/get-started/*"
+to = "/streaming/current/get-started/:splat"
+status = 301
+
+# ========= Version root redirects =====================
+
+# Redirect version roots to their streaming component equivalents
+[[redirects]]
+from = "/25.3"
+to = "/streaming/25.3/home/"
+status = 301
+
+[[redirects]]
+from = "/25.2"
+to = "/streaming/25.2/home/"
+status = 301
+
+[[redirects]]
+from = "/25.1"
+to = "/streaming/25.1/home/"
+status = 301
+
+[[redirects]]
+from = "/24.3"
+to = "/streaming/24.3/home/"
+status = 301
+
+[[redirects]]
+from = "/24.2"
+to = "/streaming/24.2/home/"
+status = 301
+
+[[redirects]]
+from = "/24.1"
+to = "/streaming/24.1/home/"
+status = 301
+
+[[redirects]]
+from = "/23.3"
+to = "/streaming/23.3/home/"
 status = 301
 
 # ========= Docker example redirects =====================
 
 [[redirects]]
-from = "/current/reference/docker-compose/"
-to = "/current/get-started/docker-compose-labs/"
+from = "/streaming/current/reference/docker-compose/"
+to = "/streaming/current/get-started/docker-compose-labs/"
 status = 301
 
 [[redirects]]
-from = "/current/console/reference/docker-compose/"
-to = "/current/get-started/docker-compose-labs/"
+from = "/streaming/current/console/reference/docker-compose/"
+to = "/streaming/current/get-started/docker-compose-labs/"
 status = 301
 
 [[redirects]]
-from = "/current/reference/console/docker-compose/"
-to = "/current/get-started/docker-compose-labs/"
+from = "/streaming/current/reference/console/docker-compose/"
+to = "/streaming/current/get-started/docker-compose-labs/"
 status = 301
 
 [[redirects]]
 from = "/23.2/reference/docker-compose/"
-to = "/current/get-started/docker-compose-labs/"
+to = "/streaming/current/get-started/docker-compose-labs/"
 status = 301
 
 [[redirects]]
-from = "/current/get-started/_attachments/single-broker/docker-compose.yml"
-to = "/redpanda-labs/docker-compose/_attachments/single-broker/docker-compose.yml"
+from = "/streaming/current/get-started/_attachments/single-broker/docker-compose.yml"
+to = "/labs/docker-compose/_attachments/single-broker/docker-compose.yml"
 status = 301
 
 [[redirects]]
-from = "/current/get-started/_attachments/three-brokers/docker-compose.yml"
-to = "/redpanda-labs/docker-compose/_attachments/three-brokers/docker-compose.yml"
+from = "/streaming/current/get-started/_attachments/three-brokers/docker-compose.yml"
+to = "/labs/docker-compose/_attachments/three-brokers/docker-compose.yml"
+status = 301
+
+# =========Streaming current restructured paths========
+# Paths that have moved within streaming/current
+
+[[redirects]]
+from = "/streaming/current/licensing/*"
+to = "/streaming/current/get-started/licensing/:splat"
+status = 301
+
+[[redirects]]
+from = "/streaming/current/kubernetes/*"
+to = "/streaming/current/deploy/deployment-option/self-hosted/kubernetes/:splat"
+status = 301
+
+[[redirects]]
+from = "/streaming/current/manage/cluster-balancing"
+to = "/streaming/current/manage/cluster-maintenance/cluster-balancing/"
+status = 301
+
+[[redirects]]
+from = "/streaming/current/manage/fips-compliance"
+to = "/streaming/current/manage/security/fips-compliance/"
 status = 301
 
 # =========Bulk redirects from different components========
 
 [[redirects]]
-from = "/current/develop/chat-room/"
-to = "/redpanda-labs/"
+from = "/streaming/current/develop/chat-room/"
+to = "/labs/"
 status = 301
 
 [[redirects]]
-from = "/current/develop/chat-room-docker/"
-to = "/redpanda-labs/"
+from = "/streaming/current/develop/chat-room-docker/"
+to = "/labs/"
 status = 301
 
 [[redirects]]
-from = "/current/get-started/code-samples/"
-to = "/redpanda-labs/"
+from = "/streaming/current/get-started/code-samples/"
+to = "/labs/"
 status = 301
 
 [[redirects]]
-from = "/current/development/code-samples/"
-to = "/redpanda-labs/"
+from = "/streaming/current/development/code-samples/"
+to = "/labs/"
 status = 301
 
 [[redirects]]
-from = "/current/introduction/code-samples/"
-to = "/redpanda-labs/"
+from = "/streaming/current/introduction/code-samples/"
+to = "/labs/"
 status = 301
 
 [[redirects]]
-from = "/current/develop/code-samples/"
-to = "/redpanda-labs/"
+from = "/streaming/current/develop/code-samples/"
+to = "/labs/"
 status = 301
 
 [[redirects]]
-from = "/current/develop/guide-go-cloud/"
-to = "/redpanda-labs/"
+from = "/streaming/current/develop/guide-go-cloud/"
+to = "/labs/"
 status = 301
 
 [[redirects]]
-from = "/current/develop/guide-python-cloud/"
-to = "/redpanda-labs/"
+from = "/streaming/current/develop/guide-python-cloud/"
+to = "/labs/"
 status = 301
 
 [[redirects]]
-from = "/current/develop/guide-java-cloud/"
-to = "/redpanda-labs/"
+from = "/streaming/current/develop/guide-java-cloud/"
+to = "/labs/"
 status = 301
 
 [[redirects]]
-from = "/current/develop/guide-nodejs-cloud/"
-to = "/redpanda-labs/"
+from = "/streaming/current/develop/guide-nodejs-cloud/"
+to = "/labs/"
 status = 301
 
 [[redirects]]
-from = "/current/develop/guide-go/"
-to = "/redpanda-labs/"
+from = "/streaming/current/develop/guide-go/"
+to = "/labs/"
 status = 301
 
 [[redirects]]
-from = "/current/develop/guide-python/"
-to = "/redpanda-labs/"
+from = "/streaming/current/develop/guide-python/"
+to = "/labs/"
 status = 301
 
 [[redirects]]
-from = "/current/develop/guide-java/"
-to = "/redpanda-labs/"
+from = "/streaming/current/develop/guide-java/"
+to = "/labs/"
 status = 301
 
 [[redirects]]
-from = "/current/develop/guide-nodejs/"
-to = "/redpanda-labs/"
+from = "/streaming/current/develop/guide-nodejs/"
+to = "/labs/"
+status = 301
+
+# Removed lab: old AI Gateway LangGraph lab (DOC-2205), canonical labs path.
+[[redirects]]
+from = "/labs/ai-agents/langchain-agent/"
+to = "/labs/"
 status = 301
 
 
 [[redirects]]
 from = "/cookbooks/*"
-to = "/redpanda-connect/cookbooks/:splat"
+to = "/connect/cookbooks/:splat"
 status = 301
 
 [[redirects]]
 from = "/blog/*"
-to = "/redpanda-connect/about/"
+to = "/connect/home/"
+status = 301
+
+# =========Cloud-data-platform path fixes========
+# Fix wrong paths within cloud-data-platform (rpk docs exist at /reference/rpk/)
+
+# Wrong: /cloud-data-platform/rpk/* -> Correct: /cloud-data-platform/reference/rpk/*
+[[redirects]]
+from = "/cloud-data-platform/rpk/*"
+to = "/cloud-data-platform/reference/rpk/:splat"
+status = 301
+
+# Wrong: /cloud-data-platform/reference/rpk-cluster/* (missing /rpk/ segment)
+[[redirects]]
+from = "/cloud-data-platform/reference/rpk-cluster/*"
+to = "/cloud-data-platform/reference/rpk/rpk-cluster/:splat"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/reference/rpk-profile/*"
+to = "/cloud-data-platform/reference/rpk/rpk-profile/:splat"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/reference/rpk-registry/*"
+to = "/cloud-data-platform/reference/rpk/rpk-registry/:splat"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/reference/rpk-security/*"
+to = "/cloud-data-platform/reference/rpk/rpk-security/:splat"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/reference/rpk-cloud/*"
+to = "/cloud-data-platform/reference/rpk/rpk-cloud/:splat"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/reference/rpk-topic/*"
+to = "/cloud-data-platform/reference/rpk/rpk-topic/:splat"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/reference/rpk-group/*"
+to = "/cloud-data-platform/reference/rpk/rpk-group/:splat"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/reference/rpk-acl/*"
+to = "/cloud-data-platform/reference/rpk/rpk-acl/:splat"
+status = 301
+
+# Connect content under cloud-data-platform should go to connect
+[[redirects]]
+from = "/cloud-data-platform/develop/connect/*"
+to = "/connect/:splat"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/connect/*"
+to = "/connect/:splat"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/develop/components/*"
+to = "/connect/components/:splat"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/develop/configuration/*"
+to = "/connect/configuration/:splat"
 status = 301
 
 # =========Cloud redirects========
@@ -384,59 +705,98 @@ status = 301
 force = true
 
 [[redirects]]
-from = "/current/reference/rpk/rpk-cloud/*"
-to = "/redpanda-cloud/reference/rpk/rpk-cloud/:splat"
+from = "/streaming/current/reference/rpk/rpk-cloud/*"
+to = "/cloud-data-platform/reference/rpk/rpk-cloud/:splat"
 status = 301
 
 [[redirects]]
-from = "/current/get-started/quick-start-cloud/"
-to = "/redpanda-cloud/get-started/cluster-types/dedicated/quick-start-cloud/"
+from = "/streaming/current/get-started/quick-start-cloud/"
+to = "/cloud-data-platform/get-started/cluster-types/dedicated/quick-start-cloud/"
 status = 301
 
 [[redirects]]
 from = "/24.1/get-started/quick-start-cloud/"
-to = "/redpanda-cloud/get-started/cluster-types/dedicated/quick-start-cloud/"
+to = "/cloud-data-platform/get-started/cluster-types/dedicated/quick-start-cloud/"
 status = 301
 
 [[redirects]]
 from = "/23.3/get-started/quick-start-cloud/"
-to = "/redpanda-cloud/get-started/cluster-types/dedicated/quick-start-cloud/"
+to = "/cloud-data-platform/get-started/cluster-types/dedicated/quick-start-cloud/"
 status = 301
 
 # Old quickstart from beta release
 [[redirects]]
-from = "/current/deploy/deployment-option/cloud/api/cloud-api-quickstart"
+from = "/streaming/current/deploy/deployment-option/cloud/api/cloud-api-quickstart"
 to = "/api/doc/cloud-controlplane/topic/topic-quickstart/"
 status = 301
 
 [[redirects]]
-from = "/current/deploy/deployment-option/cloud/*"
-to = "/redpanda-cloud/deploy/deployment-option/cloud/:splat"
+from = "/streaming/current/deploy/deployment-option/cloud/*"
+to = "/cloud-data-platform/deploy/deployment-option/cloud/:splat"
 status = 301
 
 [[redirects]]
 from = "/24.1/deploy/deployment-option/cloud/*"
-to = "/redpanda-cloud/deploy/deployment-option/cloud/:splat"
+to = "/cloud-data-platform/deploy/deployment-option/cloud/:splat"
 status = 301
 
 [[redirects]]
 from = "/23.3/deploy/deployment-option/cloud/*"
-to = "/redpanda-cloud/deploy/deployment-option/cloud/:splat"
+to = "/cloud-data-platform/deploy/deployment-option/cloud/:splat"
 status = 301
 
 [[redirects]]
-from = "/current/develop/http-proxy-cloud/"
-to = "/redpanda-cloud/develop/http-proxy/"
+from = "/streaming/current/develop/http-proxy-cloud/"
+to = "/cloud-data-platform/develop/http-proxy/"
 status = 301
 
 [[redirects]]
 from = "/24.1/develop/http-proxy-cloud/"
-to = "/redpanda-cloud/develop/http-proxy/"
+to = "/cloud-data-platform/develop/http-proxy/"
 status = 301
 
 [[redirects]]
 from = "/23.3/develop/http-proxy-cloud/"
-to = "/redpanda-cloud/develop/http-proxy/"
+to = "/cloud-data-platform/develop/http-proxy/"
+status = 301
+
+# ========= Versioned path wildcards =====================
+# Redirect versioned paths to streaming component (supported versions)
+# IMPORTANT: Must come AFTER version-specific cloud rules above
+
+[[redirects]]
+from = "/25.3/*"
+to = "/streaming/25.3/:splat"
+status = 301
+
+[[redirects]]
+from = "/25.2/*"
+to = "/streaming/25.2/:splat"
+status = 301
+
+[[redirects]]
+from = "/25.1/*"
+to = "/streaming/25.1/:splat"
+status = 301
+
+[[redirects]]
+from = "/24.3/*"
+to = "/streaming/24.3/:splat"
+status = 301
+
+[[redirects]]
+from = "/24.2/*"
+to = "/streaming/24.2/:splat"
+status = 301
+
+[[redirects]]
+from = "/24.1/*"
+to = "/streaming/24.1/:splat"
+status = 301
+
+[[redirects]]
+from = "/23.3/*"
+to = "/streaming/23.3/:splat"
 status = 301
 
 [[redirects]]
@@ -464,39 +824,92 @@ from = "/redpanda-cloud/manage/api/cloud-api-deprecation-policy/"
 to = "/api/doc/cloud-controlplane/topic/topic-deprecation-policy/"
 status = 301
 
+# ===========Connect component restructure redirects============
+# Old paths used /connect/inputs/... but current structure is /connect/components/inputs/...
+
+[[redirects]]
+from = "/connect/inputs/*"
+to = "/connect/components/inputs/:splat"
+status = 301
+
+[[redirects]]
+from = "/connect/outputs/*"
+to = "/connect/components/outputs/:splat"
+status = 301
+
+[[redirects]]
+from = "/connect/processors/*"
+to = "/connect/components/processors/:splat"
+status = 301
+
+[[redirects]]
+from = "/connect/caches/*"
+to = "/connect/components/caches/:splat"
+status = 301
+
+[[redirects]]
+from = "/connect/buffers/*"
+to = "/connect/components/buffers/:splat"
+status = 301
+
+[[redirects]]
+from = "/connect/rate_limits/*"
+to = "/connect/components/rate_limits/:splat"
+status = 301
+
+[[redirects]]
+from = "/connect/scanners/*"
+to = "/connect/components/scanners/:splat"
+status = 301
+
+[[redirects]]
+from = "/connect/metrics/*"
+to = "/connect/components/metrics/:splat"
+status = 301
+
+[[redirects]]
+from = "/connect/tracers/*"
+to = "/connect/components/tracers/:splat"
+status = 301
+
+[[redirects]]
+from = "/connect/about"
+to = "/connect/components/about/"
+status = 301
+
 # ===========Temporary redirects for autogenerated pages in Redpanda Connect============
 
 [[redirects]]
 from = "/redpanda-connect/components/processors/process_field"
-to = "/redpanda-connect/components/processors/branch/"
+to = "/connect/components/processors/branch/"
 status = 301
 
 [[redirects]]
 from = "/redpanda-connect/components/processors/function"
-to = "/redpanda-connect/components/processors/about/"
+to = "/connect/components/processors/about/"
 status = 301
 
 [[redirects]]
 from = "/redpanda-connect/components/input/xml"
-to = "/redpanda-connect/components/processors/xml/"
+to = "/connect/components/processors/xml/"
 status = 301
 
 [[redirects]]
 from = "/redpanda-connect/components/outputs/aws_s"
-to = "/redpanda-connect/components/outputs/about/"
+to = "/connect/components/outputs/about/"
 status = 301
 
 [[redirects]]
 from = "/redpanda-connect/components/inputs/amqp_09/"
-to = "/redpanda-connect/components/inputs/amqp_0_9/"
+to = "/connect/components/inputs/amqp_0_9/"
 status = 301
 
 [[redirects]]
 from = "/redpanda-connect/components/processors/conditional"
-to = "/redpanda-connect/components/processors/about"
+to = "/connect/components/processors/about"
 status = 301
 
 [[redirects]]
 from = "/redpanda-connect/components/input/mongodb/"
-to = "/redpanda-connect/components/inputs/mongodb/"
+to = "/connect/components/inputs/mongodb/"
 status = 301

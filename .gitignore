@@ -9,3 +9,4 @@ node_modules
 .netlify
 .env
 *.pem
+/drafts

@@ -1,12 +1,32 @@
 name: home
 title: Home
 version: ~
-start_page: ROOT:index.adoc
+start_page: index.adoc
+nav:
+- modules/ROOT/nav.adoc
 asciidoc:
   attributes:
+    # Component metadata for navigation system
+    component-metadata:
+      title: "Home"
+      description: "Redpanda Documentation"
+      color: "#6366f1"
+      icon: "home"
+      order: 0
+    # Components to show in the home page navigation sidebar
+    page-nav-components: 'agentic-data-plane,data-platform'
+    # Navigation hierarchy configuration (config-driven navigation)
+    page-navigation:
+      - home:
+          - agentic-data-plane
+          - data-platform:
+              - cloud-data-platform
+              - self-managed:
+                  - streaming
+                  - connect
     # Data for the home page
     page-ai-suggestions:
-      - "How do I write from Redpanda Self-Managed to Snowflake?"
+      - "How do I write from Redpanda Streaming to Snowflake?"
       - "What's the difference between Redpanda and Kafka?"
       - "Which Iceberg catalogs does Redpanda Cloud support?"
       - "How do I create a CDC pipeline from MongoDB to Redpanda Cloud?"
@@ -21,24 +41,24 @@ asciidoc:
             image: serverless.svg
             description: 'Get fast, efficient, and scalable data streaming without infrastructure management.'
             urls:
-              - url: 'redpanda-cloud:get-started:cluster-types/serverless.adoc'
+              - url: 'cloud-data-platform:get-started:cluster-types/serverless.adoc'
           - title: 'BYOC'
             image: byoc.svg
             description: 'Run fully managed Redpanda clusters in your own cloud (AWS, Azure, or GCP) for additional security and data isolation.'
             urls:
-              - url: 'redpanda-cloud:get-started:cluster-types/byoc/index.adoc'
+              - url: 'cloud-data-platform:get-started:cluster-types/byoc/index.adoc'
           - title: 'Self-Managed'
             image: self-managed.svg
             description: 'Run Redpanda on your own infrastructure with complete control over your deployment and configuration.'
             urls:
-              - url: 'ROOT:get-started:quick-start.adoc'
+              - url: 'streaming:get-started:quick-start.adoc'
           - title: 'Connect'
             image: connect.svg
             description: 'Integrate data across systems with hundreds of prebuilt connectors, including AI and change data capture (CDC).'
             urls:
-              - url: 'redpanda-connect:get-started:quickstarts/rpk.adoc'
+              - url: 'connect:get-started:quickstarts/rpk.adoc'
           - title: 'Agentic Data Plane'
             image: adp.svg
             description: 'Build, deploy, and govern AI agents at scale with enterprise governance, cost controls, and compliance-grade audit trails.'
             urls:
-              - url: 'redpanda-adp:ROOT:index.adoc'
+              - url: 'agentic-data-plane:ROOT:index.adoc'
