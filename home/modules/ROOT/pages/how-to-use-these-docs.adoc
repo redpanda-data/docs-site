@@ -1,6 +1,6 @@
 = How to Use These Docs
 :description: Navigate Redpanda's documentation structure and leverage AI-powered features including MCP server integration, markdown exports, and interactive documentation tools.
-:page-aliases: mcp-setup.adoc, home:ROOT:mcp-setup.adoc, data-platform:ROOT:how-to-use-these-docs.adoc
+:page-aliases: home:ROOT:mcp-setup.adoc, data-platform:ROOT:how-to-use-these-docs.adoc
 
 Redpanda's documentation helps you stream data, build pipelines, and deploy AI agents whether you manage infrastructure yourself or run in the cloud. This page explains how our docs are organized, clarifies the relationship between deployment models and products, and shows you how to access documentation through AI-powered tools and programmatic interfaces.
 
@@ -26,18 +26,15 @@ Redpanda Documentation
 [NOTE]
 ====
 *What changed:* Previously, the software that deployed a Redpanda broker was called "Redpanda Self-Managed". In the new structure, "Self-Managed" refers to the deployment model (you manage the infrastructure), while "Streaming" is the product name for the broker itself.
-
-* *Old:* "Redpanda Self-Managed" is the broker product
-* *New:* "Self-Managed" is deployment model that includes Streaming and Connect products
 ====
 
 *Key components:*
 
 * xref:index.adoc[Data Platform overview]: The streaming foundation
-* xref:self-managed:ROOT:index.adoc[Self-Managed documentation]: Deploy and manage yourself
-** xref:streaming:home:index.adoc[Streaming documentation]: Broker and Redpanda CLI
-** xref:connect:home:index.adoc[Connect documentation]: Data pipelines and integration
-* xref:cloud-data-platform:home:index.adoc[Cloud documentation]: Fully managed services
+** xref:self-managed:ROOT:index.adoc[Self-Managed documentation]: Deploy and manage yourself
+*** xref:streaming:home:index.adoc[Streaming documentation]: Broker and Redpanda CLI
+*** xref:connect:home:index.adoc[Connect documentation]: Data pipelines and integration
+** xref:cloud-data-platform:home:index.adoc[Cloud documentation]: Fully managed services
 * xref:agentic-data-plane:home:index.adoc[Agentic Data Plane (ADP)]: AI agent infrastructure
 
 == Choose your path
