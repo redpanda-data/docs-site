@@ -26,20 +26,21 @@ content:
     branches: main
     start_paths: [docs,'*/docs']
 
-  # cloud-docs - WIP feature branch
-  - url: https://github.com/redpanda-data/cloud-docs
-    branches: feature/remove-ai-agents
+  # cloud-docs - WIP feature branch (using local worktree)
+  - url: /Users/jakecahill/Documents/cloud-docs
+    branches: HEAD
   - url: https://github.com/redpanda-data/rp-connect-docs
     branches: main
-  - url: https://github.com/redpanda-data/adp-docs
-    branches: main
+  # adp-docs - using local worktree
+  - url: /Users/jakecahill/Documents/adp-docs
+    branches: HEAD
 
   # adp-docs - WIP feature branch
   #- url: https://github.com/redpanda-data/adp-docs
     #branches: feature/platform-badges
 ui:
   bundle:
-    url: https://github.com/redpanda-data/docs-ui/releases/latest/download/ui-bundle.zip
+    url: /Users/jakecahill/Documents/docs-ui/build/ui-bundle.zip
     snapshot: true
 asciidoc:
   attributes:
