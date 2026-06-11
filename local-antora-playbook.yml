@@ -19,8 +19,9 @@ content:
     branches: HEAD
     start_paths: [home, data-platform, self-managed]
 
-  - url: https://github.com/redpanda-data/docs
-    branches: [main, v/*, shared, 'site-search', '!v-end-of-life/*']
+  # docs - streaming (self-managed) docs (using local worktree)
+  - url: /Users/jakecahill/Documents/docs
+    branches: HEAD
 
   - url: https://github.com/redpanda-data/redpanda-labs
     branches: main
