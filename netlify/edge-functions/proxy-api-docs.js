@@ -35,25 +35,22 @@ export default async (request, context) => {
     bumpMcpUrl.pathname = `/redpanda/hub/redpanda${bumpMcpUrl.pathname.replace("/api", "")}`;
 
     try {
+      // Forward request headers directly
       const response = await fetch(bumpMcpUrl, {
         method: request.method,
-        headers: {
-          "Content-Type": request.headers.get("content-type") || "application/json",
-          "Accept": request.headers.get("accept") || "application/json, text/event-stream",
-        },
+        headers: request.headers,
         body: ["POST", "DELETE"].includes(request.method) ? request.body : undefined,
       });
 
-      // Pass through the response with appropriate headers
+      // Forward response headers, adding CORS for browser access
+      const responseHeaders = new Headers(response.headers);
+      responseHeaders.set("Access-Control-Allow-Origin", "*");
+      responseHeaders.set("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS");
+      responseHeaders.set("Access-Control-Allow-Headers", "Content-Type, Accept");
+
       return new Response(response.body, {
         status: response.status,
-        headers: {
-          "content-type": response.headers.get("content-type") || "application/json",
-          "cache-control": "no-store",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS",
-          "Access-Control-Allow-Headers": "Content-Type, Accept",
-        },
+        headers: responseHeaders,
       });
     } catch (error) {
       console.error("❌ Failed to proxy MCP request to Bump.sh:", error);
