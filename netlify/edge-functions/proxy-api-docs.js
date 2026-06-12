@@ -23,6 +23,69 @@ export default async (request, context) => {
     return Response.redirect(`${url.origin}${redirects[normalizedPath]}`, 301);
   }
 
+  // MCP passthrough: forward MCP requests to Bump.sh
+  // Enables AI agents to query API docs via Model Context Protocol
+  const isMcpRequest = url.pathname.endsWith('/mcp');
+
+  if (isMcpRequest) {
+    const secret = Netlify.env.get("BUMP_PROXY_SECRET");
+    if (!secret) {
+      console.error("❌ BUMP_PROXY_SECRET environment variable not set");
+      return new Response("Service temporarily unavailable", {
+        status: 503,
+        headers: {
+          "content-type": "text/plain; charset=utf-8",
+          "cache-control": "public, max-age=60",
+        }
+      });
+    }
+
+    // Build Bump.sh MCP URL
+    const bumpMcpUrl = new URL(request.url);
+    bumpMcpUrl.host = "bump.sh";
+    bumpMcpUrl.pathname = `/redpanda/hub/redpanda${bumpMcpUrl.pathname.replace("/api", "")}`;
+
+    try {
+      const response = await fetch(bumpMcpUrl, {
+        method: request.method,
+        headers: {
+          "X-BUMP-SH-PROXY": secret,
+          "Content-Type": request.headers.get("content-type") || "application/json",
+          "Accept": request.headers.get("accept") || "application/json, text/event-stream",
+        },
+        body: ["POST", "DELETE"].includes(request.method) ? request.body : undefined,
+      });
+
+      // Pass through the response with appropriate headers
+      return new Response(response.body, {
+        status: response.status,
+        headers: {
+          "content-type": response.headers.get("content-type") || "application/json",
+          "cache-control": "no-store",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type, Accept",
+        },
+      });
+    } catch (error) {
+      console.error("❌ Failed to proxy MCP request to Bump.sh:", error);
+      return new Response(JSON.stringify({
+        jsonrpc: "2.0",
+        error: {
+          code: -32603,
+          message: "Failed to connect to upstream MCP server"
+        },
+        id: null
+      }), {
+        status: 502,
+        headers: {
+          "content-type": "application/json",
+          "cache-control": "no-store",
+        }
+      });
+    }
+  }
+
   // Content negotiation: redirect to .md URL if markdown is explicitly requested
   // Only match text/markdown per agent-friendly docs spec (text/plain is too broad)
   const acceptHeader = request.headers.get('accept') || '';

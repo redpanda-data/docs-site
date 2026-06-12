@@ -1,7 +1,7 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
   "name": "com.redpanda/docs-mcp",
-  "description": "Get authoritative answers to questions about Redpanda.",
+  "description": "Get authoritative answers about Redpanda documentation and search API references.",
   "repository": {
     "url": "https://github.com/redpanda-data/docs-site",
     "source": "github",
