@@ -25,21 +25,10 @@ export default async (request, context) => {
 
   // MCP passthrough: forward MCP requests to Bump.sh
   // Enables AI agents to query API docs via Model Context Protocol
+  // Note: Bump's MCP server is public and doesn't require authentication
   const isMcpRequest = url.pathname.endsWith('/mcp');
 
   if (isMcpRequest) {
-    const secret = Netlify.env.get("BUMP_PROXY_SECRET");
-    if (!secret) {
-      console.error("❌ BUMP_PROXY_SECRET environment variable not set");
-      return new Response("Service temporarily unavailable", {
-        status: 503,
-        headers: {
-          "content-type": "text/plain; charset=utf-8",
-          "cache-control": "public, max-age=60",
-        }
-      });
-    }
-
     // Build Bump.sh MCP URL
     const bumpMcpUrl = new URL(request.url);
     bumpMcpUrl.host = "bump.sh";
@@ -49,7 +38,6 @@ export default async (request, context) => {
       const response = await fetch(bumpMcpUrl, {
         method: request.method,
         headers: {
-          "X-BUMP-SH-PROXY": secret,
           "Content-Type": request.headers.get("content-type") || "application/json",
           "Accept": request.headers.get("accept") || "application/json, text/event-stream",
         },

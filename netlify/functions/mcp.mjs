@@ -36,8 +36,8 @@ const KAPA_API_KEY = process.env.KAPA_API_KEY
 
 // Bump.sh API documentation MCP
 // Provides structured access to OpenAPI-based API docs
+// Note: Bump's MCP server is public and doesn't require authentication
 const BUMP_MCP_BASE_URL = 'https://bump.sh/redpanda/hub/redpanda/doc'
-const BUMP_PROXY_SECRET = process.env.BUMP_PROXY_SECRET
 const VALID_APIS = ['admin', 'cloud-controlplane', 'cloud-dataplane', 'http-proxy', 'schema-registry']
 
 // Limits and timeouts
@@ -172,24 +172,13 @@ async function ensureBumpConnected(api) {
     return bumpConnectPromises.get(api)
   }
 
-  if (!BUMP_PROXY_SECRET) {
-    throw new Error('Missing env var: BUMP_PROXY_SECRET')
-  }
-
   const client = new Client({
     name: `redpanda-bump-${api}`,
     version: SERVER_VERSION,
   })
 
   const transport = new StreamableHTTPClientTransport(
-    new URL(`${BUMP_MCP_BASE_URL}/${api}/mcp`),
-    {
-      requestInit: {
-        headers: {
-          'X-BUMP-SH-PROXY': BUMP_PROXY_SECRET,
-        },
-      },
-    }
+    new URL(`${BUMP_MCP_BASE_URL}/${api}/mcp`)
   )
 
   const connectPromise = client.connect(transport).then(() => {
@@ -459,8 +448,9 @@ server.registerTool(
   async (args) => {
     const start = Date.now()
     const api = args?.api
-    const query = String(args?.query || '').trim()
 
+    // We validate `api` because we need it to route to the correct endpoint.
+    // Other params (query, type) are validated by Bump's MCP server.
     if (!api || !VALID_APIS.includes(api)) {
       return {
         content: [{
@@ -473,34 +463,10 @@ server.registerTool(
       }
     }
 
-    if (!query) {
-      return {
-        content: [{
-          type: 'text',
-          text: JSON.stringify({
-            error: 'missing_query',
-            message: 'Provide a non-empty "query" parameter.',
-          }),
-        }],
-      }
-    }
-
-    if (query.length > MAX_QUERY_CHARS) {
-      return {
-        content: [{
-          type: 'text',
-          text: JSON.stringify({
-            error: 'query_too_long',
-            message: `Query exceeds ${MAX_QUERY_CHARS} characters.`,
-          }),
-        }],
-      }
-    }
-
     try {
       await withTimeout(ensureBumpConnected(api), CONNECT_TIMEOUT_MS, 'bump_connect')
       return await withTimeout(
-        callBumpTool(api, 'search', { query, type: args.type }),
+        callBumpTool(api, 'search', { query: args.query, type: args.type }),
         CALL_TIMEOUT_MS,
         'bump_search'
       )
@@ -513,7 +479,7 @@ server.registerTool(
           resetBumpConnection(api)
           await withTimeout(ensureBumpConnected(api), CONNECT_TIMEOUT_MS, 'bump_reconnect')
           return await withTimeout(
-            callBumpTool(api, 'search', { query, type: args.type }),
+            callBumpTool(api, 'search', { query: args.query, type: args.type }),
             CALL_TIMEOUT_MS,
             'bump_search_retry'
           )
@@ -563,8 +529,9 @@ server.registerTool(
   async (args) => {
     const start = Date.now()
     const api = args?.api
-    const urls = args?.urls
 
+    // We validate `api` because we need it to route to the correct endpoint.
+    // Other params (urls) are validated by Bump's MCP server.
     if (!api || !VALID_APIS.includes(api)) {
       return {
         content: [{
@@ -577,34 +544,10 @@ server.registerTool(
       }
     }
 
-    if (!urls || !Array.isArray(urls) || urls.length === 0) {
-      return {
-        content: [{
-          type: 'text',
-          text: JSON.stringify({
-            error: 'missing_urls',
-            message: 'Provide a non-empty "urls" array.',
-          }),
-        }],
-      }
-    }
-
-    if (urls.length > 10) {
-      return {
-        content: [{
-          type: 'text',
-          text: JSON.stringify({
-            error: 'too_many_urls',
-            message: 'Maximum 10 URLs allowed per request.',
-          }),
-        }],
-      }
-    }
-
     try {
       await withTimeout(ensureBumpConnected(api), CONNECT_TIMEOUT_MS, 'bump_connect')
       return await withTimeout(
-        callBumpTool(api, 'get_pages', { urls }),
+        callBumpTool(api, 'get_pages', { urls: args.urls }),
         CALL_TIMEOUT_MS,
         'bump_get_pages'
       )
@@ -617,7 +560,7 @@ server.registerTool(
           resetBumpConnection(api)
           await withTimeout(ensureBumpConnected(api), CONNECT_TIMEOUT_MS, 'bump_reconnect')
           return await withTimeout(
-            callBumpTool(api, 'get_pages', { urls }),
+            callBumpTool(api, 'get_pages', { urls: args.urls }),
             CALL_TIMEOUT_MS,
             'bump_get_pages_retry'
           )
