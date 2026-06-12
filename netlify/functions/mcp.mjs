@@ -40,9 +40,8 @@ const KAPA_API_KEY = process.env.KAPA_API_KEY
 // Using the hub endpoint allows searching across all APIs or scoping to specific ones
 const BUMP_HUB_MCP_URL = 'https://bump.sh/redpanda/hub/redpanda/mcp'
 const API_BASE_URL = 'https://docs.redpanda.com/api/doc'
-const VALID_APIS = ['admin', 'cloud-controlplane', 'cloud-dataplane', 'http-proxy', 'schema-registry']
 
-// Map api param to full URL for scoping
+// Map api param to full URL for scoping (Bump validates the actual API names)
 function apiToUrl(api) {
   if (!api || api === 'all') return undefined // No scoping = search all APIs
   return `${API_BASE_URL}/${api}`
@@ -341,8 +340,6 @@ server.registerTool(
 // These tools provide structured access to Redpanda API documentation hosted on Bump.sh.
 // They use the hub endpoint which can search across all APIs or scope to specific ones.
 
-const apiEnumSchema = z.enum(['all', 'admin', 'cloud-controlplane', 'cloud-dataplane', 'http-proxy', 'schema-registry'])
-
 server.registerTool(
   'list_api_reference_pages',
   {
@@ -351,7 +348,7 @@ server.registerTool(
       `List pages in Redpanda API reference documentation. Returns endpoints, schemas, and topic pages with URL, title, type, and description.
 
 SCOPING (important for accurate results):
-- api="all": Lists all 5 available APIs (admin, cloud-controlplane, cloud-dataplane, http-proxy, schema-registry)
+- api="all" or omit: Lists all available APIs
 - api="admin": Cluster management operations (brokers, partitions, configs, users)
 - api="cloud-controlplane": Redpanda Cloud resource management (clusters, networks, namespaces)
 - api="cloud-dataplane": Cloud cluster data operations (topics, ACLs, connectors)
@@ -360,7 +357,7 @@ SCOPING (important for accurate results):
 
 Use this to browse API structure. For general Redpanda docs, use ask_redpanda_question instead.`,
     inputSchema: {
-      api: apiEnumSchema.describe('Which API to list: "all" for overview of all APIs, or a specific API name to list its endpoints/schemas'),
+      api: z.string().optional().describe('Which API to list: "all" or omit for overview of all APIs, or a specific API name (admin, cloud-controlplane, cloud-dataplane, http-proxy, schema-registry)'),
       url: z.string().optional().describe('Specific URL path to list children of (optional, defaults to API root)'),
     },
   },
@@ -440,7 +437,7 @@ server.registerTool(
       `Search Redpanda API reference documentation by keyword. Returns up to 20 matching endpoints, schemas, or topics with URL, title, and text excerpts.
 
 SCOPING (important for accurate results):
-- api="all": Search across ALL 5 APIs at once - useful when unsure which API contains the endpoint
+- api="all" or omit: Search across ALL APIs at once - useful when unsure which API contains the endpoint
 - api="admin": Search only cluster management (brokers, partitions, configs, users, maintenance)
 - api="cloud-controlplane": Search only Cloud resource management (clusters, networks, namespaces)
 - api="cloud-dataplane": Search only Cloud data operations (topics, ACLs, connectors)
@@ -451,14 +448,13 @@ WHEN TO USE WHICH:
 - User asks "broker endpoints" → api="admin" (brokers are cluster management)
 - User asks "create topic API" → api="all" (topics exist in admin AND cloud-dataplane)
 - User asks "Cloud cluster API" → api="cloud-controlplane"
-- User asks about Redpanda APIs generally → api="all"
+- User asks about Redpanda APIs generally → api="all" or omit
 
 For general Redpanda questions (not API-specific), use ask_redpanda_question instead.`,
     inputSchema: {
-      api: apiEnumSchema.describe('Scope: "all" to search all APIs, or specific API name to narrow results'),
+      api: z.string().optional().describe('Scope: "all" or omit to search all APIs, or specific API name (admin, cloud-controlplane, cloud-dataplane, http-proxy, schema-registry)'),
       query: z.string().describe('Search keywords (e.g., "broker", "create topic", "ACL")'),
-      type: z.enum(['operation', 'schema', 'topic', 'authentication', 'webhook']).optional()
-        .describe('Filter by type: operation (endpoints), schema (data types), topic (guides)'),
+      type: z.string().optional().describe('Filter by type: operation (endpoints), schema (data types), topic (guides), authentication, webhook'),
     },
   },
   async (args) => {
