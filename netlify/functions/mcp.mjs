@@ -34,11 +34,19 @@ const KAPA_TOOL_NAME = 'search_redpanda_knowledge_sources'
 // Secret
 const KAPA_API_KEY = process.env.KAPA_API_KEY
 
-// Bump.sh API documentation MCP
+// Bump.sh API documentation MCP (hub endpoint)
 // Provides structured access to OpenAPI-based API docs
 // Note: Bump's MCP server is public and doesn't require authentication
-const BUMP_MCP_BASE_URL = 'https://bump.sh/redpanda/hub/redpanda/doc'
+// Using the hub endpoint allows searching across all APIs or scoping to specific ones
+const BUMP_HUB_MCP_URL = 'https://bump.sh/redpanda/hub/redpanda/mcp'
+const API_BASE_URL = 'https://docs.redpanda.com/api/doc'
 const VALID_APIS = ['admin', 'cloud-controlplane', 'cloud-dataplane', 'http-proxy', 'schema-registry']
+
+// Map api param to full URL for scoping
+function apiToUrl(api) {
+  if (!api || api === 'all') return undefined // No scoping = search all APIs
+  return `${API_BASE_URL}/${api}`
+}
 
 // Limits and timeouts
 const CONNECT_TIMEOUT_MS = 8_000
@@ -147,52 +155,33 @@ function callKapaSearch(query) {
 
 // -------------------- Bump.sh API Docs MCP client --------------------
 //
-// Lazily initialized clients for each API documentation.
-// Each API has its own MCP endpoint on Bump.sh.
+// Single hub client that can search across all APIs or scope to specific ones.
+// Much simpler than managing 5 separate clients!
 
-const bumpClients = new Map()
-const bumpConnectPromises = new Map()
+const bumpClient = new Client({
+  name: 'redpanda-bump-hub',
+  version: SERVER_VERSION,
+})
 
-function resetBumpConnection(api) {
-  bumpClients.delete(api)
-  bumpConnectPromises.delete(api)
+let bumpConnectPromise = null
+
+function resetBumpConnection() {
+  bumpConnectPromise = null
 }
 
-function resetAllBumpConnections() {
-  bumpClients.clear()
-  bumpConnectPromises.clear()
-}
-
-async function ensureBumpConnected(api) {
-  if (!VALID_APIS.includes(api)) {
-    throw new Error(`Invalid API: ${api}. Valid: ${VALID_APIS.join(', ')}`)
-  }
-
-  if (bumpConnectPromises.has(api)) {
-    return bumpConnectPromises.get(api)
-  }
-
-  const client = new Client({
-    name: `redpanda-bump-${api}`,
-    version: SERVER_VERSION,
-  })
+function ensureBumpConnected() {
+  if (bumpConnectPromise) return bumpConnectPromise
 
   const transport = new StreamableHTTPClientTransport(
-    new URL(`${BUMP_MCP_BASE_URL}/${api}/mcp`)
+    new URL(BUMP_HUB_MCP_URL)
   )
 
-  const connectPromise = client.connect(transport).then(() => {
-    bumpClients.set(api, client)
-    return client
-  })
-
-  bumpConnectPromises.set(api, connectPromise)
-  return connectPromise
+  bumpConnectPromise = bumpClient.connect(transport)
+  return bumpConnectPromise
 }
 
-async function callBumpTool(api, toolName, args) {
-  const client = await ensureBumpConnected(api)
-  return client.callTool({
+function callBumpTool(toolName, args) {
+  return bumpClient.callTool({
     name: toolName,
     arguments: args,
   })
@@ -349,60 +338,71 @@ server.registerTool(
 )
 
 // -------------------- Bump.sh API Documentation Tools --------------------
-// These tools provide structured access to Redpanda API documentation hosted on Bump.sh
+// These tools provide structured access to Redpanda API documentation hosted on Bump.sh.
+// They use the hub endpoint which can search across all APIs or scope to specific ones.
 
-const apiEnumSchema = z.enum(['admin', 'cloud-controlplane', 'cloud-dataplane', 'http-proxy', 'schema-registry'])
+const apiEnumSchema = z.enum(['all', 'admin', 'cloud-controlplane', 'cloud-dataplane', 'http-proxy', 'schema-registry'])
 
 server.registerTool(
   'list_api_reference_pages',
   {
     title: 'List API Reference Pages',
     description:
-      'List pages in a Redpanda API reference. Returns endpoints, schemas, and topic pages with their URL, title, and type. Use this to browse API structure when users ask about specific endpoints, request/response schemas, or API operations. NOT for general Redpanda docs - use ask_redpanda_question for that.',
+      `List pages in Redpanda API reference documentation. Returns endpoints, schemas, and topic pages with URL, title, type, and description.
+
+SCOPING (important for accurate results):
+- api="all": Lists all 5 available APIs (admin, cloud-controlplane, cloud-dataplane, http-proxy, schema-registry)
+- api="admin": Cluster management operations (brokers, partitions, configs, users)
+- api="cloud-controlplane": Redpanda Cloud resource management (clusters, networks, namespaces)
+- api="cloud-dataplane": Cloud cluster data operations (topics, ACLs, connectors)
+- api="http-proxy": Kafka operations over HTTP (produce, consume, offsets)
+- api="schema-registry": Schema management (register, retrieve, compatibility)
+
+Use this to browse API structure. For general Redpanda docs, use ask_redpanda_question instead.`,
     inputSchema: {
-      api: apiEnumSchema.describe('Which API reference: admin (cluster management), cloud-controlplane (Redpanda Cloud resources), cloud-dataplane (Cloud cluster data ops), http-proxy (Kafka over HTTP), or schema-registry (schema management)'),
-      path: z.string().optional().describe('Path within the API reference (optional, defaults to root)'),
+      api: apiEnumSchema.describe('Which API to list: "all" for overview of all APIs, or a specific API name to list its endpoints/schemas'),
+      url: z.string().optional().describe('Specific URL path to list children of (optional, defaults to API root)'),
     },
   },
   async (args) => {
     const start = Date.now()
-    const api = args?.api
-
-    if (!api || !VALID_APIS.includes(api)) {
-      return {
-        content: [{
-          type: 'text',
-          text: JSON.stringify({
-            error: 'invalid_api',
-            message: `Provide a valid "api" parameter. Valid values: ${VALID_APIS.join(', ')}`,
-          }),
-        }],
-      }
-    }
 
     try {
-      await withTimeout(ensureBumpConnected(api), CONNECT_TIMEOUT_MS, 'bump_connect')
+      await withTimeout(ensureBumpConnected(), CONNECT_TIMEOUT_MS, 'bump_connect')
+
+      // Build args for hub endpoint - use url param for scoping
+      const hubArgs = {}
+      const scopeUrl = apiToUrl(args.api)
+      if (scopeUrl) hubArgs.url = args.url || scopeUrl
+      else if (args.url) hubArgs.url = args.url
+
       return await withTimeout(
-        callBumpTool(api, 'list_pages', { path: args.path }),
+        callBumpTool('list_pages', hubArgs),
         CALL_TIMEOUT_MS,
         'bump_list_pages'
       )
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err)
-      console.warn('Bump MCP list_pages failed', { error: msg, api, phase: 'initial' })
+      console.warn('Bump MCP list_pages failed', { error: msg, api: args.api, phase: 'initial' })
 
       if (isTransientError(msg)) {
         try {
-          resetBumpConnection(api)
-          await withTimeout(ensureBumpConnected(api), CONNECT_TIMEOUT_MS, 'bump_reconnect')
+          resetBumpConnection()
+          await withTimeout(ensureBumpConnected(), CONNECT_TIMEOUT_MS, 'bump_reconnect')
+
+          const hubArgs = {}
+          const scopeUrl = apiToUrl(args.api)
+          if (scopeUrl) hubArgs.url = args.url || scopeUrl
+          else if (args.url) hubArgs.url = args.url
+
           return await withTimeout(
-            callBumpTool(api, 'list_pages', { path: args.path }),
+            callBumpTool('list_pages', hubArgs),
             CALL_TIMEOUT_MS,
             'bump_list_pages_retry'
           )
         } catch (retryErr) {
           const retryMsg = retryErr instanceof Error ? retryErr.message : String(retryErr)
-          console.error('Bump MCP list_pages retry failed', { error: retryMsg, api, duration_ms: Date.now() - start })
+          console.error('Bump MCP list_pages retry failed', { error: retryMsg, api: args.api, duration_ms: Date.now() - start })
           return {
             content: [{
               type: 'text',
@@ -437,55 +437,69 @@ server.registerTool(
   {
     title: 'Search API Reference',
     description:
-      'Search a Redpanda API reference by keyword. Returns up to 20 matching endpoints, schemas, or topics with URL, title, and text excerpts. Use this when users ask about specific API operations (e.g., "how to create a user via API", "broker endpoints"). For general Redpanda questions, use ask_redpanda_question instead.',
+      `Search Redpanda API reference documentation by keyword. Returns up to 20 matching endpoints, schemas, or topics with URL, title, and text excerpts.
+
+SCOPING (important for accurate results):
+- api="all": Search across ALL 5 APIs at once - useful when unsure which API contains the endpoint
+- api="admin": Search only cluster management (brokers, partitions, configs, users, maintenance)
+- api="cloud-controlplane": Search only Cloud resource management (clusters, networks, namespaces)
+- api="cloud-dataplane": Search only Cloud data operations (topics, ACLs, connectors)
+- api="http-proxy": Search only HTTP Proxy (produce, consume, offsets over HTTP)
+- api="schema-registry": Search only Schema Registry (register, retrieve, compatibility)
+
+WHEN TO USE WHICH:
+- User asks "broker endpoints" → api="admin" (brokers are cluster management)
+- User asks "create topic API" → api="all" (topics exist in admin AND cloud-dataplane)
+- User asks "Cloud cluster API" → api="cloud-controlplane"
+- User asks about Redpanda APIs generally → api="all"
+
+For general Redpanda questions (not API-specific), use ask_redpanda_question instead.`,
     inputSchema: {
-      api: apiEnumSchema.describe('Which API reference: admin (cluster management), cloud-controlplane (Redpanda Cloud resources), cloud-dataplane (Cloud cluster data ops), http-proxy (Kafka over HTTP), or schema-registry (schema management)'),
-      query: z.string().describe('Search keywords (e.g., "broker", "partition", "create user")'),
+      api: apiEnumSchema.describe('Scope: "all" to search all APIs, or specific API name to narrow results'),
+      query: z.string().describe('Search keywords (e.g., "broker", "create topic", "ACL")'),
       type: z.enum(['operation', 'schema', 'topic', 'authentication', 'webhook']).optional()
-        .describe('Filter results: operation (endpoints), schema (data types), topic (guides), authentication, or webhook'),
+        .describe('Filter by type: operation (endpoints), schema (data types), topic (guides)'),
     },
   },
   async (args) => {
     const start = Date.now()
-    const api = args?.api
-
-    // We validate `api` because we need it to route to the correct endpoint.
-    // Other params (query, type) are validated by Bump's MCP server.
-    if (!api || !VALID_APIS.includes(api)) {
-      return {
-        content: [{
-          type: 'text',
-          text: JSON.stringify({
-            error: 'invalid_api',
-            message: `Provide a valid "api" parameter. Valid values: ${VALID_APIS.join(', ')}`,
-          }),
-        }],
-      }
-    }
 
     try {
-      await withTimeout(ensureBumpConnected(api), CONNECT_TIMEOUT_MS, 'bump_connect')
+      await withTimeout(ensureBumpConnected(), CONNECT_TIMEOUT_MS, 'bump_connect')
+
+      // Build args for hub endpoint
+      const hubArgs = { query: args.query }
+      const scopeUrl = apiToUrl(args.api)
+      if (scopeUrl) hubArgs.url = scopeUrl
+      if (args.type) hubArgs.type = args.type
+
       return await withTimeout(
-        callBumpTool(api, 'search', { query: args.query, type: args.type }),
+        callBumpTool('search', hubArgs),
         CALL_TIMEOUT_MS,
         'bump_search'
       )
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err)
-      console.warn('Bump MCP search failed', { error: msg, api, phase: 'initial' })
+      console.warn('Bump MCP search failed', { error: msg, api: args.api, phase: 'initial' })
 
       if (isTransientError(msg)) {
         try {
-          resetBumpConnection(api)
-          await withTimeout(ensureBumpConnected(api), CONNECT_TIMEOUT_MS, 'bump_reconnect')
+          resetBumpConnection()
+          await withTimeout(ensureBumpConnected(), CONNECT_TIMEOUT_MS, 'bump_reconnect')
+
+          const hubArgs = { query: args.query }
+          const scopeUrl = apiToUrl(args.api)
+          if (scopeUrl) hubArgs.url = scopeUrl
+          if (args.type) hubArgs.type = args.type
+
           return await withTimeout(
-            callBumpTool(api, 'search', { query: args.query, type: args.type }),
+            callBumpTool('search', hubArgs),
             CALL_TIMEOUT_MS,
             'bump_search_retry'
           )
         } catch (retryErr) {
           const retryMsg = retryErr instanceof Error ? retryErr.message : String(retryErr)
-          console.error('Bump MCP search retry failed', { error: retryMsg, api, duration_ms: Date.now() - start })
+          console.error('Bump MCP search retry failed', { error: retryMsg, api: args.api, duration_ms: Date.now() - start })
           return {
             content: [{
               type: 'text',
@@ -520,53 +534,41 @@ server.registerTool(
   {
     title: 'Get API Reference Content',
     description:
-      'Retrieve full content of API reference pages (endpoint details, request/response schemas, parameters). Fetch up to 10 pages by URL. Use after finding pages via list_api_reference_pages or search_api_reference.',
+      `Retrieve full content of API reference pages by URL. Returns complete endpoint details including parameters, request/response schemas, and examples.
+
+Use this after finding pages via list_api_reference_pages or search_api_reference. Pass the URLs from those results directly.
+
+Returns up to 10 pages per request. URLs must be from docs.redpanda.com/api/doc/*.`,
     inputSchema: {
-      api: apiEnumSchema.describe('Which API reference: admin, cloud-controlplane, cloud-dataplane, http-proxy, or schema-registry'),
-      urls: z.array(z.string()).max(10).describe('URLs of API reference pages to retrieve (max 10). Get URLs from list_api_reference_pages or search_api_reference results.'),
+      urls: z.array(z.string()).max(10).describe('Page URLs to retrieve (max 10). Use URLs from list_api_reference_pages or search_api_reference results.'),
     },
   },
   async (args) => {
     const start = Date.now()
-    const api = args?.api
-
-    // We validate `api` because we need it to route to the correct endpoint.
-    // Other params (urls) are validated by Bump's MCP server.
-    if (!api || !VALID_APIS.includes(api)) {
-      return {
-        content: [{
-          type: 'text',
-          text: JSON.stringify({
-            error: 'invalid_api',
-            message: `Provide a valid "api" parameter. Valid values: ${VALID_APIS.join(', ')}`,
-          }),
-        }],
-      }
-    }
 
     try {
-      await withTimeout(ensureBumpConnected(api), CONNECT_TIMEOUT_MS, 'bump_connect')
+      await withTimeout(ensureBumpConnected(), CONNECT_TIMEOUT_MS, 'bump_connect')
       return await withTimeout(
-        callBumpTool(api, 'get_pages', { urls: args.urls }),
+        callBumpTool('get_pages', { urls: args.urls }),
         CALL_TIMEOUT_MS,
         'bump_get_pages'
       )
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err)
-      console.warn('Bump MCP get_pages failed', { error: msg, api, phase: 'initial' })
+      console.warn('Bump MCP get_pages failed', { error: msg, phase: 'initial' })
 
       if (isTransientError(msg)) {
         try {
-          resetBumpConnection(api)
-          await withTimeout(ensureBumpConnected(api), CONNECT_TIMEOUT_MS, 'bump_reconnect')
+          resetBumpConnection()
+          await withTimeout(ensureBumpConnected(), CONNECT_TIMEOUT_MS, 'bump_reconnect')
           return await withTimeout(
-            callBumpTool(api, 'get_pages', { urls: args.urls }),
+            callBumpTool('get_pages', { urls: args.urls }),
             CALL_TIMEOUT_MS,
             'bump_get_pages_retry'
           )
         } catch (retryErr) {
           const retryMsg = retryErr instanceof Error ? retryErr.message : String(retryErr)
-          console.error('Bump MCP get_pages retry failed', { error: retryMsg, api, duration_ms: Date.now() - start })
+          console.error('Bump MCP get_pages retry failed', { error: retryMsg, duration_ms: Date.now() - start })
           return {
             content: [{
               type: 'text',
