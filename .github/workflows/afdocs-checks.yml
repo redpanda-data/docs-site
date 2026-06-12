@@ -31,13 +31,11 @@ jobs:
         run: npm ci
 
       - name: Wait for Netlify Deploy
-        uses: kamranayub/wait-for-netlify-action@v2.1.1
+        uses: jakepartusch/wait-for-netlify-action@v1.4
         id: wait-for-netlify
         with:
           site_name: redpanda-documentation
           max_timeout: 600
-        env:
-          NETLIFY_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
 
       - name: Run afdocs checks
         continue-on-error: true
@@ -71,13 +69,11 @@ jobs:
         run: npm ci
 
       - name: Wait for Netlify Deploy
-        uses: kamranayub/wait-for-netlify-action@v2.1.1
+        uses: jakepartusch/wait-for-netlify-action@v1.4
         id: wait-for-netlify
         with:
           site_name: redpanda-documentation
           max_timeout: 600
-        env:
-          NETLIFY_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
 
       - name: Run redirect tests
         env:
