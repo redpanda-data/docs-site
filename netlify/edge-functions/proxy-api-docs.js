@@ -26,13 +26,37 @@ export default async (request, context) => {
   // MCP passthrough: forward MCP requests to Bump.sh
   // Enables AI agents to query API docs via Model Context Protocol
   // Note: Bump's MCP server is public and doesn't require authentication
-  const isMcpRequest = url.pathname.endsWith('/mcp');
+  // Normalize trailing slash: /mcp/ -> /mcp for consistent matching
+  const mcpNormalizedPath = normalizedPath.endsWith('/mcp') ? normalizedPath :
+    (normalizedPath.endsWith('/mcp/') ? normalizedPath.slice(0, -1) : normalizedPath);
+  const isMcpRequest = mcpNormalizedPath.endsWith('/mcp');
 
   if (isMcpRequest) {
-    // Build Bump.sh MCP URL
+    // Build CORS headers for browser MCP clients
+    // Mirror requested headers from preflight, plus common MCP headers
+    const requestedHeaders = request.headers.get('Access-Control-Request-Headers') || '';
+    const mcpHeaders = 'Content-Type, Accept, Authorization, mcp-session-id, mcp-protocol-version, x-request-id';
+    const allowedHeaders = requestedHeaders ? `${requestedHeaders}, ${mcpHeaders}` : mcpHeaders;
+
+    const corsHeaders = {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS",
+      "Access-Control-Allow-Headers": allowedHeaders,
+      "Access-Control-Max-Age": "86400", // Cache preflight for 24 hours
+    };
+
+    // Handle OPTIONS preflight locally
+    if (request.method === "OPTIONS") {
+      return new Response(null, {
+        status: 204,
+        headers: corsHeaders,
+      });
+    }
+
+    // Build Bump.sh MCP URL (use normalized path without trailing slash)
     const bumpMcpUrl = new URL(request.url);
     bumpMcpUrl.host = "bump.sh";
-    bumpMcpUrl.pathname = `/redpanda/hub/redpanda${bumpMcpUrl.pathname.replace("/api", "")}`;
+    bumpMcpUrl.pathname = `/redpanda/hub/redpanda${mcpNormalizedPath.replace("/api", "")}`;
 
     try {
       // Forward request headers directly
@@ -44,9 +68,9 @@ export default async (request, context) => {
 
       // Forward response headers, adding CORS for browser access
       const responseHeaders = new Headers(response.headers);
-      responseHeaders.set("Access-Control-Allow-Origin", "*");
-      responseHeaders.set("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS");
-      responseHeaders.set("Access-Control-Allow-Headers", "Content-Type, Accept");
+      Object.entries(corsHeaders).forEach(([key, value]) => {
+        responseHeaders.set(key, value);
+      });
 
       return new Response(response.body, {
         status: response.status,
@@ -66,6 +90,7 @@ export default async (request, context) => {
         headers: {
           "content-type": "application/json",
           "cache-control": "no-store",
+          ...corsHeaders,
         }
       });
     }
