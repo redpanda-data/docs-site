@@ -18,27 +18,17 @@ content:
   - url: .
     branches: HEAD
     start_paths: [home, data-platform, self-managed]
-
-  # docs - streaming (self-managed) docs (using local worktree)
-  - url: /Users/jakecahill/Documents/docs
-    branches: HEAD
-
+  - url: https://github.com/redpanda-data/docs
+    branches: [main, v/*, shared, 'site-search', '!v-end-of-life/*']
   - url: https://github.com/redpanda-data/redpanda-labs
     branches: main
     start_paths: [docs,'*/docs']
-
-  # cloud-docs - WIP feature branch (using local worktree)
-  - url: /Users/jakecahill/Documents/cloud-docs
-    branches: HEAD
+  - url: https://github.com/redpanda-data/cloud-docs
+    branches: feature/remove-ai-agents
   - url: https://github.com/redpanda-data/rp-connect-docs
     branches: main
-  # adp-docs - using local worktree
-  - url: /Users/jakecahill/Documents/adp-docs
-    branches: HEAD
-
-  # adp-docs - WIP feature branch
-  #- url: https://github.com/redpanda-data/adp-docs
-    #branches: feature/platform-badges
+  - url: https://github.com/redpanda-data/adp-docs
+    branches: main
 ui:
   bundle:
     url: /Users/jakecahill/Documents/docs-ui/build/ui-bundle.zip
