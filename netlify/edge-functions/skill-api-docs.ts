@@ -42,6 +42,24 @@ Most APIs require authentication via:
 - SASL/SCRAM or mTLS (Data Plane)
 
 See individual API documentation for specific authentication requirements.
+
+## MCP Access (Machine-Readable)
+
+For programmatic access via MCP (Model Context Protocol):
+
+### Unified MCP Server
+Connect to \`https://docs.redpanda.com/mcp\` for tools:
+- \`list_api_reference_pages\` - Browse API reference structure (endpoints, schemas)
+- \`search_api_reference\` - Search API reference by keyword
+- \`get_api_reference_content\` - Retrieve full endpoint/schema documentation
+
+### Direct API MCP Endpoints
+Each API also has a dedicated MCP endpoint:
+- Admin API: https://docs.redpanda.com/api/doc/admin/mcp
+- Cloud Control Plane: https://docs.redpanda.com/api/doc/cloud-controlplane/mcp
+- Cloud Data Plane: https://docs.redpanda.com/api/doc/cloud-dataplane/mcp
+- HTTP Proxy: https://docs.redpanda.com/api/doc/http-proxy/mcp
+- Schema Registry: https://docs.redpanda.com/api/doc/schema-registry/mcp
 `;
 
   return new Response(skill, {

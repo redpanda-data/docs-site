@@ -34,6 +34,19 @@ const KAPA_TOOL_NAME = 'search_redpanda_knowledge_sources'
 // Secret
 const KAPA_API_KEY = process.env.KAPA_API_KEY
 
+// Bump.sh API documentation MCP (hub endpoint)
+// Provides structured access to OpenAPI-based API docs
+// Note: Bump's MCP server is public and doesn't require authentication
+// Using the hub endpoint allows searching across all APIs or scoping to specific ones
+const BUMP_HUB_MCP_URL = 'https://bump.sh/redpanda/hub/redpanda/mcp'
+const API_BASE_URL = 'https://docs.redpanda.com/api/doc'
+
+// Map api param to full URL for scoping (Bump validates the actual API names)
+function apiToUrl(api) {
+  if (!api || api === 'all') return undefined // No scoping = search all APIs
+  return `${API_BASE_URL}/${api}`
+}
+
 // Limits and timeouts
 const CONNECT_TIMEOUT_MS = 8_000
 const CALL_TIMEOUT_MS = 22_000
@@ -136,6 +149,40 @@ function callKapaSearch(query) {
   return kapaClient.callTool({
     name: KAPA_TOOL_NAME,
     arguments: { query },
+  })
+}
+
+// -------------------- Bump.sh API Docs MCP client --------------------
+//
+// Single hub client that can search across all APIs or scope to specific ones.
+// Much simpler than managing 5 separate clients!
+
+const bumpClient = new Client({
+  name: 'redpanda-bump-hub',
+  version: SERVER_VERSION,
+})
+
+let bumpConnectPromise = null
+
+function resetBumpConnection() {
+  bumpConnectPromise = null
+}
+
+function ensureBumpConnected() {
+  if (bumpConnectPromise) return bumpConnectPromise
+
+  const transport = new StreamableHTTPClientTransport(
+    new URL(BUMP_HUB_MCP_URL)
+  )
+
+  bumpConnectPromise = bumpClient.connect(transport)
+  return bumpConnectPromise
+}
+
+function callBumpTool(toolName, args) {
+  return bumpClient.callTool({
+    name: toolName,
+    arguments: args,
   })
 }
 
@@ -289,6 +336,264 @@ server.registerTool(
   }
 )
 
+// -------------------- Bump.sh API Documentation Tools --------------------
+// These tools provide structured access to Redpanda API documentation hosted on Bump.sh.
+// They use the hub endpoint which can search across all APIs or scope to specific ones.
+
+server.registerTool(
+  'list_api_reference_pages',
+  {
+    title: 'List API Reference Pages',
+    description:
+      `List pages in Redpanda API reference documentation. Returns endpoints, schemas, and topic pages with URL, title, type, and description.
+
+SCOPING (important for accurate results):
+- api="all" or omit: Lists all available APIs
+- api="admin": Cluster management operations (brokers, partitions, configs, users)
+- api="cloud-controlplane": Redpanda Cloud resource management (clusters, networks, namespaces)
+- api="cloud-dataplane": Cloud cluster data operations (topics, ACLs, connectors)
+- api="http-proxy": Kafka operations over HTTP (produce, consume, offsets)
+- api="schema-registry": Schema management (register, retrieve, compatibility)
+
+Use this to browse API structure. For general Redpanda docs, use ask_redpanda_question instead.`,
+    inputSchema: {
+      api: z.string().optional().describe('Which API to list: "all" or omit for overview of all APIs, or a specific API name (admin, cloud-controlplane, cloud-dataplane, http-proxy, schema-registry)'),
+      url: z.string().optional().describe('Specific URL path to list children of (optional, defaults to API root)'),
+    },
+  },
+  async (args) => {
+    const start = Date.now()
+
+    try {
+      await withTimeout(ensureBumpConnected(), CONNECT_TIMEOUT_MS, 'bump_connect')
+
+      // Build args for hub endpoint - use url param for scoping
+      const hubArgs = {}
+      const scopeUrl = apiToUrl(args.api)
+      if (scopeUrl) hubArgs.url = args.url || scopeUrl
+      else if (args.url) hubArgs.url = args.url
+
+      return await withTimeout(
+        callBumpTool('list_pages', hubArgs),
+        CALL_TIMEOUT_MS,
+        'bump_list_pages'
+      )
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err)
+      console.warn('Bump MCP list_pages failed', { error: msg, api: args.api, phase: 'initial' })
+
+      if (isTransientError(msg)) {
+        try {
+          resetBumpConnection()
+          await withTimeout(ensureBumpConnected(), CONNECT_TIMEOUT_MS, 'bump_reconnect')
+
+          const hubArgs = {}
+          const scopeUrl = apiToUrl(args.api)
+          if (scopeUrl) hubArgs.url = args.url || scopeUrl
+          else if (args.url) hubArgs.url = args.url
+
+          return await withTimeout(
+            callBumpTool('list_pages', hubArgs),
+            CALL_TIMEOUT_MS,
+            'bump_list_pages_retry'
+          )
+        } catch (retryErr) {
+          const retryMsg = retryErr instanceof Error ? retryErr.message : String(retryErr)
+          console.error('Bump MCP list_pages retry failed', { error: retryMsg, api: args.api, duration_ms: Date.now() - start })
+          return {
+            content: [{
+              type: 'text',
+              text: JSON.stringify({
+                error: retryMsg.includes('timeout') ? 'timeout' : 'upstream_error',
+                message: 'Upstream Bump MCP request failed after retry.',
+                detail: retryMsg,
+                duration_ms: Date.now() - start,
+              }),
+            }],
+          }
+        }
+      }
+
+      return {
+        content: [{
+          type: 'text',
+          text: JSON.stringify({
+            error: msg.includes('timeout') ? 'timeout' : 'upstream_error',
+            message: 'Upstream Bump MCP request failed.',
+            detail: msg,
+            duration_ms: Date.now() - start,
+          }),
+        }],
+      }
+    }
+  }
+)
+
+server.registerTool(
+  'search_api_reference',
+  {
+    title: 'Search API Reference',
+    description:
+      `Search Redpanda API reference documentation by keyword. Returns up to 20 matching endpoints, schemas, or topics with URL, title, and text excerpts.
+
+SCOPING (important for accurate results):
+- api="all" or omit: Search across ALL APIs at once - useful when unsure which API contains the endpoint
+- api="admin": Search only cluster management (brokers, partitions, configs, users, maintenance)
+- api="cloud-controlplane": Search only Cloud resource management (clusters, networks, namespaces)
+- api="cloud-dataplane": Search only Cloud data operations (topics, ACLs, connectors)
+- api="http-proxy": Search only HTTP Proxy (produce, consume, offsets over HTTP)
+- api="schema-registry": Search only Schema Registry (register, retrieve, compatibility)
+
+WHEN TO USE WHICH:
+- User asks "broker endpoints" → api="admin" (brokers are cluster management)
+- User asks "create topic API" → api="all" (topics exist in admin AND cloud-dataplane)
+- User asks "Cloud cluster API" → api="cloud-controlplane"
+- User asks about Redpanda APIs generally → api="all" or omit
+
+For general Redpanda questions (not API-specific), use ask_redpanda_question instead.`,
+    inputSchema: {
+      api: z.string().optional().describe('Scope: "all" or omit to search all APIs, or specific API name (admin, cloud-controlplane, cloud-dataplane, http-proxy, schema-registry)'),
+      query: z.string().describe('Search keywords (e.g., "broker", "create topic", "ACL")'),
+      type: z.string().optional().describe('Filter by type: operation (endpoints), schema (data types), topic (guides), authentication, webhook'),
+    },
+  },
+  async (args) => {
+    const start = Date.now()
+
+    try {
+      await withTimeout(ensureBumpConnected(), CONNECT_TIMEOUT_MS, 'bump_connect')
+
+      // Build args for hub endpoint
+      const hubArgs = { query: args.query }
+      const scopeUrl = apiToUrl(args.api)
+      if (scopeUrl) hubArgs.url = scopeUrl
+      if (args.type) hubArgs.type = args.type
+
+      return await withTimeout(
+        callBumpTool('search', hubArgs),
+        CALL_TIMEOUT_MS,
+        'bump_search'
+      )
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err)
+      console.warn('Bump MCP search failed', { error: msg, api: args.api, phase: 'initial' })
+
+      if (isTransientError(msg)) {
+        try {
+          resetBumpConnection()
+          await withTimeout(ensureBumpConnected(), CONNECT_TIMEOUT_MS, 'bump_reconnect')
+
+          const hubArgs = { query: args.query }
+          const scopeUrl = apiToUrl(args.api)
+          if (scopeUrl) hubArgs.url = scopeUrl
+          if (args.type) hubArgs.type = args.type
+
+          return await withTimeout(
+            callBumpTool('search', hubArgs),
+            CALL_TIMEOUT_MS,
+            'bump_search_retry'
+          )
+        } catch (retryErr) {
+          const retryMsg = retryErr instanceof Error ? retryErr.message : String(retryErr)
+          console.error('Bump MCP search retry failed', { error: retryMsg, api: args.api, duration_ms: Date.now() - start })
+          return {
+            content: [{
+              type: 'text',
+              text: JSON.stringify({
+                error: retryMsg.includes('timeout') ? 'timeout' : 'upstream_error',
+                message: 'Upstream Bump MCP request failed after retry.',
+                detail: retryMsg,
+                duration_ms: Date.now() - start,
+              }),
+            }],
+          }
+        }
+      }
+
+      return {
+        content: [{
+          type: 'text',
+          text: JSON.stringify({
+            error: msg.includes('timeout') ? 'timeout' : 'upstream_error',
+            message: 'Upstream Bump MCP request failed.',
+            detail: msg,
+            duration_ms: Date.now() - start,
+          }),
+        }],
+      }
+    }
+  }
+)
+
+server.registerTool(
+  'get_api_reference_content',
+  {
+    title: 'Get API Reference Content',
+    description:
+      `Retrieve full content of API reference pages by URL. Returns complete endpoint details including parameters, request/response schemas, and examples.
+
+Use this after finding pages via list_api_reference_pages or search_api_reference. Pass the URLs from those results directly.
+
+Returns up to 10 pages per request. URLs must be from docs.redpanda.com/api/doc/*.`,
+    inputSchema: {
+      urls: z.array(z.string()).max(10).describe('Page URLs to retrieve (max 10). Use URLs from list_api_reference_pages or search_api_reference results.'),
+    },
+  },
+  async (args) => {
+    const start = Date.now()
+
+    try {
+      await withTimeout(ensureBumpConnected(), CONNECT_TIMEOUT_MS, 'bump_connect')
+      return await withTimeout(
+        callBumpTool('get_pages', { urls: args.urls }),
+        CALL_TIMEOUT_MS,
+        'bump_get_pages'
+      )
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err)
+      console.warn('Bump MCP get_pages failed', { error: msg, phase: 'initial' })
+
+      if (isTransientError(msg)) {
+        try {
+          resetBumpConnection()
+          await withTimeout(ensureBumpConnected(), CONNECT_TIMEOUT_MS, 'bump_reconnect')
+          return await withTimeout(
+            callBumpTool('get_pages', { urls: args.urls }),
+            CALL_TIMEOUT_MS,
+            'bump_get_pages_retry'
+          )
+        } catch (retryErr) {
+          const retryMsg = retryErr instanceof Error ? retryErr.message : String(retryErr)
+          console.error('Bump MCP get_pages retry failed', { error: retryMsg, duration_ms: Date.now() - start })
+          return {
+            content: [{
+              type: 'text',
+              text: JSON.stringify({
+                error: retryMsg.includes('timeout') ? 'timeout' : 'upstream_error',
+                message: 'Upstream Bump MCP request failed after retry.',
+                detail: retryMsg,
+                duration_ms: Date.now() - start,
+              }),
+            }],
+          }
+        }
+      }
+
+      return {
+        content: [{
+          type: 'text',
+          text: JSON.stringify({
+            error: msg.includes('timeout') ? 'timeout' : 'upstream_error',
+            message: 'Upstream Bump MCP request failed.',
+            detail: msg,
+            duration_ms: Date.now() - start,
+          }),
+        }],
+      }
+    }
+  }
+)
+
 // -------------------- Netlify handler --------------------
 
 const baseHandler = handle({
@@ -322,6 +627,10 @@ const baseHandler = handle({
       await next()
       c.res.headers.set('X-MCP-Server', `Redpanda Docs MCP/${SERVER_VERSION}`)
       c.res.headers.set('Cache-Control', 'no-store')
+      // CORS headers for browser MCP clients
+      c.res.headers.set('Access-Control-Allow-Origin', '*')
+      c.res.headers.set('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS')
+      c.res.headers.set('Access-Control-Allow-Headers', 'Content-Type, Accept, Authorization, mcp-session-id, mcp-protocol-version, x-request-id, x-client-key')
     })
   },
 })
@@ -369,6 +678,23 @@ export default async (request, context) => {
     })
   }
 
+  // CORS preflight handling for browser MCP clients
+  if (request.method === 'OPTIONS') {
+    const requestedHeaders = request.headers.get('access-control-request-headers') || ''
+    const mcpHeaders = 'Content-Type, Accept, Authorization, mcp-session-id, mcp-protocol-version, x-request-id, x-client-key'
+    const allowedHeaders = requestedHeaders ? `${requestedHeaders}, ${mcpHeaders}` : mcpHeaders
+
+    return new Response(null, {
+      status: 204,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
+        'Access-Control-Allow-Headers': allowedHeaders,
+        'Access-Control-Max-Age': '86400',
+      },
+    })
+  }
+
   // Streamable HTTP requires POST + GET (SSE) + DELETE
   if (
     request.method !== 'POST' &&
@@ -377,7 +703,7 @@ export default async (request, context) => {
   ) {
     return new Response('Method not allowed', {
       status: 405,
-      headers: { Allow: 'POST, GET, DELETE' },
+      headers: { Allow: 'POST, GET, DELETE, OPTIONS' },
     })
   }
 

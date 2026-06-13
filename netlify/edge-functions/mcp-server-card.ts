@@ -8,7 +8,7 @@ export default async (request: Request) => {
     serverInfo: {
       name: "redpanda-doc-tools-assistant",
       version: "1.0.0",
-      description: "MCP server for generating and managing Redpanda documentation including properties, metrics, RPK commands, connectors, Helm charts, CRDs, and OpenAPI specs"
+      description: "MCP server for searching Redpanda documentation and querying API references"
     },
     transport: {
       type: "http",

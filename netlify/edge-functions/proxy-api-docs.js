@@ -23,6 +23,79 @@ export default async (request, context) => {
     return Response.redirect(`${url.origin}${redirects[normalizedPath]}`, 301);
   }
 
+  // MCP passthrough: forward MCP requests to Bump.sh
+  // Enables AI agents to query API docs via Model Context Protocol
+  // Note: Bump's MCP server is public and doesn't require authentication
+  // Normalize trailing slash: /mcp/ -> /mcp for consistent matching
+  const mcpNormalizedPath = normalizedPath.endsWith('/mcp') ? normalizedPath :
+    (normalizedPath.endsWith('/mcp/') ? normalizedPath.slice(0, -1) : normalizedPath);
+  const isMcpRequest = mcpNormalizedPath.endsWith('/mcp');
+
+  if (isMcpRequest) {
+    // Build CORS headers for browser MCP clients
+    // Mirror requested headers from preflight, plus common MCP headers
+    const requestedHeaders = request.headers.get('Access-Control-Request-Headers') || '';
+    const mcpHeaders = 'Content-Type, Accept, Authorization, mcp-session-id, mcp-protocol-version, x-request-id';
+    const allowedHeaders = requestedHeaders ? `${requestedHeaders}, ${mcpHeaders}` : mcpHeaders;
+
+    const corsHeaders = {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS",
+      "Access-Control-Allow-Headers": allowedHeaders,
+      "Access-Control-Max-Age": "86400", // Cache preflight for 24 hours
+    };
+
+    // Handle OPTIONS preflight locally
+    if (request.method === "OPTIONS") {
+      return new Response(null, {
+        status: 204,
+        headers: corsHeaders,
+      });
+    }
+
+    // Build Bump.sh MCP URL (use normalized path without trailing slash)
+    const bumpMcpUrl = new URL(request.url);
+    bumpMcpUrl.host = "bump.sh";
+    bumpMcpUrl.pathname = `/redpanda/hub/redpanda${mcpNormalizedPath.replace("/api", "")}`;
+
+    try {
+      // Forward request headers directly
+      const response = await fetch(bumpMcpUrl, {
+        method: request.method,
+        headers: request.headers,
+        body: ["POST", "DELETE"].includes(request.method) ? request.body : undefined,
+      });
+
+      // Forward response headers, adding CORS for browser access
+      const responseHeaders = new Headers(response.headers);
+      Object.entries(corsHeaders).forEach(([key, value]) => {
+        responseHeaders.set(key, value);
+      });
+
+      return new Response(response.body, {
+        status: response.status,
+        headers: responseHeaders,
+      });
+    } catch (error) {
+      console.error("❌ Failed to proxy MCP request to Bump.sh:", error);
+      return new Response(JSON.stringify({
+        jsonrpc: "2.0",
+        error: {
+          code: -32603,
+          message: "Failed to connect to upstream MCP server"
+        },
+        id: null
+      }), {
+        status: 502,
+        headers: {
+          "content-type": "application/json",
+          "cache-control": "no-store",
+          ...corsHeaders,
+        }
+      });
+    }
+  }
+
   // Content negotiation: redirect to .md URL if markdown is explicitly requested
   // Only match text/markdown per agent-friendly docs spec (text/plain is too broad)
   const acceptHeader = request.headers.get('accept') || '';
