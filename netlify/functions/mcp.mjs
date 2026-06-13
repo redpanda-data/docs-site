@@ -627,6 +627,10 @@ const baseHandler = handle({
       await next()
       c.res.headers.set('X-MCP-Server', `Redpanda Docs MCP/${SERVER_VERSION}`)
       c.res.headers.set('Cache-Control', 'no-store')
+      // CORS headers for browser MCP clients
+      c.res.headers.set('Access-Control-Allow-Origin', '*')
+      c.res.headers.set('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS')
+      c.res.headers.set('Access-Control-Allow-Headers', 'Content-Type, Accept, Authorization, mcp-session-id, mcp-protocol-version, x-request-id, x-client-key')
     })
   },
 })
@@ -674,6 +678,23 @@ export default async (request, context) => {
     })
   }
 
+  // CORS preflight handling for browser MCP clients
+  if (request.method === 'OPTIONS') {
+    const requestedHeaders = request.headers.get('access-control-request-headers') || ''
+    const mcpHeaders = 'Content-Type, Accept, Authorization, mcp-session-id, mcp-protocol-version, x-request-id, x-client-key'
+    const allowedHeaders = requestedHeaders ? `${requestedHeaders}, ${mcpHeaders}` : mcpHeaders
+
+    return new Response(null, {
+      status: 204,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
+        'Access-Control-Allow-Headers': allowedHeaders,
+        'Access-Control-Max-Age': '86400',
+      },
+    })
+  }
+
   // Streamable HTTP requires POST + GET (SSE) + DELETE
   if (
     request.method !== 'POST' &&
@@ -682,7 +703,7 @@ export default async (request, context) => {
   ) {
     return new Response('Method not allowed', {
       status: 405,
-      headers: { Allow: 'POST, GET, DELETE' },
+      headers: { Allow: 'POST, GET, DELETE, OPTIONS' },
     })
   }
 
