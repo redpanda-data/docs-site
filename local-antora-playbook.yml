@@ -24,14 +24,14 @@ content:
     branches: main
     start_paths: [docs,'*/docs']
   - url: https://github.com/redpanda-data/cloud-docs
-    branches: feature/remove-ai-agents
+    branches: main
   - url: https://github.com/redpanda-data/rp-connect-docs
     branches: main
   - url: https://github.com/redpanda-data/adp-docs
     branches: main
 ui:
   bundle:
-    url: /Users/jakecahill/Documents/docs-ui/build/ui-bundle.zip
+    url: https://github.com/redpanda-data/docs-ui/releases/latest/download/ui-bundle.zip
     snapshot: true
 asciidoc:
   attributes:
