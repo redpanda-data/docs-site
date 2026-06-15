@@ -11,7 +11,8 @@
     "afdocs:verbose": "vitest run agent-docs.test.ts --reporter=verbose",
     "afdocs:cli": "afdocs check \"${DEPLOY_URL:-https://docs.redpanda.com}\" -v",
     "test:redirects": "vitest run tests/redirects.test.ts",
-    "test:redirects:verbose": "vitest run tests/redirects.test.ts --reporter=verbose"
+    "test:redirects:verbose": "vitest run tests/redirects.test.ts --reporter=verbose",
+    "test:mcp": "vitest run tests/mcp-auth.test.ts"
   },
   "dependencies": {
     "@antora/cli": "^3.1.14",
@@ -19,6 +20,7 @@
     "@asciidoctor/tabs": "^1.0.0-beta.5",
     "@modelcontextprotocol/sdk": "1.17.0",
     "@modelfetch/netlify": "0.15.2",
+    "@netlify/blobs": "^9.1.6",
     "@redpanda-data/docs-extensions-and-macros": "^5.0.0",
     "@sntke/antora-mermaid-extension": "^0.0.6",
     "algoliasearch": "^5.35.0",

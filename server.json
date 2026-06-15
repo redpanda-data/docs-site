@@ -1,13 +1,13 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
   "name": "com.redpanda/docs-mcp",
-  "description": "Get authoritative answers about Redpanda documentation and search API references.",
+  "description": "Get authoritative answers about Redpanda documentation and search API references. Requires a free access token: register your work email at https://docs.redpanda.com/mcp/register and send it as Authorization: Bearer <token>.",
   "repository": {
     "url": "https://github.com/redpanda-data/docs-site",
     "source": "github",
     "subfolder": "netlify"
   },
-  "version": "2026.06.13+pr180-328acad",
+  "version": "2026.06.15+auth",
   "remotes": [
     {
       "type": "streamable-http",

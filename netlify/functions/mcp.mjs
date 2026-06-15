@@ -17,6 +17,9 @@ import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/
 import { z } from 'zod'
 import handle from '@modelfetch/netlify'
 
+import { extractBearerToken, hashToken, decideAuth, isAuthEnforced } from './lib/auth.mjs'
+import { lookupToken, touchToken } from './lib/store.mjs'
+
 import rateLimiterModule from 'hono-rate-limiter'
 const makeRateLimiter =
   rateLimiterModule.rateLimiter ||
@@ -25,7 +28,7 @@ const makeRateLimiter =
 
 // -------------------- Config --------------------
 
-const SERVER_VERSION = '1.1.2'
+const SERVER_VERSION = '1.2.0'
 
 // Hardcoded upstream
 const KAPA_MCP_SERVER_URL = 'https://redpanda.mcp.kapa.ai'
@@ -68,6 +71,10 @@ function withTimeout(promise, ms, label) {
 
 const computeLimiterKey = (c) => {
   const h = (name) => c.req.header(name) || ''
+
+  // Authenticated requests get per-token limits (set by the auth middleware).
+  const auth = c.get('auth')
+  if (auth?.tokenHash) return `tok:${auth.tokenHash}`
 
   const clientKey = h('x-client-key')
   if (clientKey) return `ck:${clientKey}`
@@ -144,12 +151,22 @@ function ensureKapaConnected() {
   return kapaConnectPromise
 }
 
-// Kapa Hosted MCP search tool only accepts `query`
-function callKapaSearch(query) {
-  return kapaClient.callTool({
+// Kapa Hosted MCP search tool accepts `query`. When we have an authenticated
+// user we also attach `_meta.user` for Kapa-side usage attribution.
+function callKapaSearch(query, user = null) {
+  const toolCall = {
     name: KAPA_TOOL_NAME,
     arguments: { query },
-  })
+  }
+  if (user?.email) {
+    toolCall._meta = {
+      user: {
+        email: user.email,
+        company_name: user.domain || undefined,
+      },
+    }
+  }
+  return kapaClient.callTool(toolCall)
 }
 
 // -------------------- Bump.sh API Docs MCP client --------------------
@@ -224,8 +241,11 @@ server.registerTool(
       top_k: z.number().optional(),
     },
   },
-  async (args) => {
+  async (args, extra) => {
     const start = Date.now()
+
+    // Authenticated user context, attached by the auth middleware via c.set('auth').
+    const user = extra?.authInfo || null
 
     const q = String(args?.question || '').trim()
     if (!q) {
@@ -264,7 +284,7 @@ server.registerTool(
       )
 
       return await withTimeout(
-        callKapaSearch(q),
+        callKapaSearch(q, user),
         CALL_TIMEOUT_MS,
         'kapa_callTool'
       )
@@ -276,6 +296,15 @@ server.registerTool(
         upstream: 'kapa-mcp',
       })
 
+      // If Kapa rejected the request because of our user metadata, retry once
+      // without it (attribution is best-effort; never block the answer).
+      if (/_meta|metadata/i.test(msg) && user) {
+        try {
+          return await withTimeout(callKapaSearch(q, null), CALL_TIMEOUT_MS, 'kapa_callTool_no_meta')
+        } catch {
+          // fall through to the normal transient-retry path below
+        }
+      }
 
       if (isTransientError(msg)) {
         // retry once
@@ -287,7 +316,7 @@ server.registerTool(
             'kapa_reconnect'
           )
           return await withTimeout(
-            callKapaSearch(q),
+            callKapaSearch(q, user),
             CALL_TIMEOUT_MS,
             'kapa_callTool_retry'
           )
@@ -611,6 +640,48 @@ const baseHandler = handle({
       keyGenerator: computeLimiterKey, // use our custom key generator
       standardHeaders: true,    // send RateLimit-* headers if supported
       legacyHeaders: true,      // also send X-RateLimit-* headers
+    })
+
+    // Auth middleware. Runs BEFORE the limiter so authenticated requests can be
+    // keyed per-token. Never gates OPTIONS or the GET/SSE stream. When auth is
+    // not enforced (grace period) unauthenticated requests pass through; when
+    // enforced they get a 401 pointing to the registration page.
+    app.use('/mcp', async (c, next) => {
+      const method = c.req.method
+      if (method === 'OPTIONS' || method === 'GET') return next()
+
+      const raw = extractBearerToken(
+        c.req.header('authorization'),
+        new URL(c.req.url).searchParams.get('token')
+      )
+
+      let record = null
+      let tokenHash = null
+      if (raw) {
+        tokenHash = hashToken(raw)
+        record = await lookupToken(tokenHash).catch((e) => {
+          console.warn('[auth] token lookup failed', { error: e?.message })
+          return null
+        })
+      }
+
+      const { allow, userContext, unauthorized } = decideAuth({ record, enforced: isAuthEnforced() })
+
+      if (userContext) {
+        c.set('auth', { ...userContext, tokenHash })
+        touchToken(tokenHash, record) // fire-and-forget
+      } else if (!allow && unauthorized) {
+        const regUrl = new URL('/mcp/register', c.req.url).toString()
+        const u = { ...unauthorized }
+        u.headers = { ...u.headers, 'WWW-Authenticate': u.headers['WWW-Authenticate'].replace(/resource_metadata="[^"]*"/, `resource_metadata="${regUrl}"`) }
+        u.body = { ...u.body, registration_url: regUrl, message: `Register a free token with your work email at ${regUrl}, then send Authorization: Bearer <token>.` }
+        return c.json(u.body, u.status, u.headers)
+      } else {
+        // Grace period, unauthenticated: log for adoption tracking.
+        console.log(JSON.stringify({ event: 'mcp_unauthenticated', enforced: false, ua: c.req.header('user-agent') || '' }))
+      }
+
+      return next()
     })
 
     app.use('/mcp', async (c, next) => {

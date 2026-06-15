@@ -86,16 +86,47 @@ Redpanda provides a remote link:https://modelcontextprotocol.io[Model Context Pr
 The MCP server is hosted at: `https://docs.redpanda.com/mcp`.
 You can add this endpoint to any AI agent that supports MCP.
 
+[#authentication]
+==== Get an access token
+
+The MCP server requires a free access token tied to your work email. We use this to understand who relies on the documentation tools and to attribute usage to your organization.
+
+. Go to https://docs.redpanda.com/mcp/register[`docs.redpanda.com/mcp/register`^].
+. Enter your *work email address*. Free providers (such as Gmail or Outlook) and disposable addresses aren't accepted.
+. Check your inbox. We email your token to confirm the address is valid and belongs to you. The token isn't shown in the browser.
+. Add the token to your MCP client as shown in the configuration for your tool below.
+
+Send the token in the `Authorization` header on every request:
+
+[source,text]
+----
+Authorization: Bearer rp_mcp_your_token_here
+----
+
+For clients that can't set a custom header, append the token to the URL instead:
+
+[source,text]
+----
+https://docs.redpanda.com/mcp?token=rp_mcp_your_token_here
+----
+
+[NOTE]
+====
+*What we collect and why.* When you register, we store your work email address, its domain, and request counts to track usage and attribute it to your organization. This information may be shared with our customer systems and passed to our documentation search provider (Kapa) for usage attribution. We don't store the content of your queries. To revoke your token or request deletion of your data, reply to the token email.
+====
+
+During the initial rollout, authentication is optional and existing connections continue to work. After a transition period, a token will be required. Register now to avoid interruption.
+
 [tabs]
 ====
 Claude Code::
 +
 --
-Run the following command to add the Redpanda MCP server to Claude Code:
+Run the following command to add the Redpanda MCP server to Claude Code, replacing `rp_mcp_your_token_here` with the token from your email:
 
 [source,bash]
 ----
-claude mcp add --scope user --transport http redpanda https://docs.redpanda.com/mcp
+claude mcp add --scope user --transport http redpanda https://docs.redpanda.com/mcp --header "Authorization: Bearer rp_mcp_your_token_here"
 ----
 
 This command:
@@ -119,7 +150,7 @@ For more information about Claude Code, see the https://code.claude.com/docs/en/
 Cursor::
 +
 --
-Add the following to your `.cursor/mcp.json` file:
+Add the following to your `.cursor/mcp.json` file, replacing `rp_mcp_your_token_here` with the token from your email:
 
 [source,json]
 ----
@@ -127,7 +158,10 @@ Add the following to your `.cursor/mcp.json` file:
   "mcpServers": {
     "redpanda": {
       "type": "http",
-      "url": "https://docs.redpanda.com/mcp"
+      "url": "https://docs.redpanda.com/mcp",
+      "headers": {
+        "Authorization": "Bearer rp_mcp_your_token_here"
+      }
     }
   }
 }
@@ -140,7 +174,7 @@ VS Code::
 --
 *Prerequisites:* VS Code 1.102+ with GitHub Copilot enabled.
 
-Create an `mcp.json` file in your workspace `.vscode` folder:
+Create an `mcp.json` file in your workspace `.vscode` folder, replacing `rp_mcp_your_token_here` with the token from your email:
 
 .`.vscode/mcp.json`
 [source,json]
@@ -149,7 +183,10 @@ Create an `mcp.json` file in your workspace `.vscode` folder:
   "servers": {
     "redpanda": {
       "type": "http",
-      "url": "https://docs.redpanda.com/mcp"
+      "url": "https://docs.redpanda.com/mcp",
+      "headers": {
+        "Authorization": "Bearer rp_mcp_your_token_here"
+      }
     }
   }
 }
@@ -182,8 +219,9 @@ ChatGPT Desktop supports MCP servers in developer mode. To enable:
 . Click *Add Server* and enter:
 +
 - *Name*: `redpanda`
-- *URL*: `https://docs.redpanda.com/mcp`
+- *URL*: `https://docs.redpanda.com/mcp?token=rp_mcp_your_token_here`
 
+TIP: ChatGPT Desktop doesn't let you set a custom `Authorization` header, so append your token to the URL using `?token=` as shown above. Replace `rp_mcp_your_token_here` with the token from your email.
 
 For more information, see the https://platform.openai.com/docs/guides/developer-mode[ChatGPT Desktop MCP documentation^].
 --
@@ -199,8 +237,7 @@ This method is available for Pro, Max, Team, or Enterprise plans and works acros
 . Open Claude Desktop.
 . Navigate to Settings > Connectors.
 . Click *Add custom connector*.
-. Enter the URL: `https://docs.redpanda.com/mcp`
-. Follow any authentication prompts if required.
+. Enter the URL with your token appended: `https://docs.redpanda.com/mcp?token=rp_mcp_your_token_here`. The Connectors interface doesn't expose a custom header field, so append the token to the URL using `?token=`.
 
 NOTE: When using Connectors, Claude connects to your remote MCP server from Anthropic's cloud infrastructure.
 
@@ -221,13 +258,13 @@ Add the following configuration to your `claude_desktop_config.json` file:
   "mcpServers": {
     "redpanda": {
       "command": "npx",
-      "args": ["-y", "mcp-remote", "https://docs.redpanda.com/mcp"]
+      "args": ["-y", "mcp-remote", "https://docs.redpanda.com/mcp", "--header", "Authorization: Bearer rp_mcp_your_token_here"]
     }
   }
 }
 ----
 
-This configuration uses the `mcp-remote` bridge to connect to Redpanda's remote MCP server. Claude Desktop supports only `stdio` and `sse` transports, so `mcp-remote` converts the HTTP endpoint to a compatible format.
+Replace `rp_mcp_your_token_here` with the token from your email. This configuration uses the `mcp-remote` bridge to connect to Redpanda's remote MCP server. Claude Desktop supports only `stdio` and `sse` transports, so `mcp-remote` converts the HTTP endpoint to a compatible format.
 
 Restart Claude Desktop for changes to take effect.
 
@@ -239,14 +276,14 @@ For more details, see the https://support.anthropic.com/en/articles/9487310-desk
 
 ==== Other AI tools
 
-Any tool that supports MCP servers can connect using the following URL:
+Any tool that supports MCP servers can connect using the following URL. Send your token in the `Authorization` header, or append it to the URL with `?token=` if the tool can't set headers:
 
 [source,text]
 ----
 https://docs.redpanda.com/mcp
 ----
 
-NOTE: MCP support varies by tool and version. Check the specific tool's documentation for MCP setup instructions.
+NOTE: MCP support varies by tool and version. Check the specific tool's documentation for MCP setup instructions. See <<authentication>> for how to get a token.
 
 ==== What you can do
 
@@ -261,11 +298,13 @@ Once connected, you can ask context-aware questions about Redpanda from within y
 
 ==== Usage limits
 
-To ensure fair use and performance for all users, the public MCP endpoint enforces the following rate limits per user:
+To ensure fair use and performance for all users, the MCP endpoint enforces the following rate limits:
 
 * *60 requests per 15 minutes*
 
-As well as this global limit, the `ask_redpanda_question` tool proxies to an MCP server hosted by Kapa.ai, which enforces its own limits. See the link:https://docs.kapa.ai/integrations/mcp/overview#authentication[Kapa documentation^] for details.
+When you authenticate with a token, this limit is applied per token. Unauthenticated requests (during the rollout period) are limited per IP address.
+
+As well as this limit, the `ask_redpanda_question` tool proxies to an MCP server hosted by Kapa.ai, which enforces its own limits. See the link:https://docs.kapa.ai/integrations/mcp/overview#authentication[Kapa documentation^] for details.
 
 These limits are suitable for:
 
@@ -285,6 +324,15 @@ RateLimit-Reset: <timestamp>
 ----
 
 ==== Troubleshooting
+
+===== Authentication required (HTTP 401)
+
+If you receive an `HTTP 401` response with an `authentication_required` error:
+
+* Make sure you've registered for a token at https://docs.redpanda.com/mcp/register[`docs.redpanda.com/mcp/register`^] and used the token from the confirmation email.
+* Verify the token is sent as `Authorization: Bearer rp_mcp_...`, or appended to the URL as `?token=rp_mcp_...` for clients that can't set headers.
+* Tokens are tied to a verified work email. If you registered with a free or disposable address, the registration is rejected. Use your work email.
+* If your token was revoked, register again for a new one.
 
 ===== Server not connecting
 
