@@ -63,5 +63,3 @@ export async function validateToken(token) {
     clearTimeout(t)
   }
 }
-
-export const OAUTH_ISSUER = ISSUER

@@ -15,7 +15,7 @@ import { createHash } from 'node:crypto'
 // -------------------- Email classification --------------------
 
 // Free consumer providers — rejected when a work email is required.
-export const FREE_EMAIL_DOMAINS = new Set([
+const FREE_EMAIL_DOMAINS = new Set([
   'gmail.com', 'googlemail.com', 'yahoo.com', 'yahoo.co.uk', 'yahoo.co.in',
   'ymail.com', 'outlook.com', 'hotmail.com', 'hotmail.co.uk', 'live.com',
   'msn.com', 'icloud.com', 'me.com', 'mac.com', 'proton.me', 'protonmail.com',
@@ -24,7 +24,7 @@ export const FREE_EMAIL_DOMAINS = new Set([
 ])
 
 // Disposable / throwaway providers. Best-effort seed list, not exhaustive.
-export const DISPOSABLE_DOMAINS = new Set([
+const DISPOSABLE_DOMAINS = new Set([
   'mailinator.com', '10minutemail.com', 'guerrillamail.com', 'guerrillamail.info',
   'sharklasers.com', 'getnada.com', 'nada.email', 'yopmail.com', 'trashmail.com',
   'tempmail.com', 'temp-mail.org', 'throwawaymail.com', 'maildrop.cc',
