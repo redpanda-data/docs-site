@@ -1,65 +1,43 @@
-// Token storage for the MCP server, backed by Netlify Blobs.
-// -----------------------------------------------------------
-// Sole consumer of @netlify/blobs so the rest of the auth code stays runtime-
-// agnostic and unit-testable. Records are keyed by the SHA-256 hash of the
-// token (see auth.mjs:hashToken) so a store leak never exposes usable tokens.
+// User capture for the MCP server, backed by Netlify Blobs.
+// ----------------------------------------------------------
+// Sole consumer of @netlify/blobs. Records each authenticated user (their
+// verified work email + org/domain) for lead capture and usage attribution.
+// On first sight of a user, optionally forwards the lead to a CRM webhook.
 
-import { getStore as netlifyGetStore } from '@netlify/blobs'
+import { getStore } from '@netlify/blobs'
 
-const STORE_NAME = 'mcp-tokens'
-
-// Only persist lastUsedAt/requestCount roughly every N requests to avoid a
-// Blobs write on every single query (writes are best-effort and off the hot path).
-const TOUCH_EVERY = 10
+const STORE_NAME = 'mcp-users'
 
 function store() {
-  return netlifyGetStore(STORE_NAME)
+  return getStore(STORE_NAME)
 }
 
-export async function saveRegistration({ tokenHash, email, domain }) {
-  const record = {
-    email,
-    domain,
-    createdAt: new Date().toISOString(),
-    lastUsedAt: null,
-    requestCount: 0,
-    revoked: false,
-  }
-  await store().setJSON(tokenHash, record)
-  return record
-}
+// Record an authenticated user. Best-effort and idempotent: dedupes by `sub`
+// (falling back to email). Call fire-and-forget — never block the request.
+export async function recordUser({ sub, email, domain }) {
+  const key = sub || email
+  if (!key) return
 
-export async function lookupToken(tokenHash) {
-  if (!tokenHash) return null
-  return store().get(tokenHash, { type: 'json' })
-}
+  const now = new Date().toISOString()
+  const existing = await store().get(key, { type: 'json' }).catch(() => null)
+  const isNew = !existing
 
-// Fire-and-forget usage bump. Never awaited on the hot path, never throws.
-// Throttled so we don't write on every request.
-export function touchToken(tokenHash, record) {
-  try {
-    const count = (record?.requestCount || 0) + 1
-    // Always update the in-memory count for the throttle check, but only persist
-    // periodically (and on the very first use).
-    if (count === 1 || count % TOUCH_EVERY === 0) {
-      const updated = {
-        ...record,
-        lastUsedAt: new Date().toISOString(),
-        requestCount: count,
-      }
-      // Intentionally not awaited.
-      store().setJSON(tokenHash, updated).catch((e) => {
-        console.warn('[store] touchToken write failed', { error: e?.message })
-      })
+  const record = isNew
+    ? { sub, email, domain, firstSeenAt: now, lastSeenAt: now, requestCount: 1 }
+    : { ...existing, email, domain, lastSeenAt: now, requestCount: (existing.requestCount || 0) + 1 }
+
+  await store().setJSON(key, record).catch((e) =>
+    console.warn('[store] recordUser write failed', { error: e?.message })
+  )
+
+  if (isNew) {
+    console.log(JSON.stringify({ event: 'mcp_user_captured', domain, sub, ts: now }))
+    if (process.env.CRM_WEBHOOK_URL) {
+      fetch(process.env.CRM_WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, domain, sub, source: 'mcp', timestamp: now }),
+      }).catch((e) => console.warn('[store] CRM webhook failed', { error: e?.message }))
     }
-  } catch (e) {
-    console.warn('[store] touchToken error', { error: e?.message })
   }
-}
-
-export async function revokeToken(tokenHash) {
-  const record = await lookupToken(tokenHash)
-  if (!record) return false
-  await store().setJSON(tokenHash, { ...record, revoked: true, revokedAt: new Date().toISOString() })
-  return true
 }

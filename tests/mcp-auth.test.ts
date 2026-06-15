@@ -1,28 +1,24 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import {
-  normalizeEmail,
+  emailDomain,
   isWorkEmail,
-  generateToken,
-  looksLikeToken,
-  hashToken,
   extractBearerToken,
+  hashToken,
   buildUnauthorizedResponse,
   isAuthEnforced,
+  isWorkEmailRequired,
   decideAuth,
 } from '../netlify/functions/lib/auth.mjs'
 
-describe('normalizeEmail (Layer 1: format)', () => {
-  it('lowercases and trims, returns domain', () => {
-    expect(normalizeEmail('  Jake@Redpanda.COM ')).toEqual({ email: 'jake@redpanda.com', domain: 'redpanda.com' })
-  })
-  it('throws on malformed input', () => {
-    for (const bad of ['', 'nope', 'a@b', 'no domain.com', '@redpanda.com', 'jake@']) {
-      expect(() => normalizeEmail(bad)).toThrowError()
-    }
+describe('emailDomain', () => {
+  it('extracts and lowercases the domain', () => {
+    expect(emailDomain('Jake@Redpanda.COM')).toBe('redpanda.com')
+    expect(emailDomain('no-at')).toBe('')
+    expect(emailDomain('')).toBe('')
   })
 })
 
-describe('isWorkEmail (Layer 2: work-domain filter)', () => {
+describe('isWorkEmail', () => {
   it('accepts work domains', () => {
     expect(isWorkEmail('redpanda.com')).toEqual({ ok: true })
     expect(isWorkEmail('acme-corp.io')).toEqual({ ok: true })
@@ -38,52 +34,44 @@ describe('isWorkEmail (Layer 2: work-domain filter)', () => {
   })
 })
 
-describe('tokens', () => {
-  it('generateToken has the rp_mcp_ prefix and is unique', () => {
-    const tokens = new Set(Array.from({ length: 500 }, () => generateToken()))
-    expect(tokens.size).toBe(500)
-    for (const t of tokens) {
-      expect(t.startsWith('rp_mcp_')).toBe(true)
-      expect(looksLikeToken(t)).toBe(true)
-    }
+describe('extractBearerToken', () => {
+  it('parses the Authorization header (case-insensitive)', () => {
+    expect(extractBearerToken('Bearer abc123')).toBe('abc123')
+    expect(extractBearerToken('bearer  xyz  ')).toBe('xyz')
   })
-  it('hashToken is deterministic 64-hex', () => {
-    const t = generateToken()
-    const h = hashToken(t)
-    expect(h).toMatch(/^[0-9a-f]{64}$/)
-    expect(hashToken(t)).toBe(h)
-    expect(hashToken(generateToken())).not.toBe(h)
+  it('returns null when absent or non-bearer', () => {
+    expect(extractBearerToken('')).toBeNull()
+    expect(extractBearerToken(null)).toBeNull()
+    expect(extractBearerToken('Basic abc')).toBeNull()
+  })
+  it('does NOT accept a query token (spec forbids tokens in the URL)', () => {
+    // single-arg signature only — no query fallback
+    expect(extractBearerToken(undefined)).toBeNull()
   })
 })
 
-describe('extractBearerToken', () => {
-  it('parses the Authorization header (case-insensitive)', () => {
-    expect(extractBearerToken('Bearer abc123', null)).toBe('abc123')
-    expect(extractBearerToken('bearer  xyz  ', null)).toBe('xyz')
-  })
-  it('falls back to the query token', () => {
-    expect(extractBearerToken('', 'qtok')).toBe('qtok')
-    expect(extractBearerToken(null, 'qtok')).toBe('qtok')
-  })
-  it('returns null when absent', () => {
-    expect(extractBearerToken('', null)).toBeNull()
-    expect(extractBearerToken('Basic abc', null)).toBeNull()
+describe('hashToken', () => {
+  it('is deterministic 64-hex and never returns the raw token', () => {
+    const h = hashToken('rp-secret-token')
+    expect(h).toMatch(/^[0-9a-f]{64}$/)
+    expect(hashToken('rp-secret-token')).toBe(h)
+    expect(h).not.toContain('rp-secret-token')
   })
 })
 
 describe('buildUnauthorizedResponse', () => {
-  it('returns a 401 with WWW-Authenticate and registration_url', () => {
-    const r = buildUnauthorizedResponse({ registrationUrl: 'https://x.test/mcp/register' })
+  it('returns a 401 with WWW-Authenticate + resource_metadata', () => {
+    const r = buildUnauthorizedResponse({ resourceMetadataUrl: 'https://x.test/.well-known/oauth-protected-resource' })
     expect(r.status).toBe(401)
     expect(r.headers['WWW-Authenticate']).toContain('Bearer')
-    expect(r.headers['WWW-Authenticate']).toContain('https://x.test/mcp/register')
+    expect(r.headers['WWW-Authenticate']).toContain('resource_metadata="https://x.test/.well-known/oauth-protected-resource"')
     expect(r.body.error).toBe('authentication_required')
-    expect(r.body.registration_url).toBe('https://x.test/mcp/register')
+    expect(r.body.resource_metadata).toBe('https://x.test/.well-known/oauth-protected-resource')
   })
 })
 
-describe('isAuthEnforced', () => {
-  it('only true when REQUIRE_AUTH === "true"', () => {
+describe('config flags', () => {
+  it('isAuthEnforced only true when REQUIRE_AUTH === "true"', () => {
     const orig = process.env.REQUIRE_AUTH
     process.env.REQUIRE_AUTH = 'true'
     expect(isAuthEnforced()).toBe(true)
@@ -95,52 +83,48 @@ describe('isAuthEnforced', () => {
     expect(isAuthEnforced()).toBe(false)
     if (orig !== undefined) process.env.REQUIRE_AUTH = orig
   })
+  it('isWorkEmailRequired defaults true, false only when explicitly "false"', () => {
+    const orig = process.env.REQUIRE_WORK_EMAIL
+    delete process.env.REQUIRE_WORK_EMAIL
+    expect(isWorkEmailRequired()).toBe(true)
+    process.env.REQUIRE_WORK_EMAIL = 'false'
+    expect(isWorkEmailRequired()).toBe(false)
+    process.env.REQUIRE_WORK_EMAIL = 'true'
+    expect(isWorkEmailRequired()).toBe(true)
+    if (orig === undefined) delete process.env.REQUIRE_WORK_EMAIL
+    else process.env.REQUIRE_WORK_EMAIL = orig
+  })
 })
 
 describe('decideAuth matrix', () => {
-  const record = { email: 'jake@redpanda.com', domain: 'redpanda.com', revoked: false }
+  const workClaims = { sub: 'auth0|123', email: 'jake@redpanda.com', email_verified: true }
+  const freeClaims = { sub: 'auth0|456', email: 'someone@gmail.com', email_verified: true }
 
-  it('valid record -> allow + context', () => {
-    const r = decideAuth({ record, enforced: true })
-    expect(r.allow).toBe(true)
-    expect(r.userContext).toEqual({ email: 'jake@redpanda.com', domain: 'redpanda.com' })
-    expect(r.unauthorized).toBeNull()
-  })
-  it('revoked record + enforced -> 401', () => {
-    const r = decideAuth({ record: { ...record, revoked: true }, enforced: true })
-    expect(r.allow).toBe(false)
-    expect(r.unauthorized.status).toBe(401)
-  })
   it('no token + grace -> allow with null context', () => {
-    const r = decideAuth({ record: null, enforced: false })
+    const r = decideAuth({ claims: null, enforced: false, workEmailRequired: true })
     expect(r.allow).toBe(true)
     expect(r.userContext).toBeNull()
-    expect(r.unauthorized).toBeNull()
+    expect(r.response).toBeNull()
   })
   it('no token + enforced -> 401', () => {
-    const r = decideAuth({ record: null, enforced: true })
+    const r = decideAuth({ claims: null, enforced: true, workEmailRequired: true })
     expect(r.allow).toBe(false)
-    expect(r.unauthorized.status).toBe(401)
+    expect(r.response.status).toBe(401)
   })
-})
-
-describe('hasValidMx (Layer 3: MX) with mocked resolver', () => {
-  it('accepts a domain with MX records, rejects NXDOMAIN', async () => {
-    vi.resetModules()
-    vi.doMock('node:dns', () => ({
-      promises: {
-        resolveMx: vi.fn(async (d: string) => {
-          if (d === 'redpanda.com') return [{ exchange: 'mx.redpanda.com', priority: 10 }]
-          throw new Error('ENOTFOUND')
-        }),
-        resolve: vi.fn(async () => {
-          throw new Error('ENOTFOUND')
-        }),
-      },
-    }))
-    const { hasValidMx } = await import('../netlify/functions/lib/email.mjs')
-    expect(await hasValidMx('redpanda.com')).toBe(true)
-    expect(await hasValidMx('nope-not-a-real-domain-xyz.com')).toBe(false)
-    vi.doUnmock('node:dns')
+  it('valid work email -> allow + context', () => {
+    const r = decideAuth({ claims: workClaims, enforced: true, workEmailRequired: true })
+    expect(r.allow).toBe(true)
+    expect(r.userContext).toEqual({ sub: 'auth0|123', email: 'jake@redpanda.com', domain: 'redpanda.com', emailVerified: true })
+  })
+  it('free email + work required -> 403 forbidden', () => {
+    const r = decideAuth({ claims: freeClaims, enforced: true, workEmailRequired: true })
+    expect(r.allow).toBe(false)
+    expect(r.response.status).toBe(403)
+    expect(r.response.body.error).toBe('work_email_required')
+  })
+  it('free email + work NOT required -> allow + context', () => {
+    const r = decideAuth({ claims: freeClaims, enforced: true, workEmailRequired: false })
+    expect(r.allow).toBe(true)
+    expect(r.userContext.email).toBe('someone@gmail.com')
   })
 })

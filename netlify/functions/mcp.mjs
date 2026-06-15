@@ -17,8 +17,9 @@ import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/
 import { z } from 'zod'
 import handle from '@modelfetch/netlify'
 
-import { extractBearerToken, hashToken, decideAuth, isAuthEnforced } from './lib/auth.mjs'
-import { lookupToken, touchToken } from './lib/store.mjs'
+import { extractBearerToken, decideAuth, isAuthEnforced, isWorkEmailRequired } from './lib/auth.mjs'
+import { validateToken } from './lib/idp.mjs'
+import { recordUser } from './lib/store.mjs'
 
 import rateLimiterModule from 'hono-rate-limiter'
 const makeRateLimiter =
@@ -72,9 +73,10 @@ function withTimeout(promise, ms, label) {
 const computeLimiterKey = (c) => {
   const h = (name) => c.req.header(name) || ''
 
-  // Authenticated requests get per-token limits (set by the auth middleware).
+  // Authenticated requests get per-user limits (set by the auth middleware).
   const auth = c.get('auth')
-  if (auth?.tokenHash) return `tok:${auth.tokenHash}`
+  if (auth?.sub) return `sub:${auth.sub}`
+  if (auth?.email) return `email:${auth.email}`
 
   const clientKey = h('x-client-key')
   if (clientKey) return `ck:${clientKey}`
@@ -642,41 +644,36 @@ const baseHandler = handle({
       legacyHeaders: true,      // also send X-RateLimit-* headers
     })
 
-    // Auth middleware. Runs BEFORE the limiter so authenticated requests can be
-    // keyed per-token. Never gates OPTIONS or the GET/SSE stream. When auth is
-    // not enforced (grace period) unauthenticated requests pass through; when
-    // enforced they get a 401 pointing to the registration page.
+    // OAuth resource-server middleware. Runs BEFORE the limiter so authenticated
+    // requests can be keyed per-user. Never gates OPTIONS or the GET/SSE stream.
+    // Grace period (REQUIRE_AUTH != 'true'): unauthenticated requests pass
+    // through. Enforced: a 401 points MCP clients at our protected-resource
+    // metadata so they can sign in with a Redpanda Cloud account.
     app.use('/mcp', async (c, next) => {
       const method = c.req.method
       if (method === 'OPTIONS' || method === 'GET') return next()
 
-      const raw = extractBearerToken(
-        c.req.header('authorization'),
-        new URL(c.req.url).searchParams.get('token')
-      )
+      const token = extractBearerToken(c.req.header('authorization'))
+      const claims = token ? await validateToken(token) : null
 
-      let record = null
-      let tokenHash = null
-      if (raw) {
-        tokenHash = hashToken(raw)
-        record = await lookupToken(tokenHash).catch((e) => {
-          console.warn('[auth] token lookup failed', { error: e?.message })
-          return null
-        })
-      }
-
-      const { allow, userContext, unauthorized } = decideAuth({ record, enforced: isAuthEnforced() })
+      const resourceMetadataUrl = new URL('/.well-known/oauth-protected-resource', c.req.url).toString()
+      const { allow, userContext, response } = decideAuth({
+        claims,
+        enforced: isAuthEnforced(),
+        workEmailRequired: isWorkEmailRequired(),
+        resourceMetadataUrl,
+      })
 
       if (userContext) {
-        c.set('auth', { ...userContext, tokenHash })
-        touchToken(tokenHash, record) // fire-and-forget
-      } else if (!allow && unauthorized) {
-        const regUrl = new URL('/mcp/register', c.req.url).toString()
-        const u = { ...unauthorized }
-        u.headers = { ...u.headers, 'WWW-Authenticate': u.headers['WWW-Authenticate'].replace(/resource_metadata="[^"]*"/, `resource_metadata="${regUrl}"`) }
-        u.body = { ...u.body, registration_url: regUrl, message: `Register a free token with your work email at ${regUrl}, then send Authorization: Bearer <token>.` }
-        return c.json(u.body, u.status, u.headers)
-      } else {
+        c.set('auth', userContext)
+        recordUser(userContext).catch(() => {}) // fire-and-forget lead capture
+      }
+
+      if (!allow && response) {
+        return c.json(response.body, response.status, response.headers)
+      }
+
+      if (!userContext) {
         // Grace period, unauthenticated: log for adoption tracking.
         console.log(JSON.stringify({ event: 'mcp_unauthenticated', enforced: false, ua: c.req.header('user-agent') || '' }))
       }

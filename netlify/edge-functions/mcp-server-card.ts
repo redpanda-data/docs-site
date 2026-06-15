@@ -20,10 +20,11 @@ export default async (request: Request) => {
       prompts: false
     },
     authentication: {
-      type: "bearer",
+      type: "oauth2",
       required: false,
-      registration_url: "https://docs.redpanda.com/mcp/register",
-      description: "Register a free token with your work email, then send Authorization: Bearer <token> (or ?token=<token> for clients that can't set headers)."
+      protected_resource_metadata: `${siteUrl}/.well-known/oauth-protected-resource`,
+      authorization_servers: ["https://auth.prd.cloud.redpanda.com/"],
+      description: "Sign in with your Redpanda Cloud account. MCP clients discover the OAuth flow via the protected-resource metadata and obtain a token automatically."
     },
     metadata: {
       homepage: `${siteUrl}`,
