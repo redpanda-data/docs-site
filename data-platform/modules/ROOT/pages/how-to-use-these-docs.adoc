@@ -95,7 +95,7 @@ There's no token to copy or paste. Any MCP client that supports the standard MCP
 
 [NOTE]
 ====
-*What we collect and why.* When you sign in, we receive your verified email address and organization from Redpanda Cloud, which we use to attribute documentation usage to your organization. This may be shared with our customer systems and passed to our documentation search provider (Kapa) for usage attribution. We don't store the content of your queries.
+*What we collect and why.* When you sign in, we receive your verified email address and organization from Redpanda Cloud, which we use to attribute documentation usage to your organization. This may be shared with our customer systems and passed to our documentation search provider (Kapa) for usage attribution.
 ====
 
 During the initial rollout, authentication is optional and existing connections continue to work. After a transition period, sign-in will be required.
