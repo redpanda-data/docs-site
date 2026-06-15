@@ -14,7 +14,7 @@
 
 2. **Sitemap**: `{site-url}/sitemap.md` - Contains all documentation pages including this file and all exports. The sitemap index includes `{site-url}/sitemap-llms.md` with all AI-optimized exports.
 
-3. **MCP server**: {site-url}/agentic-data-plane/connect/mcp-overview.md - For Claude Code and MCP-compatible agents, this provides interactive documentation tools.
+3. **MCP server**: {site-url}/home/how-to-use-these-docs.md - For Claude Code and MCP-compatible agents, this provides interactive documentation tools.
 
 ### Static documentation exports
 
