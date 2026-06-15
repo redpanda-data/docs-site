@@ -663,6 +663,22 @@ from = "/cloud-data-platform/reference/rpk-acl/*"
 to = "/cloud-data-platform/reference/rpk/rpk-acl/:splat"
 status = 301
 
+# =========Streaming path fixes========
+# Fix high-volume 404s from stale links after the docs restructure.
+# :version matches a single path segment (for example, current, 25.3, 24.3).
+
+# rpk reference pages live under /reference/rpk/ (mirrors the cloud-data-platform fix above)
+[[redirects]]
+from = "/streaming/:version/rpk/*"
+to = "/streaming/:version/reference/rpk/:splat"
+status = 301
+
+# Data transforms pages live under /develop/data-transforms/
+[[redirects]]
+from = "/streaming/:version/data-transforms/*"
+to = "/streaming/:version/develop/data-transforms/:splat"
+status = 301
+
 # Connect content under cloud-data-platform should go to connect
 [[redirects]]
 from = "/cloud-data-platform/develop/connect/*"
