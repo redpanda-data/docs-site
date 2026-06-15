@@ -57,3 +57,8 @@ asciidoc:
             description: 'Integrate data across systems with hundreds of prebuilt connectors, including AI and change data capture (CDC).'
             urls:
               - url: 'connect:get-started:quickstarts/rpk.adoc'
+          - title: 'Agentic Data Plane'
+            image: adp.svg
+            description: 'Build, deploy, and govern AI agents at scale with enterprise governance, cost controls, and compliance-grade audit trails.'
+            urls:
+              - url: 'agentic-data-plane:home:index.adoc'

@@ -18,25 +18,17 @@ content:
   - url: .
     branches: HEAD
     start_paths: [home, data-platform, self-managed]
-
   - url: https://github.com/redpanda-data/docs
     branches: [main, v/*, shared, 'site-search', '!v-end-of-life/*']
-
   - url: https://github.com/redpanda-data/redpanda-labs
     branches: main
     start_paths: [docs,'*/docs']
-
-  # cloud-docs - WIP feature branch
   - url: https://github.com/redpanda-data/cloud-docs
     branches: main
-
-  # rp-connect-docs - WIP feature branch
   - url: https://github.com/redpanda-data/rp-connect-docs
     branches: main
-
-  # adp-docs - WIP feature branch
-  #- url: https://github.com/redpanda-data/adp-docs
-    #branches: feature/platform-badges
+  - url: https://github.com/redpanda-data/adp-docs
+    branches: main
 ui:
   bundle:
     url: https://github.com/redpanda-data/docs-ui/releases/latest/download/ui-bundle.zip
