@@ -14,7 +14,7 @@
 
 2. **Sitemap**: `{site-url}/sitemap.md` - Contains all documentation pages including this file and all exports. The sitemap index includes `{site-url}/sitemap-llms.md` with all AI-optimized exports.
 
-3. **MCP server**: {site-url}/cloud-data-platform/ai-agents/mcp.md - For Claude Code and MCP-compatible agents, this provides interactive documentation tools.
+3. **MCP server**: {site-url}/agentic-data-plane/connect/mcp-overview.md - For Claude Code and MCP-compatible agents, this provides interactive documentation tools.
 
 ### Static documentation exports
 
@@ -49,7 +49,7 @@ Redpanda docs serve both new and experienced users, offering detailed technical 
 - **{site-url}/streaming.md[Redpanda Streaming]:** Deploy and manage Redpanda in your environment for ultimate control, high performance, and fault tolerance with Kafka compatibility and advanced enterprise features like Tiered Storage.
 - **{site-url}/cloud-data-platform.md[Redpanda Cloud]:** Simplify streaming with a fully-managed service: Serverless, Bring Your Own Cloud (BYOC), or Dedicated. Serverless is the fastest and easiest way to start data streaming. Choose BYOC for full data sovereignty.
 - **{site-url}/connect.md[Redpanda Connect]:** Effortlessly integrate data across systems with hundreds of prebuilt connectors, change data capture (CDC) capabilities, and YAML-configurable workflows. Available as a standalone solution or as part of Redpanda Streaming, Redpanda Connect empowers organizations to build scalable, high-performance data pipelines with minimal complexity.
-- **{site-url}/agentic-data-plane.md[Redpanda Agentic Data Plane]:** Enterprise-grade infrastructure for building, deploying, and governing AI agents at scale. Provides Model Context Protocol (MCP) integration, declarative agent configuration, and compliance-grade audit trails for AI agents that need direct access to databases, queues, and business systems.
+- **{site-url}/agentic-data-plane/get-started/adp-overview.md[Redpanda Agentic Data Plane]:** Enterprise-grade infrastructure for building, deploying, and governing AI agents at scale. Provides Model Context Protocol (MCP) integration, declarative agent configuration, and compliance-grade audit trails for AI agents that need direct access to databases, queues, and business systems.
 - **{site-url}/streaming/current/console.md[Redpanda Console]:** Streamline operations with an intuitive Kafka UI for managing topics, partitions, and consumer groups, providing visibility and control over your data pipeline.
 
 ## Core documentation
@@ -79,11 +79,11 @@ Learn about `rpk`, the comprehensive command-line interface tool for managing Re
 
 Build and deploy production-ready AI agents with enterprise governance and compliance.
 
-- {site-url}/agentic-data-plane/adp-overview.md[Agentic Data Plane Overview]: Enterprise infrastructure for AI agents with built-in governance, observability, and compliance.
-- {site-url}/agentic-data-plane/mcp.md[Model Context Protocol (MCP)]: Give AI agents direct access to databases, queues, CRMs, and business systems without custom integration code.
-- {site-url}/agentic-data-plane/ai-gateway.md[AI Gateway]: Centralized gateway for AI agent interactions with intelligent routing, caching, and cost controls.
-- {site-url}/agentic-data-plane/agents.md[Building AI Agents]: Declarative agent configuration using Redpanda Connect connectors - no custom agent code required.
-- {site-url}/agentic-data-plane/observability.md[Agent Observability]: Track agent decisions, costs, and compliance with comprehensive audit trails.
+- {site-url}/agentic-data-plane/get-started/adp-overview.md[Agentic Data Plane Overview]: Enterprise infrastructure for AI agents with built-in governance, observability, and compliance.
+- {site-url}/agentic-data-plane/connect/mcp-overview.md[Model Context Protocol (MCP)]: Give AI agents direct access to databases, queues, CRMs, and business systems without custom integration code.
+- {site-url}/agentic-data-plane/gateway/overview.md[AI Gateway]: Centralized gateway for AI agent interactions with intelligent routing, caching, and cost controls.
+- {site-url}/agentic-data-plane/connect/agents-overview.md[Building AI Agents]: Declarative agent configuration using Redpanda Connect connectors - no custom agent code required.
+- {site-url}/agentic-data-plane/monitor.md[Agent Observability]: Track agent decisions, costs, and compliance with comprehensive audit trails.
 
 ## API references
 
