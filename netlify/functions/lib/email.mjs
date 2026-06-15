@@ -74,16 +74,17 @@ Keep this token private. If you need it revoked, reply to this email.`
 // the proof the email is real and owned, so the token is NEVER returned in the
 // HTTP response — only here.
 //
-// Dev bypass: outside production with no RESEND_API_KEY, log the token to the
-// console so `netlify dev` works without a provider. In production a missing
-// key is a hard error.
+// Dev bypass: ONLY under `netlify dev`/`functions:serve` (which set
+// NETLIFY_DEV=true) with no RESEND_API_KEY, log the token to the console so
+// local testing works without a provider. In any deployed environment a missing
+// key is a hard error — we never silently log tokens instead of emailing them.
 export async function sendTokenEmail({ to, token }) {
   if (!RESEND_API_KEY) {
-    if (process.env.NODE_ENV === 'production') {
-      throw new Error('RESEND_API_KEY is required in production to deliver MCP tokens')
+    if (process.env.NETLIFY_DEV === 'true') {
+      console.log(`[mcp-register][dev-bypass] token for ${to}: ${token}`)
+      return { ok: true, devBypass: true }
     }
-    console.log(`[mcp-register][dev-bypass] token for ${to}: ${token}`)
-    return { ok: true, devBypass: true }
+    throw new Error('RESEND_API_KEY is required to deliver MCP tokens')
   }
 
   const { text, html } = tokenEmailBody(token)
