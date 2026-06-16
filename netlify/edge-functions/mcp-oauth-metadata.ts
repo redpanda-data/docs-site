@@ -1,17 +1,16 @@
 // OAuth 2.0 Protected Resource Metadata (RFC 9728) for the MCP server.
 // MCP clients (ChatGPT, Claude, Cursor, …) fetch this to discover the
-// authorization server, then run the OAuth login against Redpanda Cloud.
+// authorization server. That AS is OUR OWN service (which federates the human
+// login to the Redpanda Cloud IdP), so authorization_servers points back at
+// this origin, where /.well-known/oauth-authorization-server lives.
 // https://datatracker.ietf.org/doc/html/rfc9728
-
-const AUTH_SERVER =
-  Deno.env.get("REDPANDA_OAUTH_ISSUER") || "https://auth.prd.cloud.redpanda.com/";
 
 export default async (request: Request) => {
   const origin = new URL(request.url).origin;
 
   const metadata = {
     resource: `${origin}/mcp`,
-    authorization_servers: [AUTH_SERVER],
+    authorization_servers: [origin],
     bearer_methods_supported: ["header"],
     scopes_supported: ["openid", "email", "profile"],
     resource_documentation: `${origin}/data-platform/how-to-use-these-docs#authentication`,

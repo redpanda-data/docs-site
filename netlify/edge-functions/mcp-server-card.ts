@@ -23,8 +23,8 @@ export default async (request: Request) => {
       type: "oauth2",
       required: false,
       protected_resource_metadata: `${siteUrl}/.well-known/oauth-protected-resource`,
-      authorization_servers: ["https://auth.prd.cloud.redpanda.com/"],
-      description: "Sign in with your Redpanda Cloud account. MCP clients discover the OAuth flow via the protected-resource metadata and obtain a token automatically."
+      authorization_servers: [siteUrl],
+      description: "Sign in with your Redpanda Cloud account. MCP clients discover the OAuth flow via the protected-resource metadata and obtain a token automatically (this site is the authorization server; it federates login to Redpanda Cloud)."
     },
     metadata: {
       homepage: `${siteUrl}`,

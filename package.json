@@ -21,6 +21,7 @@
     "@modelcontextprotocol/sdk": "1.17.0",
     "@modelfetch/netlify": "0.15.2",
     "@netlify/blobs": "^9.1.6",
+    "jose": "^5.9.6",
     "@redpanda-data/docs-extensions-and-macros": "^5.0.0",
     "@sntke/antora-mermaid-extension": "^0.0.6",
     "algoliasearch": "^5.35.0",

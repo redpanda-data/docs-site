@@ -18,7 +18,7 @@ import { z } from 'zod'
 import handle from '@modelfetch/netlify'
 
 import { extractBearerToken, decideAuth, isAuthEnforced, isWorkEmailRequired } from './lib/auth.mjs'
-import { validateToken } from './lib/idp.mjs'
+import { verifyAccessToken } from './lib/oauth/keys.mjs'
 import { recordUser } from './lib/store.mjs'
 
 import rateLimiterModule from 'hono-rate-limiter'
@@ -653,8 +653,13 @@ const baseHandler = handle({
       const method = c.req.method
       if (method === 'OPTIONS' || method === 'GET') return next()
 
+      // Validate OUR OWN access token (issued by our AS), not the upstream IdP.
+      const origin = new URL(c.req.url).origin
       const token = extractBearerToken(c.req.header('authorization'))
-      const claims = token ? await validateToken(token) : null
+      const verified = token
+        ? await verifyAccessToken(token, { issuer: origin, audience: `${origin}/mcp` })
+        : { valid: false }
+      const claims = verified.valid ? verified.claims : null
 
       const resourceMetadataUrl = new URL('/.well-known/oauth-protected-resource', c.req.url).toString()
       const { allow, userContext, response } = decideAuth({
