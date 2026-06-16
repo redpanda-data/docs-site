@@ -25,10 +25,13 @@ export function buildAuthorizeUrl({ origin, state, redirectUri, codeChallenge })
     u.searchParams.set('code_challenge_method', 'S256')
     return u.toString()
   }
-  const u = new URL(PATHS.mockIdp, origin)
-  u.searchParams.set('state', state)
-  u.searchParams.set('redirect_uri', redirectUri)
-  return u.toString()
+  if (UPSTREAM_MODE === 'mock') {
+    const u = new URL(PATHS.mockIdp, origin)
+    u.searchParams.set('state', state)
+    u.searchParams.set('redirect_uri', redirectUri)
+    return u.toString()
+  }
+  throw new Error('upstream IdP not configured') // fail-closed (see config.resolveUpstreamMode)
 }
 
 // Exchange the upstream code for the user's verified identity claims.
@@ -60,8 +63,11 @@ export async function exchangeCode({ code, codeVerifier, redirectUri }) {
       org_name: payload.org_name || null,
     }
   }
-  // mock: canned verified identity
-  return { sub: 'mock|123', email: 'spike@redpanda.com', email_verified: true, org_id: 'org_mock', org_name: 'Mock Org' }
+  if (UPSTREAM_MODE === 'mock') {
+    // canned verified identity (dev only)
+    return { sub: 'mock|123', email: 'spike@redpanda.com', email_verified: true, org_id: 'org_mock', org_name: 'Mock Org' }
+  }
+  throw new Error('upstream IdP not configured') // fail-closed
 }
 
 export { UPSTREAM_MODE }

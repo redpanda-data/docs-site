@@ -13,7 +13,7 @@ import { getJwks, signAccessToken } from './lib/oauth/keys.mjs'
 import { putAuthRequest, takeAuthRequest, putAuthCode, takeAuthCode } from './lib/oauth/store.mjs'
 import { buildAuthorizeUrl, exchangeCode, UPSTREAM_MODE } from './lib/oauth/upstream.mjs'
 import { verifyChallenge, generatePair } from './lib/oauth/pkce.mjs'
-import { PATHS, SCOPES, ACCESS_TOKEN_TTL_SEC, REQUIRE_WORK_EMAIL, endpoints } from './lib/oauth/config.mjs'
+import { PATHS, SCOPES, ACCESS_TOKEN_TTL_SEC, REQUIRE_WORK_EMAIL, UPSTREAM_MISCONFIGURED, endpoints } from './lib/oauth/config.mjs'
 import { isWorkEmail, emailDomain } from './lib/auth.mjs'
 import { recordUser } from './lib/store.mjs'
 
@@ -56,6 +56,13 @@ export default async (request) => {
   }
 
   if (path === PATHS.jwks) return json(await getJwks())
+
+  // Fail closed: if no real upstream is configured and dev-mock isn't explicitly
+  // allowed (e.g. a prod deploy missing the client_id), refuse the flow rather
+  // than issuing mock identities. Discovery + JWKS above stay available.
+  if (UPSTREAM_MISCONFIGURED) {
+    return json({ error: 'server_error', error_description: 'authorization server upstream not configured' }, 503)
+  }
 
   // -------- /authorize: downstream client starts the flow --------
   if (path === PATHS.authorize) {

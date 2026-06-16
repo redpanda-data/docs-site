@@ -1,6 +1,30 @@
 import { describe, it, expect, beforeAll } from 'vitest'
 import { generateKeyPair, exportJWK, calculateJwkThumbprint } from 'jose'
 import { verifyChallenge, s256, generatePair } from '../netlify/functions/lib/oauth/pkce.mjs'
+import { resolveUpstreamMode } from '../netlify/functions/lib/oauth/config.mjs'
+
+// --- Fail-closed upstream mode resolution ---
+describe('resolveUpstreamMode (fail-closed)', () => {
+  it('unconfigured (prod, no client_id, no dev flag) -> null (refuse)', () => {
+    expect(resolveUpstreamMode({})).toBeNull()
+  })
+  it('client_id present -> auth0', () => {
+    expect(resolveUpstreamMode({ REDPANDA_OAUTH_CLIENT_ID: 'abc' })).toBe('auth0')
+  })
+  it('mock only under an explicit dev signal', () => {
+    expect(resolveUpstreamMode({ NETLIFY_DEV: 'true' })).toBe('mock')
+    expect(resolveUpstreamMode({ MCP_OAUTH_ALLOW_MOCK: 'true' })).toBe('mock')
+  })
+  it('explicit mock without the dev signal -> null (no silent prod mock)', () => {
+    expect(resolveUpstreamMode({ MCP_OAUTH_UPSTREAM: 'mock' })).toBeNull()
+  })
+  it('explicit auth0 without a client_id -> null', () => {
+    expect(resolveUpstreamMode({ MCP_OAUTH_UPSTREAM: 'auth0' })).toBeNull()
+  })
+  it('client_id wins even with dev flag set', () => {
+    expect(resolveUpstreamMode({ REDPANDA_OAUTH_CLIENT_ID: 'abc', NETLIFY_DEV: 'true' })).toBe('auth0')
+  })
+})
 
 // --- PKCE ---
 describe('PKCE (S256)', () => {
