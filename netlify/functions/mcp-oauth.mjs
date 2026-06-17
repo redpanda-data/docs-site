@@ -13,6 +13,7 @@ import { getJwks, signAccessToken } from './lib/oauth/keys.mjs'
 import { putAuthRequest, takeAuthRequest, putAuthCode, takeAuthCode } from './lib/oauth/store.mjs'
 import { buildAuthorizeUrl, exchangeCode, UPSTREAM_MODE } from './lib/oauth/upstream.mjs'
 import { verifyChallenge, generatePair } from './lib/oauth/pkce.mjs'
+import { registerClient, getClient, redirectUriAllowed } from './lib/oauth/clients.mjs'
 import { PATHS, SCOPES, ACCESS_TOKEN_TTL_SEC, REQUIRE_WORK_EMAIL, UPSTREAM_MISCONFIGURED, endpoints } from './lib/oauth/config.mjs'
 import { isWorkEmail, emailDomain } from './lib/auth.mjs'
 import { recordUser } from './lib/store.mjs'
@@ -47,15 +48,28 @@ export default async (request) => {
       authorization_endpoint: ep.authorization_endpoint,
       token_endpoint: ep.token_endpoint,
       jwks_uri: ep.jwks_uri,
+      registration_endpoint: ep.registration_endpoint,
       response_types_supported: ['code'],
       grant_types_supported: ['authorization_code'], // + refresh_token (M3)
       code_challenge_methods_supported: ['S256'],
       token_endpoint_auth_methods_supported: ['none'],
       scopes_supported: SCOPES,
+      client_id_metadata_document_supported: true, // CIMD (clients may use a URL client_id)
     })
   }
 
   if (path === PATHS.jwks) return json(await getJwks())
+
+  // -------- /register: Dynamic Client Registration (RFC 7591) --------
+  if (path === PATHS.register && request.method === 'POST') {
+    const meta = await request.json().catch(() => null)
+    if (!meta) return json({ error: 'invalid_client_metadata', error_description: 'JSON body required' }, 400)
+    try {
+      return json(await registerClient(meta), 201)
+    } catch (e) {
+      return json({ error: e.code || 'invalid_client_metadata', error_description: e.message }, 400)
+    }
+  }
 
   // Fail closed: if no real upstream is configured and dev-mock isn't explicitly
   // allowed (e.g. a prod deploy missing the client_id), refuse the flow rather
@@ -70,6 +84,16 @@ export default async (request) => {
     const redirectUri = q.get('redirect_uri')
     const codeChallenge = q.get('code_challenge')
     if (!clientId || !redirectUri) return json({ error: 'invalid_request', error_description: 'client_id and redirect_uri required' }, 400)
+
+    // Resolve + validate the client and redirect_uri BEFORE any redirect — never
+    // redirect to an unvalidated URI (open-redirect / code-injection guard).
+    const client = await getClient(clientId)
+    if (!client) return json({ error: 'invalid_client', error_description: 'unknown client_id (register via DCR or use a CIMD URL)' }, 400)
+    if (!redirectUriAllowed(client, redirectUri)) {
+      return json({ error: 'invalid_request', error_description: 'redirect_uri not registered for this client' }, 400)
+    }
+
+    // redirect_uri is now trusted, so PKCE errors may be returned to it.
     if (!codeChallenge || q.get('code_challenge_method') !== 'S256') {
       return clientError(redirectUri, q.get('state'), 'invalid_request', 'PKCE S256 required')
     }
@@ -140,6 +164,11 @@ export default async (request) => {
     if (body.grant_type !== 'authorization_code') return json({ error: 'unsupported_grant_type' }, 400)
     const rec = await takeAuthCode(body.code)
     if (!rec) return json({ error: 'invalid_grant', error_description: 'invalid or used code' }, 400)
+    // Bind the code to the client it was issued to (public clients don't
+    // authenticate, so this prevents a code being redeemed by another client_id).
+    if (body.client_id && body.client_id !== rec.clientId) {
+      return json({ error: 'invalid_grant', error_description: 'client_id mismatch' }, 400)
+    }
     if (body.redirect_uri !== rec.clientRedirectUri) return json({ error: 'invalid_grant', error_description: 'redirect_uri mismatch' }, 400)
     if (!verifyChallenge(body.code_verifier, rec.clientCodeChallenge)) {
       return json({ error: 'invalid_grant', error_description: 'PKCE verification failed' }, 400)
@@ -165,6 +194,7 @@ export const config = {
     '/.well-known/jwks.json',
     '/oauth/authorize',
     '/oauth/token',
+    '/oauth/register',
     '/mcp/callback',
     '/oauth/mock-idp/authorize',
   ],

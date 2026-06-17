@@ -15,6 +15,7 @@ import { AUTH_REQUEST_TTL_SEC, AUTH_CODE_TTL_SEC } from './config.mjs'
 const STORE = 'mcp-oauth'
 const AR = (id) => `ar:${id}` // auth request
 const AC = (code) => `ac:${code}` // authorization code
+const CL = (id) => `client:${id}` // DCR-registered client
 
 function store() {
   // STRONG consistency is required: auth codes and refresh tokens are one-time
@@ -52,4 +53,21 @@ export async function takeAuthCode(code) {
   if (expired(rec) || rec.used) return null
   await store().delete(key).catch(() => {}) // one-time use
   return rec
+}
+
+// --- DCR-registered clients (persistent; no TTL) ---
+export async function putClient(client) {
+  await store().setJSON(CL(client.client_id), client)
+  return client
+}
+
+export async function getStoredClient(clientId) {
+  if (!clientId) return null
+  // Resilient: a store error (e.g. Blobs unavailable) resolves to "unknown
+  // client" rather than crashing the /authorize handler.
+  try {
+    return await store().get(CL(clientId), { type: 'json' })
+  } catch {
+    return null
+  }
 }

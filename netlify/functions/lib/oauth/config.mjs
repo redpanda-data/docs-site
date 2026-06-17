@@ -7,6 +7,7 @@ export const PATHS = {
   jwks: '/.well-known/jwks.json',
   authorize: '/oauth/authorize',
   token: '/oauth/token',
+  register: '/oauth/register', // RFC 7591 Dynamic Client Registration
   callback: '/mcp/callback', // matches the redirect URI registered in Auth0
   mockIdp: '/oauth/mock-idp/authorize', // dev only
 }
@@ -50,6 +51,7 @@ export function endpoints(origin) {
     issuer: origin,
     authorization_endpoint: `${origin}${PATHS.authorize}`,
     token_endpoint: `${origin}${PATHS.token}`,
+    registration_endpoint: `${origin}${PATHS.register}`,
     jwks_uri: `${origin}${PATHS.jwks}`,
     callback_uri: `${origin}${PATHS.callback}`,
   }
