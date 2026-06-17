@@ -156,7 +156,17 @@ export default async (request) => {
   return json({ error: 'not_found', path }, 404)
 }
 
+// NOTE: Netlify statically analyzes `config.path` at bundle time, so these MUST
+// be literal strings (not imported constants). Keep in sync with PATHS in
+// lib/oauth/config.mjs.
 export const config = {
-  path: [PATHS.metadata, PATHS.jwks, PATHS.authorize, PATHS.token, PATHS.callback, PATHS.mockIdp],
+  path: [
+    '/.well-known/oauth-authorization-server',
+    '/.well-known/jwks.json',
+    '/oauth/authorize',
+    '/oauth/token',
+    '/mcp/callback',
+    '/oauth/mock-idp/authorize',
+  ],
   preferStatic: false,
 }
