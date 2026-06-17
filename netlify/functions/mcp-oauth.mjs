@@ -19,6 +19,7 @@ import { verifyChallenge, generatePair } from './lib/oauth/pkce.mjs'
 import { registerClient, getClient, redirectUriAllowed } from './lib/oauth/clients.mjs'
 import { hashRefresh, newRefreshToken, newFamilyId, decideRefresh } from './lib/oauth/refresh.mjs'
 import { loginInterstitialHtml } from './lib/oauth/pages.mjs'
+import { allowRegister, clientIp } from './lib/oauth/ratelimit.mjs'
 import { PATHS, SCOPES, ACCESS_TOKEN_TTL_SEC, REFRESH_TOKEN_TTL_SEC, REQUIRE_WORK_EMAIL, UPSTREAM_MISCONFIGURED, SIGNUP_URL, LOGIN_INTERSTITIAL, endpoints } from './lib/oauth/config.mjs'
 import { isWorkEmail, emailDomain } from './lib/auth.mjs'
 import { recordUser } from './lib/store.mjs'
@@ -69,6 +70,10 @@ export default async (request) => {
 
   // -------- /register: Dynamic Client Registration (RFC 7591) --------
   if (path === PATHS.register && request.method === 'POST') {
+    const rl = await allowRegister(clientIp(request))
+    if (!rl.allowed) {
+      return json({ error: 'rate_limited', error_description: 'too many registrations; try again later' }, 429)
+    }
     const meta = await request.json().catch(() => null)
     if (!meta) return json({ error: 'invalid_client_metadata', error_description: 'JSON body required' }, 400)
     try {
