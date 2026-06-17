@@ -18,7 +18,8 @@ import { buildAuthorizeUrl, exchangeCode, UPSTREAM_MODE } from './lib/oauth/upst
 import { verifyChallenge, generatePair } from './lib/oauth/pkce.mjs'
 import { registerClient, getClient, redirectUriAllowed } from './lib/oauth/clients.mjs'
 import { hashRefresh, newRefreshToken, newFamilyId, decideRefresh } from './lib/oauth/refresh.mjs'
-import { PATHS, SCOPES, ACCESS_TOKEN_TTL_SEC, REFRESH_TOKEN_TTL_SEC, REQUIRE_WORK_EMAIL, UPSTREAM_MISCONFIGURED, endpoints } from './lib/oauth/config.mjs'
+import { loginInterstitialHtml } from './lib/oauth/pages.mjs'
+import { PATHS, SCOPES, ACCESS_TOKEN_TTL_SEC, REFRESH_TOKEN_TTL_SEC, REQUIRE_WORK_EMAIL, UPSTREAM_MISCONFIGURED, SIGNUP_URL, LOGIN_INTERSTITIAL, endpoints } from './lib/oauth/config.mjs'
 import { isWorkEmail, emailDomain } from './lib/auth.mjs'
 import { recordUser } from './lib/store.mjs'
 
@@ -27,6 +28,8 @@ const json = (body, status = 200) =>
     status,
     headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' },
   })
+const html = (body, status = 200) =>
+  new Response(body, { status, headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' } })
 const redirect = (location) => new Response(null, { status: 302, headers: { Location: location } })
 
 // Send an OAuth error back to the downstream client's redirect_uri.
@@ -111,9 +114,15 @@ export default async (request) => {
       upstreamVerifier: upstream.verifier,
     })
 
-    return redirect(
-      buildAuthorizeUrl({ origin, state: reqId, redirectUri: ep.callback_uri, codeChallenge: upstream.challenge })
-    )
+    const upstreamUrl = buildAuthorizeUrl({ origin, state: reqId, redirectUri: ep.callback_uri, codeChallenge: upstream.challenge })
+
+    // Interstitial: show a "Continue / Sign up" page (so users without a Cloud
+    // account get a signup link) before bouncing to the IdP. Disable with
+    // MCP_OAUTH_INTERSTITIAL=off to redirect straight through.
+    if (LOGIN_INTERSTITIAL) {
+      return html(loginInterstitialHtml({ continueUrl: upstreamUrl, signupUrl: SIGNUP_URL }))
+    }
+    return redirect(upstreamUrl)
   }
 
   // -------- Dev-only mock upstream --------

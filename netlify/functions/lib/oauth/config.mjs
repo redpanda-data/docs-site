@@ -43,6 +43,13 @@ export const AUTH0_ISSUER = process.env.REDPANDA_OAUTH_ISSUER || 'https://auth.p
 export const AUTH0_CLIENT_ID = process.env.REDPANDA_OAUTH_CLIENT_ID // public client, no secret
 export const REQUIRE_WORK_EMAIL = process.env.REQUIRE_WORK_EMAIL !== 'false'
 
+// Login interstitial (shown at /authorize before redirecting to the IdP). It
+// carries the "Sign up at cloud.redpanda.com" link for users without an account.
+// Set MCP_OAUTH_INTERSTITIAL=off to redirect straight to the IdP (e.g. once the
+// signup link lives on the Auth0 login page instead).
+export const SIGNUP_URL = process.env.MCP_OAUTH_SIGNUP_URL || 'https://cloud.redpanda.com'
+export const LOGIN_INTERSTITIAL = process.env.MCP_OAUTH_INTERSTITIAL !== 'off'
+
 // AS issuer = the public origin of the request (e.g. https://docs.redpanda.com).
 export function issuerFor(origin) {
   return origin
