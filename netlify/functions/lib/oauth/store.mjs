@@ -16,6 +16,8 @@ const STORE = 'mcp-oauth'
 const AR = (id) => `ar:${id}` // auth request
 const AC = (code) => `ac:${code}` // authorization code
 const CL = (id) => `client:${id}` // DCR-registered client
+const RT = (h) => `rt:${h}` // refresh token (by hash)
+const RTF = (id) => `rtf:${id}` // refresh-token family
 
 function store() {
   // STRONG consistency is required: auth codes and refresh tokens are one-time
@@ -70,4 +72,28 @@ export async function getStoredClient(clientId) {
   } catch {
     return null
   }
+}
+
+// --- refresh tokens (by hash) + families ---
+export async function putRefresh(hash, rec) {
+  await store().setJSON(RT(hash), rec)
+}
+export async function getRefresh(hash) {
+  if (!hash) return null
+  return store().get(RT(hash), { type: 'json' }).catch(() => null)
+}
+export async function markRefreshUsed(hash) {
+  const rec = await getRefresh(hash)
+  if (rec) await store().setJSON(RT(hash), { ...rec, used: true })
+}
+export async function putFamily(id, rec) {
+  await store().setJSON(RTF(id), rec)
+}
+export async function getFamily(id) {
+  if (!id) return null
+  return store().get(RTF(id), { type: 'json' }).catch(() => null)
+}
+export async function revokeFamily(id) {
+  const fam = (await getFamily(id)) || {}
+  await store().setJSON(RTF(id), { ...fam, revoked: true, revokedAt: Date.now() })
 }

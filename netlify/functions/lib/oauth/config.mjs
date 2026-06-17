@@ -14,6 +14,7 @@ export const PATHS = {
 
 export const SCOPES = ['openid', 'email', 'profile']
 export const ACCESS_TOKEN_TTL_SEC = Number(process.env.MCP_OAUTH_ACCESS_TTL || 3600)
+export const REFRESH_TOKEN_TTL_SEC = Number(process.env.MCP_OAUTH_REFRESH_TTL || 30 * 24 * 3600) // 30d
 export const AUTH_REQUEST_TTL_SEC = 600
 export const AUTH_CODE_TTL_SEC = 60
 

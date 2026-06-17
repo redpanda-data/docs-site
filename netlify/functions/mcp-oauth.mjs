@@ -10,11 +10,15 @@
 // consent screen, revocation.
 
 import { getJwks, signAccessToken } from './lib/oauth/keys.mjs'
-import { putAuthRequest, takeAuthRequest, putAuthCode, takeAuthCode } from './lib/oauth/store.mjs'
+import {
+  putAuthRequest, takeAuthRequest, putAuthCode, takeAuthCode,
+  putRefresh, getRefresh, markRefreshUsed, putFamily, getFamily, revokeFamily,
+} from './lib/oauth/store.mjs'
 import { buildAuthorizeUrl, exchangeCode, UPSTREAM_MODE } from './lib/oauth/upstream.mjs'
 import { verifyChallenge, generatePair } from './lib/oauth/pkce.mjs'
 import { registerClient, getClient, redirectUriAllowed } from './lib/oauth/clients.mjs'
-import { PATHS, SCOPES, ACCESS_TOKEN_TTL_SEC, REQUIRE_WORK_EMAIL, UPSTREAM_MISCONFIGURED, endpoints } from './lib/oauth/config.mjs'
+import { hashRefresh, newRefreshToken, newFamilyId, decideRefresh } from './lib/oauth/refresh.mjs'
+import { PATHS, SCOPES, ACCESS_TOKEN_TTL_SEC, REFRESH_TOKEN_TTL_SEC, REQUIRE_WORK_EMAIL, UPSTREAM_MISCONFIGURED, endpoints } from './lib/oauth/config.mjs'
 import { isWorkEmail, emailDomain } from './lib/auth.mjs'
 import { recordUser } from './lib/store.mjs'
 
@@ -50,7 +54,7 @@ export default async (request) => {
       jwks_uri: ep.jwks_uri,
       registration_endpoint: ep.registration_endpoint,
       response_types_supported: ['code'],
-      grant_types_supported: ['authorization_code'], // + refresh_token (M3)
+      grant_types_supported: ['authorization_code', 'refresh_token'],
       code_challenge_methods_supported: ['S256'],
       token_endpoint_auth_methods_supported: ['none'],
       scopes_supported: SCOPES,
@@ -161,25 +165,64 @@ export default async (request) => {
       ? await request.json().catch(() => ({}))
       : Object.fromEntries(new URLSearchParams(await request.text()))
 
-    if (body.grant_type !== 'authorization_code') return json({ error: 'unsupported_grant_type' }, 400)
-    const rec = await takeAuthCode(body.code)
-    if (!rec) return json({ error: 'invalid_grant', error_description: 'invalid or used code' }, 400)
-    // Bind the code to the client it was issued to (public clients don't
-    // authenticate, so this prevents a code being redeemed by another client_id).
-    if (body.client_id && body.client_id !== rec.clientId) {
-      return json({ error: 'invalid_grant', error_description: 'client_id mismatch' }, 400)
-    }
-    if (body.redirect_uri !== rec.clientRedirectUri) return json({ error: 'invalid_grant', error_description: 'redirect_uri mismatch' }, 400)
-    if (!verifyChallenge(body.code_verifier, rec.clientCodeChallenge)) {
-      return json({ error: 'invalid_grant', error_description: 'PKCE verification failed' }, 400)
+    const audience = `${origin}/mcp`
+    const mintAccess = (u, scope) =>
+      signAccessToken(
+        { sub: u.sub, email: u.email, email_verified: u.email_verified, org_id: u.org_id, org_name: u.org_name, scope },
+        { issuer: ep.issuer, audience, ttlSec: ACCESS_TOKEN_TTL_SEC }
+      )
+    const issueRefresh = async (familyId, clientId, user, scope) => {
+      const { token, hash } = newRefreshToken()
+      await putRefresh(hash, { familyId, clientId, user, scope, used: false, expiresAt: Date.now() + REFRESH_TOKEN_TTL_SEC * 1000 })
+      return token
     }
 
-    const u = rec.user
-    const access_token = await signAccessToken(
-      { sub: u.sub, email: u.email, email_verified: u.email_verified, org_id: u.org_id, org_name: u.org_name, scope: SCOPES.join(' ') },
-      { issuer: ep.issuer, audience: `${origin}/mcp`, ttlSec: ACCESS_TOKEN_TTL_SEC }
-    )
-    return json({ access_token, token_type: 'Bearer', expires_in: ACCESS_TOKEN_TTL_SEC, scope: SCOPES.join(' ') })
+    // ---- authorization_code grant ----
+    if (body.grant_type === 'authorization_code') {
+      const rec = await takeAuthCode(body.code)
+      if (!rec) return json({ error: 'invalid_grant', error_description: 'invalid or used code' }, 400)
+      // Bind the code to the client it was issued to (public clients don't
+      // authenticate, so this prevents a code being redeemed by another client_id).
+      if (body.client_id && body.client_id !== rec.clientId) {
+        return json({ error: 'invalid_grant', error_description: 'client_id mismatch' }, 400)
+      }
+      if (body.redirect_uri !== rec.clientRedirectUri) return json({ error: 'invalid_grant', error_description: 'redirect_uri mismatch' }, 400)
+      if (!verifyChallenge(body.code_verifier, rec.clientCodeChallenge)) {
+        return json({ error: 'invalid_grant', error_description: 'PKCE verification failed' }, 400)
+      }
+
+      const scope = SCOPES.join(' ')
+      const access_token = await mintAccess(rec.user, scope)
+      const familyId = newFamilyId()
+      await putFamily(familyId, { revoked: false, clientId: rec.clientId, createdAt: Date.now() })
+      const refresh_token = await issueRefresh(familyId, rec.clientId, rec.user, scope)
+      return json({ access_token, token_type: 'Bearer', expires_in: ACCESS_TOKEN_TTL_SEC, scope, refresh_token })
+    }
+
+    // ---- refresh_token grant (rotation + reuse detection) ----
+    if (body.grant_type === 'refresh_token') {
+      if (!body.refresh_token) return json({ error: 'invalid_request', error_description: 'refresh_token required' }, 400)
+      const oldHash = hashRefresh(body.refresh_token)
+      const record = await getRefresh(oldHash)
+      const family = record ? await getFamily(record.familyId) : null
+      const decision = decideRefresh({ record, family, nowMs: Date.now() })
+
+      if (decision.action === 'reuse') {
+        await revokeFamily(record.familyId) // theft signal — kill the whole session
+        return json({ error: 'invalid_grant', error_description: 'refresh token reuse detected; session revoked' }, 400)
+      }
+      if (decision.action === 'invalid') return json({ error: 'invalid_grant', error_description: decision.reason }, 400)
+      if (body.client_id && body.client_id !== record.clientId) {
+        return json({ error: 'invalid_grant', error_description: 'client_id mismatch' }, 400)
+      }
+
+      await markRefreshUsed(oldHash) // rotate: supersede the presented token
+      const refresh_token = await issueRefresh(record.familyId, record.clientId, record.user, record.scope)
+      const access_token = await mintAccess(record.user, record.scope)
+      return json({ access_token, token_type: 'Bearer', expires_in: ACCESS_TOKEN_TTL_SEC, scope: record.scope, refresh_token })
+    }
+
+    return json({ error: 'unsupported_grant_type' }, 400)
   }
 
   return json({ error: 'not_found', path }, 404)
