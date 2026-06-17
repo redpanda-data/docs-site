@@ -41,7 +41,9 @@ async function loadKeys() {
   }
 
   // Dev: persist a generated key in Blobs so it survives warm invocations.
-  const store = getStore(KEY_STORE)
+  // Strong consistency so a second function (e.g. the resource server reading
+  // the key the AS just wrote) sees it immediately rather than regenerating.
+  const store = getStore({ name: KEY_STORE, consistency: 'strong' })
   let stored = await store.get(KEY_NAME, { type: 'json' }).catch(() => null)
   if (!stored) {
     stored = await generate()

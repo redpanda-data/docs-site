@@ -17,7 +17,11 @@ const AR = (id) => `ar:${id}` // auth request
 const AC = (code) => `ac:${code}` // authorization code
 
 function store() {
-  return getStore(STORE)
+  // STRONG consistency is required: auth codes and refresh tokens are one-time
+  // use, and Blobs' default eventual consistency propagates deletes/updates over
+  // up to 60s — long enough for a consumed code/token to be replayed in that
+  // window. Strong reads come from the origin region (fine at our volume).
+  return getStore({ name: STORE, consistency: 'strong' })
 }
 const expired = (rec) => !rec || Date.now() > rec.expiresAt
 
