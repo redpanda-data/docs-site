@@ -10,6 +10,14 @@ import { putClient, getStoredClient } from './store.mjs'
 const CIMD_FETCH_TIMEOUT_MS = 5_000
 const CIMD_MAX_BYTES = 32_000
 
+// Short in-process cache of resolved CIMD clients (and negatives), so /authorize
+// doesn't re-fetch the same client_id URL on every call. Bounded to cap memory
+// against a flood of distinct URLs; /authorize also rate-limits CIMD resolution.
+const CIMD_CACHE_TTL_MS = 5 * 60 * 1000
+const CIMD_NEG_TTL_MS = 30_000
+const CIMD_CACHE_MAX = 500
+const cimdCache = new Map() // clientId -> { client, exp }
+
 export function isCimdClientId(clientId) {
   return typeof clientId === 'string' && clientId.startsWith('https://')
 }
@@ -108,15 +116,46 @@ export function validateCimdDocument(clientId, doc) {
   return normalizeClientMetadata(doc)
 }
 
+// Read a response body with a hard byte cap, streaming so we never buffer a
+// huge/slow body. Falls back to text() for mocked responses without a stream.
+async function readCapped(res, maxBytes) {
+  const declared = Number(res.headers?.get?.('content-length') || 0)
+  if (declared > maxBytes) throw new Error('CIMD metadata too large')
+  if (res.body && typeof res.body.getReader === 'function') {
+    const reader = res.body.getReader()
+    const chunks = []
+    let total = 0
+    for (;;) {
+      const { done, value } = await reader.read()
+      if (done) break
+      total += value.byteLength
+      if (total > maxBytes) {
+        try { await reader.cancel() } catch { /* ignore */ }
+        throw new Error('CIMD metadata too large')
+      }
+      chunks.push(Buffer.from(value))
+    }
+    return Buffer.concat(chunks).toString('utf8')
+  }
+  const text = await res.text()
+  if (Buffer.byteLength(text, 'utf8') > maxBytes) throw new Error('CIMD metadata too large')
+  return text
+}
+
 async function fetchCimdClient(clientId, fetchImpl = fetch) {
   assertSafeCimdUrl(clientId)
   const controller = new AbortController()
   const t = setTimeout(() => controller.abort(), CIMD_FETCH_TIMEOUT_MS)
   try {
-    const res = await fetchImpl(clientId, { headers: { Accept: 'application/json' }, signal: controller.signal })
+    const res = await fetchImpl(clientId, {
+      headers: { Accept: 'application/json' },
+      signal: controller.signal,
+      // SSRF: do NOT follow redirects — the initial host passed assertSafeCimdUrl,
+      // but a redirect Location is unvalidated and could point at an internal host.
+      redirect: 'error',
+    })
     if (!res.ok) throw new Error(`CIMD fetch failed: ${res.status}`)
-    const text = (await res.text()).slice(0, CIMD_MAX_BYTES)
-    const doc = JSON.parse(text)
+    const doc = JSON.parse(await readCapped(res, CIMD_MAX_BYTES))
     return { client_id: clientId, ...validateCimdDocument(clientId, doc) }
   } finally {
     clearTimeout(t)
@@ -127,7 +166,13 @@ async function fetchCimdClient(clientId, fetchImpl = fetch) {
 export async function getClient(clientId, { fetchImpl } = {}) {
   if (!clientId) return null
   if (isCimdClientId(clientId)) {
-    try { return await fetchCimdClient(clientId, fetchImpl) } catch { return null }
+    const hit = cimdCache.get(clientId)
+    if (hit && hit.exp > Date.now()) return hit.client
+    let client = null
+    try { client = await fetchCimdClient(clientId, fetchImpl) } catch { client = null }
+    if (cimdCache.size > CIMD_CACHE_MAX) cimdCache.clear()
+    cimdCache.set(clientId, { client, exp: Date.now() + (client ? CIMD_CACHE_TTL_MS : CIMD_NEG_TTL_MS) })
+    return client
   }
   return getStoredClient(clientId)
 }

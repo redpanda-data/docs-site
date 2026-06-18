@@ -310,7 +310,7 @@ If you exceed the limit, you receive an HTTP 429 response with rate limit header
 [source,text]
 ----
 HTTP 429 Too Many Requests
-RateLimit-Limit: 40
+RateLimit-Limit: 60
 RateLimit-Remaining: 0
 RateLimit-Reset: <timestamp>
 ----

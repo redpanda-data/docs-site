@@ -16,10 +16,10 @@ import {
 } from './lib/oauth/store.mjs'
 import { buildAuthorizeUrl, exchangeCode, UPSTREAM_MODE } from './lib/oauth/upstream.mjs'
 import { verifyChallenge, generatePair } from './lib/oauth/pkce.mjs'
-import { registerClient, getClient, redirectUriAllowed } from './lib/oauth/clients.mjs'
+import { registerClient, getClient, redirectUriAllowed, isCimdClientId } from './lib/oauth/clients.mjs'
 import { hashRefresh, newRefreshToken, newFamilyId, decideRefresh } from './lib/oauth/refresh.mjs'
 import { loginInterstitialHtml } from './lib/oauth/pages.mjs'
-import { allowRegister, clientIp } from './lib/oauth/ratelimit.mjs'
+import { allowRegister, allowCimd, clientIp } from './lib/oauth/ratelimit.mjs'
 import { PATHS, SCOPES, ACCESS_TOKEN_TTL_SEC, REFRESH_TOKEN_TTL_SEC, REQUIRE_WORK_EMAIL, UPSTREAM_MISCONFIGURED, SIGNUP_URL, LOGIN_INTERSTITIAL, endpoints } from './lib/oauth/config.mjs'
 import { isWorkEmail, emailDomain } from './lib/auth.mjs'
 import { recordUser } from './lib/store.mjs'
@@ -115,6 +115,11 @@ export default async (request) => {
 
     // Resolve + validate the client and redirect_uri BEFORE any redirect — never
     // redirect to an unvalidated URI (open-redirect / code-injection guard).
+    // CIMD resolution makes an outbound fetch, so rate-limit it per IP (the
+    // resolved result is also cached in getClient).
+    if (isCimdClientId(clientId) && !(await allowCimd(clientIp(request))).allowed) {
+      return json({ error: 'rate_limited', error_description: 'too many client-resolution requests; try again later' }, 429)
+    }
     const client = await getClient(clientId)
     if (!client) return json({ error: 'invalid_client', error_description: 'unknown client_id (register via DCR or use a CIMD URL)' }, 400)
     if (!redirectUriAllowed(client, redirectUri)) {
@@ -172,8 +177,9 @@ export default async (request) => {
       return clientError(authReq.clientRedirectUri, authReq.clientState, 'access_denied', 'A work account is required')
     }
 
-    // Lead capture (best-effort, non-blocking).
-    recordUser({ sub: user.sub, email: user.email, domain }).catch(() => {})
+    // Lead capture (best-effort, non-blocking). We capture email_verified rather
+    // than blocking on it — SSO logins often omit it (see recordUser).
+    recordUser({ sub: user.sub, email: user.email, domain, emailVerified: user.email_verified === true }).catch(() => {})
 
     const code = await putAuthCode({
       clientId: authReq.clientId,

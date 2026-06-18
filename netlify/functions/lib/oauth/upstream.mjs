@@ -54,6 +54,7 @@ export async function exchangeCode({ code, codeVerifier, redirectUri }) {
     const { payload } = await jwtVerify(tok.id_token, auth0Jwks(), {
       issuer: AUTH0_ISSUER,
       audience: AUTH0_CLIENT_ID,
+      algorithms: ['RS256'], // Auth0 ID tokens are RS256; pin it (defense-in-depth)
     })
     return {
       sub: payload.sub,

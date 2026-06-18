@@ -24,6 +24,14 @@ function store() {
   // use, and Blobs' default eventual consistency propagates deletes/updates over
   // up to 60s — long enough for a consumed code/token to be replayed in that
   // window. Strong reads come from the origin region (fine at our volume).
+  //
+  // KNOWN LIMITATION (until the Neon/Postgres backend lands): one-time-use here
+  // is read-then-delete, and Blobs has no compare-and-swap, so two *simultaneous*
+  // requests with the same auth code (or refresh token) can both observe it as
+  // unused before either deletes/marks it — and for refresh tokens a concurrent
+  // legit+stolen use inside that window would both rotate without tripping family
+  // revocation. Narrow window (60s code TTL, PKCE-bound). The DB backend fixes it
+  // with a transactional `UPDATE … WHERE used = false`.
   return getStore({ name: STORE, consistency: 'strong' })
 }
 const expired = (rec) => !rec || Date.now() > rec.expiresAt

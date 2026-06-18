@@ -76,7 +76,8 @@ export async function verifyAccessToken(token, { issuer, audience }) {
   const { publicJwk } = await loadKeys()
   const publicKey = await importJWK(publicJwk, ALG)
   try {
-    const { payload } = await jwtVerify(token, publicKey, { issuer, audience })
+    // Pin RS256 (defense-in-depth against alg-confusion, on top of the RSA key).
+    const { payload } = await jwtVerify(token, publicKey, { issuer, audience, algorithms: [ALG] })
     return { valid: true, claims: payload }
   } catch (e) {
     return { valid: false, error: e?.code || e?.message || 'invalid_token' }

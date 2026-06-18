@@ -73,4 +73,25 @@ describe('getClient (CIMD fetch with injected fetch)', () => {
     }
     expect(spy).not.toHaveBeenCalled() // never even fetched
   })
+  it('rejects an oversized CIMD doc declared via content-length -> null', async () => {
+    const url = 'https://big.example/oauth-client.json'
+    const fetchImpl = vi.fn(async () => ({
+      ok: true,
+      headers: { get: (h: string) => (h === 'content-length' ? '999999999' : null) },
+      text: async () => '{}',
+    }))
+    expect(await getClient(url, { fetchImpl })).toBeNull()
+  })
+  it('rejects an oversized CIMD doc with no content-length (streamed cap) -> null', async () => {
+    const url = 'https://big2.example/oauth-client.json'
+    const huge = 'x'.repeat(200_000)
+    const fetchImpl = vi.fn(async () => ({ ok: true, headers: { get: () => null }, text: async () => huge }))
+    expect(await getClient(url, { fetchImpl })).toBeNull()
+  })
+  it('a CIMD fetch that errors (e.g. blocked redirect) -> null, not a throw', async () => {
+    const fetchImpl = vi.fn(async () => {
+      throw new Error('redirect blocked')
+    })
+    expect(await getClient('https://redir.example/oauth-client.json', { fetchImpl })).toBeNull()
+  })
 })

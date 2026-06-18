@@ -14,7 +14,10 @@ function store() {
 
 // Record an authenticated user. Best-effort and idempotent: dedupes by `sub`
 // (falling back to email). Call fire-and-forget — never block the request.
-export async function recordUser({ sub, email, domain }) {
+// We record (don't block on) emailVerified: enterprise/SSO logins often omit it,
+// so blocking would lock out legitimate users. Capturing the flag lets downstream
+// (CRM / lead scoring) distinguish verified emails when needed.
+export async function recordUser({ sub, email, domain, emailVerified = false }) {
   const key = sub || email
   if (!key) return
 
@@ -23,20 +26,20 @@ export async function recordUser({ sub, email, domain }) {
   const isNew = !existing
 
   const record = isNew
-    ? { sub, email, domain, firstSeenAt: now, lastSeenAt: now, requestCount: 1 }
-    : { ...existing, email, domain, lastSeenAt: now, requestCount: (existing.requestCount || 0) + 1 }
+    ? { sub, email, domain, emailVerified, firstSeenAt: now, lastSeenAt: now, requestCount: 1 }
+    : { ...existing, email, domain, emailVerified, lastSeenAt: now, requestCount: (existing.requestCount || 0) + 1 }
 
   await store().setJSON(key, record).catch((e) =>
     console.warn('[store] recordUser write failed', { error: e?.message })
   )
 
   if (isNew) {
-    console.log(JSON.stringify({ event: 'mcp_user_captured', domain, sub, ts: now }))
+    console.log(JSON.stringify({ event: 'mcp_user_captured', domain, sub, emailVerified, ts: now }))
     if (process.env.CRM_WEBHOOK_URL) {
       fetch(process.env.CRM_WEBHOOK_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, domain, sub, source: 'mcp', timestamp: now }),
+        body: JSON.stringify({ email, domain, sub, emailVerified, source: 'mcp', timestamp: now }),
       }).catch((e) => console.warn('[store] CRM webhook failed', { error: e?.message }))
     }
   }

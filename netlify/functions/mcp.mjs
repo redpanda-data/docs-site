@@ -1,9 +1,13 @@
 // Redpanda Docs MCP Server on Netlify Functions
 // -----------------------------------------------
-// This serverless function implements an authless MCP (Model Context Protocol) server
+// This serverless function implements the MCP (Model Context Protocol) server
 // that proxies requests to Kapa AI's chat and search APIs for Redpanda documentation.
 // It uses the official MCP SDK plus the Netlify adapter (modelfetch) to support
 // JSON-RPC over HTTP and SSE streaming.
+//
+// Auth: acts as an OAuth 2.0 resource server. The auth middleware below validates
+// our own access tokens (issued by the AS in mcp-oauth.mjs); enforcement is gated
+// by REQUIRE_AUTH. Tokens are issued via the separate authorization-server function.
 //
 // For background and reference implementations, see:
 // - Kapa AI blog: Build an MCP Server with Kapa AI
@@ -651,6 +655,10 @@ const baseHandler = handle({
     // metadata so they can sign in with a Redpanda Cloud account.
     app.use('/mcp', async (c, next) => {
       const method = c.req.method
+      // GET (the SSE stream) and OPTIONS are not gated, so SSE reconnection isn't
+      // broken. This is safe: tool calls are POST (gated below), and a streamable-
+      // HTTP session is only usable after a POST `initialize` — which is gated — so
+      // an enforced deployment can't yield a usable unauthenticated channel via GET.
       if (method === 'OPTIONS' || method === 'GET') return next()
 
       // Validate OUR OWN access token (issued by our AS), not the upstream IdP.
