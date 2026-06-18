@@ -5,7 +5,18 @@
 // this origin, where /.well-known/oauth-authorization-server lives.
 // https://datatracker.ietf.org/doc/html/rfc9728
 
+const CORS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+};
+
 export default async (request: Request) => {
+  // CORS preflight for browser-based MCP clients fetching the metadata.
+  if (request.method === "OPTIONS") {
+    return new Response(null, { status: 204, headers: { ...CORS, "Access-Control-Max-Age": "86400" } });
+  }
+
   const origin = new URL(request.url).origin;
 
   const metadata = {
@@ -21,9 +32,7 @@ export default async (request: Request) => {
     headers: {
       "Content-Type": "application/json",
       "Cache-Control": "public, max-age=3600",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      ...CORS,
     },
   });
 };

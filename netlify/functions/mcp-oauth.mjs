@@ -24,10 +24,19 @@ import { PATHS, SCOPES, ACCESS_TOKEN_TTL_SEC, REFRESH_TOKEN_TTL_SEC, REQUIRE_WOR
 import { isWorkEmail, emailDomain } from './lib/auth.mjs'
 import { recordUser } from './lib/store.mjs'
 
+// CORS for the endpoints browser-based OAuth clients fetch cross-origin
+// (discovery, JWKS, /token, /register). Public discovery + public-client token
+// exchange, so a wildcard origin is appropriate.
+const CORS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+}
+
 const json = (body, status = 200) =>
   new Response(JSON.stringify(body, null, 2), {
     status,
-    headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' },
+    headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store', ...CORS },
   })
 const html = (body, status = 200) =>
   new Response(body, { status, headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' } })
@@ -48,6 +57,13 @@ export default async (request) => {
   const path = url.pathname
   const q = url.searchParams
   const ep = endpoints(origin)
+
+  // CORS preflight for browser-based clients (discovery, JWKS, /token, /register).
+  // /authorize and /callback are top-level browser navigations, not fetches, so
+  // they don't need it — but a blanket 204 here is harmless.
+  if (request.method === 'OPTIONS') {
+    return new Response(null, { status: 204, headers: { ...CORS, 'Access-Control-Max-Age': '86400' } })
+  }
 
   // -------- Discovery (RFC 8414) --------
   if (path === PATHS.metadata) {
