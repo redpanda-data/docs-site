@@ -107,6 +107,20 @@ If you don't have a Redpanda Cloud account yet, you can link:https://cloud.redpa
 
 During the initial rollout, authentication is optional and existing connections continue to work. After a transition period, sign-in will be required.
 
+[#staying-signed-in]
+===== Staying signed in
+
+You sign in once, and your MCP client keeps you signed in from then on. You don't need to manage, copy, or refresh anything yourself.
+
+Here's what happens behind the scenes:
+
+* When you sign in, your client receives a short-lived access token (valid for one hour) that it sends with each request.
+* Before that hour is up, your client quietly swaps it for a fresh one in the background. This happens automatically, without opening a browser or asking you to sign in again, so you won't notice it.
+* As long as you use the server at least once every 30 days, this renewal keeps going indefinitely and you stay signed in.
+* If you don't use the server for 30 days, the renewal lapses. The next time you connect, your client prompts you to sign in again, which is usually a quick browser redirect because you're often still signed in to Redpanda Cloud.
+
+In short: active users rarely, if ever, sign in again, and there's nothing to do manually. Token renewal is handled entirely by your MCP client.
+
 [tabs]
 ====
 Claude Code::
