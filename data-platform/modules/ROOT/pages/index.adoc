@@ -11,10 +11,6 @@
 :page-hero-stat2-text: connectors
 // === ASK AI SECTION ===
 :hero-ask-placeholder: Ask AI about Redpanda...
-:hero-suggestions-label: Try asking:
-:hero-suggestion-1: How do I write from Redpanda Streaming to Snowflake?
-:hero-suggestion-2: What's the difference between Redpanda and Kafka?
-:hero-suggestion-3: How do I create a CDC pipeline from Postgres to Redpanda Cloud?
 // === CHOOSE SECTION (heading) ===
 :page-choose-heading: Choose how you'll run Redpanda
 :page-choose-subtitle: Self-Managed or Cloud: same Kafka-compatible engine, different operations model. Both include Redpanda Connect for building data pipelines.
