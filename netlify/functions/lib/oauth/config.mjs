@@ -51,7 +51,7 @@ export const REQUIRE_WORK_EMAIL = process.env.REQUIRE_WORK_EMAIL === 'true'
 // carries the "Sign up at cloud.redpanda.com" link for users without an account.
 // Set MCP_OAUTH_INTERSTITIAL=off to redirect straight to the IdP (e.g. once the
 // signup link lives on the Auth0 login page instead).
-export const SIGNUP_URL = process.env.MCP_OAUTH_SIGNUP_URL || 'https://cloud.redpanda.com'
+export const SIGNUP_URL = process.env.MCP_OAUTH_SIGNUP_URL || 'https://cloud.redpanda.com/sign-up'
 export const PRIVACY_URL = process.env.MCP_OAUTH_PRIVACY_URL || 'https://www.redpanda.com/legal/privacy-policy'
 export const LOGIN_INTERSTITIAL = process.env.MCP_OAUTH_INTERSTITIAL !== 'off'
 

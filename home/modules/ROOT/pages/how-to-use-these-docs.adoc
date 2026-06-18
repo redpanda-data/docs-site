@@ -98,7 +98,7 @@ The MCP server uses OAuth. The first time you connect, your MCP client opens a b
 
 There's no token to copy or paste. Any MCP client that supports the standard MCP OAuth flow (including ChatGPT, Claude, Cursor, and VS Code) handles sign-in for you.
 
-If you don't have a Redpanda Cloud account yet, you can create one for free at link:https://cloud.redpanda.com[cloud.redpanda.com^] — the sign-in screen includes a sign-up link.
+If you don't have a Redpanda Cloud account yet, you can link:https://cloud.redpanda.com/sign-up[create one for free^].
 
 [NOTE]
 ====
@@ -322,7 +322,7 @@ RateLimit-Reset: <timestamp>
 If you receive an `HTTP 401` response with an `authentication_required` error:
 
 * Your MCP client should open a browser to sign in with your Redpanda Cloud account. If it doesn't, check that your client supports the MCP OAuth flow (most recent versions do).
-* If you don't have a Redpanda Cloud account, create a free one at https://cloud.redpanda.com[`cloud.redpanda.com`^].
+* If you don't have a Redpanda Cloud account, link:https://cloud.redpanda.com/sign-up[create a free one^].
 * If sign-in succeeded previously but you now see `401`, your client's token may have expired. Reconnect or restart the client to trigger a fresh sign-in.
 
 ===== Work account required (HTTP 403)
