@@ -322,7 +322,7 @@ If you receive an `HTTP 401` response with an `authentication_required` error:
 
 ===== Work account required (HTTP 403)
 
-If you receive an `HTTP 403` with a `work_email_required` error, you signed in with a personal email provider (such as Gmail). Sign in with your work account instead.
+Any verified Redpanda Cloud account works by default, including personal email providers. If your organization has opted to restrict access to work email domains and you receive an `HTTP 403` with a `work_email_required` error, sign in with your work account instead.
 
 ===== Server not connecting
 

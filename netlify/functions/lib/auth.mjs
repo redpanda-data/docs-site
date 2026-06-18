@@ -68,10 +68,11 @@ export function isAuthEnforced() {
   return process.env.REQUIRE_AUTH === 'true'
 }
 
-// Require a work email (reject free/disposable). Default true; set
-// REQUIRE_WORK_EMAIL=false to accept any verified Cloud email.
+// Require a work email (reject free/disposable). Default false — with Cloud
+// login the email is already verified, so we accept any verified Cloud account.
+// Set REQUIRE_WORK_EMAIL=true to reject free/disposable providers.
 export function isWorkEmailRequired() {
-  return process.env.REQUIRE_WORK_EMAIL !== 'false'
+  return process.env.REQUIRE_WORK_EMAIL === 'true'
 }
 
 // -------------------- Responses --------------------

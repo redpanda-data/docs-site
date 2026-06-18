@@ -83,14 +83,16 @@ describe('config flags', () => {
     expect(isAuthEnforced()).toBe(false)
     if (orig !== undefined) process.env.REQUIRE_AUTH = orig
   })
-  it('isWorkEmailRequired defaults true, false only when explicitly "false"', () => {
+  it('isWorkEmailRequired defaults false, true only when explicitly "true"', () => {
     const orig = process.env.REQUIRE_WORK_EMAIL
     delete process.env.REQUIRE_WORK_EMAIL
-    expect(isWorkEmailRequired()).toBe(true)
-    process.env.REQUIRE_WORK_EMAIL = 'false'
     expect(isWorkEmailRequired()).toBe(false)
     process.env.REQUIRE_WORK_EMAIL = 'true'
     expect(isWorkEmailRequired()).toBe(true)
+    for (const v of ['false', '', '1', 'yes']) {
+      process.env.REQUIRE_WORK_EMAIL = v
+      expect(isWorkEmailRequired()).toBe(false)
+    }
     if (orig === undefined) delete process.env.REQUIRE_WORK_EMAIL
     else process.env.REQUIRE_WORK_EMAIL = orig
   })

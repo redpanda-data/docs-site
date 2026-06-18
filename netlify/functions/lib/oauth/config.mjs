@@ -41,7 +41,11 @@ export const UPSTREAM_MODE = resolveUpstreamMode()
 export const UPSTREAM_MISCONFIGURED = UPSTREAM_MODE === null
 export const AUTH0_ISSUER = process.env.REDPANDA_OAUTH_ISSUER || 'https://auth.prd.cloud.redpanda.com/'
 export const AUTH0_CLIENT_ID = process.env.REDPANDA_OAUTH_CLIENT_ID // public client, no secret
-export const REQUIRE_WORK_EMAIL = process.env.REQUIRE_WORK_EMAIL !== 'false'
+// Default OFF: with Cloud login the email is already verified by Auth0, so we
+// don't block personal-domain Cloud accounts — we capture every verified login
+// (the domain is still recorded for attribution). Set REQUIRE_WORK_EMAIL=true
+// to reject free/disposable providers with a 403.
+export const REQUIRE_WORK_EMAIL = process.env.REQUIRE_WORK_EMAIL === 'true'
 
 // Login interstitial (shown at /authorize before redirecting to the IdP). It
 // carries the "Sign up at cloud.redpanda.com" link for users without an account.
