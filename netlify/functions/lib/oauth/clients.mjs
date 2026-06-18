@@ -65,21 +65,40 @@ export async function registerClient(meta) {
   return record // RFC 7591 registration response (public client → no secret)
 }
 
+// Block loopback / private / link-local hosts (IPv4 and IPv6). Best-effort SSRF
+// guard — residual: a DNS name that resolves to a private IP (DNS rebinding); a
+// hardened deploy would also resolve + range-check the IP.
+export function isBlockedHost(rawHost) {
+  // Lowercase and strip IPv6 brackets (URL.hostname returns e.g. "[::1]").
+  let host = String(rawHost || '').toLowerCase().replace(/^\[/, '').replace(/\]$/, '')
+  if (!host) return true
+  if (host === 'localhost' || host.endsWith('.local')) return true
+
+  if (host.includes(':')) {
+    // IPv6 literal
+    if (host === '::1' || host === '::') return true // loopback / unspecified
+    if (host.startsWith('::ffff:')) return true // IPv4-mapped IPv6
+    if (/^f[cd]/.test(host)) return true // fc00::/7 unique-local
+    if (/^fe[89ab]/.test(host)) return true // fe80::/10 link-local
+    return false
+  }
+  if (/^\d{1,3}(\.\d{1,3}){3}$/.test(host)) {
+    // IPv4 literal
+    return (
+      /^127\./.test(host) || /^10\./.test(host) || /^192\.168\./.test(host) ||
+      /^169\.254\./.test(host) || /^172\.(1[6-9]|2\d|3[01])\./.test(host) ||
+      host === '0.0.0.0'
+    )
+  }
+  return false // DNS name (rebinding residual, see note above)
+}
+
 // --- CIMD: fetch + validate a URL client_id's metadata document ---
 function assertSafeCimdUrl(clientId) {
   let u
   try { u = new URL(clientId) } catch { throw new Error('client_id is not a valid URL') }
   if (u.protocol !== 'https:') throw new Error('CIMD client_id must be https')
-  const host = u.hostname
-  // Best-effort SSRF guard: block loopback/private literals. (Residual: DNS
-  // rebinding — a hardened deploy would also resolve+range-check the IP.)
-  if (
-    host === 'localhost' || host === '::1' || host.endsWith('.local') ||
-    /^127\./.test(host) || /^10\./.test(host) || /^192\.168\./.test(host) ||
-    /^169\.254\./.test(host) || /^172\.(1[6-9]|2\d|3[01])\./.test(host)
-  ) {
-    throw new Error('CIMD client_id host not allowed')
-  }
+  if (isBlockedHost(u.hostname)) throw new Error('CIMD client_id host not allowed')
   return u
 }
 

@@ -118,6 +118,20 @@ describe('decideAuth matrix', () => {
     expect(r.allow).toBe(true)
     expect(r.userContext).toEqual({ sub: 'auth0|123', email: 'jake@redpanda.com', domain: 'redpanda.com', emailVerified: true })
   })
+  it('email_verified=false -> still allowed (SSO logins often omit it), but flagged unverified', () => {
+    // We don't block on email_verified: the user authenticated via the IdP, and
+    // enterprise/SSO logins frequently leave it false. We capture the flag so
+    // downstream (CRM/attribution) can distinguish if needed.
+    const r = decideAuth({ claims: { sub: 'auth0|9', email: 'jake@redpanda.com', email_verified: false }, enforced: true, workEmailRequired: false })
+    expect(r.allow).toBe(true)
+    expect(r.userContext.emailVerified).toBe(false)
+    expect(r.userContext.email).toBe('jake@redpanda.com')
+  })
+  it('email_verified absent -> treated as not verified (false)', () => {
+    const r = decideAuth({ claims: { sub: 'auth0|10', email: 'jake@redpanda.com' }, enforced: true, workEmailRequired: false })
+    expect(r.allow).toBe(true)
+    expect(r.userContext.emailVerified).toBe(false)
+  })
   it('free email + work required -> 403 forbidden', () => {
     const r = decideAuth({ claims: freeClaims, enforced: true, workEmailRequired: true })
     expect(r.allow).toBe(false)

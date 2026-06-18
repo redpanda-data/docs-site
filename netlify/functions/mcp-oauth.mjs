@@ -211,10 +211,13 @@ export default async (request) => {
     if (body.grant_type === 'authorization_code') {
       const rec = await takeAuthCode(body.code)
       if (!rec) return json({ error: 'invalid_grant', error_description: 'invalid or used code' }, 400)
-      // Bind the code to the client it was issued to (public clients don't
-      // authenticate, so this prevents a code being redeemed by another client_id).
-      if (body.client_id && body.client_id !== rec.clientId) {
-        return json({ error: 'invalid_grant', error_description: 'client_id mismatch' }, 400)
+      // Public clients don't authenticate, so client_id is REQUIRED in the token
+      // request and must match the client the code was issued to (RFC 6749 §3.2.1).
+      if (!body.client_id) {
+        return json({ error: 'invalid_request', error_description: 'client_id is required' }, 400)
+      }
+      if (body.client_id !== rec.clientId) {
+        return json({ error: 'invalid_grant', error_description: 'client_id does not match the authorization request' }, 400)
       }
       if (body.redirect_uri !== rec.clientRedirectUri) return json({ error: 'invalid_grant', error_description: 'redirect_uri mismatch' }, 400)
       if (!verifyChallenge(body.code_verifier, rec.clientCodeChallenge)) {
@@ -242,8 +245,11 @@ export default async (request) => {
         return json({ error: 'invalid_grant', error_description: 'refresh token reuse detected; session revoked' }, 400)
       }
       if (decision.action === 'invalid') return json({ error: 'invalid_grant', error_description: decision.reason }, 400)
-      if (body.client_id && body.client_id !== record.clientId) {
-        return json({ error: 'invalid_grant', error_description: 'client_id mismatch' }, 400)
+      if (!body.client_id) {
+        return json({ error: 'invalid_request', error_description: 'client_id is required' }, 400)
+      }
+      if (body.client_id !== record.clientId) {
+        return json({ error: 'invalid_grant', error_description: 'client_id does not match the refresh token' }, 400)
       }
 
       await markRefreshUsed(oldHash) // rotate: supersede the presented token

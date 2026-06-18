@@ -1,5 +1,23 @@
 import { describe, it, expect, vi } from 'vitest'
-import { isCimdClientId, redirectUriAllowed, validateCimdDocument, getClient } from '../netlify/functions/lib/oauth/clients.mjs'
+import { isCimdClientId, redirectUriAllowed, validateCimdDocument, getClient, isBlockedHost } from '../netlify/functions/lib/oauth/clients.mjs'
+
+describe('isBlockedHost (SSRF guard)', () => {
+  it('blocks IPv4 private / loopback / link-local + localhost', () => {
+    for (const h of ['127.0.0.1', '10.0.0.5', '192.168.1.1', '169.254.1.1', '172.16.0.1', '172.31.255.255', '0.0.0.0', 'localhost', 'foo.local']) {
+      expect(isBlockedHost(h), h).toBe(true)
+    }
+  })
+  it('blocks IPv6 loopback / ULA / link-local / mapped — including bracketed form', () => {
+    for (const h of ['::1', '[::1]', '::', 'fc00::1', 'fd12:3456::1', '[fd00::1]', 'fe80::1', '[fe80::1]', '::ffff:10.0.0.1']) {
+      expect(isBlockedHost(h), h).toBe(true)
+    }
+  })
+  it('allows public hosts (incl. public IPv6 and fc-prefixed DNS names)', () => {
+    for (const h of ['claude.ai', 'chatgpt.com', 'example.com', '8.8.8.8', '2606:4700::1111', 'fc.example.com']) {
+      expect(isBlockedHost(h), h).toBe(false)
+    }
+  })
+})
 
 describe('isCimdClientId', () => {
   it('treats https URLs as CIMD client_ids', () => {
@@ -48,10 +66,11 @@ describe('getClient (CIMD fetch with injected fetch)', () => {
   it('unknown DCR client_id -> null (store miss, no crash)', async () => {
     expect(await getClient('mcp_unknown', { fetchImpl: vi.fn() })).toBeNull()
   })
-  it('blocks loopback/private CIMD hosts (SSRF guard) -> null', async () => {
+  it('blocks loopback/private CIMD hosts (SSRF guard) -> null, including IPv6', async () => {
     const spy = vi.fn()
-    expect(await getClient('https://127.0.0.1/doc', { fetchImpl: spy })).toBeNull()
-    expect(await getClient('https://localhost/doc', { fetchImpl: spy })).toBeNull()
+    for (const url of ['https://127.0.0.1/doc', 'https://localhost/doc', 'https://[::1]/doc', 'https://[fd00::1]/doc', 'https://[fe80::1]/doc']) {
+      expect(await getClient(url, { fetchImpl: spy }), url).toBeNull()
+    }
     expect(spy).not.toHaveBeenCalled() // never even fetched
   })
 })
