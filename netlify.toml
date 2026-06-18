@@ -663,6 +663,341 @@ from = "/cloud-data-platform/reference/rpk-acl/*"
 to = "/cloud-data-platform/reference/rpk/rpk-acl/:splat"
 status = 301
 
+# =========Legacy Agentic Data Plane (ADP) redirects========
+# The ai-agents module was removed from cloud-docs and migrated to the
+# agentic-data-plane component (adp-docs). Redirect all legacy
+# /cloud-data-platform/ai-agents/** URLs to their new /agentic-data-plane/** homes.
+# Netlify is first-match: keep leaf rules before section splats, and the
+# global catch-all LAST so nothing 404s.
+
+# --- Exception: MCP "local" content stayed in cloud-data-platform (now develop/cloud-mcp). Must precede the mcp/* and ai-agents/* catch-alls. ---
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/mcp/local/*"
+to = "/cloud-data-platform/develop/cloud-mcp/:splat"
+status = 301
+
+# --- Landing / overview pages ---
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/"
+to = "/agentic-data-plane/home/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/index/"
+to = "/agentic-data-plane/home/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/overview/"
+to = "/agentic-data-plane/get-started/adp-overview/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/adp-overview/"
+to = "/agentic-data-plane/get-started/adp-overview/"
+status = 301
+
+# --- agents/* leaves (before the agents/* splat) ---
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/agents/overview/"
+to = "/agentic-data-plane/connect/agents-overview/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/agents/quickstart/"
+to = "/agentic-data-plane/get-started/adp-quickstart/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/agents/concepts/"
+to = "/agentic-data-plane/connect/concepts/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/agents/fundamentals/"
+to = "/agentic-data-plane/connect/concepts/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/agents/a2a-concepts/"
+to = "/agentic-data-plane/connect/a2a-concepts/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/agents/agent-to-agent-integration/"
+to = "/agentic-data-plane/connect/a2a-concepts/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/agents/create-agent/"
+to = "/agentic-data-plane/connect/create-agent/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/agents/architecture-patterns/"
+to = "/agentic-data-plane/connect/architecture-patterns/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/agents/pipeline-integration-patterns/"
+to = "/agentic-data-plane/connect/pipeline-integration-patterns/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/agents/integration-overview/"
+to = "/agentic-data-plane/connect/integration-overview/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/agents/integration-index/"
+to = "/agentic-data-plane/connect/integration-overview/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/agents/external-app-integration/"
+to = "/agentic-data-plane/connect/integration-overview/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/agents/external-integration/"
+to = "/agentic-data-plane/connect/integration-overview/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/agents/prompt-best-practices/"
+to = "/agentic-data-plane/connect/system-prompts/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/agents/monitor-agents/"
+to = "/agentic-data-plane/monitor/monitor-agents/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/agents/troubleshooting/"
+to = "/agentic-data-plane/monitor/troubleshoot-ai-agents/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/agents/get-started-index/"
+to = "/agentic-data-plane/get-started/"
+status = 301
+
+# --- ai-gateway/* leaves (before the ai-gateway/* splat) ---
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/ai-gateway/configure-provider/"
+to = "/agentic-data-plane/gateway/configure-provider/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/ai-gateway/connect-agent/"
+to = "/agentic-data-plane/gateway/connect-agent/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/ai-gateway/builders/connect-your-agent/"
+to = "/agentic-data-plane/gateway/connect-agent/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/ai-gateway/mcp-aggregation-guide/"
+to = "/agentic-data-plane/gateway/code-mode/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/ai-gateway/admin/secret-management/"
+to = "/agentic-data-plane/gateway/configure-provider/"
+status = 301
+
+# Claude Code has a dedicated successor page; other client integrations map to the general "connect your app" guide.
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/ai-gateway/integrations/claude-code-admin/"
+to = "/agentic-data-plane/connect/claude-code/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/ai-gateway/integrations/claude-code-user/"
+to = "/agentic-data-plane/connect/claude-code/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/ai-gateway/integrations/*"
+to = "/agentic-data-plane/gateway/connect-agent/"
+status = 301
+
+# --- mcp/* leaves (mcp/local/* exception already handled above; before mcp/remote/* and mcp/* splats) ---
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/mcp/"
+to = "/agentic-data-plane/connect/mcp-overview/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/mcp/index/"
+to = "/agentic-data-plane/connect/mcp-overview/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/mcp/overview/"
+to = "/agentic-data-plane/connect/mcp-overview/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/mcp/configuration/"
+to = "/agentic-data-plane/connect/mcp-servers/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/mcp/quickstart/"
+to = "/agentic-data-plane/connect/create-server/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/mcp/remote/quickstart/"
+to = "/agentic-data-plane/connect/create-server/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/mcp/remote/create-tool/"
+to = "/agentic-data-plane/connect/test-tools/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/mcp/remote/tool-patterns/"
+to = "/agentic-data-plane/connect/test-tools/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/mcp/remote/manage-servers/"
+to = "/agentic-data-plane/connect/mcp-servers/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/mcp/remote/developer-guide/"
+to = "/agentic-data-plane/connect/mcp-servers/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/mcp/remote/admin-guide/"
+to = "/agentic-data-plane/connect/mcp-servers/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/mcp/remote/best-practices/"
+to = "/agentic-data-plane/connect/mcp-servers/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/mcp/remote/scale-resources/"
+to = "/agentic-data-plane/connect/mcp-servers/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/mcp/remote/pipeline-patterns/"
+to = "/agentic-data-plane/connect/pipeline-integration-patterns/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/mcp/remote/monitor-activity/"
+to = "/agentic-data-plane/monitor/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/mcp/remote/monitor-mcp-servers/"
+to = "/agentic-data-plane/monitor/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/mcp/remote/troubleshooting/"
+to = "/agentic-data-plane/monitor/troubleshoot-ai-agents/"
+status = 301
+
+# --- observability/* leaves (before the observability/* splat) ---
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/observability/concepts/"
+to = "/agentic-data-plane/monitor/concepts/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/observability/monitor-agents/"
+to = "/agentic-data-plane/monitor/monitor-agents/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/observability/transcripts/"
+to = "/agentic-data-plane/monitor/transcripts/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/observability/view-transcripts/"
+to = "/agentic-data-plane/monitor/transcripts/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/observability/monitor-mcp-servers/"
+to = "/agentic-data-plane/monitor/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/observability/ingest-custom-traces/"
+to = "/agentic-data-plane/monitor/"
+status = 301
+
+# --- Section splats (after the leaves above) ---
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/agents/*"
+to = "/agentic-data-plane/connect/agents/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/ai-gateway/*"
+to = "/agentic-data-plane/gateway/overview/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/mcp/remote/*"
+to = "/agentic-data-plane/connect/mcp-overview/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/mcp/*"
+to = "/agentic-data-plane/connect/mcp-overview/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/observability/*"
+to = "/agentic-data-plane/monitor/"
+status = 301
+
+# --- Global catch-all (LAST): anything else under ai-agents goes to the ADP home ---
+[[redirects]]
+from = "/cloud-data-platform/ai-agents/*"
+to = "/agentic-data-plane/home/"
+status = 301
+
+# --- Old pre-module ADP entry points ---
+[[redirects]]
+from = "/cloud-data-platform/develop/agents/about/"
+to = "/agentic-data-plane/get-started/adp-overview/"
+status = 301
+
+[[redirects]]
+from = "/cloud-data-platform/develop/ai-agents/about/"
+to = "/agentic-data-plane/get-started/adp-overview/"
+status = 301
+
+# --- Top-level /ai-agents/* (Google indexed/displayed the page under this short path). Send the landing
+#     straight to the ADP home; chain deeper paths onto the /cloud-data-platform/ai-agents/* rules above
+#     so they inherit the same precise targets. ---
+[[redirects]]
+from = "/ai-agents/"
+to = "/agentic-data-plane/home/"
+status = 301
+
+[[redirects]]
+from = "/ai-agents/*"
+to = "/cloud-data-platform/ai-agents/:splat"
+status = 301
+
 # =========Streaming path fixes========
 # Fix high-volume 404s from stale links after the docs restructure.
 # :version matches a single path segment (for example, current, 25.3, 24.3).
