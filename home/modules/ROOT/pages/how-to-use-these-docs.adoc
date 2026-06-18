@@ -102,7 +102,7 @@ If you don't have a Redpanda Cloud account yet, you can create one for free at l
 
 [NOTE]
 ====
-*What we collect and why.* When you sign in, we receive your verified email address (and your organization, when available) from Redpanda Cloud, which we use to track documentation usage and attribute it to your organization. This may be shared with our customer systems and passed to our documentation search provider (Kapa) for usage attribution. We don't store the content of your queries. For details, see our link:https://www.redpanda.com/legal/privacy-policy[Privacy Policy^].
+*What we collect and why.* When you sign in, we receive your verified email address (and your organization, when available) from Redpanda Cloud, which we use to track documentation usage and attribute it to your organization. This may be shared with our customer systems and passed to our documentation search provider (Kapa) for usage attribution. For details, see our link:https://www.redpanda.com/legal/privacy-policy[Privacy Policy^].
 ====
 
 During the initial rollout, authentication is optional and existing connections continue to work. After a transition period, sign-in will be required.

@@ -45,7 +45,7 @@ export function loginInterstitialHtml({ continueUrl, signupUrl, privacyUrl }) {
     <div class="signup">
       Don't have an account? <a href="${s}" target="_blank" rel="noopener">Sign up at cloud.redpanda.com</a>
     </div>
-    <p class="note">When you sign in, we collect your verified work email to track documentation usage and attribute it to your organization. We don't store the content of your queries. See our <a href="${p}" target="_blank" rel="noopener">Privacy Policy</a> for details.</p>
+    <p class="note">When you sign in, we collect your verified work email to track documentation usage and attribute it to your organization. See our <a href="${p}" target="_blank" rel="noopener">Privacy Policy</a> for details.</p>
   </div>
 </body>
 </html>`
