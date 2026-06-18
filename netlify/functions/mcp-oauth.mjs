@@ -20,7 +20,7 @@ import { registerClient, getClient, redirectUriAllowed, isCimdClientId } from '.
 import { hashRefresh, newRefreshToken, newFamilyId, decideRefresh } from './lib/oauth/refresh.mjs'
 import { loginInterstitialHtml } from './lib/oauth/pages.mjs'
 import { allowRegister, allowCimd, clientIp } from './lib/oauth/ratelimit.mjs'
-import { PATHS, SCOPES, ACCESS_TOKEN_TTL_SEC, REFRESH_TOKEN_TTL_SEC, REQUIRE_WORK_EMAIL, UPSTREAM_MISCONFIGURED, SIGNUP_URL, LOGIN_INTERSTITIAL, endpoints } from './lib/oauth/config.mjs'
+import { PATHS, SCOPES, ACCESS_TOKEN_TTL_SEC, REFRESH_TOKEN_TTL_SEC, REQUIRE_WORK_EMAIL, UPSTREAM_MISCONFIGURED, SIGNUP_URL, PRIVACY_URL, LOGIN_INTERSTITIAL, endpoints } from './lib/oauth/config.mjs'
 import { isWorkEmail, emailDomain } from './lib/auth.mjs'
 import { recordUser } from './lib/store.mjs'
 
@@ -146,7 +146,7 @@ export default async (request) => {
     // account get a signup link) before bouncing to the IdP. Disable with
     // MCP_OAUTH_INTERSTITIAL=off to redirect straight through.
     if (LOGIN_INTERSTITIAL) {
-      return html(loginInterstitialHtml({ continueUrl: upstreamUrl, signupUrl: SIGNUP_URL }))
+      return html(loginInterstitialHtml({ continueUrl: upstreamUrl, signupUrl: SIGNUP_URL, privacyUrl: PRIVACY_URL }))
     }
     return redirect(upstreamUrl)
   }

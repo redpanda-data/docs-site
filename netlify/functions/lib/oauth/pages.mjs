@@ -10,10 +10,12 @@ function escapeAttr(s) {
 }
 
 // `continueUrl` is the upstream (Auth0) authorize URL; `signupUrl` points users
-// without a Redpanda Cloud account at the Cloud signup page.
-export function loginInterstitialHtml({ continueUrl, signupUrl }) {
+// without a Redpanda Cloud account at the Cloud signup page; `privacyUrl` links
+// the privacy policy so users know what we collect before they sign in.
+export function loginInterstitialHtml({ continueUrl, signupUrl, privacyUrl }) {
   const c = escapeAttr(continueUrl)
   const s = escapeAttr(signupUrl)
+  const p = escapeAttr(privacyUrl)
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -43,7 +45,7 @@ export function loginInterstitialHtml({ continueUrl, signupUrl }) {
     <div class="signup">
       Don't have an account? <a href="${s}" target="_blank" rel="noopener">Sign up at cloud.redpanda.com</a>
     </div>
-    <p class="note">We use your verified work email to track documentation usage and attribute it to your organization. We don't store the content of your queries.</p>
+    <p class="note">When you sign in, we collect your verified work email to track documentation usage and attribute it to your organization. We don't store the content of your queries. See our <a href="${p}" target="_blank" rel="noopener">Privacy Policy</a> for details.</p>
   </div>
 </body>
 </html>`
