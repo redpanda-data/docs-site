@@ -621,19 +621,41 @@ Returns up to 10 pages per request. URLs must be from docs.redpanda.com/api/doc/
 // rejection — which the Lambda runtime treats as fatal ("Invalid request ID").
 // Recover by logging and resetting the cached connections so the next request
 // reconnects, instead of crashing the invocation. Registered once per cold start.
+const isUpstreamSocketError = (err) =>
+  /ECONNRESET|socket hang up|EPIPE|ECONNREFUSED|\bsocket\b/i.test(
+    err instanceof Error ? err.message : String(err)
+  )
+
 let processGuardsInstalled = false
 function installProcessGuards() {
   if (processGuardsInstalled) return
   processGuardsInstalled = true
-  const recover = (label) => (err) => {
+  const reset = (label, err) => {
     console.warn(`[mcp] ${label} (recovered, resetting upstream connections)`, {
       error: err instanceof Error ? err.message : String(err),
     })
     resetKapaConnection()
     resetBumpConnection()
   }
-  process.on('unhandledRejection', recover('unhandledRejection'))
-  process.on('uncaughtException', recover('uncaughtException'))
+  // The original incident: a background-read-loop rejection with no awaiter that
+  // the runtime treats as fatal. Recovering here (reset cached connections) is
+  // cheap and safe, and the error is logged either way.
+  process.on('unhandledRejection', (reason) => reset('unhandledRejection', reason))
+  // uncaughtException is broader and can leave the process in a state Node's
+  // docs flag as unsafe, so only recover from known upstream socket drops;
+  // re-throw anything else so genuine bugs surface instead of being masked
+  // (re-throwing inside this handler terminates the process, as intended).
+  process.on('uncaughtException', (err) => {
+    if (isUpstreamSocketError(err)) {
+      reset('uncaughtException', err)
+      return
+    }
+    console.error('[mcp] fatal uncaughtException (not recovering)', {
+      error: err instanceof Error ? err.message : String(err),
+      stack: err instanceof Error ? err.stack : undefined,
+    })
+    throw err
+  })
 }
 installProcessGuards()
 
