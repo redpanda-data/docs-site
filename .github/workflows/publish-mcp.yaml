@@ -50,7 +50,15 @@ jobs:
 
       - name: Compute new version and update server.json
         run: |
-          VERSION="$(date -u +%Y.%m.%d)+pr${{ github.event.number }}-${GITHUB_SHA::7}"
+          # The registry orders releases by SemVer precedence, which ONLY looks
+          # at MAJOR.MINOR.PATCH — build metadata after '+' is ignored. The old
+          # scheme (YYYY.MM.DD+pr<n>-<sha>) therefore couldn't convey "latest"
+          # (same-day publishes tied, and YYYY.MM.DD isn't even valid SemVer:
+          # numeric identifiers can't have leading zeros). Use a strictly
+          # increasing core version instead: year . MMDD-as-int . run_number.
+          YEAR="$(date -u +%Y)"
+          MMDD="$(( 10#$(date -u +%m) * 100 + 10#$(date -u +%d) ))"  # Jun 22 -> 622, Dec 5 -> 1205 (no leading zeros)
+          VERSION="${YEAR}.${MMDD}.${{ github.run_number }}"          # e.g. 2026.622.4531 — monotonic, valid SemVer
           echo "New version: $VERSION"
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
