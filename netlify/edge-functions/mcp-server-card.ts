@@ -7,8 +7,8 @@ export default async (request: Request) => {
     $schema: "https://modelcontextprotocol.io/schemas/server-card.json",
     serverInfo: {
       name: "redpanda-doc-tools-assistant",
-      version: "1.2.0",
-      description: "MCP server for searching Redpanda documentation and querying API references"
+      version: "1.3.0",
+      description: "MCP server for searching Redpanda documentation, querying API references, and sending feedback to the Redpanda team"
     },
     transport: {
       type: "http",
