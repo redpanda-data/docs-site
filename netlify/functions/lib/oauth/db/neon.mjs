@@ -10,8 +10,10 @@
 // Scope: the four one-time-use / transactional tables only. DCR clients stay on
 // Blobs (they are plain persistence, not one-time-use — no atomicity benefit).
 //
-// Driver is imported lazily so this module can be loaded without the dependency
-// or a database URL present (e.g. when STORE_BACKEND=blobs in tests/CI).
+// Uses @netlify/database's zero-config client (getDatabase().httpClient), which
+// reads NETLIFY_DATABASE_URL automatically and is the HTTP Neon query function
+// (tagged-template SQL). Imported lazily so this module can be loaded without
+// the dependency or a database URL present (e.g. STORE_BACKEND=blobs in tests).
 
 import { randomUUID, randomBytes } from 'node:crypto'
 import { AUTH_REQUEST_TTL_SEC, AUTH_CODE_TTL_SEC } from '../config.mjs'
@@ -19,10 +21,9 @@ import { AUTH_REQUEST_TTL_SEC, AUTH_CODE_TTL_SEC } from '../config.mjs'
 let _sql = null
 async function db() {
   if (_sql) return _sql
-  const url = process.env.NETLIFY_DATABASE_URL
-  if (!url) throw new Error('NETLIFY_DATABASE_URL is not set (STORE_BACKEND=neon requires a provisioned Neon DB)')
-  const { neon } = await import('@neondatabase/serverless')
-  _sql = neon(url)
+  const { getDatabase } = await import('@netlify/database')
+  // Throws MissingDatabaseConnectionError if no URL is configured (fail-closed).
+  _sql = getDatabase().httpClient
   return _sql
 }
 

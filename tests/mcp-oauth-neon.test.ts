@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url'
 const TEST_DB = process.env.TEST_NEON_URL
 
 const migrationPath = fileURLToPath(
-  new URL('../netlify/functions/lib/oauth/db/migrations/0001_oauth_state.sql', import.meta.url)
+  new URL('../netlify/database/migrations/20260622110000_oauth_state.sql', import.meta.url)
 )
 
 describe.skipIf(!TEST_DB)('Neon backend — atomic one-time-use', () => {
@@ -19,8 +19,8 @@ describe.skipIf(!TEST_DB)('Neon backend — atomic one-time-use', () => {
     process.env.NETLIFY_DATABASE_URL = TEST_DB
     process.env.STORE_BACKEND = 'neon'
 
-    const { neon } = await import('@neondatabase/serverless')
-    const sql = neon(TEST_DB as string)
+    const { getDatabase } = await import('@netlify/database')
+    const sql = getDatabase().httpClient // zero-config, reads NETLIFY_DATABASE_URL
     // Apply schema, then clear any leftover rows from a previous run.
     for (const stmt of readFileSync(migrationPath, 'utf8').split(';').map((s) => s.trim()).filter(Boolean)) {
       await sql.query(stmt)
