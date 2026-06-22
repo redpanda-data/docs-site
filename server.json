@@ -7,7 +7,7 @@
     "source": "github",
     "subfolder": "netlify"
   },
-  "version": "2026.06.22+pr181-15a4023",
+  "version": "2026.06.22+pr181-279799e",
   "remotes": [
     {
       "type": "streamable-http",
