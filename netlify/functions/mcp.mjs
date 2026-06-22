@@ -258,7 +258,24 @@ if (MCPCAT_PROJECT) {
   try {
     // Dynamic import to avoid bundler issues
     const { track } = await import('mcpcat')
-    track(server, MCPCAT_PROJECT)
+    // Attach the authenticated user so MCPcat shows per-user/per-org usage
+    // instead of anonymous sessions. The identity comes from our verified OAuth
+    // context (extra.authInfo), set by the auth middleware below — not from a
+    // tool argument. Returns null when unauthenticated (grace period), so those
+    // sessions stay anonymous. NOTE: this forwards the user's email to MCPcat
+    // (a third-party analytics provider); the login notice + Privacy Policy
+    // disclose sharing with service providers. Pending legal sign-off pre-launch.
+    track(server, MCPCAT_PROJECT, {
+      identify: async (_request, extra) => {
+        const u = extra?.authInfo
+        if (!u?.sub) return null
+        return {
+          userId: u.sub,
+          userName: u.email || u.domain || undefined,
+          userData: { domain: u.domain || null, emailVerified: u.emailVerified === true },
+        }
+      },
+    })
   } catch (e) {
     // Don't crash the MCP server if analytics fail to load.
     console.warn('[mcpcat] disabled due to import error:', e)

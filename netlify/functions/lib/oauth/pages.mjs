@@ -67,7 +67,7 @@ export function loginInterstitialHtml({ continueUrl, signupUrl, privacyUrl }) {
       New to Redpanda? <a href="${s}" target="_blank" rel="noopener">Create a free account</a>
     </div>
     <hr>
-    <p class="note">When you sign in, we collect your verified work email to track documentation usage and attribute it to your organization. See our <a href="${p}" target="_blank" rel="noopener">Privacy Policy</a> for details.</p>
+    <p class="note">When you sign in, we collect your verified work email to track documentation usage and attribute it to your organization, and we share it with service providers that help us run and analyze the service. See our <a href="${p}" target="_blank" rel="noopener">Privacy Policy</a> for details.</p>
   </div>
 </body>
 </html>`

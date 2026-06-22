@@ -102,7 +102,7 @@ If you don't have a Redpanda Cloud account yet, you can link:https://cloud.redpa
 
 [NOTE]
 ====
-*What we collect and why.* When you sign in, we receive your verified email address (and your organization, when available) from Redpanda Cloud, which we use to track documentation usage and attribute it to your organization. This may be shared with our customer systems and passed to our documentation search provider (Kapa) for usage attribution. For details, see our link:https://www.redpanda.com/legal/privacy-policy[Privacy Policy^].
+*What we collect and why.* When you sign in, we receive your verified email address (and your organization, when available) from Redpanda Cloud, which we use to track documentation usage and attribute it to your organization. This may be shared with our customer and analytics systems and passed to our documentation search provider (Kapa) for usage attribution. For details, see our link:https://www.redpanda.com/legal/privacy-policy[Privacy Policy^].
 ====
 
 
