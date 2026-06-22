@@ -3,100 +3,27 @@ name: Update MCP registry
 on:
   pull_request:
     paths:
-      - "netlify/functions/mcp.js"
+      - "netlify/functions/mcp.mjs"
+      - "netlify/functions/mcp-oauth.mjs"
       - "server.json"
   push:
     branches: [ main ]
     paths:
+      - "netlify/functions/mcp.mjs"
+      - "netlify/functions/mcp-oauth.mjs"
       - "server.json"
-      - "netlify/edge-functions/mcp.js"
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
   id-token: write
 
 jobs:
-  validate_and_bump_version_on_pr:
-    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout PR branch
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.ref }}
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
-          persist-credentials: true
-
-      - name: Setup Node (for jq availability on some runners)
-        uses: actions/setup-node@v4
-        with:
-          node-version: "lts/*"
-
-      - name: Validate server.json
-        run: |
-          echo "Validating server.json..."
-          if [ ! -f server.json ]; then
-            echo "Error: server.json not found!"
-            exit 1
-          fi
-
-          if ! jq empty server.json 2>/dev/null; then
-            echo "Error: server.json is not valid JSON!"
-            exit 1
-          fi
-
-          echo "server.json is valid"
-
-      - name: Compute new version and update server.json
-        run: |
-          # The registry orders releases by SemVer precedence, which ONLY looks
-          # at MAJOR.MINOR.PATCH — build metadata after '+' is ignored. The old
-          # scheme (YYYY.MM.DD+pr<n>-<sha>) therefore couldn't convey "latest"
-          # (same-day publishes tied, and YYYY.MM.DD isn't even valid SemVer:
-          # numeric identifiers can't have leading zeros). Use a strictly
-          # increasing core version instead: year . MMDD-as-int . run_number.
-          YEAR="$(date -u +%Y)"
-          MMDD="$(( 10#$(date -u +%m) * 100 + 10#$(date -u +%d) ))"  # Jun 22 -> 622, Dec 5 -> 1205 (no leading zeros)
-          VERSION="${YEAR}.${MMDD}.${{ github.run_number }}"          # e.g. 2026.622.4531 — monotonic, valid SemVer
-          echo "New version: $VERSION"
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
-
-          jq --arg v "$VERSION" '.version = $v' server.json > server.tmp.json
-          mv server.tmp.json server.json
-          git diff -- server.json || true
-
-      - name: Install MCP Publisher for validation
-        run: |
-          echo "Downloading MCP Publisher..."
-          ARCH="$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/')"
-          DOWNLOAD_URL="https://github.com/modelcontextprotocol/registry/releases/download/v1.0.0/mcp-publisher_1.0.0_${ARCH}.tar.gz"
-
-          if ! curl -fsSL "$DOWNLOAD_URL" | tar xz mcp-publisher; then
-            echo "Error: Failed to download or extract mcp-publisher"
-            echo "Attempted URL: $DOWNLOAD_URL"
-            exit 1
-          fi
-
-          chmod +x mcp-publisher
-          ./mcp-publisher --version
-          echo "MCP Publisher installed successfully"
-
-      - name: Commit and push version bump (if changed)
-        run: |
-          if ! git diff --quiet -- server.json; then
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add server.json
-            git commit -m "chore: bump server.json version to ${VERSION} (PR #${{ github.event.number }})"
-            git push
-            echo "Version bumped and committed"
-          else
-            echo "No changes to server.json; skipping commit."
-          fi
-
-  publish_on_main:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+  # On PRs: validate server.json only. We deliberately do NOT bump the version
+  # or commit to the PR branch — the version is computed at publish time (below),
+  # so PR branches stay free of version-bump commits.
+  validate_on_pr:
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -114,22 +41,67 @@ jobs:
             echo "Error: server.json not found!"
             exit 1
           fi
-
           if ! jq empty server.json 2>/dev/null; then
             echo "Error: server.json is not valid JSON!"
             exit 1
           fi
-
-          # Validate required fields
           if ! jq -e '.name and .version and .remotes' server.json > /dev/null; then
-            echo "Error: server.json missing required fields"
+            echo "Error: server.json missing required fields (name, version, remotes)"
             exit 1
           fi
-
-          VERSION=$(jq -r '.version' server.json)
-          echo "Current version: $VERSION"
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
           echo "server.json is valid"
+
+  # On push to main (or manual dispatch): compute a fresh version and publish.
+  publish_on_main:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: mcp-publish-${{ github.ref }}
+      cancel-in-progress: false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node (for jq availability)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+
+      - name: Validate server.json
+        run: |
+          echo "Validating server.json..."
+          if [ ! -f server.json ]; then
+            echo "Error: server.json not found!"
+            exit 1
+          fi
+          if ! jq empty server.json 2>/dev/null; then
+            echo "Error: server.json is not valid JSON!"
+            exit 1
+          fi
+          if ! jq -e '.name and .version and .remotes' server.json > /dev/null; then
+            echo "Error: server.json missing required fields (name, version, remotes)"
+            exit 1
+          fi
+          echo "server.json is valid"
+
+      - name: Compute publish version
+        run: |
+          # Computed here (at publish time), so the version increases in MERGE
+          # order and no version-bump commit is needed on PR branches.
+          #
+          # The registry orders releases by SemVer precedence, which looks ONLY
+          # at MAJOR.MINOR.PATCH — build metadata after '+' is ignored. So we keep
+          # the strictly increasing value in the core: year . MMDD-as-int . run.
+          # MMDD is an integer (Jun 22 -> 622, Dec 5 -> 1205) so there are no
+          # leading zeros (which would make the version invalid SemVer).
+          YEAR="$(date -u +%Y)"
+          MMDD="$(( 10#$(date -u +%m) * 100 + 10#$(date -u +%d) ))"
+          VERSION="${YEAR}.${MMDD}.${{ github.run_number }}"   # e.g. 2026.622.4531
+          echo "Publishing version: $VERSION"
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          # Write it into the copy we publish (not committed back to the repo).
+          jq --arg v "$VERSION" '.version = $v' server.json > server.tmp.json
+          mv server.tmp.json server.json
 
       - name: Install MCP Publisher
         run: |
@@ -178,7 +150,3 @@ jobs:
           echo "  Remote URL: $(jq -r '.remotes[0].url' server.json)"
           echo ""
           echo "MCP server successfully published!"
-
-    concurrency:
-      group: mcp-publish-${{ github.ref }}
-      cancel-in-progress: false
