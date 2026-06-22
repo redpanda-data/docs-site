@@ -14,9 +14,10 @@ on:
       - "server.json"
   workflow_dispatch:
 
+# Workflow-level default: read-only. id-token is granted only to the publish
+# job below (least privilege) — the validate-only PR job doesn't need it.
 permissions:
   contents: read
-  id-token: write
 
 jobs:
   # On PRs: validate server.json only. We deliberately do NOT bump the version
@@ -55,6 +56,9 @@ jobs:
   publish_on_main:
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write   # only this job needs it (registry auth)
     concurrency:
       group: mcp-publish-${{ github.ref }}
       cancel-in-progress: false
