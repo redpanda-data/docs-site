@@ -184,6 +184,17 @@ function ensureKapaConnected() {
     }
   )
 
+  // The transport keeps a persistent connection that's reused across warm
+  // invocations. When the container freezes/thaws, the idle socket is dropped
+  // and the error surfaces in the transport's background read loop. Handle it
+  // here (at the source) so it resets the cache rather than bubbling up as an
+  // unhandled rejection that crashes the invocation.
+  kapaTransport.onerror = (err) => {
+    console.warn('[mcp] kapa transport error; resetting connection', { error: err?.message || String(err) })
+    resetKapaConnection()
+  }
+  kapaTransport.onclose = () => resetKapaConnection()
+
   kapaConnectPromise = kapaClient.connect(kapaTransport)
   return kapaConnectPromise
 }
@@ -228,6 +239,15 @@ function ensureBumpConnected() {
   const transport = new StreamableHTTPClientTransport(
     new URL(BUMP_HUB_MCP_URL)
   )
+
+  // Reset the cached connection if the persistent socket errors/closes in the
+  // background (e.g. dropped on container freeze/thaw) so the next request
+  // reconnects instead of the error crashing the invocation. See Kapa above.
+  transport.onerror = (err) => {
+    console.warn('[mcp] bump transport error; resetting connection', { error: err?.message || String(err) })
+    resetBumpConnection()
+  }
+  transport.onclose = () => resetBumpConnection()
 
   bumpConnectPromise = bumpClient.connect(transport)
   return bumpConnectPromise
@@ -782,15 +802,52 @@ if (MCPCAT_PROJECT) {
 
 // -------------------- Netlify handler --------------------
 
+// Safety net: even with transport onerror/onclose handlers, a stray background
+// socket error from a cached upstream connection can surface as an unhandled
+// rejection — which the Lambda runtime treats as fatal ("Invalid request ID").
+// Recover by logging and resetting the cached connections so the next request
+// reconnects, instead of crashing the invocation. Registered once per cold start.
+const isUpstreamSocketError = (err) =>
+  /ECONNRESET|socket hang up|EPIPE|ECONNREFUSED|\bsocket\b/i.test(
+    err instanceof Error ? err.message : String(err)
+  )
+
+let processGuardsInstalled = false
+function installProcessGuards() {
+  if (processGuardsInstalled) return
+  processGuardsInstalled = true
+  const reset = (label, err) => {
+    console.warn(`[mcp] ${label} (recovered, resetting upstream connections)`, {
+      error: err instanceof Error ? err.message : String(err),
+    })
+    resetKapaConnection()
+    resetBumpConnection()
+  }
+  // The original incident: a background-read-loop rejection with no awaiter that
+  // the runtime treats as fatal. Recovering here (reset cached connections) is
+  // cheap and safe, and the error is logged either way.
+  process.on('unhandledRejection', (reason) => reset('unhandledRejection', reason))
+  // uncaughtException is broader and can leave the process in a state Node's
+  // docs flag as unsafe, so only recover from known upstream socket drops;
+  // re-throw anything else so genuine bugs surface instead of being masked
+  // (re-throwing inside this handler terminates the process, as intended).
+  process.on('uncaughtException', (err) => {
+    if (isUpstreamSocketError(err)) {
+      reset('uncaughtException', err)
+      return
+    }
+    console.error('[mcp] fatal uncaughtException (not recovering)', {
+      error: err instanceof Error ? err.message : String(err),
+      stack: err instanceof Error ? err.stack : undefined,
+    })
+    throw err
+  })
+}
+installProcessGuards()
+
 const baseHandler = handle({
   server,
   pre: (app) => {
-    // IMPORTANT:
-    // Streamable HTTP opens a long-lived SSE stream via GET requests.
-    // Some rate limiter middleware can interfere with SSE and cause 500s on reconnect/idle.
-    // We therefore apply rate limiting ONLY to POST/DELETE (expensive operations),
-    // and allow GET (SSE stream) through un-limited.
-
     const limiter = makeRateLimiter({
       windowMs: 15 * 60 * 1000, // 15 minutes
       limit: 60,                // limit each key to 60 requests per windowMs (tune as needed)
@@ -806,10 +863,10 @@ const baseHandler = handle({
     // metadata so they can sign in with a Redpanda Cloud account.
     app.use('/mcp', async (c, next) => {
       const method = c.req.method
-      // GET (the SSE stream) and OPTIONS are not gated, so SSE reconnection isn't
-      // broken. This is safe: tool calls are POST (gated below), and a streamable-
-      // HTTP session is only usable after a POST `initialize` — which is gated — so
-      // an enforced deployment can't yield a usable unauthenticated channel via GET.
+      // Don't gate GET/OPTIONS here: OPTIONS is preflight, and GET is declined
+      // with 405 by the rate-limit middleware below (we don't offer the optional
+      // SSE stream). Tool calls are POST and are gated here, so an enforced
+      // deployment can't yield a usable unauthenticated channel.
       if (method === 'OPTIONS' || method === 'GET') return next()
 
       // Validate OUR OWN access token (issued by our AS), not the upstream IdP.
@@ -848,8 +905,16 @@ const baseHandler = handle({
     app.use('/mcp', async (c, next) => {
       const method = c.req.method
       if (method === 'GET') {
-        // Let SSE stream open/reconnect without limiter interference
-        return next()
+        // GET opens Streamable HTTP's optional server->client SSE stream. This
+        // server is request/response only (it never pushes server-initiated
+        // messages), so on serverless that stream just idles open until the
+        // function hits its max duration — a wasted full-length invocation per
+        // connected client. Decline it: the MCP spec allows 405 when the server
+        // doesn't offer an SSE stream on GET, and clients fall back to POST.
+        return c.text('Method Not Allowed', 405, {
+          Allow: 'POST, DELETE, OPTIONS',
+          'Access-Control-Allow-Origin': '*',
+        })
       }
       // Apply limiter to POST + DELETE (and anything else, if ever present)
       return limiter(c, next)
