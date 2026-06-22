@@ -163,3 +163,20 @@ export async function revokeFamily(id) {
   const sql = await db()
   await sql`UPDATE refresh_families SET revoked = true, revoked_at = now() WHERE id = ${id}`
 }
+
+// TTL cleanup (run on a schedule). Deletes expired one-time-use rows. Only
+// past-expiry refresh tokens are removed, so reuse detection still works for
+// every token within its lifetime; families with no remaining tokens are then
+// swept. Reads already filter on expires_at, so this is purely housekeeping.
+export async function cleanupExpired() {
+  const sql = await db()
+  const reqs = await sql`DELETE FROM auth_requests WHERE expires_at < now() RETURNING id`
+  const codes = await sql`DELETE FROM auth_codes WHERE expires_at < now() RETURNING code`
+  const toks = await sql`DELETE FROM refresh_tokens WHERE expires_at < now() RETURNING hash`
+  const fams = await sql`
+    DELETE FROM refresh_families f
+    WHERE NOT EXISTS (SELECT 1 FROM refresh_tokens t WHERE t.family_id = f.id)
+    RETURNING id
+  `
+  return { authRequests: reqs.length, authCodes: codes.length, refreshTokens: toks.length, families: fams.length }
+}
