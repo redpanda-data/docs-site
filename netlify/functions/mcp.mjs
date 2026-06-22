@@ -62,10 +62,16 @@ const MAX_QUERY_CHARS = 2_000
 const MAX_FEEDBACK_CHARS = 5_000
 
 // Feedback is submitted to the existing `api-feedback` Netlify form — the same
-// store our docs feedback uses. Netlify routes form POSTs sent to any path on
-// the deployed site; we use the site root. Registered fields live in
+// store our docs feedback uses. Registered fields live in
 // home/modules/ROOT/attachments/api-feedback-registration.html (keep in sync).
+//
+// IMPORTANT: Netlify only processes a form POST if it reaches a static 200 page;
+// the site root `/` 301-redirects to `/home/`, and a redirect drops the POST
+// body (so the form is never recorded). We therefore POST to a non-redirecting
+// page (`/home/`) and use `redirect: 'error'` below so a redirect surfaces as a
+// failure instead of a false success. Override the path with MCP_FEEDBACK_FORM_PATH.
 const FEEDBACK_FORM_NAME = 'api-feedback'
+const FEEDBACK_FORM_PATH = process.env.MCP_FEEDBACK_FORM_PATH || '/home/'
 const SITE_URL = process.env.URL || process.env.DEPLOY_PRIME_URL || ''
 
 // -------------------- Helpers --------------------
@@ -80,16 +86,19 @@ function withTimeout(promise, ms, label) {
   )
 }
 
-// Submit a field map to the `api-feedback` Netlify form (URL-encoded POST to the
-// site root, with the required form-name). Throws on a missing site URL or a
-// non-2xx response so the caller can surface a clear failure to the agent.
+// Submit a field map to the `api-feedback` Netlify form (URL-encoded POST to a
+// non-redirecting page, with the required form-name). `redirect: 'error'` means
+// any 3xx (e.g. hitting a redirect that would drop the POST body) throws rather
+// than following it to a 200 and falsely reporting success. Throws on a missing
+// site URL or a non-2xx so the caller surfaces a clear failure to the agent.
 async function submitFeedback(fields) {
   if (!SITE_URL) throw new Error('site URL not configured')
   const body = new URLSearchParams({ 'form-name': FEEDBACK_FORM_NAME, ...fields })
-  const res = await fetch(`${SITE_URL}/`, {
+  const res = await fetch(`${SITE_URL}${FEEDBACK_FORM_PATH}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: body.toString(),
+    redirect: 'error',
   })
   if (!res.ok) throw new Error(`feedback submission failed: ${res.status}`)
 }
