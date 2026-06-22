@@ -247,40 +247,11 @@ const server = new McpServer({
   version: SERVER_VERSION,
 })
 
-// -------------------- MCPcat Analytics --------------------
-// Initialize MCPcat tracking (if MCPCAT_PROJECT is set)
-// MCPcat is an open-source analytics platform for MCP usage tracking.
-// See https://www.mcpcat.com/ for details.
-
+// MCPcat analytics is initialized AFTER all tools are registered — see the
+// track() call near the end of this file. (MCPcat wraps the SDK's tools/list
+// and tools/call handlers, which only exist once the first tool is registered;
+// initializing it before registration silently no-ops — "no user intent".)
 const MCPCAT_PROJECT = process.env.MCPCAT_PROJECT
-
-if (MCPCAT_PROJECT) {
-  try {
-    // Dynamic import to avoid bundler issues
-    const { track } = await import('mcpcat')
-    // Attach the authenticated user so MCPcat shows per-user/per-org usage
-    // instead of anonymous sessions. The identity comes from our verified OAuth
-    // context (extra.authInfo), set by the auth middleware below — not from a
-    // tool argument. Returns null when unauthenticated (grace period), so those
-    // sessions stay anonymous. NOTE: this forwards the user's email to MCPcat
-    // (a third-party analytics provider); the login notice + Privacy Policy
-    // disclose sharing with service providers. Pending legal sign-off pre-launch.
-    track(server, MCPCAT_PROJECT, {
-      identify: async (_request, extra) => {
-        const u = extra?.authInfo
-        if (!u?.sub) return null
-        return {
-          userId: u.sub,
-          userName: u.email || u.domain || undefined,
-          userData: { domain: u.domain || null, emailVerified: u.emailVerified === true },
-        }
-      },
-    })
-  } catch (e) {
-    // Don't crash the MCP server if analytics fail to load.
-    console.warn('[mcpcat] disabled due to import error:', e)
-  }
-}
 
 server.registerTool(
   'ask_redpanda_question',
@@ -770,6 +741,38 @@ If the user hits a bug, a documentation gap, incorrect or missing information, o
     }
   }
 )
+
+// -------------------- MCPcat Analytics --------------------
+// Initialized HERE — after every server.registerTool above — because MCPcat
+// wraps the SDK's tools/list and tools/call handlers, and those only exist once
+// the first tool is registered. (Calling track() before registration grabs no
+// handlers and silently no-ops, which shows up as "no user intent provided".)
+//
+// identify attaches the authenticated user (from our verified OAuth context,
+// extra.authInfo) so usage is per-user/per-org instead of anonymous; returns
+// null when unauthenticated so grace-period sessions stay anonymous. NOTE: this
+// forwards the user's email to MCPcat (a third-party analytics provider); the
+// login notice + Privacy Policy disclose sharing with service providers.
+// Pending legal sign-off pre-launch.
+if (MCPCAT_PROJECT) {
+  try {
+    const { track } = await import('mcpcat')
+    track(server, MCPCAT_PROJECT, {
+      identify: async (_request, extra) => {
+        const u = extra?.authInfo
+        if (!u?.sub) return null
+        return {
+          userId: u.sub,
+          userName: u.email || u.domain || undefined,
+          userData: { domain: u.domain || null, emailVerified: u.emailVerified === true },
+        }
+      },
+    })
+  } catch (e) {
+    // Don't crash the MCP server if analytics fail to load.
+    console.warn('[mcpcat] disabled due to import error:', e)
+  }
+}
 
 // -------------------- Netlify handler --------------------
 
