@@ -767,6 +767,12 @@ if (MCPCAT_PROJECT) {
           userData: { domain: u.domain || null, emailVerified: u.emailVerified === true },
         }
       },
+      // Prompt the agent for its intent per call (captured as "agent intent"),
+      // while steering it away from sensitive data in that free-text field.
+      customContextDescription:
+        'In one concise sentence (third person), describe what the user is trying to ' +
+        'accomplish with this request. Do not include credentials, tokens, personal ' +
+        'data, or verbatim secrets.',
     })
   } catch (e) {
     // Don't crash the MCP server if analytics fail to load.
