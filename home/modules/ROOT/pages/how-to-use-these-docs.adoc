@@ -302,6 +302,8 @@ Once connected, you can ask context-aware questions about Redpanda from within y
 * "How do I monitor Redpanda cluster performance?"
 * "What's the difference between Redpanda Cloud and self-hosted deployment?"
 
+You can also *send feedback to the Redpanda team* through your AI client. If you hit a bug, a documentation gap, or anything unclear, tell your assistant something like "send feedback that this page is missing X" and it can submit it for us to review. If you're signed in, we can follow up with you.
+
 ==== Usage limits
 
 To ensure fair use and performance for all users, the MCP endpoint enforces the following rate limits:

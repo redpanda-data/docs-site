@@ -33,7 +33,7 @@ const makeRateLimiter =
 
 // -------------------- Config --------------------
 
-const SERVER_VERSION = '1.2.0'
+const SERVER_VERSION = '1.3.0'
 
 // Hardcoded upstream
 const KAPA_MCP_SERVER_URL = 'https://redpanda.mcp.kapa.ai'
@@ -59,6 +59,14 @@ function apiToUrl(api) {
 const CONNECT_TIMEOUT_MS = 8_000
 const CALL_TIMEOUT_MS = 22_000
 const MAX_QUERY_CHARS = 2_000
+const MAX_FEEDBACK_CHARS = 5_000
+
+// Feedback is submitted to the existing `api-feedback` Netlify form — the same
+// store our docs feedback uses. Netlify routes form POSTs sent to any path on
+// the deployed site; we use the site root. Registered fields live in
+// home/modules/ROOT/attachments/api-feedback-registration.html (keep in sync).
+const FEEDBACK_FORM_NAME = 'api-feedback'
+const SITE_URL = process.env.URL || process.env.DEPLOY_PRIME_URL || ''
 
 // -------------------- Helpers --------------------
 
@@ -70,6 +78,20 @@ function withTimeout(promise, ms, label) {
   return Promise.race([promise, timeoutPromise]).finally(() =>
     clearTimeout(timeoutId)
   )
+}
+
+// Submit a field map to the `api-feedback` Netlify form (URL-encoded POST to the
+// site root, with the required form-name). Throws on a missing site URL or a
+// non-2xx response so the caller can surface a clear failure to the agent.
+async function submitFeedback(fields) {
+  if (!SITE_URL) throw new Error('site URL not configured')
+  const body = new URLSearchParams({ 'form-name': FEEDBACK_FORM_NAME, ...fields })
+  const res = await fetch(`${SITE_URL}/`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: body.toString(),
+  })
+  if (!res.ok) throw new Error(`feedback submission failed: ${res.status}`)
 }
 
 // -------------------- Rate limiting --------------------
@@ -622,6 +644,105 @@ Returns up to 10 pages per request. URLs must be from docs.redpanda.com/api/doc/
             message: 'Upstream Bump MCP request failed.',
             detail: msg,
             duration_ms: Date.now() - start,
+          }),
+        }],
+      }
+    }
+  }
+)
+
+// -------------------- Feedback tool --------------------
+// Lets agents forward user feedback (bugs, doc gaps, frustrations, feature
+// requests) straight to the Redpanda team — the docs/DX team's MCP feedback
+// channel. Goes to the same `api-feedback` Netlify form as our docs feedback.
+
+server.registerTool(
+  'submit_documentation_feedback',
+  {
+    title: 'Submit Documentation Feedback',
+    description:
+      `Send feedback about the Redpanda documentation or products directly to the Redpanda team.
+
+If the user hits a bug, a documentation gap, incorrect or missing information, or expresses frustration while using Redpanda, ASK whether they'd like to send feedback to the Redpanda team. Only call this tool once the user agrees — never submit feedback without their consent. Summarize their feedback clearly and include the relevant documentation page URL or context when you know it.`,
+    inputSchema: {
+      feedback: z
+        .string()
+        .min(1)
+        .max(MAX_FEEDBACK_CHARS)
+        .describe('The user feedback to submit, in clear prose. Summarize the bug, gap, or request.'),
+      category: z
+        .enum(['bug', 'documentation_gap', 'feature_request', 'other'])
+        .optional()
+        .describe('The type of feedback.'),
+      page_url: z
+        .string()
+        .optional()
+        .describe('The documentation page URL the feedback relates to, if known.'),
+    },
+  },
+  async (args, extra) => {
+    const start = Date.now()
+
+    const feedback = String(args?.feedback || '').trim()
+    if (!feedback) {
+      return {
+        content: [{
+          type: 'text',
+          text: JSON.stringify({ error: 'missing_feedback', message: 'Provide non-empty feedback text.' }),
+        }],
+      }
+    }
+
+    // Attach the authenticated user (set by the auth middleware) so the team can
+    // follow up; anonymous when unauthenticated. Never logs the raw email.
+    const user = extra?.authInfo || null
+    const category = args?.category || 'other'
+    const pageUrl = String(args?.page_url || '')
+    const timestamp = new Date().toISOString()
+
+    try {
+      await withTimeout(
+        submitFeedback({
+          feedback: feedback.slice(0, MAX_FEEDBACK_CHARS),
+          category,
+          'page-path': pageUrl,
+          referer: pageUrl,
+          source: 'mcp',
+          'user-email': user?.email || '',
+          'user-domain': user?.domain || '',
+          'user-sub': user?.sub || '',
+          'user-agent': 'redpanda-mcp',
+          timestamp,
+          'bot-field': '',
+        }),
+        CALL_TIMEOUT_MS,
+        'feedback_submit'
+      )
+
+      console.log(JSON.stringify({
+        event: 'mcp_feedback_submitted',
+        category,
+        domain: user?.domain || null,
+        authed: !!user,
+        ts: timestamp,
+      }))
+
+      return {
+        content: [{
+          type: 'text',
+          text: JSON.stringify({ status: 'submitted', message: 'Thanks — your feedback has been sent to the Redpanda team.' }),
+        }],
+      }
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err)
+      console.warn('Feedback submission failed', { error: msg, duration_ms: Date.now() - start })
+      return {
+        content: [{
+          type: 'text',
+          text: JSON.stringify({
+            error: 'submission_failed',
+            message: 'Could not submit feedback right now. Please try again later.',
+            detail: msg,
           }),
         }],
       }
