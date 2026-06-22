@@ -7,9 +7,9 @@ describe('loginInterstitialHtml', () => {
   const privacyUrl = 'https://www.redpanda.com/legal/privacy-policy'
   const out = loginInterstitialHtml({ continueUrl, signupUrl, privacyUrl })
 
-  it('renders a Continue link to the upstream URL and a signup link', () => {
+  it('renders a Continue link to the upstream URL and a free-signup link', () => {
     expect(out).toContain('Continue with Redpanda Cloud')
-    expect(out).toContain('Sign up at cloud.redpanda.com')
+    expect(out).toContain('Create a free account')
     expect(out).toContain('href="https://cloud.redpanda.com"')
   })
   it('discloses what we collect and links the privacy policy', () => {
