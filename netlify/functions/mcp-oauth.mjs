@@ -12,7 +12,7 @@
 import { getJwks, signAccessToken } from './lib/oauth/keys.mjs'
 import {
   putAuthRequest, takeAuthRequest, putAuthCode, takeAuthCode,
-  putRefresh, getRefresh, markRefreshUsed, putFamily, getFamily, revokeFamily,
+  putRefresh, getRefresh, consumeRefresh, putFamily, getFamily, revokeFamily,
 } from './lib/oauth/store.mjs'
 import { buildAuthorizeUrl, exchangeCode, UPSTREAM_MODE } from './lib/oauth/upstream.mjs'
 import { verifyChallenge, generatePair } from './lib/oauth/pkce.mjs'
@@ -258,7 +258,16 @@ export default async (request) => {
         return json({ error: 'invalid_grant', error_description: 'client_id does not match the refresh token' }, 400)
       }
 
-      await markRefreshUsed(oldHash) // rotate: supersede the presented token
+      // Atomically consume (supersede) the presented token. On the Neon backend
+      // this is a single UPDATE…WHERE used=false RETURNING, so only one of two
+      // concurrent requests wins; the loser gets null and is treated as reuse
+      // (theft signal), closing the rotation race. On Blobs this is best-effort.
+      const consumed = await consumeRefresh(oldHash)
+      if (!consumed) {
+        await revokeFamily(record.familyId)
+        return json({ error: 'invalid_grant', error_description: 'refresh token reuse detected; session revoked' }, 400)
+      }
+
       const refresh_token = await issueRefresh(record.familyId, record.clientId, record.user, record.scope)
       const access_token = await mintAccess(record.user, record.scope)
       return json({ access_token, token_type: 'Bearer', expires_in: ACCESS_TOKEN_TTL_SEC, scope: record.scope, refresh_token })

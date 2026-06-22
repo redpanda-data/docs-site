@@ -1,107 +1,38 @@
-// AS state storage — auth requests (in-flight) + authorization codes.
+// OAuth state storage — backend selector.
 //
-// Backed by Netlify Blobs (available today; key-value fits the AS state, which
-// is all keyed lookups by id/hash). The interface below is the seam for a
-// Netlify DB (Neon Postgres) backend when relational queries/analytics are
-// needed — swap the four functions; callers don't change.
+// The public interface here is stable; callers (mcp-oauth.mjs, clients.mjs)
+// don't know or care which backend is active. The one-time-use / transactional
+// state (auth requests, auth codes, refresh tokens, families) is served by
+// either the Blobs backend (default) or the Neon Postgres backend, chosen by
+// STORE_BACKEND. The Neon backend exists because Blobs has no compare-and-swap,
+// so its one-time-use is best-effort; Neon makes consume atomic.
 //
-// NOTE: refresh tokens (Milestone 3) and registered clients/DCR (Milestone 2)
-// will add tables/namespaces here.
+// Rollout: deploy with STORE_BACKEND=blobs (default), flip a preview to neon,
+// verify, then flip prod. Roll back by resetting the env var — no code revert.
+//
+// NOTE: flipping blobs→neon does not migrate existing rows, so any live refresh
+// tokens (in Blobs) won't exist in Neon — users re-authenticate once at cutover.
+// Auth codes (60s TTL) are unaffected in practice. Flip during low traffic.
 
-import { getStore } from '@netlify/blobs'
-import { randomUUID, randomBytes } from 'node:crypto'
-import { AUTH_REQUEST_TTL_SEC, AUTH_CODE_TTL_SEC } from './config.mjs'
+import * as blobs from './db/blobs.mjs'
+import * as neon from './db/neon.mjs'
 
-const STORE = 'mcp-oauth'
-const AR = (id) => `ar:${id}` // auth request
-const AC = (code) => `ac:${code}` // authorization code
-const CL = (id) => `client:${id}` // DCR-registered client
-const RT = (h) => `rt:${h}` // refresh token (by hash)
-const RTF = (id) => `rtf:${id}` // refresh-token family
+const backend = (process.env.STORE_BACKEND || 'blobs').toLowerCase() === 'neon' ? neon : blobs
 
-function store() {
-  // STRONG consistency is required: auth codes and refresh tokens are one-time
-  // use, and Blobs' default eventual consistency propagates deletes/updates over
-  // up to 60s — long enough for a consumed code/token to be replayed in that
-  // window. Strong reads come from the origin region (fine at our volume).
-  //
-  // KNOWN LIMITATION (until the Neon/Postgres backend lands): one-time-use here
-  // is read-then-delete, and Blobs has no compare-and-swap, so two *simultaneous*
-  // requests with the same auth code (or refresh token) can both observe it as
-  // unused before either deletes/marks it — and for refresh tokens a concurrent
-  // legit+stolen use inside that window would both rotate without tripping family
-  // revocation. Narrow window (60s code TTL, PKCE-bound). The DB backend fixes it
-  // with a transactional `UPDATE … WHERE used = false`.
-  return getStore({ name: STORE, consistency: 'strong' })
-}
-const expired = (rec) => !rec || Date.now() > rec.expiresAt
+// One-time-use / transactional OAuth state — backend-selectable.
+export const putAuthRequest = (...a) => backend.putAuthRequest(...a)
+export const takeAuthRequest = (...a) => backend.takeAuthRequest(...a)
+export const putAuthCode = (...a) => backend.putAuthCode(...a)
+export const takeAuthCode = (...a) => backend.takeAuthCode(...a)
+export const putRefresh = (...a) => backend.putRefresh(...a)
+export const getRefresh = (...a) => backend.getRefresh(...a)
+export const consumeRefresh = (...a) => backend.consumeRefresh(...a)
+export const putFamily = (...a) => backend.putFamily(...a)
+export const getFamily = (...a) => backend.getFamily(...a)
+export const revokeFamily = (...a) => backend.revokeFamily(...a)
 
-export async function putAuthRequest(data) {
-  const id = randomUUID()
-  await store().setJSON(AR(id), { ...data, expiresAt: Date.now() + AUTH_REQUEST_TTL_SEC * 1000 })
-  return id
-}
-
-export async function takeAuthRequest(id) {
-  if (!id) return null
-  const key = AR(id)
-  const rec = await store().get(key, { type: 'json' }).catch(() => null)
-  await store().delete(key).catch(() => {}) // one-time
-  return expired(rec) ? null : rec
-}
-
-export async function putAuthCode(data) {
-  const code = randomBytes(32).toString('base64url')
-  await store().setJSON(AC(code), { ...data, used: false, expiresAt: Date.now() + AUTH_CODE_TTL_SEC * 1000 })
-  return code
-}
-
-export async function takeAuthCode(code) {
-  if (!code) return null
-  const key = AC(code)
-  const rec = await store().get(key, { type: 'json' }).catch(() => null)
-  if (expired(rec) || rec.used) return null
-  await store().delete(key).catch(() => {}) // one-time use
-  return rec
-}
-
-// --- DCR-registered clients (persistent; no TTL) ---
-export async function putClient(client) {
-  await store().setJSON(CL(client.client_id), client)
-  return client
-}
-
-export async function getStoredClient(clientId) {
-  if (!clientId) return null
-  // Resilient: a store error (e.g. Blobs unavailable) resolves to "unknown
-  // client" rather than crashing the /authorize handler.
-  try {
-    return await store().get(CL(clientId), { type: 'json' })
-  } catch {
-    return null
-  }
-}
-
-// --- refresh tokens (by hash) + families ---
-export async function putRefresh(hash, rec) {
-  await store().setJSON(RT(hash), rec)
-}
-export async function getRefresh(hash) {
-  if (!hash) return null
-  return store().get(RT(hash), { type: 'json' }).catch(() => null)
-}
-export async function markRefreshUsed(hash) {
-  const rec = await getRefresh(hash)
-  if (rec) await store().setJSON(RT(hash), { ...rec, used: true })
-}
-export async function putFamily(id, rec) {
-  await store().setJSON(RTF(id), rec)
-}
-export async function getFamily(id) {
-  if (!id) return null
-  return store().get(RTF(id), { type: 'json' }).catch(() => null)
-}
-export async function revokeFamily(id) {
-  const fam = (await getFamily(id)) || {}
-  await store().setJSON(RTF(id), { ...fam, revoked: true, revokedAt: Date.now() })
-}
+// DCR-registered clients always live on Blobs: they are plain persistence (not
+// one-time-use), so the Neon migration's atomicity buys nothing here. Keeping
+// them on Blobs keeps the migration surface small.
+export const putClient = blobs.putClient
+export const getStoredClient = blobs.getStoredClient
