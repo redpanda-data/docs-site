@@ -6,6 +6,11 @@ nav:
 - modules/ROOT/nav.adoc
 asciidoc:
   attributes:
+    # Whether ADP (Agentic Data Plane) content renders on the shared home page.
+    # Default OFF so builds that don't aggregate the adp-docs component (25.x branches,
+    # per-repo previews) hide ADP links instead of emitting broken-xref errors.
+    # Overridden to 'true' in the docs-site playbooks that aggregate adp-docs.
+    site-adp-enabled: 'false'
     # Component metadata for navigation system
     component-metadata:
       title: "Home"

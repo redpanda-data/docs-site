@@ -322,8 +322,10 @@ asciidoc:
     # site-adp-enabled: Controls whether ADP (Agentic Data Plane) content is shown
     #   - When true: Home page shows full content with ADP options
     #   - When false: Home page redirects to Data Platform landing
-    # Set this to false when building without adp-docs component
-    site-adp-enabled: 'false'
+    # Set this to false when building without adp-docs component.
+    # The home page guards ADP links on this attribute (ifeval site-adp-enabled == 'true'),
+    # so production (which aggregates adp-docs) must keep this 'true' to render ADP content.
+    site-adp-enabled: 'true'
 
   extensions:
   - '@asciidoctor/tabs'
