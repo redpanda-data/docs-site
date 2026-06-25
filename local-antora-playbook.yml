@@ -35,6 +35,8 @@ ui:
     snapshot: true
 asciidoc:
   attributes:
+    # ADP home content renders in this build (aggregates adp-docs). See home/antora.yml.
+    site-adp-enabled: 'true'
     # ===========================================================================
     # GLOBAL ASCIIDOC ATTRIBUTES
     # ===========================================================================

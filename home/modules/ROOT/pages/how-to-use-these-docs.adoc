@@ -35,7 +35,9 @@ Redpanda Documentation
 *** xref:streaming:home:index.adoc[Streaming documentation]: Broker and Redpanda CLI
 *** xref:connect:home:index.adoc[Connect documentation]: Data pipelines and integration
 ** xref:cloud-data-platform:home:index.adoc[Cloud documentation]: Fully managed services
+ifeval::["{site-adp-enabled}" == "true"]
 * xref:agentic-data-plane:home:index.adoc[Agentic Data Plane (ADP)]: AI agent infrastructure
+endif::[]
 
 == Choose your path
 
@@ -58,10 +60,12 @@ Find the documentation that matches your use case:
 * Hundreds of prebuilt connectors including AI and change data capture (CDC)
 * xref:connect:home:index.adoc[Connect documentation]
 
+ifeval::["{site-adp-enabled}" == "true"]
 *I want to build AI agent infrastructure* → ADP docs
 
 * Specialized platform for agentic workflows and AI agent orchestration
 * xref:agentic-data-plane:home:index.adoc[Get started with ADP]
+endif::[]
 
 == AI agent access
 
