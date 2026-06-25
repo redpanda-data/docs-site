@@ -35,7 +35,7 @@ jobs:
         id: wait-for-netlify
         with:
           site_name: redpanda-documentation
-          max_timeout: 600
+          max_timeout: 1200
 
       - name: Run afdocs checks
         continue-on-error: true
