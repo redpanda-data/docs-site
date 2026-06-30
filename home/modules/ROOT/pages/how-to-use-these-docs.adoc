@@ -95,6 +95,33 @@ Redpanda provides a remote link:https://modelcontextprotocol.io[Model Context Pr
 The MCP server is hosted at: `https://docs.redpanda.com/mcp`.
 You can add this endpoint to any AI agent that supports MCP.
 
+[#authentication]
+==== Authentication
+
+The MCP server uses OAuth. The first time you connect, your MCP client opens a browser and prompts you to sign in with your link:https://cloud.redpanda.com[Redpanda Cloud account^] (free to create). Your client then obtains an access token automatically and reuses it on future requests, so you only sign in once.
+
+There's no token to copy or paste. Any MCP client that supports the standard MCP OAuth flow (including ChatGPT, Claude, Cursor, and VS Code) handles sign-in for you.
+
+If you don't have a Redpanda Cloud account yet, you can link:https://cloud.redpanda.com/sign-up[create one for free^].
+
+[NOTE]
+====
+*What we collect and why.* When you sign in, we receive your verified email address (and your organization, when available) from Redpanda Cloud, which we use to track documentation usage and attribute it to your organization. This may be shared with our customer and analytics systems and passed to our documentation search provider (Kapa) for usage attribution. For details, see our link:https://www.redpanda.com/legal/privacy-policy[Privacy Policy^].
+====
+
+
+
+You sign in once, and your MCP client keeps you signed in from then on. You don't need to manage, copy, or refresh anything yourself.
+
+Here's what happens behind the scenes:
+
+* When you sign in, your client receives a short-lived access token (valid for one hour) that it sends with each request.
+* Before that hour is up, your client quietly swaps it for a fresh one in the background. This happens automatically, without opening a browser or asking you to sign in again, so you won't notice it.
+* As long as you use the server at least once every 30 days, this renewal keeps going indefinitely and you stay signed in.
+* If you don't use the server for 30 days, the renewal lapses. The next time you connect, your client prompts you to sign in again, which is usually a quick browser redirect because you're often still signed in to Redpanda Cloud.
+
+In short: active users rarely, if ever, sign in again, and there's nothing to do manually. Token renewal is handled entirely by your MCP client.
+
 [tabs]
 ====
 Claude Code::
@@ -106,6 +133,8 @@ Run the following command to add the Redpanda MCP server to Claude Code:
 ----
 claude mcp add --scope user --transport http redpanda https://docs.redpanda.com/mcp
 ----
+
+The first time you use the server, Claude Code prompts you to authenticate with your Redpanda Cloud account in the browser.
 
 This command:
 
@@ -142,6 +171,8 @@ Add the following to your `.cursor/mcp.json` file:
 }
 ----
 
+The first time you use the server, Cursor prompts you to sign in with your Redpanda Cloud account.
+
 For more information about MCP in Cursor, see the https://docs.cursor.com/context/model-context-protocol[Cursor documentation^].
 --
 VS Code::
@@ -163,6 +194,8 @@ Create an `mcp.json` file in your workspace `.vscode` folder:
   }
 }
 ----
+
+The first time you use the server, VS Code prompts you to sign in with your Redpanda Cloud account.
 
 To configure globally for all workspaces:
 
@@ -192,7 +225,9 @@ ChatGPT Desktop supports MCP servers in developer mode. To enable:
 +
 - *Name*: `redpanda`
 - *URL*: `https://docs.redpanda.com/mcp`
+- *Authentication*: *OAuth*
 
+ChatGPT discovers the OAuth flow automatically and prompts you to sign in with your Redpanda Cloud account.
 
 For more information, see the https://platform.openai.com/docs/guides/developer-mode[ChatGPT Desktop MCP documentation^].
 --
@@ -209,7 +244,7 @@ This method is available for Pro, Max, Team, or Enterprise plans and works acros
 . Navigate to Settings > Connectors.
 . Click *Add custom connector*.
 . Enter the URL: `https://docs.redpanda.com/mcp`
-. Follow any authentication prompts if required.
+. When prompted, sign in with your Redpanda Cloud account. The connector completes the OAuth flow automatically.
 
 NOTE: When using Connectors, Claude connects to your remote MCP server from Anthropic's cloud infrastructure.
 
@@ -236,7 +271,7 @@ Add the following configuration to your `claude_desktop_config.json` file:
 }
 ----
 
-This configuration uses the `mcp-remote` bridge to connect to Redpanda's remote MCP server. Claude Desktop supports only `stdio` and `sse` transports, so `mcp-remote` converts the HTTP endpoint to a compatible format.
+This configuration uses the `mcp-remote` bridge to connect to Redpanda's remote MCP server. On first use, `mcp-remote` opens a browser for you to sign in with your Redpanda Cloud account. Claude Desktop supports only `stdio` and `sse` transports, so `mcp-remote` converts the HTTP endpoint to a compatible format.
 
 Restart Claude Desktop for changes to take effect.
 
@@ -248,14 +283,14 @@ For more details, see the https://support.anthropic.com/en/articles/9487310-desk
 
 ==== Other AI tools
 
-Any tool that supports MCP servers can connect using the following URL:
+Any tool that supports the MCP OAuth flow can connect using the following URL and will prompt you to sign in with your Redpanda Cloud account on first use:
 
 [source,text]
 ----
 https://docs.redpanda.com/mcp
 ----
 
-NOTE: MCP support varies by tool and version. Check the specific tool's documentation for MCP setup instructions.
+NOTE: MCP support varies by tool and version. Check the specific tool's documentation for MCP setup instructions. See <<authentication>> for details on sign-in.
 
 ==== What you can do
 
@@ -268,13 +303,17 @@ Once connected, you can ask context-aware questions about Redpanda from within y
 * "How do I monitor Redpanda cluster performance?"
 * "What's the difference between Redpanda Cloud and self-hosted deployment?"
 
+You can also *send feedback to the Redpanda team* through your AI client. If you hit a bug, a documentation gap, or anything unclear, tell your assistant something like "send feedback that this page is missing X" and it can submit it for us to review. If you're signed in, we can follow up with you.
+
 ==== Usage limits
 
-To ensure fair use and performance for all users, the public MCP endpoint enforces the following rate limits per user:
+To ensure fair use and performance for all users, the MCP endpoint enforces the following rate limits:
 
 * *60 requests per 15 minutes*
 
-As well as this global limit, the `ask_redpanda_question` tool proxies to an MCP server hosted by Kapa.ai, which enforces its own limits. See the link:https://docs.kapa.ai/integrations/mcp/overview#authentication[Kapa documentation^] for details.
+When you're signed in, this limit is applied per user. Unauthenticated requests (during the rollout period) are limited per IP address.
+
+As well as this limit, the `ask_redpanda_question` tool proxies to an MCP server hosted by Kapa.ai, which enforces its own limits. See the link:https://docs.kapa.ai/integrations/mcp/overview#authentication[Kapa documentation^] for details.
 
 These limits are suitable for:
 
@@ -288,12 +327,24 @@ If you exceed the limit, you receive an HTTP 429 response with rate limit header
 [source,text]
 ----
 HTTP 429 Too Many Requests
-RateLimit-Limit: 40
+RateLimit-Limit: 60
 RateLimit-Remaining: 0
 RateLimit-Reset: <timestamp>
 ----
 
 ==== Troubleshooting
+
+===== Authentication required (HTTP 401)
+
+If you receive an `HTTP 401` response with an `authentication_required` error:
+
+* Your MCP client should open a browser to sign in with your Redpanda Cloud account. If it doesn't, check that your client supports the MCP OAuth flow (most recent versions do).
+* If you don't have a Redpanda Cloud account, link:https://cloud.redpanda.com/sign-up[create a free one^].
+* If sign-in succeeded previously but you now see `401`, your client's token may have expired. Reconnect or restart the client to trigger a fresh sign-in.
+
+===== Work account required (HTTP 403)
+
+Any verified Redpanda Cloud account works by default, including personal email providers. If your organization has opted to restrict access to work email domains and you receive an `HTTP 403` with a `work_email_required` error, sign in with your work account instead.
 
 ===== Server not connecting
 

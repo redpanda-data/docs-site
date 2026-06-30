@@ -1,9 +1,13 @@
 // Redpanda Docs MCP Server on Netlify Functions
 // -----------------------------------------------
-// This serverless function implements an authless MCP (Model Context Protocol) server
+// This serverless function implements the MCP (Model Context Protocol) server
 // that proxies requests to Kapa AI's chat and search APIs for Redpanda documentation.
 // It uses the official MCP SDK plus the Netlify adapter (modelfetch) to support
 // JSON-RPC over HTTP and SSE streaming.
+//
+// Auth: acts as an OAuth 2.0 resource server. The auth middleware below validates
+// our own access tokens (issued by the AS in mcp-oauth.mjs); enforcement is gated
+// by REQUIRE_AUTH. Tokens are issued via the separate authorization-server function.
 //
 // For background and reference implementations, see:
 // - Kapa AI blog: Build an MCP Server with Kapa AI
@@ -17,6 +21,10 @@ import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/
 import { z } from 'zod'
 import handle from '@modelfetch/netlify'
 
+import { extractBearerToken, decideAuth, isAuthEnforced, isWorkEmailRequired } from './lib/auth.mjs'
+import { verifyAccessToken } from './lib/oauth/keys.mjs'
+import { recordUser } from './lib/store.mjs'
+
 import rateLimiterModule from 'hono-rate-limiter'
 const makeRateLimiter =
   rateLimiterModule.rateLimiter ||
@@ -25,7 +33,7 @@ const makeRateLimiter =
 
 // -------------------- Config --------------------
 
-const SERVER_VERSION = '1.1.3'
+const SERVER_VERSION = '1.3.0'
 
 // Hardcoded upstream
 const KAPA_MCP_SERVER_URL = 'https://redpanda.mcp.kapa.ai'
@@ -51,6 +59,20 @@ function apiToUrl(api) {
 const CONNECT_TIMEOUT_MS = 8_000
 const CALL_TIMEOUT_MS = 22_000
 const MAX_QUERY_CHARS = 2_000
+const MAX_FEEDBACK_CHARS = 5_000
+
+// Feedback is submitted to the existing `api-feedback` Netlify form — the same
+// store our docs feedback uses. Registered fields live in
+// home/modules/ROOT/attachments/api-feedback-registration.html (keep in sync).
+//
+// IMPORTANT: Netlify only processes a form POST if it reaches a static 200 page;
+// the site root `/` 301-redirects to `/home/`, and a redirect drops the POST
+// body (so the form is never recorded). We therefore POST to a non-redirecting
+// page (`/home/`) and use `redirect: 'error'` below so a redirect surfaces as a
+// failure instead of a false success. Override the path with MCP_FEEDBACK_FORM_PATH.
+const FEEDBACK_FORM_NAME = 'api-feedback'
+const FEEDBACK_FORM_PATH = process.env.MCP_FEEDBACK_FORM_PATH || '/home/'
+const SITE_URL = process.env.URL || process.env.DEPLOY_PRIME_URL || ''
 
 // -------------------- Helpers --------------------
 
@@ -64,10 +86,32 @@ function withTimeout(promise, ms, label) {
   )
 }
 
+// Submit a field map to the `api-feedback` Netlify form (URL-encoded POST to a
+// non-redirecting page, with the required form-name). `redirect: 'error'` means
+// any 3xx (e.g. hitting a redirect that would drop the POST body) throws rather
+// than following it to a 200 and falsely reporting success. Throws on a missing
+// site URL or a non-2xx so the caller surfaces a clear failure to the agent.
+async function submitFeedback(fields) {
+  if (!SITE_URL) throw new Error('site URL not configured')
+  const body = new URLSearchParams({ 'form-name': FEEDBACK_FORM_NAME, ...fields })
+  const res = await fetch(`${SITE_URL}${FEEDBACK_FORM_PATH}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: body.toString(),
+    redirect: 'error',
+  })
+  if (!res.ok) throw new Error(`feedback submission failed: ${res.status}`)
+}
+
 // -------------------- Rate limiting --------------------
 
 const computeLimiterKey = (c) => {
   const h = (name) => c.req.header(name) || ''
+
+  // Authenticated requests get per-user limits (set by the auth middleware).
+  const auth = c.get('auth')
+  if (auth?.sub) return `sub:${auth.sub}`
+  if (auth?.email) return `email:${auth.email}`
 
   const clientKey = h('x-client-key')
   if (clientKey) return `ck:${clientKey}`
@@ -155,12 +199,22 @@ function ensureKapaConnected() {
   return kapaConnectPromise
 }
 
-// Kapa Hosted MCP search tool only accepts `query`
-function callKapaSearch(query) {
-  return kapaClient.callTool({
+// Kapa Hosted MCP search tool accepts `query`. When we have an authenticated
+// user we also attach `_meta.user` for Kapa-side usage attribution.
+function callKapaSearch(query, user = null) {
+  const toolCall = {
     name: KAPA_TOOL_NAME,
     arguments: { query },
-  })
+  }
+  if (user?.email) {
+    toolCall._meta = {
+      user: {
+        email: user.email,
+        company_name: user.domain || undefined,
+      },
+    }
+  }
+  return kapaClient.callTool(toolCall)
 }
 
 // -------------------- Bump.sh API Docs MCP client --------------------
@@ -213,23 +267,11 @@ const server = new McpServer({
   version: SERVER_VERSION,
 })
 
-// -------------------- MCPcat Analytics --------------------
-// Initialize MCPcat tracking (if MCPCAT_PROJECT is set)
-// MCPcat is an open-source analytics platform for MCP usage tracking.
-// See https://www.mcpcat.com/ for details.
-
+// MCPcat analytics is initialized AFTER all tools are registered — see the
+// track() call near the end of this file. (MCPcat wraps the SDK's tools/list
+// and tools/call handlers, which only exist once the first tool is registered;
+// initializing it before registration silently no-ops — "no user intent".)
 const MCPCAT_PROJECT = process.env.MCPCAT_PROJECT
-
-if (MCPCAT_PROJECT) {
-  try {
-    // Dynamic import to avoid bundler issues
-    const { track } = await import('mcpcat')
-    track(server, MCPCAT_PROJECT)
-  } catch (e) {
-    // Don't crash the MCP server if analytics fail to load.
-    console.warn('[mcpcat] disabled due to import error:', e)
-  }
-}
 
 server.registerTool(
   'ask_redpanda_question',
@@ -244,8 +286,11 @@ server.registerTool(
       top_k: z.number().optional(),
     },
   },
-  async (args) => {
+  async (args, extra) => {
     const start = Date.now()
+
+    // Authenticated user context, attached by the auth middleware via c.set('auth').
+    const user = extra?.authInfo || null
 
     const q = String(args?.question || '').trim()
     if (!q) {
@@ -284,7 +329,7 @@ server.registerTool(
       )
 
       return await withTimeout(
-        callKapaSearch(q),
+        callKapaSearch(q, user),
         CALL_TIMEOUT_MS,
         'kapa_callTool'
       )
@@ -296,6 +341,15 @@ server.registerTool(
         upstream: 'kapa-mcp',
       })
 
+      // If Kapa rejected the request because of our user metadata, retry once
+      // without it (attribution is best-effort; never block the answer).
+      if (/_meta|metadata/i.test(msg) && user) {
+        try {
+          return await withTimeout(callKapaSearch(q, null), CALL_TIMEOUT_MS, 'kapa_callTool_no_meta')
+        } catch {
+          // fall through to the normal transient-retry path below
+        }
+      }
 
       if (isTransientError(msg)) {
         // retry once
@@ -307,7 +361,7 @@ server.registerTool(
             'kapa_reconnect'
           )
           return await withTimeout(
-            callKapaSearch(q),
+            callKapaSearch(q, user),
             CALL_TIMEOUT_MS,
             'kapa_callTool_retry'
           )
@@ -614,6 +668,138 @@ Returns up to 10 pages per request. URLs must be from docs.redpanda.com/api/doc/
   }
 )
 
+// -------------------- Feedback tool --------------------
+// Lets agents forward user feedback (bugs, doc gaps, frustrations, feature
+// requests) straight to the Redpanda team — the docs/DX team's MCP feedback
+// channel. Goes to the same `api-feedback` Netlify form as our docs feedback.
+
+server.registerTool(
+  'submit_documentation_feedback',
+  {
+    title: 'Submit Documentation Feedback',
+    description:
+      `Send feedback about the Redpanda documentation or products directly to the Redpanda team.
+
+If the user hits a bug, a documentation gap, incorrect or missing information, or expresses frustration while using Redpanda, ASK whether they'd like to send feedback to the Redpanda team. Only call this tool once the user agrees — never submit feedback without their consent. Summarize their feedback clearly and include the relevant documentation page URL or context when you know it.`,
+    inputSchema: {
+      feedback: z
+        .string()
+        .min(1)
+        .max(MAX_FEEDBACK_CHARS)
+        .describe('The user feedback to submit, in clear prose. Summarize the bug, gap, or request.'),
+      category: z
+        .enum(['bug', 'documentation_gap', 'feature_request', 'other'])
+        .optional()
+        .describe('The type of feedback.'),
+      page_url: z
+        .string()
+        .optional()
+        .describe('The documentation page URL the feedback relates to, if known.'),
+    },
+  },
+  async (args, extra) => {
+    const start = Date.now()
+
+    const feedback = String(args?.feedback || '').trim()
+    if (!feedback) {
+      return {
+        content: [{
+          type: 'text',
+          text: JSON.stringify({ error: 'missing_feedback', message: 'Provide non-empty feedback text.' }),
+        }],
+      }
+    }
+
+    // Attach the authenticated user (set by the auth middleware) so the team can
+    // follow up; anonymous when unauthenticated. Never logs the raw email.
+    const user = extra?.authInfo || null
+    const category = args?.category || 'other'
+    const pageUrl = String(args?.page_url || '')
+    const timestamp = new Date().toISOString()
+
+    try {
+      await withTimeout(
+        submitFeedback({
+          feedback: feedback.slice(0, MAX_FEEDBACK_CHARS),
+          category,
+          'page-path': pageUrl,
+          'user-email': user?.email || '',
+          'user-domain': user?.domain || '',
+          'bot-field': '',
+        }),
+        CALL_TIMEOUT_MS,
+        'feedback_submit'
+      )
+
+      console.log(JSON.stringify({
+        event: 'mcp_feedback_submitted',
+        category,
+        domain: user?.domain || null,
+        authed: !!user,
+        ts: timestamp,
+      }))
+
+      return {
+        content: [{
+          type: 'text',
+          text: JSON.stringify({ status: 'submitted', message: 'Thanks — your feedback has been sent to the Redpanda team.' }),
+        }],
+      }
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err)
+      console.warn('Feedback submission failed', { error: msg, duration_ms: Date.now() - start })
+      return {
+        content: [{
+          type: 'text',
+          text: JSON.stringify({
+            error: 'submission_failed',
+            message: 'Could not submit feedback right now. Please try again later.',
+            detail: msg,
+          }),
+        }],
+      }
+    }
+  }
+)
+
+// -------------------- MCPcat Analytics --------------------
+// Initialized HERE — after every server.registerTool above — because MCPcat
+// wraps the SDK's tools/list and tools/call handlers, and those only exist once
+// the first tool is registered. (Calling track() before registration grabs no
+// handlers and silently no-ops, which shows up as "no user intent provided".)
+//
+// identify attaches the authenticated user (from our verified OAuth context,
+// extra.authInfo) so usage is per-user/per-org instead of anonymous; returns
+// null when unauthenticated so grace-period sessions stay anonymous. NOTE: this
+// forwards the user's email to MCPcat (a third-party analytics provider); the
+// login notice + Privacy Policy disclose sharing with service providers.
+// Pending legal sign-off pre-launch.
+if (MCPCAT_PROJECT) {
+  try {
+    const { track } = await import('mcpcat')
+    track(server, MCPCAT_PROJECT, {
+      identify: async (_request, extra) => {
+        const u = extra?.authInfo
+        if (!u?.sub) return null
+        return {
+          userId: u.sub,
+          userName: u.email || u.domain || undefined,
+          userData: { domain: u.domain || null, emailVerified: u.emailVerified === true },
+        }
+      },
+      // Prompt the agent for its intent per call (captured as "agent intent"),
+      // while steering it away from sensitive data in that free-text field.
+      customContextDescription:
+        'In one concise sentence (third person), describe what the user is trying to ' +
+        'accomplish with this request. Do not include credentials, tokens, personal ' +
+        'data, or verbatim secrets.',
+    })
+  } catch (e) {
+    // Don't crash the MCP server if analytics fail to load.
+    console.warn('[mcpcat] disabled due to import error:', e)
+  }
+}
+
 // -------------------- Netlify handler --------------------
 
 // Safety net: even with transport onerror/onclose handlers, a stray background
@@ -668,6 +854,52 @@ const baseHandler = handle({
       keyGenerator: computeLimiterKey, // use our custom key generator
       standardHeaders: true,    // send RateLimit-* headers if supported
       legacyHeaders: true,      // also send X-RateLimit-* headers
+    })
+
+    // OAuth resource-server middleware. Runs BEFORE the limiter so authenticated
+    // requests can be keyed per-user. Never gates OPTIONS or the GET/SSE stream.
+    // Grace period (REQUIRE_AUTH != 'true'): unauthenticated requests pass
+    // through. Enforced: a 401 points MCP clients at our protected-resource
+    // metadata so they can sign in with a Redpanda Cloud account.
+    app.use('/mcp', async (c, next) => {
+      const method = c.req.method
+      // Don't gate GET/OPTIONS here: OPTIONS is preflight, and GET is declined
+      // with 405 by the rate-limit middleware below (we don't offer the optional
+      // SSE stream). Tool calls are POST and are gated here, so an enforced
+      // deployment can't yield a usable unauthenticated channel.
+      if (method === 'OPTIONS' || method === 'GET') return next()
+
+      // Validate OUR OWN access token (issued by our AS), not the upstream IdP.
+      const origin = new URL(c.req.url).origin
+      const token = extractBearerToken(c.req.header('authorization'))
+      const verified = token
+        ? await verifyAccessToken(token, { issuer: origin, audience: `${origin}/mcp` })
+        : { valid: false }
+      const claims = verified.valid ? verified.claims : null
+
+      const resourceMetadataUrl = new URL('/.well-known/oauth-protected-resource', c.req.url).toString()
+      const { allow, userContext, response } = decideAuth({
+        claims,
+        enforced: isAuthEnforced(),
+        workEmailRequired: isWorkEmailRequired(),
+        resourceMetadataUrl,
+      })
+
+      if (userContext) {
+        c.set('auth', userContext)
+        recordUser(userContext).catch(() => {}) // fire-and-forget lead capture
+      }
+
+      if (!allow && response) {
+        return c.json(response.body, response.status, response.headers)
+      }
+
+      if (!userContext) {
+        // Grace period, unauthenticated: log for adoption tracking.
+        console.log(JSON.stringify({ event: 'mcp_unauthenticated', enforced: false, ua: c.req.header('user-agent') || '' }))
+      }
+
+      return next()
     })
 
     app.use('/mcp', async (c, next) => {
